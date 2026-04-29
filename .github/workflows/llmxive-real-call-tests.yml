@@ -1,0 +1,56 @@
+name: llmXive Real-Call Tests
+
+on:
+  pull_request:
+    paths:
+      - "src/llmxive/**"
+      - "agents/**"
+      - "tests/**"
+      - ".github/workflows/llmxive-*.yml"
+      - "pyproject.toml"
+      - "contracts/**"
+
+permissions:
+  contents: read
+
+jobs:
+  real-call:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      LLMXIVE_REAL_TESTS: "1"
+      DARTMOUTH_CHAT_API_KEY: ${{ secrets.DARTMOUTH_CHAT_API_KEY }}
+      DARTMOUTH_API_KEY: ${{ secrets.DARTMOUTH_API_KEY }}
+      HF_TOKEN: ${{ secrets.HF_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # On PR runs, github.head_ref is the source branch name (e.g.
+          # 001-agentic-pipeline-refactor) rather than the PR-merge SHA;
+          # the spec-kit bash scripts require a feature-branch name.
+          ref: ${{ github.head_ref || github.ref }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+      - name: Install package and dev deps
+        run: pip install -e ".[dev]"
+
+      # FR-031 / T114: Per-PR pre-checks BEFORE running real-call tests.
+      # If any of these fail, the gate fails fast — saving real-LLM minutes.
+      - name: Prompt existence check (every prompt referenced by registry exists and parses)
+        run: python -m llmxive.checks.prompts
+
+      - name: Spec Kit script executability check
+        run: python -m llmxive.checks.speckit_scripts
+
+      - name: Backend reachability check (Dartmouth + HF list_models())
+        run: python -m llmxive.checks.backends
+
+      # The contract suite validates every schema in contracts/.
+      - name: Contract tests
+        run: pytest tests/contract -v
+
+      # The real-call suite is the canonical Constitution III gate.
+      - name: Real-call tests (Dartmouth + HF + Spec Kit scripts + e2e)
+        run: pytest tests/real_call -v
