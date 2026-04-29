@@ -92,9 +92,9 @@
 - [X] T028 [P] [US2] Create differential splicing event model in `code/src/models/differential_splicing_event.py`
 - [X] T029 [US2] Implement rMATS wrapper in `code/src/quantification/rmats_wrapper.py`
 - [X] T030 [US2] Implement PSI calculator in `code/src/quantification/psi_calculator.py`
-- [ ] T031 [US2] Implement differential splicing analysis in `code/src/analysis/differential_splicing.py`
-- [ ] T032 [US2] Apply minimum ΔPSI threshold (≥0.1) per spec requirements
-- [ ] T033 [US2] Apply minimum read coverage threshold (≥20 reads per junction)
+- [X] T031 [US2] Implement differential splicing analysis in `code/src/analysis/differential_splicing.py`
+- [X] T032 [US2] Apply minimum ΔPSI threshold (≥0.1) per spec requirements
+- [X] T033 [US2] Apply minimum read coverage threshold (≥20 reads per junction)
 - [ ] T034 [US2] Apply Benjamini-Hochberg FDR correction (p < 0.05)
 - [ ] T035 [US2] Add logging for quantification and differential analysis operations
 

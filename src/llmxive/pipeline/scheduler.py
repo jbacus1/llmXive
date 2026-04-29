@@ -40,7 +40,16 @@ PRIORITY: list[Stage] = [
 ]
 
 
-def pick_next(*, repo_root: Path | None = None) -> Project | None:
+def pick_next(
+    *, repo_root: Path | None = None, stage: Stage | None = None
+) -> Project | None:
+    """Pick the highest-priority project to act on.
+
+    When `stage` is provided, restrict to projects currently at that
+    stage and pick the oldest. This is used by cron jobs that only
+    handle one stage (e.g. flesh-out cron picks the oldest brainstormed
+    project even when there are higher-priority in_progress projects).
+    """
     projects = project_store.list_all(repo_root=repo_root)
     by_stage: dict[Stage, list[Project]] = {s: [] for s in PRIORITY}
     for p in projects:
@@ -53,8 +62,15 @@ def pick_next(*, repo_root: Path | None = None) -> Project | None:
         # Stages outside PRIORITY (e.g., RESEARCH_REVIEW, PAPER_REVIEW) are
         # handled by their reviewer agents on a different cadence.
 
-    for stage in PRIORITY:
-        bucket = by_stage[stage]
+    if stage is not None:
+        bucket = by_stage.get(stage, [])
+        if not bucket:
+            return None
+        bucket.sort(key=lambda p: p.updated_at)
+        return bucket[0]
+
+    for prio_stage in PRIORITY:
+        bucket = by_stage[prio_stage]
         if not bucket:
             continue
         bucket.sort(key=lambda p: p.updated_at)

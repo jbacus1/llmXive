@@ -296,12 +296,20 @@ def run_one_step(
                     "principal_agent_name": "flesh_out",
                 },
             )
-            try:
-                run_agent(agent, ctx, repo_root=repo)
-            except Exception as exc:
+            is_review_dispatch = project.current_stage in {
+                Stage.RESEARCH_REVIEW, Stage.PAPER_REVIEW
+            }
+            if is_review_dispatch:
                 # Specialist reviewer failures are non-fatal — log and
                 # move on so other specialists still vote.
-                print(f"[graph] reviewer {an!r} failed: {exc}")
+                try:
+                    run_agent(agent, ctx, repo_root=repo)
+                except Exception as exc:
+                    print(f"[graph] reviewer {an!r} failed: {exc}")
+            else:
+                # Single-agent stages (brainstorm, flesh_out, etc.) —
+                # propagate failures so the run is marked failed.
+                run_agent(agent, ctx, repo_root=repo)
     elif agent_name in _SPECKIT_AGENTS:
         # SlashCommandAgents take no constructor args; the registry
         # entry is consulted at run() time via the SlashCommandContext.

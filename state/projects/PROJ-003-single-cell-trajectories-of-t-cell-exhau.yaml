@@ -6,7 +6,7 @@ failed_stage: null
 field: biology
 human_escalation_reason: null
 id: PROJ-003-single-cell-trajectories-of-t-cell-exhau
-last_run_id: null
+last_run_id: e8619d5c-31f9-4bc1-859e-14222c5db96e
 last_run_status: null
 points_paper: {}
 points_research: {}
@@ -14,4 +14,4 @@ revision_round: 0
 speckit_paper_dir: null
 speckit_research_dir: null
 title: Single-Cell Trajectories of T-Cell Exhaustion
-updated_at: '2026-04-29T03:54:32.993821Z'
+updated_at: '2026-04-29T15:23:06.430265Z'

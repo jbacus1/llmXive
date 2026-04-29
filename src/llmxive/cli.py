@@ -34,6 +34,15 @@ def _cmd_run(args: argparse.Namespace) -> int:
     from llmxive.pipeline import graph, scheduler
     from llmxive.state import project as project_store
 
+    from llmxive.types import Stage as _Stage
+    stage_filter: _Stage | None = None
+    if args.stage:
+        try:
+            stage_filter = _Stage(args.stage)
+        except ValueError:
+            print(f"[run] invalid --stage {args.stage!r}", file=sys.stderr)
+            return 2
+
     completed = 0
     for _ in range(max(1, args.max_tasks)):
         if args.project:
@@ -43,11 +52,12 @@ def _cmd_run(args: argparse.Namespace) -> int:
                 print(f"[run] no project state for {args.project!r}", file=sys.stderr)
                 return 2
         else:
-            project = scheduler.pick_next()
+            project = scheduler.pick_next(stage=stage_filter)
         if project is None:
             print("[run] no project ready for action")
             break
-        if args.stage and project.current_stage.value != args.stage:
+        if stage_filter is not None and project.current_stage != stage_filter:
+            # --project + --stage mismatch: skip the project
             print(
                 f"[run] {project.id} is at {project.current_stage.value} (skipped: stage filter)"
             )
