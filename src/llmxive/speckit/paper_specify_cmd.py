@@ -23,11 +23,9 @@ class PaperSpecifierAgent(SlashCommandAgent):
         return ctx.project_dir / "paper"
 
     def mechanical_step(self, ctx: SlashCommandContext) -> dict[str, Any]:
-        repo = ctx.project_dir.parent.parent
         paper_dir = self._paper_dir(ctx)
         script = paper_dir / ".specify" / "scripts" / "bash" / "create-new-feature.sh"
         short_name = "paper"
-        # Description is the project's research-stage spec summary.
         descriptions: list[str] = []
         for sp in sorted(ctx.project_dir.glob("specs/*/spec.md")):
             descriptions.append(sp.read_text(encoding="utf-8"))
@@ -35,8 +33,8 @@ class PaperSpecifierAgent(SlashCommandAgent):
         if not descriptions:
             descriptions.append(f"Paper for {ctx.project_id}")
         description = (descriptions[0] or "")[:4000]
-        return run_script(  # type: ignore[return-value]
-            str(script.relative_to(repo)),
+        out = run_script(
+            str(script),
             "--json",
             "--short-name",
             short_name,
@@ -44,6 +42,10 @@ class PaperSpecifierAgent(SlashCommandAgent):
             cwd=paper_dir,
             expect_json=True,
         )
+        # Synthesize FEATURE_DIR from SPEC_FILE when missing.
+        if isinstance(out, dict) and "FEATURE_DIR" not in out and out.get("SPEC_FILE"):
+            out["FEATURE_DIR"] = str(Path(out["SPEC_FILE"]).parent)
+        return out  # type: ignore[return-value]
 
     def build_prompt(
         self,
@@ -110,6 +112,14 @@ class PaperSpecifierAgent(SlashCommandAgent):
         feature_dir.mkdir(parents=True, exist_ok=True)
         spec_path = feature_dir / "spec.md"
         spec_path.write_text(llm_response.text.strip() + "\n", encoding="utf-8")
+        # Persist speckit_paper_dir on project state so the validator
+        # accepts the `paper_specified` stage transition.
+        from llmxive.state import project as project_store
+        project = project_store.load(ctx.project_id, repo_root=repo)
+        rel = str(feature_dir.resolve().relative_to(repo.resolve()))
+        if project.speckit_paper_dir != rel:
+            project.speckit_paper_dir = rel
+            project_store.save(project, repo_root=repo)
         return [str(spec_path.relative_to(repo))]
 
 
