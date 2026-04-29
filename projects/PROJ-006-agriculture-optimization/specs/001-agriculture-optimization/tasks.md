@@ -41,9 +41,9 @@
 - [X] T006 [P] Setup configuration management in src/config/constants.py (Principle I compliance)
 - [X] T007 [P] Create schema validation helpers in src/config/schemas.py
 - [X] T008 [P] Implement caching layer in src/data/cache.py (SQLite-based)
-- [ ] T009 [P] Setup error handling and logging infrastructure
-- [ ] T010 Create data-model.md and contracts/dataset.schema.yaml
-- [ ] T011 Create contracts/output.schema.yaml for pipeline outputs
+- [X] T009 [P] Setup error handling and logging infrastructure
+- [X] T010 Create data-model.md and contracts/dataset.schema.yaml
+- [X] T011 Create contracts/output.schema.yaml for pipeline outputs
 
 **Checkpoint**: Foundation ready - user story implementation can now begin in parallel
 
@@ -59,14 +59,14 @@
 
 > **NOTE: Write these tests FIRST, ensure they FAIL before implementation**
 
-- [ ] T012 [P] [US1] Contract test for schema validation in tests/contract/test_dataset_schema.py
-- [ ] T013 [P] [US1] Integration test for OpenWeatherMap API in tests/integration/test_api_calls.py
-- [ ] T014 [P] [US1] Integration test for USGS EarthExplorer in tests/integration/test_usgs_api.py
+- [X] T012 [P] [US1] Contract test for schema validation in tests/contract/test_dataset_schema.py
+- [X] T013 [P] [US1] Integration test for OpenWeatherMap API in tests/integration/test_api_calls.py
+- [X] T014 [P] [US1] Integration test for USGS EarthExplorer in tests/integration/test_usgs_api.py
 
 ### Implementation for User Story 1
 
-- [ ] T015 [P] [US1] Create survey data collector in src/data/collectors/survey_collector.py
-- [ ] T016 [P] [US1] Create climate data collector in src/data/collectors/climate_collector.py
+- [X] T015 [P] [US1] Create survey data collector in src/data/collectors/survey_collector.py
+- [X] T016 [P] [US1] Create climate data collector in src/data/collectors/climate_collector.py
 - [ ] T017 [US1] Implement remote sensing collector in src/data/collectors/remote_sensing_collector.py (uses rasterio)
 - [ ] T018 [US1] Implement API client in src/services/api_client.py (OpenWeatherMap, USGS)
 - [ ] T019 [US1] Add validation and error handling for all data collectors
