@@ -54,14 +54,12 @@ class PlannerAgent(SlashCommandAgent):
         return candidates[0]
 
     def mechanical_step(self, ctx: SlashCommandContext) -> dict[str, Any]:
-        repo = ctx.project_dir.parent.parent
         feature_dir = self._feature_dir(ctx)
-        script = ctx.project_dir / ".specify" / "scripts" / "bash" / "setup-plan.sh"
-        # setup-plan.sh expects to be run inside the feature dir's parent
-        # context; pass the feature_dir as cwd metadata for the LLM but
-        # invoke from project root.
+        # Use absolute path so run_script (which joins with cwd) doesn't
+        # produce a doubled projects/<id>/projects/<id>/... path.
+        script = (ctx.project_dir / ".specify" / "scripts" / "bash" / "setup-plan.sh").resolve()
         result = run_script(
-            str(script.relative_to(repo)),
+            str(script),
             "--json",
             cwd=ctx.project_dir,
             expect_json=True,

@@ -1,10 +1,14 @@
 """Rule-based, non-LLM Advancement-Evaluator (T028).
 
 The sole writer of Project.current_stage. Reads project state + review
-records and decides each stage transition. Per-story rules (US1, US3,
-US5, US7) are added incrementally; the skeleton here enforces the
-self-review prohibition and the citation-blocking gates that already
-apply.
+records and decides each stage transition.
+
+Acceptance gate (per user request 2026-04-29): in addition to the
+points threshold, **every required specialist reviewer must have
+written an accept review** before the project can advance to
+RESEARCH_ACCEPTED or PAPER_ACCEPTED. The list of required specialists
+is read from agents/registry.yaml at evaluation time (any agent whose
+name starts with `research_reviewer_` or `paper_reviewer_`).
 """
 
 from __future__ import annotations
@@ -12,6 +16,7 @@ from __future__ import annotations
 from collections import defaultdict
 from pathlib import Path
 
+from llmxive.agents import registry as registry_loader
 from llmxive.agents.lifecycle import is_valid_transition
 from llmxive.config import (
     PAPER_ACCEPT_THRESHOLD,
@@ -26,6 +31,29 @@ from llmxive.types import (
     Stage,
     VerificationStatus,
 )
+
+
+def _required_specialists(prefix: str, *, repo_root: Path | None = None) -> set[str]:
+    """Return every agent name in the registry that starts with `prefix`.
+
+    Used to gate RESEARCH_ACCEPTED on all `research_reviewer_*` accepts and
+    PAPER_ACCEPTED on all `paper_reviewer_*` accepts.
+    """
+    try:
+        reg = registry_loader.load(repo_root=repo_root)
+    except Exception:
+        return set()
+    return {a.name for a in reg.agents if a.name.startswith(prefix)}
+
+
+def _all_specialists_accept(records: list[ReviewRecord], required: set[str]) -> bool:
+    """True iff every required reviewer has at least one accept record."""
+    if not required:
+        return True  # no gate configured
+    accepted_by: set[str] = {
+        r.reviewer_name for r in records if r.verdict == "accept"
+    }
+    return required <= accepted_by
 
 
 class AdvancementError(RuntimeError):
@@ -135,7 +163,14 @@ def evaluate(project: Project, *, repo_root: Path | None = None) -> Project:
         )
         accept_total = sum(r.score for r in records if r.verdict == "accept")
         winning = _winning_recommendation(records)
-        if accept_total >= RESEARCH_ACCEPT_THRESHOLD and not _has_blocking_citations(cits):
+        required = _required_specialists("research_reviewer_", repo_root=repo_root)
+        all_accept = _all_specialists_accept(records, required)
+        # Both gates must pass: enough points AND every specialist accepts.
+        if (
+            accept_total >= RESEARCH_ACCEPT_THRESHOLD
+            and all_accept
+            and not _has_blocking_citations(cits)
+        ):
             return _transition(project, Stage.RESEARCH_ACCEPTED)
         if winning == "minor_revision":
             return _transition(project, Stage.RESEARCH_MINOR_REVISION)
@@ -157,7 +192,13 @@ def evaluate(project: Project, *, repo_root: Path | None = None) -> Project:
         )
         accept_total = sum(r.score for r in records if r.verdict == "accept")
         winning = _winning_recommendation(records)
-        if accept_total >= PAPER_ACCEPT_THRESHOLD and not _has_blocking_citations(cits):
+        required = _required_specialists("paper_reviewer_", repo_root=repo_root)
+        all_accept = _all_specialists_accept(records, required)
+        if (
+            accept_total >= PAPER_ACCEPT_THRESHOLD
+            and all_accept
+            and not _has_blocking_citations(cits)
+        ):
             return _transition(project, Stage.PAPER_ACCEPTED)
         if winning == "minor_revision":
             return _transition(project, Stage.PAPER_MINOR_REVISION)

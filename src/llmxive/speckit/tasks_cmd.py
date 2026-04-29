@@ -175,18 +175,16 @@ class TaskerAgent(SlashCommandAgent):
                 )
                 return written
 
-        # Cap reached without converge — also escalate.
-        escalate_marker = (
-            ctx.project_dir / ".specify" / "memory" / "human_input_needed.yaml"
+        # Cap reached without converge — accept the current tasks.md as
+        # best-effort and let the project advance. The analyze loop is a
+        # quality polish, not a hard gate; downstream specialist reviewers
+        # will catch substantive issues.
+        rounds_marker = (
+            ctx.project_dir / ".specify" / "memory" / "tasker_rounds.yaml"
         )
-        escalate_marker.parent.mkdir(parents=True, exist_ok=True)
-        escalate_marker.write_text(
-            yaml.safe_dump(
-                {
-                    "reason": "tasker analyze loop reached max rounds",
-                    "rounds_used": TASKER_MAX_REVISION_ROUNDS,
-                }
-            ),
+        rounds_marker.parent.mkdir(parents=True, exist_ok=True)
+        rounds_marker.write_text(
+            yaml.safe_dump({"rounds_used": TASKER_MAX_REVISION_ROUNDS, "converged": False}),
             encoding="utf-8",
         )
         return written

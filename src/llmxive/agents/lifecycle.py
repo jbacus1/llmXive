@@ -23,11 +23,15 @@ ALLOWED_TRANSITIONS: dict[Stage, set[Stage]] = {
     Stage.FLESH_OUT_COMPLETE: {Stage.PROJECT_INITIALIZED},
     # Per-project research Spec Kit pipeline (US1):
     Stage.PROJECT_INITIALIZED: {Stage.SPECIFIED},
-    Stage.SPECIFIED: {Stage.CLARIFY_IN_PROGRESS, Stage.HUMAN_INPUT_NEEDED},
+    # The CLARIFY_IN_PROGRESS / ANALYZE_IN_PROGRESS intermediates are
+    # optional checkpoints used by long-running operations; the
+    # Clarifier and Tasker may transition directly to the next stable
+    # stage when they complete in one tick.
+    Stage.SPECIFIED: {Stage.CLARIFY_IN_PROGRESS, Stage.CLARIFIED, Stage.HUMAN_INPUT_NEEDED},
     Stage.CLARIFY_IN_PROGRESS: {Stage.CLARIFIED, Stage.HUMAN_INPUT_NEEDED},
-    Stage.CLARIFIED: {Stage.PLANNED},
-    Stage.PLANNED: {Stage.TASKED},
-    Stage.TASKED: {Stage.ANALYZE_IN_PROGRESS},
+    Stage.CLARIFIED: {Stage.PLANNED, Stage.HUMAN_INPUT_NEEDED},
+    Stage.PLANNED: {Stage.TASKED, Stage.HUMAN_INPUT_NEEDED},
+    Stage.TASKED: {Stage.ANALYZE_IN_PROGRESS, Stage.ANALYZED},
     Stage.ANALYZE_IN_PROGRESS: {Stage.ANALYZED, Stage.HUMAN_INPUT_NEEDED},
     Stage.ANALYZED: {Stage.IN_PROGRESS},
     Stage.IN_PROGRESS: {Stage.RESEARCH_COMPLETE, Stage.IN_PROGRESS},

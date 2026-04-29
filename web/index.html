@@ -242,8 +242,8 @@
         <p>Every project gets its own <code>.specify/</code> scaffold with its own constitution, spec, plan, tasks, and analyze report. The same agent that writes a project's <code>spec.md</code> also drives <code>/speckit-clarify</code>, <code>/speckit-plan</code>, <code>/speckit-tasks</code>, and <code>/speckit-analyze</code> against that scaffold — the agentic equivalent of slash commands.</p>
       </div>
       <div class="about-block">
-        <h3>Two review gates</h3>
-        <p>Research review (after implementation, before paper drafting) and paper review (after compile, before posting) each require <span data-threshold-mirror="research_review_accept_pts">5</span> points. Human reviews count as <span data-threshold-mirror="human_review_score">1.0</span> point and LLM reviews as <span data-threshold-mirror="llm_review_score">0.5</span> point. Self-review (the same agent as the artifact's author) is rejected by the schema.</p>
+        <h3>Two review gates — every specialist must accept</h3>
+        <p>Research review and paper review require BOTH the points threshold (<span data-threshold-mirror="research_review_accept_pts">5</span>) AND an accept verdict from <em>every</em> specialist reviewer in its lane: 7 research specialists (idea quality, creativity, implementation correctness, completeness, code quality, data quality, filesystem hygiene) and 12 paper specialists (writing, logic, claims, over-reach, safety, evidence, statistics, code, data, formatting, figures, jargon). Human reviews count as <span data-threshold-mirror="human_review_score">1.0</span> point and LLM reviews as <span data-threshold-mirror="llm_review_score">0.5</span> point. Self-review is rejected by the schema.</p>
       </div>
       <div class="about-block">
         <h3>Free-first, fail-fast</h3>
@@ -324,7 +324,7 @@
 <div class="modal-backdrop" id="modal-review">
   <div class="modal" role="dialog" aria-modal="true">
     <h3>Add human review</h3>
-    <p class="sub">Human reviews count as 1.0 points; LLM reviews count as 0.5 points. Both review gates (research, paper) require ≥5 points to advance.</p>
+    <p class="sub">Human reviews count as 1.0 points; LLM reviews count as 0.5 points. Both review gates require BOTH ≥5 points AND an accept verdict from every specialist reviewer in the lane.</p>
     <input type="hidden" id="review-project-id" />
     <label class="field"><span class="l">Reviewing stage *</span>
       <select data-review="stage">

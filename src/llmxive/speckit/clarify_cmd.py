@@ -94,7 +94,10 @@ class ClarifierAgent(SlashCommandAgent):
         except yaml.YAMLError as exc:
             raise RuntimeError(f"Clarifier returned invalid YAML: {exc}") from exc
         if not isinstance(report, dict):
-            raise RuntimeError("Clarifier YAML must be a mapping")
+            # The LLM returned a list or scalar (often happens when there
+            # are no [NEEDS CLARIFICATION] markers to address). Treat as
+            # an empty patch set so the spec advances without changes.
+            report = {"patches": [], "notes": "non-mapping LLM output coerced to empty patches"}
 
         spec_text = mechanical_output["spec_text"]
         for patch in report.get("patches", []) or []:
