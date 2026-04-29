@@ -1,0 +1,83 @@
+$schema: "http://json-schema.org/draft-07/schema#"
+$id: "contracts/assessment.schema.yaml"
+title: "Assessment Schema"
+description: "Schema for validating assessment data across all timepoints"
+version: "1.0.0"
+
+type: object
+required:
+  - assessment_id
+  - participant_id
+  - timepoint
+  - assessment_date
+  - assessor_id
+
+properties:
+  assessment_id:
+    type: string
+    pattern: "^ASSESS-[0-9]{4}-T[0-9]$"
+    description: "Unique assessment identifier (format: ASSESS-XXXX-TN)"
+    examples:
+      - "ASSESS-0001-T0"
+      - "ASSESS-0001-T1"
+
+  participant_id:
+    type: string
+    pattern: "^ASD-[0-9]{4}$"
+    description: "Foreign key to Participant entity"
+
+  timepoint:
+    type: string
+    enum:
+      - "baseline"
+      - "post_intervention"
+      - "followup"
+    description: "Assessment timepoint"
+
+  assessment_date:
+    type: string
+    format: date
+    pattern: "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+    description: "Date assessment was administered"
+
+  assessor_id:
+    type: string
+    pattern: "^ASS-[0-9]{3}$"
+    description: "Blinded assessor identifier"
+    examples:
+      - "ASS-001"
+      - "ASS-005"
+
+  srs_total:
+    type: number
+    minimum: 0
+    maximum: 100
+    description: "SRS-2 Total T-score"
+    null: true
+
+  srs_social_communication:
+    type: number
+    minimum: 0
+    maximum: 100
+    description: "SRS Social Communication subscale"
+    null: true
+
+  srs_social_motivation:
+    type: number
+    minimum: 0
+    maximum: 100
+    description: "SRS Social Motivation subscale"
+    null: true
+
+  ssis_total:
+    type: number
+    minimum: 0
+    maximum: 150
+    description: "SSIS Total Standard Score"
+    null: true
+
+  erc_regulation:
+    type: number
+    minimum: 0
+    maximum: 100
+    description

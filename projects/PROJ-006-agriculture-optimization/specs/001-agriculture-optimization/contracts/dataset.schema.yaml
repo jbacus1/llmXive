@@ -1,0 +1,180 @@
+$schema: http://json-schema.org/draft-07/schema#
+$id: https://llmxive.org/schemas/agriculture-20250704-001/dataset.schema.yaml
+title: Climate-Smart Agriculture Dataset Schema
+description: Schema for validating raw and processed agricultural data
+version: 1.0.0
+
+type: object
+properties:
+  metadata:
+    type: object
+    properties:
+      dataset_id:
+        type: string
+        pattern: "^[a-z0-9-]+$"
+        description: "Unique dataset identifier"
+      created_at:
+        type: string
+        format: date-time
+      source:
+        type: string
+        enum:
+          - "remote_sensing"
+          - "survey"
+          - "climate_api"
+          - "synthetic"
+      version:
+        type: string
+        pattern: "^\\d+\\.\\d+\\.\\d+$"
+    required:
+      - dataset_id
+      - created_at
+      - source
+      - version
+
+  sites:
+    type: array
+    items:
+      type: object
+      properties:
+        site_id:
+          type: string
+          pattern: "^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$"
+          description: "UUID v4 format"
+        name:
+          type: string
+          minLength: 1
+          maxLength: 255
+        latitude:
+          type: number
+          minimum: -90
+          maximum: 90
+        longitude:
+          type: number
+          minimum: -180
+          maximum: 180
+        elevation:
+          type: number
+          minimum: -500
+          maximum: 9000
+        country:
+          type: string
+          pattern: "^[A-Z]{3}$"
+          description: "ISO 3166-1 alpha-3"
+        region:
+          type: string
+        land_use:
+          type: string
+          enum:
+            - "cropland"
+            - "pasture"
+            - "mixed"
+            - "forest_agro"
+            - "other"
+      required:
+        - site_id
+        - name
+        - latitude
+        - longitude
+        - country
+        - land_use
+
+  observations:
+    type: array
+    items:
+      type: object
+      properties:
+        observation_id:
+          type: string
+          pattern: "^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$"
+        site_id:
+          type: string
+          description: "Must reference valid site_id"
+        observation_date:
+          type: string
+          format: date
+        soil_ph:
+          type: number
+          minimum: 0
+          maximum: 14
+        soil_organic_carbon:
+          type: number
+          minimum: 0
+          maximum: 100
+        moisture_content:
+          type: number
+          minimum: 0
+          maximum: 100
+        temperature:
+          type: number
+          minimum: -50
+          maximum: 60
+        precipitation:
+          type: number
+          minimum: 0
+          maximum: 10000
+        notes:
+          type: string
+          maxLength: 1000
+      required:
+        - observation_id
+        - site_id
+        - observation_date
+
+  climate_records:
+    type: array
+    items:
+      type: object
+      properties:
+        record_id:
+          type: string
+          pattern: "^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$"
+        site_id:
+          type: string
+        period_start:
+          type: string
+          format: date
+        period_end:
+          type: string
+          format: date
+        avg_temperature:
+          type: number
+        max_temperature:
+          type: number
+        min_temperature:
+          type: number
+        total_precipitation:
+          type: number
+        extreme_event_count:
+          type: integer
+          minimum: 0
+        source:
+          type: string
+          enum:
+            - "WorldClim"
+            - "CHIRPS"
+            - "ERA5"
+            - "MODIS"
+            - "USGS"
+      required:
+        - record_id
+        - site_id
+        - period_start
+        - period_end
+        - source
+
+  practice_records:
+    type: array
+    items:
+      type: object
+      properties:
+        practice_id:
+          type: string
+          pattern: "^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$"
+        site_id:
+          type: string
+        practice_type:
+          type: string
+          enum:
+            - "conservation_tillage"
+            - "cover_cropping

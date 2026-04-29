@@ -1,0 +1,104 @@
+$schema: "http://json-schema.org/draft-07/schema#"
+$id: "contracts/participant.schema.yaml"
+title: "Participant Schema"
+description: "Schema for validating participant enrollment and demographic data"
+version: "1.0.0"
+
+type: object
+required:
+  - participant_id
+  - age
+  - sex
+  - diagnosis_date
+  - diagnosis_facility
+  - group_assignment
+  - consent_date
+  - assent_date
+  - enrollment_date
+  - status
+
+properties:
+  participant_id:
+    type: string
+    pattern: "^ASD-[0-9]{4}$"
+    description: "Unique anonymized identifier (format: ASD-XXXX)"
+    examples:
+      - "ASD-0001"
+      - "ASD-0060"
+
+  age:
+    type: integer
+    minimum: 8
+    maximum: 12
+    description: "Age in years at enrollment"
+
+  sex:
+    type: string
+    enum:
+      - "Male"
+      - "Female"
+      - "Other"
+      - "Prefer not to say"
+    description: "Biological sex at birth"
+
+  diagnosis_date:
+    type: string
+    format: date
+    pattern: "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+    description: "Date of ASD diagnosis (ISO 8601)"
+    examples:
+      - "2023-06-15"
+
+  diagnosis_facility:
+    type: string
+    minLength: 1
+    maxLength: 200
+    description: "Name of facility that provided ASD diagnosis"
+
+  group_assignment:
+    type: string
+    enum:
+      - "intervention"
+      - "control"
+    description: "Randomized group assignment"
+
+  consent_date:
+    type: string
+    format: date
+    pattern: "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+    description: "Date parent/guardian consent was obtained"
+
+  assent_date:
+    type: string
+    format: date
+    pattern: "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+    description: "Date child assent was obtained"
+
+  enrollment_date:
+    type: string
+    format: date
+    pattern: "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+    description: "Date participant was enrolled in study"
+
+  status:
+    type: string
+    enum:
+      - "active"
+      - "completed"
+      - "withdrawn"
+      - "lost_to_followup"
+    description: "Current participant status"
+
+  notes:
+    type: string
+    maxLength: 1000
+    description: "Optional notes about participant"
+
+additionalProperties: false
+
+# Validation rules (documented for implementation)
+# - participant_id must be unique across all participants
+# - age must be between 8 and 12 (inclusive)
+# - All dates must be in chronological order: diagnosis_date <= consent_date <= enrollment_date
+# - assent_date must be on or after enrollment_date
+# - If status is "withdrawn", withdrawal_reason is required (not shown in schema)

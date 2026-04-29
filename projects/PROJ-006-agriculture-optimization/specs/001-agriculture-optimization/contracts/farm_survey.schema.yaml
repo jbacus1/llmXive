@@ -1,0 +1,63 @@
+$schema: "http://json-schema.org/draft-07/schema#"
+$id: "https://llmxive.org/schemas/agriculture-20250704-001/farm_survey.schema.yaml"
+title: "Farm Survey Data Schema"
+description: "Canonical schema for farmer household and plot survey data. Source of Truth per Constitution Principle I."
+type: object
+required:
+  - farmer_id
+  - region_code
+  - plots
+properties:
+  farmer_id:
+    type: string
+    pattern: "^FARMER-[0-9]{6}$"
+    description: "Unique identifier for the household."
+  region_code:
+    type: string
+    pattern: "^[A-Z]{2}-[0-9]{3}$"
+    description: "ISO-like region code."
+  household_size:
+    type: integer
+    minimum: 1
+    maximum: 50
+  income_bracket:
+    type: string
+    enum: ["low", "medium", "high"]
+  plots:
+    type: array
+    items:
+      type: object
+      required:
+        - plot_id
+        - area_hectares
+        - practices
+      properties:
+        plot_id:
+          type: string
+          pattern: "^PLOT-[0-9]{6}$"
+        area_hectares:
+          type: number
+          minimum: 0.01
+        soil_type:
+          type: string
+          enum: ["sandy", "loam", "clay", "silt"]
+        practices:
+          type: array
+          items:
+            type: object
+            required:
+              - type
+              - start_date
+            properties:
+              type:
+                type: string
+                enum: ["agroforestry", "conservation", "improved_seeds", "irrigation"]
+              start_date:
+                type: string
+                format: date
+              intensity_level:
+                type: integer
+                minimum: 1
+                maximum: 5
+      additionalProperties: false
+additionalProperties: false

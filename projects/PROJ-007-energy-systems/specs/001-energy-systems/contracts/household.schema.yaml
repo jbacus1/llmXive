@@ -1,0 +1,103 @@
+$schema: https://json-schema.org/draft/2020-12/schema
+$id: https://llmxive.org/energy-20250704-001/contracts/household.schema.yaml
+title: Household
+description: Represents a low-income household participating in the energy inequity study
+version: 1.0.0
+
+type: object
+required:
+  - household_id
+  - income_bracket
+  - household_size
+  - housing_type
+  - energy_burden_pct
+  - community_id
+
+properties:
+  household_id:
+    type: string
+    format: uuid
+    description: Unique identifier for the household
+    pattern: "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+
+  income_bracket:
+    type: string
+    enum:
+      - "under_15k"
+      - "15k_to_25k"
+      - "25k_to_35k"
+      - "35k_to_50k"
+      - "over_50k"
+    description: Annual household income range
+
+  household_size:
+    type: integer
+    minimum: 1
+    maximum: 20
+    description: Number of residents in household
+
+  housing_type:
+    type: object
+    required:
+      - ownership
+      - structure
+    properties:
+      ownership:
+        type: string
+        enum:
+          - owner
+          - renter
+        description: Homeownership status
+      structure:
+        type: string
+        enum:
+          - single_family
+          - multi_family
+          - apartment
+          - mobile_home
+          - other
+        description: Building structure type
+
+  primary_heating_source:
+    type: string
+    enum:
+      - electric
+      - natural_gas
+      - propane
+      - oil
+      - wood
+      - other
+    description: Primary heating fuel source
+
+  energy_burden_pct:
+    type: number
+    minimum: 0
+    maximum: 100
+    description: Percentage of household income spent on energy costs
+    examples: [8.5, 12.3, 5.0]
+
+  community_id:
+    type: string
+    format: uuid
+    description: Reference to community location
+
+  enrollment_date:
+    type: string
+    format: date
+    description: Date household enrolled in study
+
+  consent_given:
+    type: boolean
+    description: Whether informed consent was obtained
+
+  data_retention_expiry:
+    type: string
+    format: date
+    description: Date after which raw data should be deleted
+
+  metadata:
+    type: object
+    description: Additional metadata
+    additionalProperties: true
+
+additionalProperties: false

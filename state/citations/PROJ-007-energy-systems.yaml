@@ -1,0 +1,11 @@
+- artifact_hash: 6fc1e2a39923f04cb41d44c955d1f8444eee6464f8dd090a6fc8fc50d36f18d2
+  artifact_path: projects/PROJ-007-energy-systems/specs/001-energy-systems/quickstart.md
+  cite_id: c-001
+  cited_authors: []
+  cited_title: null
+  fetched_title: null
+  kind: url
+  value: https://github.com/llmXive/energy-20250704-001.git
+  verification_status: mismatch
+  verified_against_url: https://github.com/llmXive/energy-20250704-001
+  verified_at: '2026-04-29T04:37:43.391102Z'

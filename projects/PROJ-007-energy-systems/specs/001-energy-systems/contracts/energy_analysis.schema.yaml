@@ -1,0 +1,130 @@
+$schema: https://json-schema.org/draft/2020-12/schema
+$id: https://llmxive.org/energy-20250704-001/contracts/energy_analysis.schema.yaml
+title: Energy Analysis Output
+description: Output schema for energy burden and feasibility analysis
+version: 1.0.0
+
+type: object
+required:
+  - analysis_id
+  - generated_at
+  - household_count
+  - results
+
+properties:
+  analysis_id:
+    type: string
+    format: uuid
+    description: Unique identifier for this analysis run
+
+  generated_at:
+    type: string
+    format: date-time
+    description: ISO 8601 timestamp when analysis was generated
+
+  household_count:
+    type: integer
+    minimum: 1
+    description: Number of households in analysis
+
+  results:
+    type: object
+    required:
+      - energy_burden
+      - feasibility
+    properties:
+      energy_burden:
+        type: object
+        required:
+          - average_pct
+          - median_pct
+          - households_above_threshold
+        properties:
+          average_pct:
+            type: number
+            minimum: 0
+            maximum: 100
+          median_pct:
+            type: number
+            minimum: 0
+            maximum: 100
+          households_above_threshold:
+            type: integer
+            minimum: 0
+          threshold_pct:
+            type: number
+            default: 6
+            description: Percentage threshold for energy poverty (default 6%)
+
+      feasibility:
+        type: object
+        required:
+          - solar_potential
+          - wind_potential
+          - geothermal_potential
+        properties:
+          solar_potential:
+            type: object
+            properties:
+              households_eligible:
+                type: integer
+              avg_installation_cost:
+                type: number
+              avg_payback_years:
+                type: number
+              recommended_programs:
+                type: array
+                items:
+                  type: string
+
+          wind_potential:
+            type: object
+            properties:
+              households_eligible:
+                type: integer
+              avg_installation_cost:
+                type: number
+              avg_payback_years:
+                type: number
+
+          geothermal_potential:
+            type: object
+            properties:
+              households_eligible:
+                type: integer
+              avg_installation_cost:
+                type: number
+              avg_payback_years:
+                type: number
+
+  recommendations:
+    type: array
+    items:
+      type: object
+      required:
+        - priority
+        - intervention_type
+        - estimated_impact
+      properties:
+        priority:
+          type: string
+          enum:
+            - high
+            - medium
+            - low
+        intervention_type:
+          type: string
+        estimated_impact:
+          type: object
+          properties:
+            cost_savings_annual:
+              type: number
+            households_benefiting:
+              type: integer
+
+  schema_version:
+    type: string
+    pattern: "^\\d+\\.\\d+\\.\\d+$"
+    description: Semantic version of this schema
+
+additionalProperties: false

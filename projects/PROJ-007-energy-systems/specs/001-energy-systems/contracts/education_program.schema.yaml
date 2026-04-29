@@ -1,0 +1,88 @@
+$schema: https://json-schema.org/draft/2020-12/schema
+$id: https://llmxive.org/energy-20250704-001/contracts/education_program.schema.yaml
+title: Education Program Enrollment
+description: Schema for tracking energy education program participation
+version: 1.0.0
+
+type: object
+required:
+  - enrollment_id
+  - household_id
+  - program_type
+  - start_date
+  - completion_status
+
+properties:
+  enrollment_id:
+    type: string
+    format: uuid
+    description: Unique identifier for enrollment record
+
+  household_id:
+    type: string
+    format: uuid
+    description: Reference to household
+
+  program_type:
+    type: string
+    enum:
+      - workshop
+      - one_on_one
+      - digital_course
+      - home_audit
+      - financing_assistance
+    description: Type of education program
+
+  start_date:
+    type: string
+    format: date
+    description: Program start date
+
+  end_date:
+    type: string
+    format: date
+    description: Program completion or end date
+
+  completion_status:
+    type: string
+    enum:
+      - completed
+      - in_progress
+      - dropped
+      - paused
+    description: Current enrollment status
+
+  pre_post_bill_avg:
+    type: object
+    description: Average bills before and after program
+    properties:
+      pre_program_avg:
+        type: number
+        minimum: 0
+      post_program_avg:
+        type: number
+        minimum: 0
+      percentage_change:
+        type: number
+        description: Percentage change (negative = savings)
+
+  materials_provided:
+    type: array
+    items:
+      type: string
+    description: Educational materials provided to household
+
+  follow_up_scheduled:
+    type: boolean
+    description: Whether follow-up contact was scheduled
+
+  notes:
+    type: string
+    description: Additional notes from program coordinator
+
+  schema_version:
+    type: string
+    pattern: "^\\d+\\.\\d+\\.\\d+$"
+    description: Semantic version of this schema
+
+additionalProperties: false
