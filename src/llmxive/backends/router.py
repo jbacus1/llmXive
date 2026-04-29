@@ -45,7 +45,14 @@ def chat_with_fallback(
     max_tokens: int | None = None,
     temperature: float | None = None,
 ) -> ChatResponse:
-    """Try default backend; on TransientBackendError, walk the fallback chain."""
+    """Try default backend; on TransientBackendError, walk the fallback chain.
+
+    If `max_tokens` is None we default to 8192 — Spec Kit agents (Tasker,
+    Specifier, Planner, paper-writers) frequently exceed the per-model
+    silent default (often 1024) and produce truncated output otherwise.
+    """
+    if max_tokens is None:
+        max_tokens = 8192
     chain = [default_backend, *fallback_backends]
     last_err: BackendError | None = None
     msg_list = list(messages)

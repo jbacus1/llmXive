@@ -61,7 +61,15 @@ def _cmd_run(args: argparse.Namespace) -> int:
         print(f"[run]   -> stage={updated.current_stage.value}")
         completed += 1
         if updated.current_stage == project.current_stage:
-            # Cycled (e.g., implementer still in_progress); stop to let
+            # In_progress / paper_in_progress legitimately stay in the
+            # same stage while the Implementer ticks off tasks one by
+            # one. Allow the loop to continue so multiple tasks complete
+            # in a single run; the loop will exit when --max-tasks is
+            # exhausted or run_one_step raises.
+            from llmxive.types import Stage
+            if updated.current_stage in {Stage.IN_PROGRESS, Stage.PAPER_IN_PROGRESS}:
+                continue
+            # Anything else: cycled (no real progress); stop and let
             # the scheduler reconsider next time.
             break
     print(f"[run] completed {completed} step(s)")
