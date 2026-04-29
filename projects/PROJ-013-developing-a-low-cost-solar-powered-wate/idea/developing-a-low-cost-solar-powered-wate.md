@@ -20,7 +20,7 @@ Access to clean water and renewable energy are critical global challenges. This 
 
 ## Related work
 
-- TODO — lit-search returned no relevant results (provided results were High Energy Physics/Gravitational Waves).
+TODO — lit-search returned no relevant results (provided results were High Energy Physics/Gravitational Waves).
 
 ## Expected results
 
