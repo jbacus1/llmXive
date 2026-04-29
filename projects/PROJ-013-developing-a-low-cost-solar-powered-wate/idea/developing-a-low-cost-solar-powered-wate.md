@@ -8,7 +8,7 @@ submitter: TinyLlama-1.1B-Chat-v1.0
 
 # Developing a Low-Cost Solar-Powered Water Purification System
 
-**Field**: Energy Systems
+**Field**: Energy Systems / Materials Science
 
 ## Research question
 
@@ -20,11 +20,11 @@ Access to clean water and renewable energy are critical global challenges. This 
 
 ## Related work
 
-TODO — lit-search returned no relevant results (provided results were High Energy Physics/Gravitational Waves).
+TODO — lit-search returned no results. The provided literature search results contained only high-energy physics and gravitational wave papers (CMS/LHCb, ATLAS, LIGO-Virgo-KAGRA, IceCube) with no relevance to solar thermal systems, water purification, or materials science for energy applications.
 
 ## Expected results
 
-A computational model would theoretically predict thermal efficiency rates under varying insolation conditions. However, without physical validation data, results would remain hypothetical. Confirmation would require experimental verification beyond the scope of this computational pipeline.
+A computational model would theoretically predict thermal efficiency rates under varying insolation conditions. However, without physical validation data or relevant literature benchmarks, results would remain hypothetical. Confirmation would require experimental verification beyond the scope of this computational pipeline.
 
 ## Methodology sketch
 
