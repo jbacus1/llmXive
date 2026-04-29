@@ -22,7 +22,7 @@
 - [X] T001 Create project structure per implementation plan (`projects/PROJ-002-evolutionary-pressure-on-alternative-spl/`)
 - [X] T002 Initialize Python 3.11 project with dependencies in `code/requirements.txt`
 - [X] T003 [P] Configure linting and formatting tools (black, flake8, isort)
-- [ ] T004 [P] Setup pytest configuration in `code/tests/`
+- [X] T004 [P] Setup pytest configuration in `code/tests/`
 
 ---
 
@@ -32,8 +32,8 @@
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete
 
-- [ ] T005 Create base configuration management in `code/src/utils/config.py`
-- [ ] T006 [P] Implement checksum utilities in `code/src/utils/checksum.py`
+- [X] T005 Create base configuration management in `code/src/utils/config.py`
+- [X] T006 [P] Implement checksum utilities in `code/src/utils/checksum.py`
 - [ ] T007 Setup SQLite metadata database schema for sample tracking
 - [ ] T008 [P] Create data model contracts in `code/specs/contracts/`
 - [ ] T009 Setup environment configuration with random seeds for reproducibility

@@ -1,6 +1,7 @@
 ---
-field: general
-keywords: [general]
+field: agriculture
+keywords:
+- agriculture
 submitter: legacy:llmxive-automation
 ---
 
