@@ -184,8 +184,8 @@
     },
     {
       "path": "src/llmxive/agents/advancement.py",
-      "accessCount": 7,
-      "lastAccessed": 1777435632041,
+      "accessCount": 8,
+      "lastAccessed": 1777481170197,
       "type": "file"
     },
     {
@@ -321,6 +321,12 @@
       "type": "file"
     },
     {
+      "path": "src/llmxive/config.py",
+      "accessCount": 2,
+      "lastAccessed": 1777481184892,
+      "type": "file"
+    },
+    {
       "path": ".specify/templates/constitution-template.md",
       "accessCount": 1,
       "lastAccessed": 1777388913682,
@@ -414,12 +420,6 @@
       "path": "src/llmxive/state/reviews.py",
       "accessCount": 1,
       "lastAccessed": 1777417585161,
-      "type": "file"
-    },
-    {
-      "path": "src/llmxive/config.py",
-      "accessCount": 1,
-      "lastAccessed": 1777417600788,
       "type": "file"
     },
     {

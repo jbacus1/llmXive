@@ -25,7 +25,7 @@ reviewer_kind: llm
 artifact_path: <relative path to the primary artifact reviewed, e.g. specs/001-.../tasks.md>
 artifact_hash: <SHA-256 hex of that file>
 verdict: accept | minor_revision | full_revision | reject
-score: 0.5                            # 0.5 ONLY when verdict == accept; else 0.0
+score: 1.0                            # 1.0 ONLY when verdict == accept; else 0.0
 ---
 <200-500 words of feedback in your lens. Cite specific files / line
 numbers / requirements. Do NOT critique aspects outside your lens —
