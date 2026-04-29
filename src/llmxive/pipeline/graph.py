@@ -71,9 +71,11 @@ STAGE_TO_AGENT: dict[Stage, str] = {
     Stage.ANALYZE_IN_PROGRESS: "tasker",
     Stage.ANALYZED: "implementer",
     Stage.IN_PROGRESS: "implementer",
-    # US3: at research_complete the project waits for at least one review
-    # record to exist, then auto-transitions to research_review (handled
-    # by advancement.evaluate); the dispatch table picks it up here.
+    # US3: research_complete is a brief checkpoint — kick straight into
+    # research_review so the specialist reviewers actually vote.
+    # (Previously the project just sat at research_complete waiting for
+    # a review to appear that no agent was producing.)
+    Stage.RESEARCH_COMPLETE: "research_reviewer",
     Stage.RESEARCH_REVIEW: "research_reviewer",
     # US4: paper-stage Spec Kit pipeline.
     Stage.RESEARCH_ACCEPTED: "paper_initializer",

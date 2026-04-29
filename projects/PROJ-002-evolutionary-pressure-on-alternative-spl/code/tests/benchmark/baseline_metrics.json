@@ -1,0 +1,37 @@
+{
+  "version": "1.0.0",
+  "created": "2024-01-15T00:00:00Z",
+  "metrics": {
+    "alignment_throughput": {
+      "target_reads_per_minute": 10000000,
+      "expected_mean_seconds": 0.1,
+      "tolerance_percent": 20
+    },
+    "psi_calculation": {
+      "target_max_seconds": 5.0,
+      "expected_mean_seconds": 0.5,
+      "tolerance_percent": 10
+    },
+    "differential_splicing": {
+      "target_max_seconds": 60.0,
+      "expected_mean_seconds": 5.0,
+      "tolerance_percent": 10
+    },
+    "memory_usage": {
+      "target_max_gb": 4.0,
+      "expected_peak_mb": 1024,
+      "tolerance_percent": 25
+    },
+    "full_pipeline": {
+      "target_max_seconds": 300.0,
+      "expected_mean_seconds": 5.45,
+      "tolerance_percent": 15
+    }
+  },
+  "hardware_baseline": {
+    "cpu": "Intel Xeon or equivalent",
+    "ram_gb": 16,
+    "storage": "NVMe SSD"
+  },
+  "notes": "Baseline metrics for comparison. Actual performance may vary based on hardware."
+}

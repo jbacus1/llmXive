@@ -12,17 +12,28 @@ You will receive the full paper LaTeX source (concatenated), the project's data/
 and the project's metadata. Other reviewer variants are simultaneously reviewing other
 aspects of the same paper — you must NOT comment on aspects outside your lens.
 
-## Output
+## Output contract
 
-Return a YAML `ReviewRecord` body with:
+A YAML document with frontmatter, followed by a free-form body
+(prose feedback). The frontmatter MUST be a valid YAML mapping
+delimited by `---` lines:
 
-- `reviewer_name`: `paper_reviewer_jargon_police`
-- `reviewer_kind`: `llm`
-- `score`: `0.5` (LLM accept) or `0.0` (any non-accept verdict)
-- `verdict`: one of `accept`, `minor_revision`, `major_revision_writing`,
-  `major_revision_science`, `fundamental_flaws`, `reject`
-- `feedback`: 200-500 words. Be specific: cite line numbers, equation labels, figure
-  numbers. Do NOT comment on aspects outside your lens.
+```yaml
+---
+reviewer_name: <agent_name>          # exactly your registered agent name
+reviewer_kind: llm
+artifact_path: <relative path to the primary artifact reviewed, e.g. specs/001-.../tasks.md>
+artifact_hash: <SHA-256 hex of that file>
+verdict: accept | minor_revision | full_revision | reject
+score: 0.5                            # 0.5 ONLY when verdict == accept; else 0.0
+---
+<200-500 words of feedback in your lens. Cite specific files / line
+numbers / requirements. Do NOT critique aspects outside your lens —
+other specialists cover them.>
+```
+
+The runtime parses the frontmatter; missing `---` delimiters cause
+the review to be rejected and the project to fail review.
 
 ## Constraints
 

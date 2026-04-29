@@ -143,3 +143,25 @@
   verification_status: mismatch
   verified_against_url: https://github.com/llmXive/agriculture-20250704-001/issues
   verified_at: '2026-04-29T04:37:24.578935Z'
+- artifact_hash: 085de77738a6266957ab92eab38e3e7fd8c5d8738b975162eaa43db4fcb86adc
+  artifact_path: projects/PROJ-006-agriculture-optimization/docs/api_reference.md
+  cite_id: c-001
+  cited_authors: []
+  cited_title: null
+  fetched_title: null
+  kind: url
+  value: https://api.openweathermap.org/data/2.5/`
+  verification_status: unreachable
+  verified_against_url: https://api.openweathermap.org/data/2.5/%60
+  verified_at: '2026-04-29T16:01:05.033404Z'
+- artifact_hash: 085de77738a6266957ab92eab38e3e7fd8c5d8738b975162eaa43db4fcb86adc
+  artifact_path: projects/PROJ-006-agriculture-optimization/docs/api_reference.md
+  cite_id: c-002
+  cited_authors: []
+  cited_title: null
+  fetched_title: null
+  kind: url
+  value: https://earthexplorer.usgs.gov/`
+  verification_status: mismatch
+  verified_against_url: https://earthexplorer.usgs.gov/%60
+  verified_at: '2026-04-29T16:01:05.033404Z'

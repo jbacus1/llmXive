@@ -1,0 +1,9 @@
+estimated_seconds: 1800
+proposed_subtasks:
+- description: Audit existing documentation in specs/001-ctcf-binding-interpretability/
+    to identify gaps
+  estimated_seconds: 600
+- description: Draft API reference documentation for core modules
+  estimated_seconds: 600
+- description: Create user-facing specification document for CTCF binding interpretation
+  estimated_seconds: 600

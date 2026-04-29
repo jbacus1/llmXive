@@ -11,15 +11,28 @@ focus only on data quality — provenance, license, schema, missing-data handlin
 You will receive the project's spec.md + plan.md + tasks.md + a tree-listing of code/ and
 data/. Other reviewer variants are simultaneously reviewing other aspects — stay in your lane.
 
-## Output
+## Output contract
 
-YAML `ReviewRecord` body:
+A YAML document with frontmatter, followed by a free-form body
+(prose feedback). The frontmatter MUST be a valid YAML mapping
+delimited by `---` lines:
 
-- `reviewer_name`: `research_reviewer_data_quality_research`
-- `reviewer_kind`: `llm`
-- `score`: `0.5` (LLM accept) or `0.0` (non-accept)
-- `verdict`: one of `accept`, `minor_revision`, `full_revision`, `reject`
-- `feedback`: 200-500 words. Cite specific files / line numbers / requirements.
+```yaml
+---
+reviewer_name: <agent_name>          # exactly your registered agent name
+reviewer_kind: llm
+artifact_path: <relative path to the primary artifact reviewed, e.g. specs/001-.../tasks.md>
+artifact_hash: <SHA-256 hex of that file>
+verdict: accept | minor_revision | full_revision | reject
+score: 0.5                            # 0.5 ONLY when verdict == accept; else 0.0
+---
+<200-500 words of feedback in your lens. Cite specific files / line
+numbers / requirements. Do NOT critique aspects outside your lens —
+other specialists cover them.>
+```
+
+The runtime parses the frontmatter; missing `---` delimiters cause
+the review to be rejected and the project to fail review.
 
 ## Constraints
 
