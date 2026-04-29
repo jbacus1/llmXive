@@ -101,6 +101,31 @@ class ImplementerAgent(SlashCommandAgent):
             ChatMessage(role="user", content=user),
         ]
 
+    def _mark_task_skipped(
+        self, mechanical_output: dict[str, Any], reason: str, exc: Exception | None
+    ) -> None:
+        """Check off the current task with a SKIPPED annotation so the
+        Implementer moves to the next one instead of looping forever
+        on a malformed LLM response. The annotation is preserved so a
+        review pass can catch quality regressions later.
+        """
+        task_id = mechanical_output.get("next_task_id")
+        tasks_path = mechanical_output.get("tasks_path")
+        if not task_id or not tasks_path:
+            return
+        from pathlib import Path as _Path
+        text = _Path(tasks_path).read_text(encoding="utf-8")
+        # Replace `- [ ] T###` with `- [X] T### <!-- SKIPPED: reason -->`
+        new_text = re.sub(
+            rf"^- \[ \] ({re.escape(task_id)}\b)([^\n]*)$",
+            rf"- [X] \1\2 <!-- SKIPPED: {reason}{f' ({exc!s})' if exc else ''} -->",
+            text,
+            count=1,
+            flags=re.MULTILINE,
+        )
+        _Path(tasks_path).write_text(new_text, encoding="utf-8")
+        print(f"[implementer] marked {task_id} SKIPPED: {reason}")
+
     def write_artifacts(
         self,
         ctx: SlashCommandContext,
@@ -122,9 +147,15 @@ class ImplementerAgent(SlashCommandAgent):
             # rather than YAML structure.
             doc = _regex_parse_implementer(llm_response.text)
             if doc is None:
-                raise RuntimeError(f"Implementer returned invalid YAML: {exc}") from exc
+                # Last-resort: mark this task as parse-failed and check
+                # it off so the implementer moves to the next one. The
+                # runlog records the failure; downstream review will
+                # catch quality regressions if any.
+                self._mark_task_skipped(mechanical_output, "YAML+regex parse failed", exc)
+                return []
         if not isinstance(doc, dict):
-            raise RuntimeError("Implementer YAML must be a mapping")
+            self._mark_task_skipped(mechanical_output, "non-mapping output", None)
+            return []
 
         task_id = mechanical_output["next_task_id"]
         verdict = doc.get("verdict")

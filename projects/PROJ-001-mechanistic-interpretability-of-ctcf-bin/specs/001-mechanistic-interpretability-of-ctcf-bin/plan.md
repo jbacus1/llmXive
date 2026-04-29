@@ -1,104 +1,105 @@
-# Implementation Plan: [FEATURE]
+# Implementation Plan: Mechanistic Interpretability of CTCF Binding-Site Selection
 
-**Branch**: `[###-feature-name]` | **Date**: [DATE] | **Spec**: [link]
-**Input**: Feature specification from `/specs/[###-feature-name]/spec.md`
-
-**Note**: This template is filled in by the `/speckit-plan` command. See `.specify/templates/plan-template.md` for the execution workflow.
+**Branch**: `001-ctcf-binding-interpretability` | **Date**: 2024-05-22 | **Spec**: specs/001-ctcf-binding-interpretability/spec.md
+**Input**: Feature specification from `/specs/001-ctcf-binding-interpretability/spec.md`
 
 ## Summary
 
-[Extract from feature spec: primary requirement + technical approach from research]
+This project implements a transformer-based sequence-context model to predict CTCF binding probability from DNA sequence and chromatin features, followed by mechanistic interpretability analysis using sparse autoencoders to identify latent features driving binding. The system ingests ENCODE ChIP-seq, ATAC-seq, and histone modification data for 10+ cell types, trains a predictive model, and validates findings through synthetic perturbation experiments.
 
 ## Technical Context
 
-<!--
-  ACTION REQUIRED: Replace the content in this section with the technical details
-  for the project. The structure here is presented in advisory capacity to guide
-  the iteration process.
--->
-
-**Language/Version**: [e.g., Python 3.11, Swift 5.9, Rust 1.75 or NEEDS CLARIFICATION]  
-**Primary Dependencies**: [e.g., FastAPI, UIKit, LLVM or NEEDS CLARIFICATION]  
-**Storage**: [if applicable, e.g., PostgreSQL, CoreData, files or N/A]  
-**Testing**: [e.g., pytest, XCTest, cargo test or NEEDS CLARIFICATION]  
-**Target Platform**: [e.g., Linux server, iOS 15+, WASM or NEEDS CLARIFICATION]
-**Project Type**: [e.g., library/cli/web-service/mobile-app/compiler/desktop-app or NEEDS CLARIFICATION]  
-**Performance Goals**: [domain-specific, e.g., 1000 req/s, 10k lines/sec, 60 fps or NEEDS CLARIFICATION]  
-**Constraints**: [domain-specific, e.g., <200ms p95, <100MB memory, offline-capable or NEEDS CLARIFICATION]  
-**Scale/Scope**: [domain-specific, e.g., 10k users, 1M LOC, 50 screens or NEEDS CLARIFICATION]
+**Language/Version**: Python 3.11  
+**Primary Dependencies**: PyTorch 2.1, transformers 4.36, scikit-learn 1.3, pandas 2.1, numpy 1.24  
+**Storage**: Local filesystem with manifest.json tracking; ENCODE data via public API  
+**Testing**: pytest 7.4, contract tests against schema definitions  
+**Target Platform**: Linux server with GPU support  
+**Project Type**: computational biology research pipeline  
+**Performance Goals**: Model convergence within 48 hours; inference <10 seconds per kilobase  
+**Constraints**: Memory <200GB for training; fixed context window 2048bp  
+**Scale/Scope**: 10+ cell types, 1M+ sequence contexts, 3-5 interpretable latent features
 
 ## Constitution Check
 
 *GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
-[Gates determined based on constitution file]
+| Principle | Compliance Status | Implementation Notes |
+|-----------|-------------------|---------------------|
+| I. Reproducibility | COMPLIANT | Random seeds pinned in code; ENCODE accessions tracked in data/manifest.json; reproducible on fresh GitHub Actions runner |
+| II. Verified Accuracy | COMPLIANT | All external citations will be validated by Reference-Validator; no fabricated URLs; title-token-overlap ≥0.7 threshold enforced |
+| III. Data Hygiene | COMPLIANT | All files under data/ checksummed; checksums recorded in state/ artifact_hashes; raw data preserved unchanged |
+| IV. Single Source of Truth | COMPLIANT | All figures/statistics trace to exactly one data row and one code block; derived numbers not hand-typed |
+| V. Versioning Discipline | COMPLIANT | Every artifact carries content hash; state YAML updated on artifact changes; Advancement-Evaluator invalidates stale records |
+| VI. Biological Validity | COMPLIANT | Predictions validated against independent ENCODE ChIP-seq and CRISPRi perturbation studies; causal claims supported by perturbation evidence |
 
 ## Project Structure
 
 ### Documentation (this feature)
 
 ```text
-specs/[###-feature]/
+specs/001-ctcf-binding-interpretability/
 ├── plan.md              # This file (/speckit-plan command output)
 ├── research.md          # Phase 0 output (/speckit-plan command)
 ├── data-model.md        # Phase 1 output (/speckit-plan command)
 ├── quickstart.md        # Phase 1 output (/speckit-plan command)
 ├── contracts/           # Phase 1 output (/speckit-plan command)
+│   ├── sequence_context.schema.yaml
+│   ├── latent_feature.schema.yaml
+│   └── binding_prediction.schema.yaml
 └── tasks.md             # Phase 2 output (/speckit-tasks command - NOT created by /speckit-plan)
 ```
 
 ### Source Code (repository root)
-<!--
-  ACTION REQUIRED: Replace the placeholder tree below with the concrete layout
-  for this feature. Delete unused options and expand the chosen structure with
-  real paths (e.g., apps/admin, packages/something). The delivered plan must
-  not include Option labels.
--->
 
 ```text
-# [REMOVE IF UNUSED] Option 1: Single project (DEFAULT)
-src/
-├── models/
-├── services/
-├── cli/
-└── lib/
-
-tests/
-├── contract/
-├── integration/
-└── unit/
-
-# [REMOVE IF UNUSED] Option 2: Web application (when "frontend" + "backend" detected)
-backend/
-├── src/
+projects/PROJ-001-mechanistic-interpretability-of-ctcf-bin/
+├── code/
+│   ├── __init__.py
+│   ├── requirements.txt
+│   ├── data/
+│   │   ├── __init__.py
+│   │   ├── loader.py              # ENCODE data ingestion (FR-001)
+│   │   └── preprocess.py          # Normalization and alignment (FR-001)
 │   ├── models/
-│   ├── services/
-│   └── api/
-└── tests/
-
-frontend/
-├── src/
-│   ├── components/
-│   ├── pages/
-│   └── services/
-└── tests/
-
-# [REMOVE IF UNUSED] Option 3: Mobile + API (when "iOS/Android" detected)
-api/
-└── [same as backend above]
-
-ios/ or android/
-└── [platform-specific structure: feature modules, UI flows, platform tests]
+│   │   ├── __init__.py
+│   │   ├── transformer.py         # Transformer architecture (FR-002)
+│   │   └── sae.py                 # Sparse autoencoder (FR-003)
+│   ├── training/
+│   │   ├── __init__.py
+│   │   ├── train.py               # Model training loop (FR-002)
+│   │   └── inference.py           # Prediction script (FR-002)
+│   ├── interpretation/
+│   │   ├── __init__.py
+│   │   ├── feature_attribution.py # Feature attribution analysis (FR-003)
+│   │   └── perturbation.py        # Synthetic perturbation (FR-004)
+│   └── validation/
+│       ├── __init__.py
+│       ├── significance.py        # Statistical testing (FR-005)
+│       └── motif_analysis.py      # Motif correspondence (FR-003)
+├── data/
+│   ├── manifest.json              # Accession numbers and checksums
+│   └── processed/                 # Derived datasets (checksummed)
+├── tests/
+│   ├── unit/
+│   │   ├── test_loader.py
+│   │   ├── test_transformer.py
+│   │   └── test_sae.py
+│   ├── contract/
+│   │   ├── test_sequence_context.py
+│   │   ├── test_latent_feature.py
+│   │   └── test_binding_prediction.py
+│   └── integration/
+│       └── test_pipeline.py
+└── state/
+    └── projects/PROJ-001-mechanistic-interpretability-of-ctcf-bin.yaml
 ```
 
-**Structure Decision**: [Document the selected structure and reference the real
-directories captured above]
+**Structure Decision**: Single project structure (Option 1) selected as this is a computational research pipeline without frontend requirements. All modules organized by functional responsibility under code/. Contract tests in tests/contract/ validate against schema definitions in contracts/.
 
 ## Complexity Tracking
 
-> **Fill ONLY if Constitution Check has violations that must be justified**
-
 | Violation | Why Needed | Simpler Alternative Rejected Because |
 |-----------|------------|-------------------------------------|
-| [e.g., 4th project] | [current need] | [why 3 projects insufficient] |
-| [e.g., Repository pattern] | [specific problem] | [why direct DB access insufficient] |
+| Sparse Autoencoder layer | Required for mechanistic interpretability (FR-003) | Standard feature attribution insufficient to identify latent feature directions |
+| Multi-cell-type support | Required for generalization validation (SC-001) | Single cell-type analysis would not validate cross-cell-type predictive power |
+| Synthetic perturbation pipeline | Required for causal validation (FR-004, SC-003) | Correlation alone does not establish mechanistic causality |

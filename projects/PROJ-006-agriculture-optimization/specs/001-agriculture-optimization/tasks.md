@@ -96,8 +96,8 @@
 - [X] T027 [US2] Implement time series analysis for historical climate patterns
 - [X] T028 [US2] Implement regression analysis for yield prediction
 - [X] T029 [US2] Add GIS-based risk mapping in src/services/gis_mapper.py
-- [ ] T030 [US2] Add validation and error handling for risk calculations
-- [ ] T031 [US2] Add logging for climate risk assessment operations
+- [X] T030 [US2] Add validation and error handling for risk calculations
+- [X] T031 [US2] Add logging for climate risk assessment operations
 
 **Checkpoint**: At this point, User Stories 1 AND 2 should both work independently
 
@@ -111,13 +111,13 @@
 
 ### Tests for User Story 3 ⚠️
 
-- [ ] T032 [P] [US3] Contract test for recommendation output in tests/contract/test_recommendation_schema.py
-- [ ] T033 [P] [US3] Integration test for recommendation pipeline in tests/integration/test_recommendations.py
+- [X] T032 [P] [US3] Contract test for recommendation output in tests/contract/test_recommendation_schema.py
+- [X] T033 [P] [US3] Integration test for recommendation pipeline in tests/integration/test_recommendations.py
 
 ### Implementation for User Story 3
 
-- [ ] T034 [P] [US3] Create adoption_rate model in src/models/adoption_rate.py
-- [ ] T035 [P] [US3] Create crop_yield model in src/models/crop_yield.py
+- [X] T034 [P] [US3] Create adoption_rate model in src/models/adoption_rate.py
+- [X] T035 [P] [US3] Create crop_yield model in src/models/crop_yield.py
 - [ ] T036 [US3] Implement recommendation logic in src/services/recommendation_engine.py
 - [ ] T037 [US3] Integrate sustainability, ecosystem service, and social equity principles
 - [ ] T038 [US3] Add validation for recommendation outputs

@@ -1,0 +1,54 @@
+$schema: http://json-schema.org/draft-07/schema#
+title: Solvent Condition Schema
+description: Schema for validating solvent condition configuration data
+type: object
+properties:
+  solvent_id:
+    type: string
+    pattern: "^[a-z]+_[0-9]+$"
+    description: "Unique identifier for solvent condition"
+  name:
+    type: string
+    description: "Common solvent name"
+  dielectric_constant:
+    type: number
+    minimum: 1.0
+    maximum: 100.0
+    description: "Dielectric constant (ε) at 25°C"
+  temperature:
+    type: number
+    minimum: 24.5
+    maximum: 25.5
+    description: "Measurement temperature (°C), expected 25.0 ± 0.5"
+  volume_ml:
+    type: number
+    minimum: 0.1
+    description: "Sample volume in milliliters"
+  manufacturer:
+    type: string
+    minLength: 1
+    description: "Chemical supplier"
+  lot_number:
+    type: string
+    minLength: 1
+    description: "Batch/lot identifier"
+  purity_percent:
+    type: number
+    minimum: 90.0
+    maximum: 100.0
+    description: "Purity percentage"
+  purity_certificate_path:
+    type: string
+    pattern: "^data/chemicals/.*$"
+    description: "Path to certificate file in data/chemicals/"
+required:
+  - solvent_id
+  - name
+  - dielectric_constant
+  - temperature
+  - volume_ml
+  - manufacturer
+  - lot_number
+  - purity_percent
+  - purity_certificate_path
+additionalProperties: false

@@ -120,11 +120,11 @@
 - [X] T040 [P] [US3] Create regulatory region entity model in `code/src/models/regulatory_region.py`
 - [X] T041 [US3] Implement phyloP sequence extractor in `code/src/analysis/phylo_extractor.py`
 - [X] T042 [US3] Implement flanking intronic sequence extraction (±500bp)
-- [ ] T043 [US3] Implement enrichment analysis in `code/src/analysis/enrichment_test.py`
-- [ ] T044 [US3] Apply Benjamini-Hochberg FDR correction for enrichment (p < 0.05 per SC-003)
-- [ ] T045 [US3] Implement validation module for orthogonal dataset comparison
-- [ ] T046 [US3] Add support for phyloP conservation score handling (including missing data cases)
-- [ ] T047 [US3] Add logging for selection analysis and validation operations
+- [X] T043 [US3] Implement enrichment analysis in `code/src/analysis/enrichment_test.py`
+- [X] T044 [US3] Apply Benjamini-Hochberg FDR correction for enrichment (p < 0.05 per SC-003)
+- [X] T045 [US3] Implement validation module for orthogonal dataset comparison
+- [X] T046 [US3] Add support for phyloP conservation score handling (including missing data cases)
+- [X] T047 [US3] Add logging for selection analysis and validation operations
 
 **Checkpoint**: All user stories should now be independently functional
 

@@ -1,1 +1,11 @@
-[]
+- artifact_hash: ca2563bca8bf3fe76a06396a8cef10cc78af97f9c56773cdb94b52299ae61e89
+  artifact_path: projects/PROJ-001-mechanistic-interpretability-of-ctcf-bin/specs/001-mechanistic-interpretability-of-ctcf-bin/quickstart.md
+  cite_id: c-001
+  cited_authors: []
+  cited_title: null
+  fetched_title: ENCODE
+  kind: url
+  value: https://www.encodeproject.org/
+  verification_status: verified
+  verified_against_url: https://www.encodeproject.org/
+  verified_at: '2026-04-29T15:35:00.077138Z'

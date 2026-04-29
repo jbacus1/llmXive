@@ -1,0 +1,64 @@
+$schema: "http://json-schema.org/draft-07/schema#"
+title: "SequenceContext"
+description: "DNA sequence paired with local chromatin accessibility and histone modification profiles"
+type: object
+properties:
+  sequence_id:
+    type: string
+    description: "Unique identifier for the genomic locus"
+    pattern: "^[a-zA-Z0-9_-]+$"
+  genome_build:
+    type: string
+    description: "Genome assembly version"
+    enum: ["GRCh38", "hg38", "GRCh37", "hg19"]
+  chromosome:
+    type: string
+    description: "Chromosome name"
+    pattern: "^chr[0-9XYM]+$"
+  start_position:
+    type: integer
+    description: "Start coordinate (0-based)"
+    minimum: 0
+  end_position:
+    type: integer
+    description: "End coordinate (0-based)"
+    minimum: 0
+  cell_type:
+    type: string
+    description: "Cell type identifier"
+    minLength: 1
+  dna_sequence:
+    type: string
+    description: "DNA sequence string"
+    pattern: "^[ACGTNacgtn]+$"
+  chromatin_accessibility:
+    type: array
+    description: "ATAC-seq signal array"
+    items:
+      type: number
+  histone_modifications:
+    type: object
+    description: "Dict of histone mark signals"
+    additionalProperties:
+      type: array
+      items:
+        type: number
+  ctcf_chipseq:
+    type: array
+    description: "CTCF ChIP-seq signal (ground truth)"
+    items:
+      type: number
+  context_window:
+    type: integer
+    description: "Fixed size in base pairs"
+    enum: [2048]
+required:
+  - sequence_id
+  - genome_build
+  - chromosome
+  - start_position
+  - end_position
+  - cell_type
+  - dna_sequence
+  - context_window
+additionalProperties: false

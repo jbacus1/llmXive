@@ -1,0 +1,49 @@
+$schema: "http://json-schema.org/draft-07/schema#"
+title: "BindingPrediction"
+description: "Output probability of CTCF binding for a given genomic locus"
+type: object
+properties:
+  prediction_id:
+    type: string
+    description: "Unique identifier for the prediction"
+    pattern: "^[a-zA-Z0-9_-]+$"
+  sequence_id:
+    type: string
+    description: "Reference to SequenceContext"
+    pattern: "^[a-zA-Z0-9_-]+$"
+  binding_probability:
+    type: number
+    description: "Probability score"
+    minimum: 0
+    maximum: 1
+  confidence_interval:
+    type: array
+    description: "95% confidence interval"
+    items:
+      type: number
+    minItems: 2
+    maxItems: 2
+  feature_contributions:
+    type: object
+    description: "Dict of latent feature contributions"
+    additionalProperties:
+      type: number
+  attribution_method:
+    type: string
+    description: "Method used for attribution"
+    enum: ["integrated_gradients", "saliency", "deep_lift", "sae_decomposition"]
+  timestamp:
+    type: string
+    description: "Prediction timestamp"
+    format: "date-time"
+  model_version:
+    type: string
+    description: "Model checkpoint identifier"
+    pattern: "^[a-zA-Z0-9_.-]+$"
+required:
+  - prediction_id
+  - sequence_id
+  - binding_probability
+  - attribution_method
+  - model_version
+additionalProperties: false

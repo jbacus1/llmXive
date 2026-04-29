@@ -1,0 +1,48 @@
+$schema: "http://json-schema.org/draft-07/schema#"
+title: "LatentFeature"
+description: "Interpretable direction in the model's activation space corresponding to biological determinants"
+type: object
+properties:
+  feature_id:
+    type: string
+    description: "Unique identifier for the latent feature"
+    pattern: "^[a-zA-Z0-9_-]+$"
+  layer_index:
+    type: integer
+    description: "Transformer layer where feature was extracted"
+    minimum: 0
+  feature_vector:
+    type: array
+    description: "Weight vector in activation space"
+    items:
+      type: number
+  sparsity_score:
+    type: number
+    description: "L1/L2 ratio indicating feature sparsity"
+    minimum: 0
+    maximum: 1
+  motif_correspondence:
+    type: object
+    description: "Dict mapping to known motifs"
+    additionalProperties:
+      type: string
+  cell_types_active:
+    type: array
+    description: "List of cell types where feature is active"
+    items:
+      type: string
+  activation_threshold:
+    type: number
+    description: "Activation threshold for feature detection"
+    minimum: 0
+  biological_annotation:
+    type: string
+    description: "Text description of biological function"
+    minLength: 1
+required:
+  - feature_id
+  - layer_index
+  - feature_vector
+  - sparsity_score
+  - cell_types_active
+additionalProperties: false

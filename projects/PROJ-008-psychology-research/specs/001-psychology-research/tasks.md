@@ -43,8 +43,8 @@
 - [X] T006 [P] Create `contracts/assessment.schema.yaml` defining outcome measures and timepoints
 - [X] T007 [P] Create `contracts/intervention.schema.yaml` defining session logs and adherence metrics
 - [X] T008 Implement Pydantic models in `src/models/data_models.py` reflecting contracts
-- [ ] T009 Implement validation utilities in `src/lib/validators.py` for schema compliance checks
-- [ ] T010 Configure environment configuration management for IRB-protected paths in `.env.example`
+- [X] T009 Implement validation utilities in `src/lib/validators.py` for schema compliance checks
+- [X] T010 Configure environment configuration management for IRB-protected paths in `.env.example`
 
 **Checkpoint**: Foundation ready - user story implementation can now begin in parallel
 
@@ -60,14 +60,14 @@
 
 > **NOTE: Write these tests FIRST, ensure they FAIL before implementation**
 
-- [ ] T011 [P] [US1] Unit test for `src/lib/validators.py` in `tests/unit/test_validators.py`
-- [ ] T012 [P] [US1] Contract test for participant schema in `tests/contract/test_participant_schema.py`
-- [ ] T013 [P] [US1] Contract test for assessment schema in `tests/contract/test_assessment_schema.py`
+- [X] T011 [P] [US1] Unit test for `src/lib/validators.py` in `tests/unit/test_validators.py`
+- [X] T012 [P] [US1] Contract test for participant schema in `tests/contract/test_participant_schema.py`
+- [X] T013 [P] [US1] Contract test for assessment schema in `tests/contract/test_assessment_schema.py`
 
 ### Implementation for User Story 1
 
-- [ ] T014 [P] [US1] Create data collector interface in `src/services/data_collector.py`
-- [ ] T015 [P] [US1] Implement raw data storage logic in `data/raw/` with HIPAA-compliant naming
+- [X] T014 [P] [US1] Create data collector interface in `src/services/data_collector.py`
+- [X] T015 [P] [US1] Implement raw data storage logic in `data/raw/` with HIPAA-compliant naming
 - [ ] T016 [US1] Add validation and error handling for data ingestion pipeline
 - [ ] T017 [US1] Add logging for data collection operations in `src/services/data_collector.py`
 
