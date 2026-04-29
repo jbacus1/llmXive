@@ -27,7 +27,13 @@ from llmxive.speckit.slash_command import SlashCommandAgent, SlashCommandContext
 
 
 CLARIFY_MARKER_RE = re.compile(
-    r"\[NEEDS CLARIFICATION:\s*(?P<question>[^\]]+)\]",
+    # Match BOTH the canonical bracket form `[NEEDS CLARIFICATION: …]`
+    # AND the markdown-bold form `**NEEDS CLARIFICATION**: …` that the
+    # Specifier LLM tends to produce. Bracket form: question is up to
+    # closing `]`. Bold form: question runs to end of line.
+    r"\[NEEDS CLARIFICATION:\s*(?P<bq>[^\]]+)\]"
+    r"|"
+    r"\*\*NEEDS CLARIFICATION\*\*\s*:\s*(?P<mq>[^\n]+)",
     re.IGNORECASE | re.DOTALL,
 )
 
@@ -49,7 +55,10 @@ class ClarifierAgent(SlashCommandAgent):
         spec_path = self._spec_path(ctx)
         text = spec_path.read_text(encoding="utf-8")
         markers = [
-            {"index": i, "question": m.group("question").strip()}
+            {
+                "index": i,
+                "question": (m.group("bq") or m.group("mq") or "").strip(),
+            }
             for i, m in enumerate(CLARIFY_MARKER_RE.finditer(text))
         ]
         return {
@@ -100,22 +109,27 @@ class ClarifierAgent(SlashCommandAgent):
             report = {"patches": [], "notes": "non-mapping LLM output coerced to empty patches"}
 
         spec_text = mechanical_output["spec_text"]
-        for patch in report.get("patches", []) or []:
-            idx = patch.get("marker_index")
-            replacement = patch.get("replacement", "")
-            if idx is None:
-                continue
-            # Replace the Nth occurrence in order.
-            count = 0
+        patches = report.get("patches", []) or []
+        patches_by_index = {p.get("marker_index"): p for p in patches if p.get("marker_index") is not None}
+        # Replace markers in order. Any marker that the LLM didn't patch
+        # gets a defensible default note appended so the spec doesn't
+        # carry [NEEDS CLARIFICATION] all the way through tasking.
+        count_holder = {"n": 0}
 
-            def _sub(match: re.Match[str]) -> str:
-                nonlocal count
-                count += 1
-                if count - 1 == idx:
-                    return replacement
-                return match.group(0)
+        def _sub(match: re.Match[str]) -> str:
+            idx = count_holder["n"]
+            count_holder["n"] += 1
+            patch = patches_by_index.get(idx)
+            if patch and patch.get("replacement"):
+                return patch["replacement"]
+            # Fallback: convert into a 'Resolved by default' note rather
+            # than leaving the marker. This unblocks the pipeline; the
+            # downstream Tasker / Reviewer can flag if the default is
+            # inappropriate.
+            question = (match.group("bq") or match.group("mq") or "").strip()
+            return f"_(Resolved by default; LLM clarifier could not pin a value: {question})_"
 
-            spec_text = CLARIFY_MARKER_RE.sub(_sub, spec_text)
+        spec_text = CLARIFY_MARKER_RE.sub(_sub, spec_text)
         spec_path.write_text(spec_text, encoding="utf-8")
         return [str(spec_path.relative_to(repo))]
 

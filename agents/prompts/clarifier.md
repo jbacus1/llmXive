@@ -51,11 +51,23 @@ remaining_questions:  # only when verdict ∈ {escalate, partial}
 
 ## Rules
 
-- NEVER invent an answer that primary sources do not support
-  (Constitution Principle II).
-- If a marker concerns scope or business preference (no primary
-  source can answer), emit `escalate` for that marker rather than
-  guessing.
-- A `partial` verdict is allowed: resolve what you can, escalate the
-  rest.
+- Strongly prefer `resolved` over `escalate`. The pipeline is
+  autonomous; escalations stop research progress until a human
+  intervenes. Pick a defensible default based on common practice in
+  the field, document it as such, and move on.
+- For statistical/methodological clarifications (e.g., "what FDR
+  threshold?", "what minimum sample size?"), pick a community-standard
+  value (FDR&nbsp;≤&nbsp;0.05, |effect|&nbsp;≥&nbsp;0.1, n&nbsp;≥&nbsp;3 biological replicates,
+  power&nbsp;≥&nbsp;0.8 etc.) and cite it as "convention in the field, see X"
+  rather than escalating.
+- For scope clarifications (e.g., "should we include species X?"),
+  pick the narrowest scope that still answers the research question
+  and document the boundary in the replacement text.
+- Only `escalate` when a clarification genuinely depends on something
+  no agent can decide (e.g., access to private data, ethical review
+  outcome). NEVER escalate for design choices the LLM can pick a
+  sensible default for.
+- NEVER invent factual claims that primary sources do not support
+  (Constitution Principle II) — but methodological defaults are not
+  factual claims, they're agreed-upon practice.
 - Output ONLY the YAML document.

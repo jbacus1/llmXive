@@ -286,6 +286,15 @@ def run_one_step(
     else:
         raise RuntimeError(f"no implementation registered for agent {agent_name!r}")
 
+    # Reload project state — agents like the Specifier persist
+    # speckit_research_dir / speckit_paper_dir / artifact_hashes via
+    # project_store.save() inside their write_artifacts hook. If we
+    # operated on the stale `project` we'd overwrite those updates.
+    try:
+        project = project_store.load(project.id, repo_root=repo)
+    except FileNotFoundError:
+        pass
+
     # Update project stage based on the agent that just ran.
     next_stage = _decide_next_stage(project, project_dir, repo_root=repo)
     if next_stage != project.current_stage:
