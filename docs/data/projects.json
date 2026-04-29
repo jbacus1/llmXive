@@ -5,7 +5,7 @@
     "human_contributors": 0,
     "papers_posted": 0,
     "total_collaborations": 0,
-    "total_contributions": 79,
+    "total_contributions": 87,
     "total_contributors": 7
   },
   "contributors": [
@@ -16,7 +16,7 @@
         "energy",
         "psychology"
       ],
-      "contribution_count": 79,
+      "contribution_count": 87,
       "kind": "llm",
       "name": "qwen.qwen3.5-122b"
     },
@@ -62,7 +62,7 @@
       "name": "Qwen2.5-1.5B-Instruct"
     }
   ],
-  "generated_at": "2026-04-29T12:50:21.638729+00:00",
+  "generated_at": "2026-04-29T13:08:18.053239+00:00",
   "projects": [
     {
       "artifact_links": {
@@ -180,7 +180,7 @@
     {
       "artifact_links": {
         "citations": "state/citations/PROJ-002-evolutionary-pressure-on-alternative-spl.yaml",
-        "code": null,
+        "code": "projects/PROJ-002-evolutionary-pressure-on-alternative-spl/code",
         "data": null,
         "idea": "projects/PROJ-002-evolutionary-pressure-on-alternative-spl/idea/evolutionary-pressure-on-alternative-spl.md",
         "paper_figures": null,
@@ -202,7 +202,7 @@
         "verified": 0
       },
       "created_at": "2026-04-29T02:44:28.710016+00:00",
-      "current_stage": "planned",
+      "current_stage": "in_progress",
       "description": "Field: biology To what extent does alternative splicing divergence in primate cortex correlate with positive selection on splicing regulatory elements? Alternative splicing significantly increases proteomic complexity, yet the evolutionary drivers of splicing divergence across primates remain poorly understood. This\u2026",
       "field": "biology",
       "id": "PROJ-002-evolutionary-pressure-on-alternative-spl",
@@ -210,6 +210,62 @@
         "biology"
       ],
       "last_run_log": [
+        {
+          "agent": "implementer",
+          "duration_s": 24.05265,
+          "ended_at": "2026-04-29T13:08:05.226208Z",
+          "outcome": "success",
+          "started_at": "2026-04-29T13:07:41.173558Z"
+        },
+        {
+          "agent": "implementer",
+          "duration_s": 53.134674,
+          "ended_at": "2026-04-29T13:07:41.136375Z",
+          "outcome": "success",
+          "started_at": "2026-04-29T13:06:48.001701Z"
+        },
+        {
+          "agent": "implementer",
+          "duration_s": 14.089221,
+          "ended_at": "2026-04-29T13:06:47.974625Z",
+          "outcome": "success",
+          "started_at": "2026-04-29T13:06:33.885404Z"
+        },
+        {
+          "agent": "implementer",
+          "duration_s": 17.770209,
+          "ended_at": "2026-04-29T13:02:54.406487Z",
+          "outcome": "success",
+          "started_at": "2026-04-29T13:02:36.636278Z"
+        },
+        {
+          "agent": "implementer",
+          "duration_s": 12.488435,
+          "ended_at": "2026-04-29T13:02:36.611716Z",
+          "outcome": "success",
+          "started_at": "2026-04-29T13:02:24.123281Z"
+        },
+        {
+          "agent": "implementer",
+          "duration_s": 16.194232,
+          "ended_at": "2026-04-29T13:02:24.088172Z",
+          "outcome": "success",
+          "started_at": "2026-04-29T13:02:07.893940Z"
+        },
+        {
+          "agent": "tasker",
+          "duration_s": 634.195325,
+          "ended_at": "2026-04-29T13:01:48.318263Z",
+          "outcome": "success",
+          "started_at": "2026-04-29T12:51:14.122938Z"
+        },
+        {
+          "agent": "tasker",
+          "duration_s": 665.686315,
+          "ended_at": "2026-04-29T12:50:50.419033Z",
+          "outcome": "success",
+          "started_at": "2026-04-29T12:39:44.732718Z"
+        },
         {
           "agent": "planner",
           "duration_s": 87.644184,
@@ -223,41 +279,6 @@
           "ended_at": "2026-04-29T12:37:50.052157Z",
           "outcome": "success",
           "started_at": "2026-04-29T12:37:27.041670Z"
-        },
-        {
-          "agent": "clarifier",
-          "duration_s": 15.7964,
-          "ended_at": "2026-04-29T12:36:38.868377Z",
-          "outcome": "success",
-          "started_at": "2026-04-29T12:36:23.071977Z"
-        },
-        {
-          "agent": "clarifier",
-          "duration_s": 29.000036,
-          "ended_at": "2026-04-29T12:34:34.542761Z",
-          "outcome": "success",
-          "started_at": "2026-04-29T12:34:05.542725Z"
-        },
-        {
-          "agent": "specifier",
-          "duration_s": 33.942993,
-          "ended_at": "2026-04-29T12:33:06.611325Z",
-          "outcome": "success",
-          "started_at": "2026-04-29T12:32:32.668332Z"
-        },
-        {
-          "agent": "project_initializer",
-          "duration_s": 25.24225,
-          "ended_at": "2026-04-29T12:32:20.863896Z",
-          "outcome": "success",
-          "started_at": "2026-04-29T12:31:55.621646Z"
-        },
-        {
-          "agent": "flesh_out",
-          "duration_s": 94.237489,
-          "ended_at": "2026-04-29T12:31:31.932903Z",
-          "outcome": "success",
-          "started_at": "2026-04-29T12:29:57.695414Z"
         }
       ],
       "phase_group": "research_speckit",
@@ -267,7 +288,7 @@
       "speckit_research_dir": "projects/PROJ-002-evolutionary-pressure-on-alternative-spl/specs/001-evolutionary-pressure-on-alternative-spl",
       "submitter": "system:brainstorm-seed",
       "title": "Evolutionary Pressure on Alternative Splicing in Primates",
-      "updated_at": "2026-04-29T12:39:29.673389+00:00"
+      "updated_at": "2026-04-29T13:02:24.090613+00:00"
     },
     {
       "artifact_links": {
@@ -425,7 +446,7 @@
       "field": "agriculture",
       "id": "PROJ-006-agriculture-optimization",
       "keywords": [
-        "general"
+        "agriculture"
       ],
       "last_run_log": [
         {
@@ -538,7 +559,7 @@
       "field": "energy",
       "id": "PROJ-007-energy-systems",
       "keywords": [
-        "general"
+        "energy"
       ],
       "last_run_log": [
         {
@@ -651,7 +672,7 @@
       "field": "psychology",
       "id": "PROJ-008-psychology-research",
       "keywords": [
-        "general"
+        "psychology"
       ],
       "last_run_log": [
         {
