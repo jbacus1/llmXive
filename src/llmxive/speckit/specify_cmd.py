@@ -27,14 +27,13 @@ class SpecifierAgent(SlashCommandAgent):
         return "speckit.specify"
 
     def mechanical_step(self, ctx: SlashCommandContext) -> dict[str, Any]:
-        # Use the project's own per-project script (already in place after
-        # Project-Initializer's init_speckit_in call).
-        repo = ctx.project_dir.parent.parent  # projects/<id>/.. → repo
+        # The per-project create-new-feature.sh resolves spec dirs
+        # relative to the cwd the script is invoked from. To keep all
+        # artifacts under projects/<id>/ we MUST run with cwd=project_dir
+        # — running with cwd=repo causes specs to land at the repo root.
         script = ctx.project_dir / ".specify" / "scripts" / "bash" / "create-new-feature.sh"
-        # Use a short-name derived from the project id (last hyphen-segment)
         short_name = ctx.project_id.split("-", 2)[-1]
         idea_path = ctx.project_dir / "idea"
-        # Concatenate any idea Markdown files for the description.
         descriptions: list[str] = []
         if idea_path.is_dir():
             for md in sorted(idea_path.glob("*.md")):
@@ -42,15 +41,20 @@ class SpecifierAgent(SlashCommandAgent):
         if not descriptions:
             descriptions.append(f"Spec for project {ctx.project_id}")
         description = "\n\n".join(descriptions)[:4000]
-        return run_script(  # type: ignore[return-value]
-            str(script.relative_to(repo)),
+        out = run_script(
+            str(script),
             "--json",
             "--short-name",
             short_name,
             description,
-            cwd=repo,
+            cwd=ctx.project_dir,
             expect_json=True,
-        )  # type: ignore[no-any-return]
+        )
+        # Older scripts emit only SPEC_FILE; older code expects FEATURE_DIR.
+        # Synthesize it from SPEC_FILE so write_artifacts has what it needs.
+        if isinstance(out, dict) and "FEATURE_DIR" not in out and out.get("SPEC_FILE"):
+            out["FEATURE_DIR"] = str(Path(out["SPEC_FILE"]).parent)
+        return out  # type: ignore[return-value]
 
     def build_prompt(
         self,
@@ -112,6 +116,15 @@ class SpecifierAgent(SlashCommandAgent):
         feature_dir.mkdir(parents=True, exist_ok=True)
         spec_path = feature_dir / "spec.md"
         spec_path.write_text(llm_response.text.strip() + "\n", encoding="utf-8")
+        # Persist speckit_research_dir on project state so the Project
+        # validator allows the `specified` stage. The directory is
+        # stored relative to the repo root.
+        from llmxive.state import project as project_store
+        project = project_store.load(ctx.project_id, repo_root=repo)
+        rel_feature_dir = str(feature_dir.resolve().relative_to(repo.resolve()))
+        if project.speckit_research_dir != rel_feature_dir:
+            project.speckit_research_dir = rel_feature_dir
+            project_store.save(project, repo_root=repo)
         return [str(spec_path.relative_to(repo))]
 
 

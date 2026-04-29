@@ -429,6 +429,7 @@ def _agent_contributors(repo: Path) -> list[dict[str, Any]]:
                         # Skip entries with no model attribution. The
                         # agent_name (e.g. "tasker") would mislead.
                         continue
+                    model = _normalize_model_name(model)
                     row = counts.setdefault(
                         model,
                         {"name": model, "kind": "llm", "contribution_count": 0, "areas": set()},
@@ -445,15 +446,80 @@ def _agent_contributors(repo: Path) -> list[dict[str, Any]]:
     return out
 
 
+def _normalize_model_name(name: str) -> str:
+    """Collapse alias forms of the same model.
+
+    e.g. "Qwen/Qwen2.5-3B-Instruct" → "Qwen2.5-3B-Instruct" so it
+    aggregates with the bare form in the contributor list.
+    """
+    name = name.strip()
+    if "/" in name:
+        return name.split("/", 1)[1]
+    return name
+
+
+def _submitter_contributors(repo: Path, projects: list) -> list[dict[str, Any]]:
+    """Each project's idea submitter counts as one contribution.
+
+    Distinguishes:
+      - GitHub usernames (kind=human) — anything matching a typical
+        username pattern without dots/slashes is treated as human.
+      - Model names (kind=llm) — strings containing slashes (e.g.
+        "Qwen/Qwen2.5-3B-Instruct") or dots-then-name (e.g.
+        "google.gemma-3-27b-it") or any of the known model family
+        prefixes (TinyLlama, Qwen, Claude, GPT, Gemma, Mistral).
+      - Anything starting with "system:" or "legacy:" or
+        "agent:" is skipped (no real attribution).
+    """
+    rows: dict[tuple[str, str], dict[str, Any]] = {}
+    model_prefixes = (
+        "tinyllama", "qwen", "claude", "gpt", "gemma", "mistral",
+        "google.", "qwen.", "openai.", "anthropic.",
+    )
+    for p in projects:
+        sub = _project_submitter(repo, p.id)
+        if not sub:
+            continue
+        if sub.startswith(("system:", "legacy:", "agent:")):
+            continue
+        low = sub.lower()
+        is_model = (
+            "/" in sub
+            or any(low.startswith(pre) or pre in low for pre in model_prefixes)
+            or "." in sub.split("-")[0]
+        )
+        kind = "llm" if is_model else "human"
+        if kind == "llm":
+            sub = _normalize_model_name(sub)
+        key = (sub, kind)
+        row = rows.setdefault(
+            key, {"name": sub, "kind": kind, "contribution_count": 0, "areas": set()}
+        )
+        row["contribution_count"] += 1
+        field = (p.field or "").strip().lower()
+        if field and field != "general":
+            row["areas"].add(field)
+    return [
+        {
+            "name": r["name"],
+            "kind": r["kind"],
+            "contribution_count": r["contribution_count"],
+            "areas": sorted(r["areas"]),
+        }
+        for r in rows.values()
+    ]
+
+
 def build_payload(repo: Path) -> dict[str, Any]:
     """Top-level builder: returns the dict to be serialized to projects.json."""
     projects = project_store.list_all(repo_root=repo)
     by_kind, human_rows = _collect_reviews(repo)
     ai_rows = _agent_contributors(repo)
+    submitter_rows = _submitter_contributors(repo, projects)
 
-    # Merge human reviewer rows + AI agent rows.
+    # Merge human reviewer rows + AI agent rows + per-project submitters.
     rows_by_key: dict[tuple[str, str], dict[str, Any]] = {}
-    for r in ai_rows + human_rows:
+    for r in ai_rows + human_rows + submitter_rows:
         key = (r["name"], r["kind"])
         if key in rows_by_key:
             rows_by_key[key]["contribution_count"] += r["contribution_count"]

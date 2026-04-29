@@ -51,18 +51,9 @@ Advancement-Evaluator Agent invalidates stale review records when the
 hashed artifact changes. Every research-stage artifact change updates this
 project's `state/projects/PROJ-001-mechanistic-interpretability-of-ctcf-bin.yaml` `updated_at` timestamp.
 
-### VI. Biological Ground Truth Validation
+### VI. Biological Validity
 
-Every mechanistic interpretation or binding-site prediction MUST be validated
-against at least one independent experimental dataset (e.g., ChIP-seq,
-ATAC-seq, or CRISPR perturbation data). Computational confidence scores
-MUST NOT be reported without corresponding empirical validation metrics.
-
-### VII. Genomic Data Standards Compliance
-
-All genomic coordinates MUST specify the exact reference genome build
-(e.g., GRCh38/hg38). Cross-build comparisons require documented liftOver
-procedures with validation of coordinate preservation rates ≥ 95%.
+Computational predictions regarding CTCF binding determinants MUST be validated against independent experimental datasets (e.g., ENCODE ChIP-seq, CRISPRi perturbation studies) to ensure mechanistic plausibility. Claims regarding causal sequence motifs or chromatin features MUST be supported by perturbation evidence or established biological literature.
 
 ## Reproducibility Requirements
 
@@ -72,6 +63,8 @@ procedures with validation of coordinate preservation rates ≥ 95%.
   from this requirements file; no global packages are assumed.
 - Every notebook or script under `code/` is runnable end-to-end without
   manual intervention.
+- All external genomic data (e.g., ENCODE ChIP-seq, ATAC-seq) MUST be tracked by accession number in `data/manifest.json` and mapped to a specific genome build (e.g., GRCh38/hg38).
+- Cell-type-specific data sources MUST be explicitly documented to ensure cross-cell-type comparisons are valid.
 
 ## Data Hygiene
 

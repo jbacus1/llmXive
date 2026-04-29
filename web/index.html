@@ -246,8 +246,8 @@
         <p>Research review and paper review require BOTH the points threshold (<span data-threshold-mirror="research_review_accept_pts">5</span>) AND an accept verdict from <em>every</em> specialist reviewer in its lane: 7 research specialists (idea quality, creativity, implementation correctness, completeness, code quality, data quality, filesystem hygiene) and 12 paper specialists (writing, logic, claims, over-reach, safety, evidence, statistics, code, data, formatting, figures, jargon). Human reviews count as <span data-threshold-mirror="human_review_score">1.0</span> point and LLM reviews as <span data-threshold-mirror="llm_review_score">0.5</span> point. Self-review is rejected by the schema.</p>
       </div>
       <div class="about-block">
-        <h3>Free-first, fail-fast</h3>
-        <p>By constitution every backend is free: Dartmouth Chat (Qwen3.5 122B and Gemma 3 27B) primary, Hugging Face Inference fallback, local Transformers as last resort. Missing credentials abort the run in seconds rather than burning a workflow timeout.</p>
+        <h3>Model selection — right-sized to each task</h3>
+        <p>Each pipeline step is associated with an appropriate open model. Long, complex tasks (planning, paper writing, deep review) are routed to Qwen3.5&nbsp;122B; faster, less complex tasks (clarifying questions, atomization, quick judgments) are routed to Gemma 3 27B. All inference runs on Dartmouth&rsquo;s <a href="https://rc.dartmouth.edu/ai/computing-resources/discovery-cluster/" target="_blank" rel="noopener">Discovery Cluster</a>, with fallbacks to <a href="https://huggingface.co/" target="_blank" rel="noopener">Hugging&nbsp;Face</a> as needed.</p>
       </div>
     </div>
 

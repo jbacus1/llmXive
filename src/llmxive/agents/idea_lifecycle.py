@@ -183,7 +183,20 @@ class FleshOutAgent(_IdeaPhaseAgent):
         body = response.text.strip()
         if not body:
             raise RuntimeError("Flesh-Out returned an empty body")
-        target.write_text(front + f"# {title}\n\n{body}\n", encoding="utf-8")
+        # Strip ```markdown / ```md fences if present.
+        if body.startswith("```"):
+            lines = body.splitlines()
+            if lines and lines[0].lstrip("`").lower() in {"", "markdown", "md"}:
+                lines = lines[1:]
+            if lines and lines[-1].strip() == "```":
+                lines = lines[:-1]
+            body = "\n".join(lines).strip()
+        # If the body already starts with a `# Title` heading, don't
+        # double-add one. The LLM tends to repeat the title; honor
+        # whichever variant it produced.
+        if not body.startswith("# "):
+            body = f"# {title}\n\n{body}"
+        target.write_text(front + body + "\n", encoding="utf-8")
         return [str(target.relative_to(repo))]
 
 

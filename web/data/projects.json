@@ -1,12 +1,12 @@
 {
   "aggregates": {
     "active_projects": 22,
-    "ai_contributors": 6,
+    "ai_contributors": 7,
     "human_contributors": 0,
     "papers_posted": 0,
     "total_collaborations": 0,
-    "total_contributions": 69,
-    "total_contributors": 6
+    "total_contributions": 72,
+    "total_contributors": 7
   },
   "contributors": [
     {
@@ -16,16 +16,57 @@
         "energy",
         "psychology"
       ],
-      "contribution_count": 69,
+      "contribution_count": 72,
       "kind": "llm",
       "name": "qwen.qwen3.5-122b"
+    },
+    {
+      "areas": [
+        "agriculture",
+        "biology",
+        "computer science",
+        "energy",
+        "environmental science",
+        "robotics"
+      ],
+      "contribution_count": 8,
+      "kind": "llm",
+      "name": "TinyLlama-1.1B-Chat-v1.0"
+    },
+    {
+      "areas": [
+        "agriculture",
+        "chemistry",
+        "ocean science",
+        "psychology"
+      ],
+      "contribution_count": 4,
+      "kind": "llm",
+      "name": "Claude 3 Sonnet"
+    },
+    {
+      "areas": [
+        "neuroscience",
+        "ocean science"
+      ],
+      "contribution_count": 2,
+      "kind": "llm",
+      "name": "Qwen2.5-3B-Instruct"
+    },
+    {
+      "areas": [
+        "biology"
+      ],
+      "contribution_count": 1,
+      "kind": "llm",
+      "name": "Qwen2.5-1.5B-Instruct"
     }
   ],
-  "generated_at": "2026-04-29T12:12:57.913393+00:00",
+  "generated_at": "2026-04-29T12:27:20.609619+00:00",
   "projects": [
     {
       "artifact_links": {
-        "citations": null,
+        "citations": "state/citations/PROJ-001-mechanistic-interpretability-of-ctcf-bin.yaml",
         "code": null,
         "data": null,
         "idea": "projects/PROJ-001-mechanistic-interpretability-of-ctcf-bin/idea/mechanistic-interpretability-of-ctcf-bin.md",
@@ -38,7 +79,7 @@
         "plan": null,
         "reviews_paper": null,
         "reviews_research": null,
-        "spec": null,
+        "spec": "projects/PROJ-001-mechanistic-interpretability-of-ctcf-bin/specs/001-mechanistic-interpretability-of-ctcf-bin/spec.md",
         "tasks": null
       },
       "citation_summary": {
@@ -48,8 +89,8 @@
         "verified": 0
       },
       "created_at": "2026-04-29T02:44:28.710016+00:00",
-      "current_stage": "brainstormed",
-      "description": "CTCF binds tens of thousands of sites across the genome but engages only a fraction of them in any given cell type. We propose to apply mechanistic-interpretability tools developed for transformer models to a sequence-context-aware CTCF binding predictor, identifying which sequence motifs and neighboring chromatin\u2026",
+      "current_stage": "specified",
+      "description": "Field: biology Which sequence motifs and neighboring chromatin features causally drive CTCF site selection across cell types, and how can mechanistic interpretability methods applied to sequence-context-aware binding predictors reveal these determinants? CTCF binds tens of thousands of genomic sites but engages only a\u2026",
       "field": "biology",
       "id": "PROJ-001-mechanistic-interpretability-of-ctcf-bin",
       "keywords": [
@@ -57,28 +98,84 @@
       ],
       "last_run_log": [
         {
-          "agent": "project_initializer",
-          "duration_s": 22.842257,
-          "ended_at": "2026-04-29T10:06:45.501744Z",
+          "agent": "specifier",
+          "duration_s": 71.516883,
+          "ended_at": "2026-04-29T12:25:02.506263Z",
           "outcome": "success",
-          "started_at": "2026-04-29T10:06:22.659487Z"
+          "started_at": "2026-04-29T12:23:50.989380Z"
+        },
+        {
+          "agent": "specifier",
+          "duration_s": 95.94414,
+          "ended_at": "2026-04-29T12:22:54.271184Z",
+          "outcome": "failed",
+          "started_at": "2026-04-29T12:21:18.327044Z"
+        },
+        {
+          "agent": "specifier",
+          "duration_s": 69.9851,
+          "ended_at": "2026-04-29T12:21:18.044642Z",
+          "outcome": "failed",
+          "started_at": "2026-04-29T12:20:08.059542Z"
+        },
+        {
+          "agent": "specifier",
+          "duration_s": 33.714738,
+          "ended_at": "2026-04-29T12:20:07.793786Z",
+          "outcome": "failed",
+          "started_at": "2026-04-29T12:19:34.079048Z"
+        },
+        {
+          "agent": "specifier",
+          "duration_s": 123.071056,
+          "ended_at": "2026-04-29T12:19:33.839661Z",
+          "outcome": "failed",
+          "started_at": "2026-04-29T12:17:30.768605Z"
+        },
+        {
+          "agent": "specifier",
+          "duration_s": 34.171423,
+          "ended_at": "2026-04-29T12:17:30.524973Z",
+          "outcome": "failed",
+          "started_at": "2026-04-29T12:16:56.353550Z"
+        },
+        {
+          "agent": "specifier",
+          "duration_s": 74.380287,
+          "ended_at": "2026-04-29T12:16:56.081182Z",
+          "outcome": "failed",
+          "started_at": "2026-04-29T12:15:41.700895Z"
+        },
+        {
+          "agent": "project_initializer",
+          "duration_s": 66.221674,
+          "ended_at": "2026-04-29T12:15:41.444592Z",
+          "outcome": "success",
+          "started_at": "2026-04-29T12:14:35.222918Z"
         },
         {
           "agent": "flesh_out",
-          "duration_s": 4.500329,
-          "ended_at": "2026-04-29T10:06:22.622936Z",
+          "duration_s": 17.554329,
+          "ended_at": "2026-04-29T12:14:03.079299Z",
           "outcome": "success",
-          "started_at": "2026-04-29T10:06:18.122607Z"
+          "started_at": "2026-04-29T12:13:45.524970Z"
+        },
+        {
+          "agent": "flesh_out",
+          "duration_s": 14.726441,
+          "ended_at": "2026-04-29T12:13:39.342104Z",
+          "outcome": "failed",
+          "started_at": "2026-04-29T12:13:24.615663Z"
         }
       ],
-      "phase_group": "idea",
+      "phase_group": "research_speckit",
       "points_paper_total": 0.0,
       "points_research_total": 0.0,
       "speckit_paper_dir": null,
-      "speckit_research_dir": null,
+      "speckit_research_dir": "projects/PROJ-001-mechanistic-interpretability-of-ctcf-bin/specs/001-mechanistic-interpretability-of-ctcf-bin",
       "submitter": "system:brainstorm-seed",
       "title": "Mechanistic Interpretability of CTCF Binding-Site Selection",
-      "updated_at": "2026-04-29T03:54:32.993821+00:00"
+      "updated_at": "2026-04-29T12:25:02.506872+00:00"
     },
     {
       "artifact_links": {
