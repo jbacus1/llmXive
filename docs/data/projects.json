@@ -1,22 +1,27 @@
 {
   "aggregates": {
-    "active_projects": 22,
-    "ai_contributors": 7,
-    "human_contributors": 0,
-    "papers_posted": 0,
-    "total_collaborations": 0,
-    "total_contributions": 88,
-    "total_contributors": 7
+    "active_projects": 21,
+    "ai_contributors": 29,
+    "human_contributors": 1,
+    "papers_posted": 1,
+    "total_collaborations": 1,
+    "total_contributions": 384,
+    "total_contributors": 30
   },
   "contributors": [
     {
       "areas": [
         "agriculture",
         "biology",
+        "chemistry",
+        "computer science",
         "energy",
-        "psychology"
+        "neuroscience",
+        "ocean science",
+        "psychology",
+        "statistics"
       ],
-      "contribution_count": 88,
+      "contribution_count": 365,
       "kind": "llm",
       "name": "qwen.qwen3.5-122b"
     },
@@ -35,6 +40,16 @@
     },
     {
       "areas": [
+        "biology",
+        "computer science",
+        "statistics"
+      ],
+      "contribution_count": 4,
+      "kind": "human",
+      "name": "jeremymanning"
+    },
+    {
+      "areas": [
         "agriculture",
         "chemistry",
         "ocean science",
@@ -43,6 +58,85 @@
       "contribution_count": 4,
       "kind": "llm",
       "name": "Claude 3 Sonnet"
+    },
+    {
+      "areas": [
+        "biology",
+        "psychology",
+        "statistics"
+      ],
+      "contribution_count": 3,
+      "kind": "llm",
+      "name": "research_reviewer_idea_quality"
+    },
+    {
+      "areas": [
+        "biology",
+        "psychology",
+        "statistics"
+      ],
+      "contribution_count": 3,
+      "kind": "llm",
+      "name": "research_reviewer_data_quality_research"
+    },
+    {
+      "areas": [
+        "biology",
+        "psychology",
+        "statistics"
+      ],
+      "contribution_count": 3,
+      "kind": "llm",
+      "name": "research_reviewer_implementation_correctness"
+    },
+    {
+      "areas": [
+        "biology",
+        "psychology",
+        "statistics"
+      ],
+      "contribution_count": 3,
+      "kind": "llm",
+      "name": "research_reviewer_code_quality_research"
+    },
+    {
+      "areas": [
+        "biology",
+        "psychology",
+        "statistics"
+      ],
+      "contribution_count": 3,
+      "kind": "llm",
+      "name": "research_reviewer_implementation_completeness"
+    },
+    {
+      "areas": [
+        "biology",
+        "psychology",
+        "statistics"
+      ],
+      "contribution_count": 3,
+      "kind": "llm",
+      "name": "research_reviewer_filesystem_hygiene"
+    },
+    {
+      "areas": [
+        "biology",
+        "psychology",
+        "statistics"
+      ],
+      "contribution_count": 3,
+      "kind": "llm",
+      "name": "research_reviewer_creativity"
+    },
+    {
+      "areas": [
+        "psychology",
+        "statistics"
+      ],
+      "contribution_count": 2,
+      "kind": "llm",
+      "name": "research_reviewer"
     },
     {
       "areas": [
@@ -59,15 +153,103 @@
       ],
       "contribution_count": 1,
       "kind": "llm",
+      "name": "paper_reviewer_statistical_analysis"
+    },
+    {
+      "areas": [
+        "biology"
+      ],
+      "contribution_count": 1,
+      "kind": "llm",
+      "name": "paper_reviewer_safety_ethics"
+    },
+    {
+      "areas": [
+        "biology"
+      ],
+      "contribution_count": 1,
+      "kind": "llm",
+      "name": "paper_reviewer_overreach"
+    },
+    {
+      "areas": [
+        "biology"
+      ],
+      "contribution_count": 1,
+      "kind": "llm",
+      "name": "paper_reviewer_logical_consistency"
+    },
+    {
+      "areas": [
+        "biology"
+      ],
+      "contribution_count": 1,
+      "kind": "llm",
+      "name": "paper_reviewer_code_quality_paper"
+    },
+    {
+      "areas": [
+        "biology"
+      ],
+      "contribution_count": 1,
+      "kind": "llm",
+      "name": "paper_reviewer"
+    },
+    {
+      "areas": [
+        "biology"
+      ],
+      "contribution_count": 1,
+      "kind": "llm",
+      "name": "paper_reviewer_claim_accuracy"
+    },
+    {
+      "areas": [
+        "biology"
+      ],
+      "contribution_count": 1,
+      "kind": "llm",
+      "name": "paper_reviewer_writing_quality"
+    },
+    {
+      "areas": [
+        "biology"
+      ],
+      "contribution_count": 1,
+      "kind": "llm",
+      "name": "paper_reviewer_scientific_evidence"
+    },
+    {
+      "areas": [
+        "biology"
+      ],
+      "contribution_count": 1,
+      "kind": "llm",
+      "name": "paper_reviewer_data_quality_paper"
+    },
+    {
+      "areas": [
+        "biology"
+      ],
+      "contribution_count": 1,
+      "kind": "llm",
       "name": "Qwen2.5-1.5B-Instruct"
+    },
+    {
+      "areas": [
+        "statistics"
+      ],
+      "contribution_count": 1,
+      "kind": "llm",
+      "name": "google.gemma-3-27b-it"
     }
   ],
-  "generated_at": "2026-04-29T13:10:16.383515+00:00",
+  "generated_at": "2026-04-29T23:50:30.677378+00:00",
   "projects": [
     {
       "artifact_links": {
         "citations": "state/citations/PROJ-001-mechanistic-interpretability-of-ctcf-bin.yaml",
-        "code": null,
+        "code": "projects/PROJ-001-mechanistic-interpretability-of-ctcf-bin/code",
         "data": null,
         "idea": "projects/PROJ-001-mechanistic-interpretability-of-ctcf-bin/idea/mechanistic-interpretability-of-ctcf-bin.md",
         "paper_figures": null,
@@ -76,20 +258,20 @@
         "paper_source": null,
         "paper_spec": null,
         "paper_tasks": null,
-        "plan": null,
+        "plan": "projects/PROJ-001-mechanistic-interpretability-of-ctcf-bin/specs/001-mechanistic-interpretability-of-ctcf-bin/plan.md",
         "reviews_paper": null,
         "reviews_research": null,
         "spec": "projects/PROJ-001-mechanistic-interpretability-of-ctcf-bin/specs/001-mechanistic-interpretability-of-ctcf-bin/spec.md",
-        "tasks": null
+        "tasks": "projects/PROJ-001-mechanistic-interpretability-of-ctcf-bin/specs/001-mechanistic-interpretability-of-ctcf-bin/tasks.md"
       },
       "citation_summary": {
         "mismatch": 0,
         "pending": 0,
         "unreachable": 0,
-        "verified": 0
+        "verified": 1
       },
       "created_at": "2026-04-29T02:44:28.710016+00:00",
-      "current_stage": "specified",
+      "current_stage": "in_progress",
       "description": "Field: biology Which sequence motifs and neighboring chromatin features causally drive CTCF site selection across cell types, and how can mechanistic interpretability methods applied to sequence-context-aware binding predictors reveal these determinants? CTCF binds tens of thousands of genomic sites but engages only a\u2026",
       "field": "biology",
       "id": "PROJ-001-mechanistic-interpretability-of-ctcf-bin",
@@ -97,6 +279,54 @@
         "biology"
       ],
       "last_run_log": [
+        {
+          "agent": "implementer",
+          "duration_s": 12.708389,
+          "ended_at": "2026-04-29T15:58:20.993401Z",
+          "model": "qwen.qwen3.5-122b",
+          "outcome": "success",
+          "started_at": "2026-04-29T15:58:08.285012Z"
+        },
+        {
+          "agent": "tasker",
+          "duration_s": 741.499757,
+          "ended_at": "2026-04-29T15:58:08.253827Z",
+          "model": "qwen.qwen3.5-122b",
+          "outcome": "success",
+          "started_at": "2026-04-29T15:45:46.754070Z"
+        },
+        {
+          "agent": "tasker",
+          "duration_s": 646.070938,
+          "ended_at": "2026-04-29T15:45:46.711762Z",
+          "model": "qwen.qwen3.5-122b",
+          "outcome": "success",
+          "started_at": "2026-04-29T15:35:00.640824Z"
+        },
+        {
+          "agent": "planner",
+          "duration_s": 130.822476,
+          "ended_at": "2026-04-29T15:35:00.600384Z",
+          "model": "qwen.qwen3.5-122b",
+          "outcome": "success",
+          "started_at": "2026-04-29T15:32:49.777908Z"
+        },
+        {
+          "agent": "clarifier",
+          "duration_s": 12.903697,
+          "ended_at": "2026-04-29T15:32:49.742112Z",
+          "model": "qwen.qwen3.5-122b",
+          "outcome": "success",
+          "started_at": "2026-04-29T15:32:36.838415Z"
+        },
+        {
+          "agent": "clarifier",
+          "duration_s": 27.455053,
+          "ended_at": "2026-04-29T15:31:46.297937Z",
+          "model": "qwen.qwen3.5-122b",
+          "outcome": "failed",
+          "started_at": "2026-04-29T15:31:18.842884Z"
+        },
         {
           "agent": "specifier",
           "duration_s": 71.516883,
@@ -128,54 +358,6 @@
           "model": "qwen.qwen3.5-122b",
           "outcome": "failed",
           "started_at": "2026-04-29T12:19:34.079048Z"
-        },
-        {
-          "agent": "specifier",
-          "duration_s": 123.071056,
-          "ended_at": "2026-04-29T12:19:33.839661Z",
-          "model": "qwen.qwen3.5-122b",
-          "outcome": "failed",
-          "started_at": "2026-04-29T12:17:30.768605Z"
-        },
-        {
-          "agent": "specifier",
-          "duration_s": 34.171423,
-          "ended_at": "2026-04-29T12:17:30.524973Z",
-          "model": "qwen.qwen3.5-122b",
-          "outcome": "failed",
-          "started_at": "2026-04-29T12:16:56.353550Z"
-        },
-        {
-          "agent": "specifier",
-          "duration_s": 74.380287,
-          "ended_at": "2026-04-29T12:16:56.081182Z",
-          "model": "qwen.qwen3.5-122b",
-          "outcome": "failed",
-          "started_at": "2026-04-29T12:15:41.700895Z"
-        },
-        {
-          "agent": "project_initializer",
-          "duration_s": 66.221674,
-          "ended_at": "2026-04-29T12:15:41.444592Z",
-          "model": "qwen.qwen3.5-122b",
-          "outcome": "success",
-          "started_at": "2026-04-29T12:14:35.222918Z"
-        },
-        {
-          "agent": "flesh_out",
-          "duration_s": 17.554329,
-          "ended_at": "2026-04-29T12:14:03.079299Z",
-          "model": "qwen.qwen3.5-122b",
-          "outcome": "success",
-          "started_at": "2026-04-29T12:13:45.524970Z"
-        },
-        {
-          "agent": "flesh_out",
-          "duration_s": 14.726441,
-          "ended_at": "2026-04-29T12:13:39.342104Z",
-          "model": "qwen.qwen3.5-122b",
-          "outcome": "failed",
-          "started_at": "2026-04-29T12:13:24.615663Z"
         }
       ],
       "phase_group": "research_speckit",
@@ -185,23 +367,23 @@
       "speckit_research_dir": "projects/PROJ-001-mechanistic-interpretability-of-ctcf-bin/specs/001-mechanistic-interpretability-of-ctcf-bin",
       "submitter": "system:brainstorm-seed",
       "title": "Mechanistic Interpretability of CTCF Binding-Site Selection",
-      "updated_at": "2026-04-29T12:25:02.506872+00:00"
+      "updated_at": "2026-04-29T15:58:20.996143+00:00"
     },
     {
       "artifact_links": {
         "citations": "state/citations/PROJ-002-evolutionary-pressure-on-alternative-spl.yaml",
         "code": "projects/PROJ-002-evolutionary-pressure-on-alternative-spl/code",
-        "data": null,
+        "data": "projects/PROJ-002-evolutionary-pressure-on-alternative-spl/data",
         "idea": "projects/PROJ-002-evolutionary-pressure-on-alternative-spl/idea/evolutionary-pressure-on-alternative-spl.md",
-        "paper_figures": null,
+        "paper_figures": "projects/PROJ-002-evolutionary-pressure-on-alternative-spl/paper/figures",
         "paper_pdf": null,
-        "paper_plan": null,
-        "paper_source": null,
-        "paper_spec": null,
-        "paper_tasks": null,
+        "paper_plan": "projects/PROJ-002-evolutionary-pressure-on-alternative-spl/paper/specs/001-paper/plan.md",
+        "paper_source": "projects/PROJ-002-evolutionary-pressure-on-alternative-spl/paper/source/main.tex",
+        "paper_spec": "projects/PROJ-002-evolutionary-pressure-on-alternative-spl/paper/specs/001-paper/spec.md",
+        "paper_tasks": "projects/PROJ-002-evolutionary-pressure-on-alternative-spl/paper/specs/001-paper/tasks.md",
         "plan": "projects/PROJ-002-evolutionary-pressure-on-alternative-spl/specs/001-evolutionary-pressure-on-alternative-spl/plan.md",
-        "reviews_paper": null,
-        "reviews_research": null,
+        "reviews_paper": "projects/PROJ-002-evolutionary-pressure-on-alternative-spl/paper/reviews",
+        "reviews_research": "projects/PROJ-002-evolutionary-pressure-on-alternative-spl/reviews/research",
         "spec": "projects/PROJ-002-evolutionary-pressure-on-alternative-spl/specs/001-evolutionary-pressure-on-alternative-spl/spec.md",
         "tasks": "projects/PROJ-002-evolutionary-pressure-on-alternative-spl/specs/001-evolutionary-pressure-on-alternative-spl/tasks.md"
       },
@@ -212,7 +394,7 @@
         "verified": 0
       },
       "created_at": "2026-04-29T02:44:28.710016+00:00",
-      "current_stage": "in_progress",
+      "current_stage": "brainstormed",
       "description": "Field: biology To what extent does alternative splicing divergence in primate cortex correlate with positive selection on splicing regulatory elements? Alternative splicing significantly increases proteomic complexity, yet the evolutionary drivers of splicing divergence across primates remain poorly understood. This\u2026",
       "field": "biology",
       "id": "PROJ-002-evolutionary-pressure-on-alternative-spl",
@@ -221,94 +403,94 @@
       ],
       "last_run_log": [
         {
-          "agent": "implementer",
-          "duration_s": 64.140017,
-          "ended_at": "2026-04-29T13:09:09.404107Z",
+          "agent": "paper_reviewer_statistical_analysis",
+          "duration_s": 23.340481,
+          "ended_at": "2026-04-29T17:50:04.114544Z",
           "model": "qwen.qwen3.5-122b",
           "outcome": "success",
-          "started_at": "2026-04-29T13:08:05.264090Z"
+          "started_at": "2026-04-29T17:49:40.774063Z"
         },
         {
-          "agent": "implementer",
-          "duration_s": 24.05265,
-          "ended_at": "2026-04-29T13:08:05.226208Z",
+          "agent": "paper_reviewer_scientific_evidence",
+          "duration_s": 106.338013,
+          "ended_at": "2026-04-29T17:49:40.745673Z",
           "model": "qwen.qwen3.5-122b",
           "outcome": "success",
-          "started_at": "2026-04-29T13:07:41.173558Z"
+          "started_at": "2026-04-29T17:47:54.407660Z"
         },
         {
-          "agent": "implementer",
-          "duration_s": 53.134674,
-          "ended_at": "2026-04-29T13:07:41.136375Z",
+          "agent": "paper_reviewer_safety_ethics",
+          "duration_s": 23.309208,
+          "ended_at": "2026-04-29T17:47:54.378674Z",
           "model": "qwen.qwen3.5-122b",
-          "outcome": "success",
-          "started_at": "2026-04-29T13:06:48.001701Z"
+          "outcome": "failed",
+          "started_at": "2026-04-29T17:47:31.069466Z"
         },
         {
-          "agent": "implementer",
-          "duration_s": 14.089221,
-          "ended_at": "2026-04-29T13:06:47.974625Z",
+          "agent": "paper_reviewer_overreach",
+          "duration_s": 109.164357,
+          "ended_at": "2026-04-29T17:47:31.040437Z",
           "model": "qwen.qwen3.5-122b",
           "outcome": "success",
-          "started_at": "2026-04-29T13:06:33.885404Z"
+          "started_at": "2026-04-29T17:45:41.876080Z"
         },
         {
-          "agent": "implementer",
-          "duration_s": 17.770209,
-          "ended_at": "2026-04-29T13:02:54.406487Z",
+          "agent": "paper_reviewer_claim_accuracy",
+          "duration_s": 175.043707,
+          "ended_at": "2026-04-29T17:45:41.846787Z",
           "model": "qwen.qwen3.5-122b",
-          "outcome": "success",
-          "started_at": "2026-04-29T13:02:36.636278Z"
+          "outcome": "failed",
+          "started_at": "2026-04-29T17:42:46.803080Z"
         },
         {
-          "agent": "implementer",
-          "duration_s": 12.488435,
-          "ended_at": "2026-04-29T13:02:36.611716Z",
+          "agent": "paper_reviewer_logical_consistency",
+          "duration_s": 27.838349,
+          "ended_at": "2026-04-29T17:42:46.764148Z",
           "model": "qwen.qwen3.5-122b",
           "outcome": "success",
-          "started_at": "2026-04-29T13:02:24.123281Z"
+          "started_at": "2026-04-29T17:42:18.925799Z"
         },
         {
-          "agent": "implementer",
-          "duration_s": 16.194232,
-          "ended_at": "2026-04-29T13:02:24.088172Z",
+          "agent": "paper_reviewer_writing_quality",
+          "duration_s": 73.123386,
+          "ended_at": "2026-04-29T17:42:18.887100Z",
           "model": "qwen.qwen3.5-122b",
           "outcome": "success",
-          "started_at": "2026-04-29T13:02:07.893940Z"
+          "started_at": "2026-04-29T17:41:05.763714Z"
         },
         {
-          "agent": "tasker",
-          "duration_s": 634.195325,
-          "ended_at": "2026-04-29T13:01:48.318263Z",
+          "agent": "paper_reviewer",
+          "duration_s": 34.593929,
+          "ended_at": "2026-04-29T17:41:05.741157Z",
           "model": "qwen.qwen3.5-122b",
           "outcome": "success",
-          "started_at": "2026-04-29T12:51:14.122938Z"
+          "started_at": "2026-04-29T17:40:31.147228Z"
         },
         {
-          "agent": "tasker",
-          "duration_s": 665.686315,
-          "ended_at": "2026-04-29T12:50:50.419033Z",
+          "agent": "paper_reviewer_jargon_police",
+          "duration_s": 28.545413,
+          "ended_at": "2026-04-29T17:39:31.117278Z",
           "model": "qwen.qwen3.5-122b",
-          "outcome": "success",
-          "started_at": "2026-04-29T12:39:44.732718Z"
+          "outcome": "failed",
+          "started_at": "2026-04-29T17:39:02.571865Z"
         },
         {
-          "agent": "planner",
-          "duration_s": 87.644184,
-          "ended_at": "2026-04-29T12:39:29.671011Z",
+          "agent": "paper_reviewer_figure_critic",
+          "duration_s": 22.482632,
+          "ended_at": "2026-04-29T17:39:02.530826Z",
           "model": "qwen.qwen3.5-122b",
-          "outcome": "success",
-          "started_at": "2026-04-29T12:38:02.026827Z"
+          "outcome": "failed",
+          "started_at": "2026-04-29T17:38:40.048194Z"
         }
       ],
-      "phase_group": "research_speckit",
+      "phase_group": "idea",
       "points_paper_total": 0.0,
-      "points_research_total": 0.0,
-      "speckit_paper_dir": null,
+      "points_research_total": 6.0,
+      "speckit_paper_dir": "projects/PROJ-002-evolutionary-pressure-on-alternative-spl/paper/specs/001-paper",
       "speckit_research_dir": "projects/PROJ-002-evolutionary-pressure-on-alternative-spl/specs/001-evolutionary-pressure-on-alternative-spl",
       "submitter": "system:brainstorm-seed",
       "title": "Evolutionary Pressure on Alternative Splicing in Primates",
-      "updated_at": "2026-04-29T13:02:24.090613+00:00"
+      "updated_at": "2026-04-29T17:39:31.170569+00:00"
     },
     {
       "artifact_links": {
@@ -342,7 +524,16 @@
       "keywords": [
         "biology"
       ],
-      "last_run_log": [],
+      "last_run_log": [
+        {
+          "agent": "flesh_out",
+          "duration_s": 2.256633,
+          "ended_at": "2026-04-29T15:23:06.428550Z",
+          "model": "qwen.qwen3.5-122b",
+          "outcome": "failed",
+          "started_at": "2026-04-29T15:23:04.171917Z"
+        }
+      ],
       "phase_group": "idea",
       "points_paper_total": 0.0,
       "points_research_total": 0.0,
@@ -350,11 +541,11 @@
       "speckit_research_dir": null,
       "submitter": "system:brainstorm-seed",
       "title": "Single-Cell Trajectories of T-Cell Exhaustion",
-      "updated_at": "2026-04-29T03:54:32.993821+00:00"
+      "updated_at": "2026-04-29T15:23:06.430265+00:00"
     },
     {
       "artifact_links": {
-        "citations": null,
+        "citations": "state/citations/PROJ-004-solvent-effects-on-photo-fries-rearrange.yaml",
         "code": null,
         "data": null,
         "idea": "projects/PROJ-004-solvent-effects-on-photo-fries-rearrange/idea/solvent-effects-on-photo-fries-rearrange.md",
@@ -364,35 +555,84 @@
         "paper_source": null,
         "paper_spec": null,
         "paper_tasks": null,
-        "plan": null,
+        "plan": "projects/PROJ-004-solvent-effects-on-photo-fries-rearrange/specs/001-solvent-effects-on-photo-fries-rearrange/plan.md",
         "reviews_paper": null,
         "reviews_research": null,
-        "spec": null,
-        "tasks": null
+        "spec": "projects/PROJ-004-solvent-effects-on-photo-fries-rearrange/specs/001-solvent-effects-on-photo-fries-rearrange/spec.md",
+        "tasks": "projects/PROJ-004-solvent-effects-on-photo-fries-rearrange/specs/001-solvent-effects-on-photo-fries-rearrange/tasks.md"
       },
       "citation_summary": {
         "mismatch": 0,
         "pending": 0,
         "unreachable": 0,
-        "verified": 0
+        "verified": 10
       },
       "created_at": "2026-04-29T02:44:28.710016+00:00",
-      "current_stage": "brainstormed",
-      "description": "The photo-Fries rearrangement of aryl esters proceeds through a singlet-radical-pair intermediate; rate constants and product distributions vary dramatically with solvent polarity. We will run a controlled solvent series (cyclohexane \u2192 methanol) with transient-absorption spectroscopy to extract the radical-pair\u2026",
+      "current_stage": "tasked",
+      "description": "Field: chemistry How does solvent polarity quantitatively affect the singlet-radical-pair intermediate lifetime and product distribution in aryl ester photo-Fries rearrangement? Photo-Fries rearrangement is a fundamental photochemical transformation with applications in materials synthesis and mechanistic\u2026",
       "field": "chemistry",
       "id": "PROJ-004-solvent-effects-on-photo-fries-rearrange",
       "keywords": [
         "chemistry"
       ],
-      "last_run_log": [],
-      "phase_group": "idea",
+      "last_run_log": [
+        {
+          "agent": "tasker",
+          "duration_s": 772.644522,
+          "ended_at": "2026-04-29T15:52:33.714712Z",
+          "model": "qwen.qwen3.5-122b",
+          "outcome": "success",
+          "started_at": "2026-04-29T15:39:41.070190Z"
+        },
+        {
+          "agent": "planner",
+          "duration_s": 130.761442,
+          "ended_at": "2026-04-29T15:39:41.040999Z",
+          "model": "qwen.qwen3.5-122b",
+          "outcome": "success",
+          "started_at": "2026-04-29T15:37:30.279557Z"
+        },
+        {
+          "agent": "clarifier",
+          "duration_s": 164.965681,
+          "ended_at": "2026-04-29T15:37:30.240517Z",
+          "model": "qwen.qwen3.5-122b",
+          "outcome": "success",
+          "started_at": "2026-04-29T15:34:45.274836Z"
+        },
+        {
+          "agent": "specifier",
+          "duration_s": 111.124155,
+          "ended_at": "2026-04-29T15:34:45.235905Z",
+          "model": "qwen.qwen3.5-122b",
+          "outcome": "success",
+          "started_at": "2026-04-29T15:32:54.111750Z"
+        },
+        {
+          "agent": "project_initializer",
+          "duration_s": 89.201757,
+          "ended_at": "2026-04-29T15:32:54.073787Z",
+          "model": "qwen.qwen3.5-122b",
+          "outcome": "success",
+          "started_at": "2026-04-29T15:31:24.872030Z"
+        },
+        {
+          "agent": "flesh_out",
+          "duration_s": 28.346689,
+          "ended_at": "2026-04-29T15:25:17.666544Z",
+          "model": "qwen.qwen3.5-122b",
+          "outcome": "success",
+          "started_at": "2026-04-29T15:24:49.319855Z"
+        }
+      ],
+      "phase_group": "research_speckit",
       "points_paper_total": 0.0,
       "points_research_total": 0.0,
       "speckit_paper_dir": null,
-      "speckit_research_dir": null,
+      "speckit_research_dir": "projects/PROJ-004-solvent-effects-on-photo-fries-rearrange/specs/001-solvent-effects-on-photo-fries-rearrange",
       "submitter": "system:brainstorm-seed",
       "title": "Solvent Effects on Photo-Fries Rearrangement Kinetics",
-      "updated_at": "2026-04-29T03:54:32.993821+00:00"
+      "updated_at": "2026-04-29T15:52:33.716563+00:00"
     },
     {
       "artifact_links": {
@@ -419,14 +659,23 @@
         "verified": 0
       },
       "created_at": "2026-04-29T02:44:28.710016+00:00",
-      "current_stage": "brainstormed",
-      "description": "Density-functional calculations on transition-metal catalytic cycles are accurate but cost-prohibitive at scale. We propose to train a graph-neural-network potential on a benchmark set of (Pd, Ni, Cu) elementary steps and evaluate whether the learned potential reproduces DFT free-energy barriers to within 2 kcal/mol\u2026",
+      "current_stage": "flesh_out_complete",
+      "description": "Field: chemistry Can graph-neural-network potentials trained on density-functional theory (DFT) data for Pd, Ni, and Cu elementary steps reproduce DFT free-energy barriers to within 2 kcal/mol on held-out transition-metal catalytic reactions? DFT calculations provide accurate energetics for transition-metal catalytic\u2026",
       "field": "chemistry",
       "id": "PROJ-005-machine-learned-potentials-for-transitio",
       "keywords": [
         "chemistry"
       ],
-      "last_run_log": [],
+      "last_run_log": [
+        {
+          "agent": "flesh_out",
+          "duration_s": 25.000049,
+          "ended_at": "2026-04-29T15:34:54.283663Z",
+          "model": "qwen.qwen3.5-122b",
+          "outcome": "success",
+          "started_at": "2026-04-29T15:34:29.283614Z"
+        }
+      ],
       "phase_group": "idea",
       "points_paper_total": 0.0,
       "points_research_total": 0.0,
@@ -434,7 +683,7 @@
       "speckit_research_dir": null,
       "submitter": "system:brainstorm-seed",
       "title": "Machine-Learned Potentials for Transition-Metal Catalysis",
-      "updated_at": "2026-04-29T03:54:32.993821+00:00"
+      "updated_at": "2026-04-29T15:34:54.286399+00:00"
     },
     {
       "artifact_links": {
@@ -455,13 +704,13 @@
         "tasks": null
       },
       "citation_summary": {
-        "mismatch": 6,
+        "mismatch": 8,
         "pending": 0,
-        "unreachable": 1,
-        "verified": 6
+        "unreachable": 5,
+        "verified": 31
       },
       "created_at": "2026-04-29T03:39:25.118444+00:00",
-      "current_stage": "in_progress",
+      "current_stage": "research_complete",
       "description": "Project ID: agriculture-20250704-001 Date: 2025-07-04 Author: LLM (Automated) Issue: #27 Technical Design Document for \"The Use of Climate-Smart Agricultural Practices in Rural Areas to Improve Food Security and Livelihoods\" Abstract",
       "field": "agriculture",
       "id": "PROJ-006-agriculture-optimization",
@@ -471,83 +720,83 @@
       "last_run_log": [
         {
           "agent": "implementer",
-          "duration_s": 38.188752,
-          "ended_at": "2026-04-29T09:22:53.715736Z",
+          "duration_s": 95.519559,
+          "ended_at": "2026-04-29T20:55:06.546444Z",
           "model": "qwen.qwen3.5-122b",
           "outcome": "success",
-          "started_at": "2026-04-29T09:22:15.526984Z"
+          "started_at": "2026-04-29T20:53:31.026885Z"
         },
         {
           "agent": "implementer",
-          "duration_s": 46.409545,
-          "ended_at": "2026-04-29T09:22:15.449920Z",
+          "duration_s": 38.674929,
+          "ended_at": "2026-04-29T20:53:30.958127Z",
           "model": "qwen.qwen3.5-122b",
           "outcome": "success",
-          "started_at": "2026-04-29T09:21:29.040375Z"
+          "started_at": "2026-04-29T20:52:52.283198Z"
         },
         {
           "agent": "implementer",
-          "duration_s": 62.330233,
-          "ended_at": "2026-04-29T09:21:28.965560Z",
+          "duration_s": 39.469089,
+          "ended_at": "2026-04-29T20:52:52.214318Z",
           "model": "qwen.qwen3.5-122b",
           "outcome": "success",
-          "started_at": "2026-04-29T09:20:26.635327Z"
+          "started_at": "2026-04-29T20:52:12.745229Z"
         },
         {
           "agent": "implementer",
-          "duration_s": 68.425245,
-          "ended_at": "2026-04-29T09:20:26.559730Z",
+          "duration_s": 18.66806,
+          "ended_at": "2026-04-29T20:52:12.676872Z",
           "model": "qwen.qwen3.5-122b",
           "outcome": "success",
-          "started_at": "2026-04-29T09:19:18.134485Z"
+          "started_at": "2026-04-29T20:51:54.008812Z"
         },
         {
           "agent": "implementer",
-          "duration_s": 71.077073,
-          "ended_at": "2026-04-29T09:19:18.058925Z",
+          "duration_s": 129.229708,
+          "ended_at": "2026-04-29T20:51:53.940948Z",
           "model": "qwen.qwen3.5-122b",
           "outcome": "success",
-          "started_at": "2026-04-29T09:18:06.981852Z"
+          "started_at": "2026-04-29T20:49:44.711240Z"
         },
         {
           "agent": "implementer",
-          "duration_s": 113.234828,
-          "ended_at": "2026-04-29T09:18:06.906476Z",
+          "duration_s": 117.553963,
+          "ended_at": "2026-04-29T20:49:44.641701Z",
           "model": "qwen.qwen3.5-122b",
           "outcome": "success",
-          "started_at": "2026-04-29T09:16:13.671648Z"
+          "started_at": "2026-04-29T20:47:47.087738Z"
         },
         {
           "agent": "implementer",
-          "duration_s": 59.972039,
-          "ended_at": "2026-04-29T09:16:13.595808Z",
+          "duration_s": 9.795384,
+          "ended_at": "2026-04-29T20:47:47.017910Z",
           "model": "qwen.qwen3.5-122b",
           "outcome": "success",
-          "started_at": "2026-04-29T09:15:13.623769Z"
+          "started_at": "2026-04-29T20:47:37.222526Z"
         },
         {
           "agent": "implementer",
-          "duration_s": 89.376739,
-          "ended_at": "2026-04-29T09:15:13.547657Z",
+          "duration_s": 13.031331,
+          "ended_at": "2026-04-29T20:47:37.151677Z",
           "model": "qwen.qwen3.5-122b",
           "outcome": "success",
-          "started_at": "2026-04-29T09:13:44.170918Z"
+          "started_at": "2026-04-29T20:47:24.120346Z"
         },
         {
           "agent": "implementer",
-          "duration_s": 68.857696,
-          "ended_at": "2026-04-29T05:43:28.050878Z",
+          "duration_s": 9.612569,
+          "ended_at": "2026-04-29T16:03:02.947630Z",
           "model": "qwen.qwen3.5-122b",
           "outcome": "success",
-          "started_at": "2026-04-29T05:42:19.193182Z"
+          "started_at": "2026-04-29T16:02:53.335061Z"
         },
         {
           "agent": "implementer",
-          "duration_s": 64.300653,
-          "ended_at": "2026-04-29T05:42:19.116952Z",
+          "duration_s": 10.851137,
+          "ended_at": "2026-04-29T16:02:53.293588Z",
           "model": "qwen.qwen3.5-122b",
           "outcome": "success",
-          "started_at": "2026-04-29T05:41:14.816299Z"
+          "started_at": "2026-04-29T16:02:42.442451Z"
         }
       ],
       "phase_group": "research_speckit",
@@ -557,7 +806,7 @@
       "speckit_research_dir": "projects/proj-tmp-003-agriculture-optimization/specs/001-agriculture-optimization",
       "submitter": "legacy:llmxive-automation",
       "title": "Climate-Smart Agricultural Practices in Rural Areas to Improve Food Security",
-      "updated_at": "2026-04-29T04:57:45.043819+00:00"
+      "updated_at": "2026-04-29T20:55:06.548492+00:00"
     },
     {
       "artifact_links": {
@@ -571,11 +820,11 @@
         "paper_source": null,
         "paper_spec": null,
         "paper_tasks": null,
-        "plan": null,
+        "plan": "projects/PROJ-007-energy-systems/specs/001-energy-systems/plan.md",
         "reviews_paper": null,
         "reviews_research": null,
-        "spec": null,
-        "tasks": null
+        "spec": "projects/PROJ-007-energy-systems/specs/001-energy-systems/spec.md",
+        "tasks": "projects/PROJ-007-energy-systems/specs/001-energy-systems/tasks.md"
       },
       "citation_summary": {
         "mismatch": 1,
@@ -584,7 +833,7 @@
         "verified": 0
       },
       "created_at": "2026-04-29T03:39:25.118444+00:00",
-      "current_stage": "in_progress",
+      "current_stage": "planned",
       "description": "Project ID: energy-20250704-001 Date: 2025-07-04 Author: LLM (Automated) Issue: #29 Title: Developing Novel Solutions to Address Energy Inequity in Low-Income Communities: A Technical Design Document Introduction This technical design document aims to present a comprehensive approach to address energy inequity in\u2026",
       "field": "energy",
       "id": "PROJ-007-energy-systems",
@@ -677,7 +926,7 @@
       "points_paper_total": 0.0,
       "points_research_total": 0.0,
       "speckit_paper_dir": null,
-      "speckit_research_dir": "projects/proj-tmp-004-energy-systems/specs/001-energy-systems",
+      "speckit_research_dir": "projects/PROJ-007-energy-systems/specs/001-energy-systems",
       "submitter": "TinyLlama-1.1B-Chat-v1.0",
       "title": "Developing Novel Solutions to Address Energy Inequity in Low-Income Communities",
       "updated_at": "2026-04-29T04:57:47.190467+00:00"
@@ -696,7 +945,7 @@
         "paper_tasks": null,
         "plan": null,
         "reviews_paper": null,
-        "reviews_research": null,
+        "reviews_research": "projects/PROJ-008-psychology-research/reviews/research",
         "spec": null,
         "tasks": null
       },
@@ -707,7 +956,7 @@
         "verified": 0
       },
       "created_at": "2026-04-29T03:39:25.118444+00:00",
-      "current_stage": "in_progress",
+      "current_stage": "research_rejected",
       "description": "Project ID: psychology-20250704-001 Date: 2025-07-04 Author: LLM (Automated) Issue: #26 [Insert your name and affiliation] Title: The Role of Mindfulness in Improving Social Skills Among Children with Autism Spectrum Disorder (ASD)",
       "field": "psychology",
       "id": "PROJ-008-psychology-research",
@@ -716,94 +965,94 @@
       ],
       "last_run_log": [
         {
-          "agent": "implementer",
-          "duration_s": 35.072601,
-          "ended_at": "2026-04-29T05:05:52.359410Z",
+          "agent": "research_reviewer_filesystem_hygiene",
+          "duration_s": 20.240441,
+          "ended_at": "2026-04-29T16:32:19.174452Z",
           "model": "qwen.qwen3.5-122b",
           "outcome": "success",
-          "started_at": "2026-04-29T05:05:17.286809Z"
+          "started_at": "2026-04-29T16:31:58.934011Z"
         },
         {
-          "agent": "implementer",
-          "duration_s": 37.792554,
-          "ended_at": "2026-04-29T05:05:17.250117Z",
+          "agent": "research_reviewer_data_quality_research",
+          "duration_s": 31.346921,
+          "ended_at": "2026-04-29T16:31:58.908666Z",
           "model": "qwen.qwen3.5-122b",
           "outcome": "success",
-          "started_at": "2026-04-29T05:04:39.457563Z"
+          "started_at": "2026-04-29T16:31:27.561745Z"
         },
         {
-          "agent": "implementer",
-          "duration_s": 33.188492,
-          "ended_at": "2026-04-29T05:04:39.426309Z",
+          "agent": "research_reviewer_code_quality_research",
+          "duration_s": 69.724472,
+          "ended_at": "2026-04-29T16:31:27.537055Z",
           "model": "qwen.qwen3.5-122b",
           "outcome": "success",
-          "started_at": "2026-04-29T05:04:06.237817Z"
+          "started_at": "2026-04-29T16:30:17.812583Z"
         },
         {
-          "agent": "implementer",
-          "duration_s": 15.4468,
-          "ended_at": "2026-04-29T05:02:39.036393Z",
-          "model": "qwen.qwen3.5-122b",
-          "outcome": "success",
-          "started_at": "2026-04-29T05:02:23.589593Z"
-        },
-        {
-          "agent": "implementer",
-          "duration_s": 19.221107,
-          "ended_at": "2026-04-29T05:02:23.551103Z",
-          "model": "qwen.qwen3.5-122b",
-          "outcome": "success",
-          "started_at": "2026-04-29T05:02:04.329996Z"
-        },
-        {
-          "agent": "implementer",
-          "duration_s": 13.362739,
-          "ended_at": "2026-04-29T05:02:04.293592Z",
-          "model": "qwen.qwen3.5-122b",
-          "outcome": "success",
-          "started_at": "2026-04-29T05:01:50.930853Z"
-        },
-        {
-          "agent": "tasker",
-          "duration_s": 722.703345,
-          "ended_at": "2026-04-29T05:01:50.902532Z",
-          "model": "qwen.qwen3.5-122b",
-          "outcome": "success",
-          "started_at": "2026-04-29T04:49:48.199187Z"
-        },
-        {
-          "agent": "tasker",
-          "duration_s": 695.74169,
-          "ended_at": "2026-04-29T04:49:48.159156Z",
-          "model": "qwen.qwen3.5-122b",
-          "outcome": "success",
-          "started_at": "2026-04-29T04:38:12.417466Z"
-        },
-        {
-          "agent": "planner",
-          "duration_s": 144.477238,
-          "ended_at": "2026-04-29T04:38:12.385919Z",
-          "model": "qwen.qwen3.5-122b",
-          "outcome": "success",
-          "started_at": "2026-04-29T04:35:47.908681Z"
-        },
-        {
-          "agent": "tasker",
-          "duration_s": 58.627331,
-          "ended_at": "2026-04-29T04:35:05.759781Z",
+          "agent": "research_reviewer_implementation_completeness",
+          "duration_s": 27.421834,
+          "ended_at": "2026-04-29T16:30:17.769620Z",
           "model": "qwen.qwen3.5-122b",
           "outcome": "failed",
-          "started_at": "2026-04-29T04:34:07.132450Z"
+          "started_at": "2026-04-29T16:29:50.347786Z"
+        },
+        {
+          "agent": "research_reviewer_implementation_correctness",
+          "duration_s": 33.376199,
+          "ended_at": "2026-04-29T16:29:50.307872Z",
+          "model": "qwen.qwen3.5-122b",
+          "outcome": "success",
+          "started_at": "2026-04-29T16:29:16.931673Z"
+        },
+        {
+          "agent": "research_reviewer_creativity",
+          "duration_s": 33.193512,
+          "ended_at": "2026-04-29T16:29:16.891761Z",
+          "model": "qwen.qwen3.5-122b",
+          "outcome": "success",
+          "started_at": "2026-04-29T16:28:43.698249Z"
+        },
+        {
+          "agent": "research_reviewer_idea_quality",
+          "duration_s": 24.493315,
+          "ended_at": "2026-04-29T16:28:43.656105Z",
+          "model": "qwen.qwen3.5-122b",
+          "outcome": "success",
+          "started_at": "2026-04-29T16:28:19.162790Z"
+        },
+        {
+          "agent": "research_reviewer",
+          "duration_s": 24.575858,
+          "ended_at": "2026-04-29T16:28:19.125301Z",
+          "model": "qwen.qwen3.5-122b",
+          "outcome": "success",
+          "started_at": "2026-04-29T16:27:54.549443Z"
+        },
+        {
+          "agent": "research_reviewer_filesystem_hygiene",
+          "duration_s": 26.162425,
+          "ended_at": "2026-04-29T16:27:38.270420Z",
+          "model": "qwen.qwen3.5-122b",
+          "outcome": "success",
+          "started_at": "2026-04-29T16:27:12.107995Z"
+        },
+        {
+          "agent": "research_reviewer_data_quality_research",
+          "duration_s": 27.62314,
+          "ended_at": "2026-04-29T16:27:12.075094Z",
+          "model": "qwen.qwen3.5-122b",
+          "outcome": "success",
+          "started_at": "2026-04-29T16:26:44.451954Z"
         }
       ],
-      "phase_group": "research_speckit",
+      "phase_group": "research_review",
       "points_paper_total": 0.0,
       "points_research_total": 0.0,
       "speckit_paper_dir": null,
       "speckit_research_dir": "projects/proj-tmp-006-psychology-research/specs/001-psychology-research",
       "submitter": "Claude 3 Sonnet",
       "title": "The Role of Mindfulness in Improving Social Skills Among Children with Autism",
-      "updated_at": "2026-04-29T05:02:04.294404+00:00"
+      "updated_at": "2026-04-29T16:32:19.245705+00:00"
     },
     {
       "artifact_links": {
@@ -830,22 +1079,31 @@
         "verified": 0
       },
       "created_at": "2026-04-29T03:39:55.508035+00:00",
-      "current_stage": "brainstormed",
-      "description": "Field: computer science Can we build a mesh network, comprised of the computers owned by whoever opts in, that collectively forms the largest supercomputer on earth? The idea is to use idle time from other machines to boost productivity. Keywords: mesh computing, supercomputer, network --- *Submitted via llmXive\u2026",
+      "current_stage": "flesh_out_complete",
+      "description": "Field: computer science Can a decentralized mesh network architecture effectively pool idle computing resources from opt-in consumer devices to achieve supercomputer-class performance for distributed scientific workloads? Current supercomputing infrastructure is centralized, expensive, and underutilized. A mesh\u2026",
       "field": "computer science",
       "id": "PROJ-009-build-a-mesh-network-that-forms-the-larg",
       "keywords": [
         "computer science"
       ],
-      "last_run_log": [],
+      "last_run_log": [
+        {
+          "agent": "flesh_out",
+          "duration_s": 29.913144,
+          "ended_at": "2026-04-29T15:35:24.327162Z",
+          "model": "qwen.qwen3.5-122b",
+          "outcome": "success",
+          "started_at": "2026-04-29T15:34:54.414018Z"
+        }
+      ],
       "phase_group": "idea",
       "points_paper_total": 0.0,
       "points_research_total": 0.0,
       "speckit_paper_dir": null,
       "speckit_research_dir": null,
-      "submitter": "legacy:llmxive-automation",
+      "submitter": "jeremymanning",
       "title": "Mesh Network Supercomputer Using Pooled Idle Computing Resources",
-      "updated_at": "2026-04-29T03:54:32.993821+00:00"
+      "updated_at": "2026-04-29T15:35:24.329665+00:00"
     },
     {
       "artifact_links": {
@@ -872,14 +1130,23 @@
         "verified": 0
       },
       "created_at": "2026-04-29T03:39:55.508035+00:00",
-      "current_stage": "brainstormed",
-      "description": "Field: biology Description: Certainly! Here's an expanded research idea in the field of biology: Research Idea: \"Quantitative Analysis of Gene Expression Dynamics during Human Brain Development across Multiple Environments\" This comprehensive project aims to investigate how gene expression patterns evolve throughout\u2026",
+      "current_stage": "flesh_out_complete",
+      "description": "Field: biology How do gene expression patterns quantitatively evolve across specific developmental stages in the human brain, and what regulatory networks drive these dynamics during critical neurodevelopmental windows? Understanding the temporal and spatial dynamics of gene expression during human brain development\u2026",
       "field": "biology",
       "id": "PROJ-010-quantitative-analysis-of-gene-expression",
       "keywords": [
         "biology"
       ],
-      "last_run_log": [],
+      "last_run_log": [
+        {
+          "agent": "flesh_out",
+          "duration_s": 32.564417,
+          "ended_at": "2026-04-29T15:35:57.015898Z",
+          "model": "qwen.qwen3.5-122b",
+          "outcome": "success",
+          "started_at": "2026-04-29T15:35:24.451481Z"
+        }
+      ],
       "phase_group": "idea",
       "points_paper_total": 0.0,
       "points_research_total": 0.0,
@@ -887,7 +1154,7 @@
       "speckit_research_dir": null,
       "submitter": "Qwen2.5-1.5B-Instruct",
       "title": "Quantitative Analysis of Gene Expression Dynamics during Human Brain Development",
-      "updated_at": "2026-04-29T03:54:32.993821+00:00"
+      "updated_at": "2026-04-29T15:35:57.018401+00:00"
     },
     {
       "artifact_links": {
@@ -914,14 +1181,23 @@
         "verified": 0
       },
       "created_at": "2026-04-29T03:39:55.508035+00:00",
-      "current_stage": "brainstormed",
-      "description": "Field: psychology Description: Title: \"Neural Mechanisms Underlying Adaptive Decision-Making in Response to Social Stress\" Abstract Suggested ID: psychology-20250706-001 Keywords: \"neural, mechanisms, underlying, adaptive, decision-making ---",
+      "current_stage": "flesh_out_complete",
+      "description": "Field: neuroscience How do neural circuits integrate social feedback signals to update decision policies, and what computational mechanisms underlie adaptive behavioral changes in response to social information? Understanding how social feedback shapes decision-making is critical for explaining individual differences\u2026",
       "field": "neuroscience",
       "id": "PROJ-011-neural-mechanisms-underlying-adaptive-de",
       "keywords": [
         "psychology"
       ],
-      "last_run_log": [],
+      "last_run_log": [
+        {
+          "agent": "flesh_out",
+          "duration_s": 23.105271,
+          "ended_at": "2026-04-29T15:36:20.246408Z",
+          "model": "qwen.qwen3.5-122b",
+          "outcome": "success",
+          "started_at": "2026-04-29T15:35:57.141137Z"
+        }
+      ],
       "phase_group": "idea",
       "points_paper_total": 0.0,
       "points_research_total": 0.0,
@@ -929,7 +1205,7 @@
       "speckit_research_dir": null,
       "submitter": "Qwen2.5-3B-Instruct",
       "title": "Neural Mechanisms Underlying Adaptive Decision-Making in Response to Social Feedback",
-      "updated_at": "2026-04-29T03:54:32.993821+00:00"
+      "updated_at": "2026-04-29T15:36:20.248940+00:00"
     },
     {
       "artifact_links": {
@@ -956,14 +1232,23 @@
         "verified": 0
       },
       "created_at": "2026-04-29T03:39:55.508035+00:00",
-      "current_stage": "brainstormed",
-      "description": "Field: ocean science Description: Research Idea: Investigating Submarine Hydrothermal Vent Microbial Communities as Indicators of Ocean Acidification Suggested ID: ocean-science-20250706-001 Keywords: investigating, submarine, hydrothermal, microbial, communities --- *This idea was automatically generated by the\u2026",
+      "current_stage": "flesh_out_complete",
+      "description": "Field: ocean science How do shifts in microbial community composition within submarine hydrothermal vents correlate with localized pH reductions driven by ocean acidification? Vent ecosystems are chemically dynamic, but their microbial sensitivity to global carbon uptake remains poorly quantified. Establishing this\u2026",
       "field": "ocean science",
       "id": "PROJ-012-investigating-submarine-hydrothermal-ven",
       "keywords": [
         "ocean science"
       ],
-      "last_run_log": [],
+      "last_run_log": [
+        {
+          "agent": "flesh_out",
+          "duration_s": 73.345173,
+          "ended_at": "2026-04-29T15:37:33.755009Z",
+          "model": "qwen.qwen3.5-122b",
+          "outcome": "success",
+          "started_at": "2026-04-29T15:36:20.409836Z"
+        }
+      ],
       "phase_group": "idea",
       "points_paper_total": 0.0,
       "points_research_total": 0.0,
@@ -971,7 +1256,7 @@
       "speckit_research_dir": null,
       "submitter": "Qwen/Qwen2.5-3B-Instruct",
       "title": "Submarine Hydrothermal Vent Microbial Communities as Indicators of Ocean Acidification",
-      "updated_at": "2026-04-29T03:54:32.993821+00:00"
+      "updated_at": "2026-04-29T15:37:33.757536+00:00"
     },
     {
       "artifact_links": {
@@ -999,13 +1284,86 @@
       },
       "created_at": "2026-04-29T03:39:55.508035+00:00",
       "current_stage": "brainstormed",
-      "description": "Background: The use of renewable energy sources is essential in combating environmental degradation caused by non-renewable resources. One of the most significant environmental issues is water pollution resulting from unsanitary",
+      "description": "Field: Energy Systems / Materials Science Can computational thermodynamic modeling accurately predict the efficiency of passive solar stills using open-source material data without physical prototyping? Access to clean water and renewable energy are critical global challenges. This research addresses the gap between\u2026",
       "field": "energy",
       "id": "PROJ-013-developing-a-low-cost-solar-powered-wate",
       "keywords": [
         "materials science"
       ],
-      "last_run_log": [],
+      "last_run_log": [
+        {
+          "agent": "flesh_out",
+          "duration_s": 82.364998,
+          "ended_at": "2026-04-29T23:27:52.280372Z",
+          "model": "qwen.qwen3.5-122b",
+          "outcome": "success",
+          "started_at": "2026-04-29T23:26:29.915374Z"
+        },
+        {
+          "agent": "flesh_out",
+          "duration_s": 24.174353,
+          "ended_at": "2026-04-29T22:35:52.420861Z",
+          "model": "qwen.qwen3.5-122b",
+          "outcome": "success",
+          "started_at": "2026-04-29T22:35:28.246508Z"
+        },
+        {
+          "agent": "flesh_out",
+          "duration_s": 29.943408,
+          "ended_at": "2026-04-29T22:27:36.645872Z",
+          "model": "qwen.qwen3.5-122b",
+          "outcome": "success",
+          "started_at": "2026-04-29T22:27:06.702464Z"
+        },
+        {
+          "agent": "flesh_out",
+          "duration_s": 92.563325,
+          "ended_at": "2026-04-29T21:32:33.227675Z",
+          "model": "qwen.qwen3.5-122b",
+          "outcome": "success",
+          "started_at": "2026-04-29T21:31:00.664350Z"
+        },
+        {
+          "agent": "flesh_out",
+          "duration_s": 130.425269,
+          "ended_at": "2026-04-29T20:41:08.290519Z",
+          "model": "qwen.qwen3.5-122b",
+          "outcome": "success",
+          "started_at": "2026-04-29T20:38:57.865250Z"
+        },
+        {
+          "agent": "flesh_out",
+          "duration_s": 78.474454,
+          "ended_at": "2026-04-29T20:35:14.203538Z",
+          "model": "qwen.qwen3.5-122b",
+          "outcome": "success",
+          "started_at": "2026-04-29T20:33:55.729084Z"
+        },
+        {
+          "agent": "flesh_out",
+          "duration_s": 38.311851,
+          "ended_at": "2026-04-29T19:39:26.462517Z",
+          "model": "qwen.qwen3.5-122b",
+          "outcome": "success",
+          "started_at": "2026-04-29T19:38:48.150666Z"
+        },
+        {
+          "agent": "flesh_out",
+          "duration_s": 25.930295,
+          "ended_at": "2026-04-29T18:47:07.802843Z",
+          "model": "qwen.qwen3.5-122b",
+          "outcome": "success",
+          "started_at": "2026-04-29T18:46:41.872548Z"
+        },
+        {
+          "agent": "flesh_out",
+          "duration_s": 121.364346,
+          "ended_at": "2026-04-29T18:43:20.484535Z",
+          "model": "qwen.qwen3.5-122b",
+          "outcome": "success",
+          "started_at": "2026-04-29T18:41:19.120189Z"
+        }
+      ],
       "phase_group": "idea",
       "points_paper_total": 0.0,
       "points_research_total": 0.0,
@@ -1392,6 +1750,127 @@
       "submitter": "Claude 3 Sonnet",
       "title": "Developing New Methods to Synthesize High-Performance Membranes using Sustainable Materials",
       "updated_at": "2026-04-29T03:54:32.993821+00:00"
+    },
+    {
+      "artifact_links": {
+        "citations": "state/citations/PROJ-023-bayesian-nonparametrics-for-anomaly-dete.yaml",
+        "code": "projects/PROJ-023-bayesian-nonparametrics-for-anomaly-dete/code",
+        "data": "projects/PROJ-023-bayesian-nonparametrics-for-anomaly-dete/data",
+        "idea": "projects/PROJ-023-bayesian-nonparametrics-for-anomaly-dete/idea/bayesian-nonparametrics-for-anomaly-dete.md",
+        "paper_figures": "projects/PROJ-023-bayesian-nonparametrics-for-anomaly-dete/paper/figures",
+        "paper_pdf": null,
+        "paper_plan": null,
+        "paper_source": "projects/PROJ-023-bayesian-nonparametrics-for-anomaly-dete/paper/source/main.tex",
+        "paper_spec": "projects/PROJ-023-bayesian-nonparametrics-for-anomaly-dete/paper/specs/001-paper/spec.md",
+        "paper_tasks": null,
+        "plan": "projects/PROJ-023-bayesian-nonparametrics-for-anomaly-dete/specs/002-bayesian-nonparametrics-for-anomaly-dete/plan.md",
+        "reviews_paper": "projects/PROJ-023-bayesian-nonparametrics-for-anomaly-dete/paper/reviews",
+        "reviews_research": "projects/PROJ-023-bayesian-nonparametrics-for-anomaly-dete/reviews/research",
+        "spec": "projects/PROJ-023-bayesian-nonparametrics-for-anomaly-dete/specs/002-bayesian-nonparametrics-for-anomaly-dete/spec.md",
+        "tasks": null
+      },
+      "citation_summary": {
+        "mismatch": 1,
+        "pending": 0,
+        "unreachable": 0,
+        "verified": 0
+      },
+      "created_at": "2026-04-29T17:53:16.603320+00:00",
+      "current_stage": "posted",
+      "description": "Field: statistics Can Bayesian nonparametric models, specifically Gaussian process priors with Dirichlet process mixtures, detect distributional shifts in non-stationary univariate time series more effectively than traditional Statistical Process Control (SPC) charts? Traditional SPC charts assume stationarity and\u2026",
+      "field": "statistics",
+      "id": "PROJ-023-bayesian-nonparametrics-for-anomaly-dete",
+      "keywords": [],
+      "last_run_log": [
+        {
+          "agent": "paper_reviewer_figure_critic",
+          "duration_s": 141.47635,
+          "ended_at": "2026-04-29T18:37:09.358502Z",
+          "model": "qwen.qwen3.5-122b",
+          "outcome": "failed",
+          "started_at": "2026-04-29T18:34:47.882152Z"
+        },
+        {
+          "agent": "paper_reviewer_text_formatting",
+          "duration_s": 20.409433,
+          "ended_at": "2026-04-29T18:34:47.839644Z",
+          "model": "qwen.qwen3.5-122b",
+          "outcome": "failed",
+          "started_at": "2026-04-29T18:34:27.430211Z"
+        },
+        {
+          "agent": "paper_reviewer_data_quality_paper",
+          "duration_s": 19.760341,
+          "ended_at": "2026-04-29T18:34:27.388743Z",
+          "model": "qwen.qwen3.5-122b",
+          "outcome": "failed",
+          "started_at": "2026-04-29T18:34:07.628402Z"
+        },
+        {
+          "agent": "paper_reviewer_code_quality_paper",
+          "duration_s": 34.332602,
+          "ended_at": "2026-04-29T18:34:07.587116Z",
+          "model": "qwen.qwen3.5-122b",
+          "outcome": "failed",
+          "started_at": "2026-04-29T18:33:33.254514Z"
+        },
+        {
+          "agent": "paper_reviewer_statistical_analysis",
+          "duration_s": 47.060834,
+          "ended_at": "2026-04-29T18:33:33.189477Z",
+          "model": "qwen.qwen3.5-122b",
+          "outcome": "failed",
+          "started_at": "2026-04-29T18:32:46.128643Z"
+        },
+        {
+          "agent": "paper_reviewer_scientific_evidence",
+          "duration_s": 75.74017,
+          "ended_at": "2026-04-29T18:32:46.087274Z",
+          "model": "qwen.qwen3.5-122b",
+          "outcome": "failed",
+          "started_at": "2026-04-29T18:31:30.347104Z"
+        },
+        {
+          "agent": "paper_reviewer_safety_ethics",
+          "duration_s": 20.447824,
+          "ended_at": "2026-04-29T18:31:30.307973Z",
+          "model": "qwen.qwen3.5-122b",
+          "outcome": "failed",
+          "started_at": "2026-04-29T18:31:09.860149Z"
+        },
+        {
+          "agent": "paper_reviewer_overreach",
+          "duration_s": 20.330001,
+          "ended_at": "2026-04-29T18:31:09.830611Z",
+          "model": "qwen.qwen3.5-122b",
+          "outcome": "failed",
+          "started_at": "2026-04-29T18:30:49.500610Z"
+        },
+        {
+          "agent": "paper_reviewer_claim_accuracy",
+          "duration_s": 17.121271,
+          "ended_at": "2026-04-29T18:30:49.460776Z",
+          "model": "qwen.qwen3.5-122b",
+          "outcome": "failed",
+          "started_at": "2026-04-29T18:30:32.339505Z"
+        },
+        {
+          "agent": "paper_reviewer_logical_consistency",
+          "duration_s": 97.612434,
+          "ended_at": "2026-04-29T18:30:32.298350Z",
+          "model": "qwen.qwen3.5-122b",
+          "outcome": "failed",
+          "started_at": "2026-04-29T18:28:54.685916Z"
+        }
+      ],
+      "phase_group": "posted",
+      "points_paper_total": 6.0,
+      "points_research_total": 6.0,
+      "speckit_paper_dir": "projects/PROJ-023-bayesian-nonparametrics-for-anomaly-dete/paper/specs/001-paper",
+      "speckit_research_dir": "projects/PROJ-023-bayesian-nonparametrics-for-anomaly-dete/specs/002-bayesian-nonparametrics-for-anomaly-dete",
+      "submitter": "google.gemma-3-27b-it",
+      "title": "Bayesian Nonparametrics for Anomaly Detection in Time Series",
+      "updated_at": "2026-04-29T18:38:40.708874+00:00"
     }
   ],
   "schema_version": "2.0.0"
