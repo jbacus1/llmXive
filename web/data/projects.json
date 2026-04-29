@@ -5,7 +5,7 @@
     "human_contributors": 1,
     "papers_posted": 1,
     "total_collaborations": 1,
-    "total_contributions": 372,
+    "total_contributions": 380,
     "total_contributors": 30
   },
   "contributors": [
@@ -21,7 +21,7 @@
         "psychology",
         "statistics"
       ],
-      "contribution_count": 353,
+      "contribution_count": 361,
       "kind": "llm",
       "name": "qwen.qwen3.5-122b"
     },
@@ -244,7 +244,7 @@
       "name": "google.gemma-3-27b-it"
     }
   ],
-  "generated_at": "2026-04-29T20:44:08.285539+00:00",
+  "generated_at": "2026-04-29T20:55:07.078910+00:00",
   "projects": [
     {
       "artifact_links": {
@@ -704,13 +704,13 @@
         "tasks": null
       },
       "citation_summary": {
-        "mismatch": 7,
+        "mismatch": 8,
         "pending": 0,
-        "unreachable": 2,
-        "verified": 6
+        "unreachable": 5,
+        "verified": 31
       },
       "created_at": "2026-04-29T03:39:25.118444+00:00",
-      "current_stage": "in_progress",
+      "current_stage": "research_complete",
       "description": "Project ID: agriculture-20250704-001 Date: 2025-07-04 Author: LLM (Automated) Issue: #27 Technical Design Document for \"The Use of Climate-Smart Agricultural Practices in Rural Areas to Improve Food Security and Livelihoods\" Abstract",
       "field": "agriculture",
       "id": "PROJ-006-agriculture-optimization",
@@ -718,6 +718,70 @@
         "agriculture"
       ],
       "last_run_log": [
+        {
+          "agent": "implementer",
+          "duration_s": 95.519559,
+          "ended_at": "2026-04-29T20:55:06.546444Z",
+          "model": "qwen.qwen3.5-122b",
+          "outcome": "success",
+          "started_at": "2026-04-29T20:53:31.026885Z"
+        },
+        {
+          "agent": "implementer",
+          "duration_s": 38.674929,
+          "ended_at": "2026-04-29T20:53:30.958127Z",
+          "model": "qwen.qwen3.5-122b",
+          "outcome": "success",
+          "started_at": "2026-04-29T20:52:52.283198Z"
+        },
+        {
+          "agent": "implementer",
+          "duration_s": 39.469089,
+          "ended_at": "2026-04-29T20:52:52.214318Z",
+          "model": "qwen.qwen3.5-122b",
+          "outcome": "success",
+          "started_at": "2026-04-29T20:52:12.745229Z"
+        },
+        {
+          "agent": "implementer",
+          "duration_s": 18.66806,
+          "ended_at": "2026-04-29T20:52:12.676872Z",
+          "model": "qwen.qwen3.5-122b",
+          "outcome": "success",
+          "started_at": "2026-04-29T20:51:54.008812Z"
+        },
+        {
+          "agent": "implementer",
+          "duration_s": 129.229708,
+          "ended_at": "2026-04-29T20:51:53.940948Z",
+          "model": "qwen.qwen3.5-122b",
+          "outcome": "success",
+          "started_at": "2026-04-29T20:49:44.711240Z"
+        },
+        {
+          "agent": "implementer",
+          "duration_s": 117.553963,
+          "ended_at": "2026-04-29T20:49:44.641701Z",
+          "model": "qwen.qwen3.5-122b",
+          "outcome": "success",
+          "started_at": "2026-04-29T20:47:47.087738Z"
+        },
+        {
+          "agent": "implementer",
+          "duration_s": 9.795384,
+          "ended_at": "2026-04-29T20:47:47.017910Z",
+          "model": "qwen.qwen3.5-122b",
+          "outcome": "success",
+          "started_at": "2026-04-29T20:47:37.222526Z"
+        },
+        {
+          "agent": "implementer",
+          "duration_s": 13.031331,
+          "ended_at": "2026-04-29T20:47:37.151677Z",
+          "model": "qwen.qwen3.5-122b",
+          "outcome": "success",
+          "started_at": "2026-04-29T20:47:24.120346Z"
+        },
         {
           "agent": "implementer",
           "duration_s": 9.612569,
@@ -733,70 +797,6 @@
           "model": "qwen.qwen3.5-122b",
           "outcome": "success",
           "started_at": "2026-04-29T16:02:42.442451Z"
-        },
-        {
-          "agent": "implementer",
-          "duration_s": 11.014716,
-          "ended_at": "2026-04-29T16:02:42.402126Z",
-          "model": "qwen.qwen3.5-122b",
-          "outcome": "success",
-          "started_at": "2026-04-29T16:02:31.387410Z"
-        },
-        {
-          "agent": "implementer",
-          "duration_s": 7.558423,
-          "ended_at": "2026-04-29T16:02:31.344630Z",
-          "model": "qwen.qwen3.5-122b",
-          "outcome": "success",
-          "started_at": "2026-04-29T16:02:23.786207Z"
-        },
-        {
-          "agent": "implementer",
-          "duration_s": 10.148176,
-          "ended_at": "2026-04-29T16:02:23.722925Z",
-          "model": "qwen.qwen3.5-122b",
-          "outcome": "success",
-          "started_at": "2026-04-29T16:02:13.574749Z"
-        },
-        {
-          "agent": "implementer",
-          "duration_s": 12.720056,
-          "ended_at": "2026-04-29T16:02:13.534141Z",
-          "model": "qwen.qwen3.5-122b",
-          "outcome": "success",
-          "started_at": "2026-04-29T16:02:00.814085Z"
-        },
-        {
-          "agent": "implementer",
-          "duration_s": 10.183157,
-          "ended_at": "2026-04-29T16:02:00.773005Z",
-          "model": "qwen.qwen3.5-122b",
-          "outcome": "success",
-          "started_at": "2026-04-29T16:01:50.589848Z"
-        },
-        {
-          "agent": "implementer",
-          "duration_s": 9.838501,
-          "ended_at": "2026-04-29T16:01:50.548233Z",
-          "model": "qwen.qwen3.5-122b",
-          "outcome": "success",
-          "started_at": "2026-04-29T16:01:40.709732Z"
-        },
-        {
-          "agent": "implementer",
-          "duration_s": 8.654428,
-          "ended_at": "2026-04-29T16:01:40.671019Z",
-          "model": "qwen.qwen3.5-122b",
-          "outcome": "success",
-          "started_at": "2026-04-29T16:01:32.016591Z"
-        },
-        {
-          "agent": "implementer",
-          "duration_s": 10.169052,
-          "ended_at": "2026-04-29T16:01:31.988303Z",
-          "model": "qwen.qwen3.5-122b",
-          "outcome": "success",
-          "started_at": "2026-04-29T16:01:21.819251Z"
         }
       ],
       "phase_group": "research_speckit",
@@ -806,7 +806,7 @@
       "speckit_research_dir": "projects/proj-tmp-003-agriculture-optimization/specs/001-agriculture-optimization",
       "submitter": "legacy:llmxive-automation",
       "title": "Climate-Smart Agricultural Practices in Rural Areas to Improve Food Security",
-      "updated_at": "2026-04-29T04:57:45.043819+00:00"
+      "updated_at": "2026-04-29T20:55:06.548492+00:00"
     },
     {
       "artifact_links": {

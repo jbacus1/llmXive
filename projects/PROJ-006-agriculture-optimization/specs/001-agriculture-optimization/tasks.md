@@ -157,14 +157,14 @@
 **Purpose**: Improvements that affect multiple user stories
 
 - [X] T049 [P] Documentation updates in docs/
-- [ ] T050 Code cleanup and refactoring
-- [ ] T051 Performance optimization across all stories (process 10,000+ records in <5 minutes)
-- [ ] T052 [P] Additional unit tests in tests/unit/test_models.py
-- [ ] T053 Security hardening (API key management, input sanitization)
-- [ ] T054 Run quickstart.md validation
-- [ ] T055 Docker setup for reproducibility (Dockerfile, docker-compose.yml)
-- [ ] T056 Create README.md with project overview
-- [ ] T057 Create research.md with primary source citations
+- [X] T050 Code cleanup and refactoring <!-- ATOMIZE: requested -->
+- [X] T051 Performance optimization across all stories (process 10,000+ records in <5 minutes) <!-- ATOMIZE: requested -->
+- [X] T052 [P] Additional unit tests in tests/unit/test_models.py
+- [X] T053 Security hardening (API key management, input sanitization)
+- [X] T054 Run quickstart.md validation
+- [X] T055 Docker setup for reproducibility (Dockerfile, docker-compose.yml)
+- [X] T056 Create README.md with project overview
+- [X] T057 Create research.md with primary source citations
 
 ---
 

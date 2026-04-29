@@ -1,0 +1,146 @@
+version: '3.8'
+
+services:
+  # Main application service
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: climate-smart-app
+    volumes:
+      # Mount local data for persistence
+      - ./data:/app/data:rw
+      - ./paper:/app/paper:rw
+      - ./code/scripts:/app/code/scripts:rw
+    environment:
+      - OPENWEATHER_API_KEY=${OPENWEATHER_API_KEY:-}
+      - USGS_USERNAME=${USGS_USERNAME:-}
+      - USGS_PASSWORD=${USGS_PASSWORD:-}
+      - PYTHONPATH=/app/src
+    working_dir: /app
+    profiles:
+      - default
+
+  # Development service with hot-reload
+  dev:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: climate-smart-dev
+    volumes:
+      - ./src:/app/src:rw
+      - ./tests:/app/tests:rw
+      - ./data:/app/data:rw
+      - ./paper:/app/paper:rw
+      - ./code:/app/code:rw
+    environment:
+      - OPENWEATHER_API_KEY=${OPENWEATHER_API_KEY:-}
+      - USGS_USERNAME=${USGS_USERNAME:-}
+      - USGS_PASSWORD=${USGS_PASSWORD:-}
+      - PYTHONPATH=/app/src
+      - PYTHONDONTWRITEBYTECODE=1
+      - PYTHONUNBUFFERED=1
+    working_dir: /app
+    profiles:
+      - development
+    command: python -m pytest tests/ -v --tb=short --watch
+
+  # Test runner service
+  test:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: climate-smart-test
+    volumes:
+      - ./data:/app/data:ro
+      - ./paper:/app/paper:rw
+    environment:
+      - OPENWEATHER_API_KEY=${OPENWEATHER_API_KEY:-}
+      - USGS_USERNAME=${USGS_USERNAME:-}
+      - USGS_PASSWORD=${USGS_PASSWORD:-}
+      - PYTHONPATH=/app/src
+    working_dir: /app
+    profiles:
+      - test
+    command: python -m pytest tests/ -v --tb=short --cov=src --cov-report=xml
+
+  # Data collection service
+  data-collector:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: climate-smart-data-collector
+    volumes:
+      - ./data:/app/data:rw
+      - ./code/scripts:/app/code/scripts:rw
+    environment:
+      - OPENWEATHER_API_KEY=${OPENWEATHER_API_KEY:-}
+      - USGS_USERNAME=${USGS_USERNAME:-}
+      - USGS_PASSWORD=${USGS_PASSWORD:-}
+      - PYTHONPATH=/app/src
+    working_dir: /app
+    profiles:
+      - data
+    command: python code/scripts/download_datasets.py
+    restart: "no"
+
+  # Visualization service
+  viz:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: climate-smart-viz
+    volumes:
+      - ./data:/app/data:ro
+      - ./paper:/app/paper:rw
+      - ./code/scripts:/app/code/scripts:rw
+    environment:
+      - OPENWEATHER_API_KEY=${OPENWEATHER_API_KEY:-}
+      - USGS_USERNAME=${USGS_USERNAME:-}
+      - USGS_PASSWORD=${USGS_PASSWORD:-}
+      - PYTHONPATH=/app/src
+      - MPLBACKEND=Agg
+    working_dir: /app
+    profiles:
+      - viz
+    command: python code/scripts/render_all_figures.py
+    restart: "no"
+
+  # Interactive shell for debugging
+  shell:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: climate-smart-shell
+    volumes:
+      - ./src:/app/src:rw
+      - ./tests:/app/tests:rw
+      - ./data:/app/data:rw
+      - ./paper:/app/paper:rw
+      - ./code:/app/code:rw
+    environment:
+      - OPENWEATHER_API_KEY=${OPENWEATHER_API_KEY:-}
+      - USGS_USERNAME=${USGS_USERNAME:-}
+      - USGS_PASSWORD=${USGS_PASSWORD:-}
+      - PYTHONPATH=/app/src
+    working_dir: /app
+    profiles:
+      - debug
+    stdin_open: true
+    tty: true
+    command: /bin/bash
+
+# Named volumes for persistent data
+volumes:
+  data-volume:
+    driver: local
+  paper-volume:
+    driver: local
+  code-volume:
+    driver: local
+
+# Networks
+networks:
+  default:
+    name: climate-smart-network
+    driver: bridge
