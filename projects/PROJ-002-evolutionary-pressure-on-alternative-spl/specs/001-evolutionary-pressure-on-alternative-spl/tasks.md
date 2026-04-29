@@ -136,8 +136,8 @@
 
 - [X] T048 [P] Documentation updates in `code/docs/`
 - [X] T049 Code cleanup and refactoring across all modules <!-- ATOMIZE: requested -->
-- [ ] T050 Performance optimization for alignment throughput (>10M reads/min per plan.md)
-- [ ] T051 [P] Additional unit tests in `code/tests/unit/`
+- [X] T050 Performance optimization for alignment throughput (>10M reads/min per plan.md) <!-- ATOMIZE: requested -->
+- [X] T051 [P] Additional unit tests in `code/tests/unit/` <!-- ATOMIZE: requested -->
 - [ ] T052 Security hardening for data access
 - [ ] T053 Run quickstart.md validation
 - [ ] T054 [P] Create end-to-end pipeline integration test

@@ -207,6 +207,12 @@
       "type": "file"
     },
     {
+      "path": "src/llmxive/agents/lifecycle.py",
+      "accessCount": 5,
+      "lastAccessed": 1777477838918,
+      "type": "file"
+    },
+    {
       "path": "specs/001-agentic-pipeline-refactor/quickstart.md",
       "accessCount": 4,
       "lastAccessed": 1777401071103,
@@ -222,12 +228,6 @@
       "path": "src/llmxive/state/runlog.py",
       "accessCount": 4,
       "lastAccessed": 1777429859097,
-      "type": "file"
-    },
-    {
-      "path": "src/llmxive/agents/lifecycle.py",
-      "accessCount": 4,
-      "lastAccessed": 1777457158574,
       "type": "file"
     },
     {

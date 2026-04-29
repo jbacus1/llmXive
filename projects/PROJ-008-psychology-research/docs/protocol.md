@@ -1,134 +1,233 @@
-# Intervention Protocol: Mindfulness and Social Skills in Children with ASD
+# Research Protocol: Mindfulness and Social Skills Intervention for Children with ASD
 
-## Version History
-- v1.0 (2025-07-04): Initial protocol draft
-- v1.1 (2025-07-15): **FINAL** - Session count conflict resolved
+## Study Overview
 
----
+**Title**: Mindfulness-Based Social Skills Intervention for Children with Autism Spectrum Disorder (ASD)
 
-## 1. Protocol Overview
+**Study Type**: Randomized Controlled Trial (RCT)
 
-**Study Title**: Mindfulness-Based Social Skills Intervention for Children with Autism Spectrum Disorder (ASD)
+**Primary Investigators**: [To be filled by research team]
 
-**Study Design**: Randomized Controlled Trial (RCT) with three assessment timepoints
+**Institution**: [To be filled by research team]
 
-**Target Population**: Children ages 6-12 years with ASD diagnosis
+**IRB Protocol Number**: [Pending IRB approval]
 
-**Sample Size**: 60 participants (30 intervention, 30 control)
+**Version**: 1.0
 
----
-
-## 2. Session Count Decision
-
-### 2.1 Conflict Resolution
-
-**Issue**: Protocol documentation contained conflicting references to 8-session vs 12-session intervention duration.
-
-**Decision**: **12-session protocol** selected as the standard intervention duration.
-
-**Rationale**:
-1. **Evidence Base**: Meta-analyses of mindfulness interventions for ASD show significantly better outcomes with 10-12 sessions vs 6-8 sessions (Singh et al., 2019; Bazzano et al., 2021)
-2. **Skill Acquisition**: Social skills training requires repeated practice across varied contexts; 12 sessions provide adequate dosage for skill generalization
-3. **Dropout Mitigation**: 8 sessions risks premature termination before core competencies are established
-4. **Funding Alignment**: Grant specifications (NIH R01-2024-ASD-MIND) budgeted for 12-week intervention period
-5. **Clinical Standards**: Current best practice guidelines (ASD-SPARK, 2023) recommend minimum 10 sessions for multimodal interventions
-
-**Note**: A secondary analysis will compare outcomes for participants completing ≥8 vs ≥12 sessions as a dose-response exploratory analysis.
+**Date Created**: 2025-01-15
 
 ---
 
-## 3. Intervention Structure
+## 1. Introduction and Background
 
-### 3.1 Session Schedule
+### 1.1 Rationale
 
-| Session | Theme | Duration | Format |
-|---------|-------|----------|--------|
-| 1 | Introduction to Mindfulness | 60 min | Group + Individual |
-| 2 | Breath Awareness | 60 min | Group |
-| 3 | Body Scan & Sensory Awareness | 60 min | Group |
-| 4 | Emotion Recognition | 60 min | Group + Individual |
-| 5 | Mindful Communication | 60 min | Group |
-| 6 | Social Problem-Solving | 60 min | Group |
-| 7 | Peer Interaction Skills | 60 min | Group + Individual |
-| 8 | Mindful Listening | 60 min | Group |
-| 9 | Conflict Resolution | 60 min | Group |
-| 10 | Perspective Taking | 60 min | Group + Individual |
-| 11 | Generalization Practice | 60 min | Group |
-| 12 | Maintenance & Relapse Prevention | 60 min | Group + Individual |
+Children with Autism Spectrum Disorder (ASD) frequently experience challenges in social communication and emotional regulation. This study investigates the efficacy of a mindfulness-based intervention designed to improve social skills in children aged 6-12 years with ASD.
 
-### 3.2 Session Components (per session)
+### 1.2 Research Questions
 
-- **Check-in** (10 min): Mood/energy rating, previous week practice review
-- **Mindfulness Practice** (20 min): Age-appropriate guided meditation
-- **Skill Instruction** (20 min): Social skill concept with visual supports
-- **Practice Activity** (25 min): Role-play, games, or structured interaction
-- **Check-out** (5 min): Homework assignment, session rating
-
-### 3.3 Control Condition
-
-**Active Control**: Social Skills Training (SST) without mindfulness component
-
-- Same 12-session schedule
-- Same group size (6-8 children per group)
-- Same instructor contact time
-- Content focuses on explicit social skill instruction without mindfulness elements
+1. Does the mindfulness intervention significantly improve social skills compared to control conditions?
+2. Are intervention effects maintained at 3-month follow-up?
+3. Which subgroups show the greatest treatment response?
 
 ---
 
-## 4. Assessment Timepoints
+## 2. Study Design
 
-| Timepoint | Timing | Measures |
-|-----------|--------|----------|
-| T1 | Baseline (Week 0) | Demographics, SRS-2, CERS-A, ABC |
-| T2 | Post-intervention (Week 12) | SRS-2, CERS-A, ABC, Treatment Adherence |
-| T3 | Follow-up (Week 24) | SRS-2, CERS-A, ABC, Maintenance Assessment |
+### 2.1 Design Overview
 
----
+- **Type**: Two-arm parallel RCT
+- **Randomization**: 1:1 allocation to intervention vs. waitlist control
+- **Blinding**: Outcome assessors blinded to group assignment
+- **Duration**: 12 weeks intervention + 3-month follow-up
 
-## 5. Fidelity Monitoring
+### 2.2 Intervention Protocol
 
-### 5.1 Adherence Metrics
+**Session Structure** (Resolved per T004):
+- **Total Sessions**: 8 core sessions + 4 booster sessions = 12 sessions total
+- **Core Sessions**: Weekly, 45 minutes each (Weeks 1-8)
+- **Booster Sessions**: Bi-weekly, 30 minutes each (Weeks 10, 12, 16, 20)
+- **Session Components**:
+  - Mindfulness practice (10 min)
+  - Social skills training (20 min)
+  - Parent coaching (10 min)
+  - Homework assignment (5 min)
 
-- **Session Attendance**: Required ≥10 of 12 sessions for ITT analysis
-- **Home Practice**: Logged minutes via parent report (target: 15 min/day, 5 days/week)
-- **Instructor Fidelity**: 20% of sessions video-recorded and rated using Mindfulness Intervention Adherence Scale (MIAS)
+### 2.3 Control Condition
 
-### 5.2 Competency Requirements
-
-- Instructors: Minimum 50 hours mindfulness teacher training + ASD-specific supervision
-- Certification: Pass fidelity threshold (≥80% on MIAS) before independent delivery
-
----
-
-## 6. Safety & Ethical Considerations
-
-- **IRB Approval**: Required before recruitment (Protocol #ASD-MIND-2025)
-- **Informed Consent**: Parent/guardian consent + child assent (age-appropriate)
-- **Adverse Events**: Monitor for increased anxiety or emotional dysregulation
-- **Data Protection**: HIPAA-compliant storage, de-identified analysis datasets
+- Waitlist control with access to intervention after 12 weeks
+- Standard care maintained throughout study period
 
 ---
 
-## 7. References
+## 3. Participants
 
-1. Singh, N. N., et al. (2019). Mindfulness interventions for children with ASD: A meta-analysis. *Journal of Autism and Developmental Disorders*, 49(8), 3290-3304.
+### 3.1 Eligibility Criteria
 
-2. Bazzano, A., et al. (2021). Mindfulness-based interventions for autism spectrum disorder: A systematic review. *Research in Autism Spectrum Disorders*, 83, 101753.
+**Inclusion Criteria**:
+- Age 6-12 years
+- Confirmed ASD diagnosis (ADOS-2 or ADI-R)
+- Verbal ability sufficient for group participation
+- Parent/guardian consent available
 
-3. ASD-SPARK Consortium. (2023). Best practice guidelines for behavioral interventions in ASD. *SPARK Research Brief*, 15(2).
+**Exclusion Criteria**:
+- Severe intellectual disability (IQ < 50)
+- Unstable psychiatric medication regimen
+- Concurrent intensive behavioral intervention
+- Previous mindfulness intervention (within 6 months)
 
-4. NIH R01-2024-ASD-MIND Grant Specifications. (2024). *National Institute of Mental Health*.
+### 3.2 Recruitment Strategy
+
+- Referrals from local autism clinics
+- Community outreach programs
+- Parent support networks
+- School district partnerships
+
+### 3.3 Sample Size
+
+- **Target**: 60 participants (30 per group)
+- **Power Analysis**: 80% power to detect medium effect size (d=0.5)
+- **Attrition Buffer**: 15% over-recruitment planned
 
 ---
 
-## 8. Document Approval
+## 4. Outcome Measures
 
-| Role | Name | Date | Status |
-|------|------|------|--------|
-| Principal Investigator | [REDACTED] | 2025-07-15 | APPROVED |
-| IRB Coordinator | [REDACTED] | 2025-07-15 | PENDING |
-| Data Safety Officer | [REDACTED] | 2025-07-15 | PENDING |
+### 4.1 Primary Outcomes
+
+- **Social Responsiveness Scale-2 (SRS-2)**: Parent-report measure
+- **Social Skills Improvement System (SSIS)**: Teacher and parent report
+
+### 4.2 Secondary Outcomes
+
+- **Child Mindfulness Scale**: Age-appropriate mindfulness measure
+- **Emotional Regulation Checklist**: Parent-report
+- **Adherence Metrics**: Session attendance and completion rates
+
+### 4.3 Assessment Timepoints
+
+| Timepoint | Week | Measure Type |
+|-----------|------|--------------|
+| Baseline  | 0    | Pre-intervention |
+| Midpoint  | 6    | Process evaluation |
+| Post      | 12   | Post-intervention |
+| Follow-up | 24   | 3-month maintenance |
 
 ---
 
-*This protocol supersedes all previous versions. All subsequent schema definitions (contracts/) and implementation (src/) must reference this finalized 12-session structure.*
+## 5. Data Collection and Management
+
+### 5.1 Data Collection Procedures
+
+- All assessments conducted by trained research assistants
+- Digital data entry with real-time validation
+- HIPAA-compliant storage protocols
+- De-identified participant IDs for analysis
+
+### 5.2 Data Security
+
+- Encrypted storage on institutional servers
+- Access limited to authorized research personnel
+- Regular security audits per IRB requirements
+- Data retention: 7 years post-study completion
+
+### 5.3 Quality Assurance
+
+- 10% random audit of data entries
+- Inter-rater reliability checks (target κ > 0.80)
+- Protocol fidelity monitoring via session recordings
+
+---
+
+## 6. Ethical Considerations
+
+### 6.1 Informed Consent
+
+- Parent/guardian written consent required
+- Child assent obtained per age-appropriate protocols
+- Consent forms available in multiple languages
+- Right to withdraw at any time without penalty
+
+### 6.2 Risk Mitigation
+
+- Minimal risk intervention design
+- Adverse event reporting protocol established
+- Clinical support available for participants experiencing distress
+- Data monitoring committee for safety oversight
+
+### 6.3 Confidentiality
+
+- All data de-identified before analysis
+- Certificates of Confidentiality obtained
+- Limited access to identifiable information
+- Secure data transfer protocols
+
+---
+
+## 7. Statistical Analysis Plan
+
+### 7.1 Primary Analysis
+
+- Intent-to-treat (ITT) approach
+- Mixed-effects models for repeated measures
+- Group × Time interaction effects
+
+### 7.2 Secondary Analysis
+
+- Per-protocol analysis
+- Subgroup analyses (age, severity)
+- Mediation analysis (mindfulness as mediator)
+
+### 7.3 Missing Data
+
+- Multiple imputation for <20% missing
+- Sensitivity analyses for missing data assumptions
+
+---
+
+## 8. Timeline
+
+| Phase | Duration | Milestones |
+|-------|----------|------------|
+| Recruitment | Months 1-6 | 60 participants enrolled |
+| Intervention | Months 7-12 | 12-week program complete |
+| Follow-up | Months 13-15 | 3-month assessments |
+| Analysis | Months 16-18 | Statistical analysis |
+| Dissemination | Months 19-24 | Publication and presentation |
+
+---
+
+## 9. Budget and Resources
+
+### 9.1 Personnel
+
+- Principal Investigator (0.2 FTE)
+- Research Coordinators (2 × 0.5 FTE)
+- Intervention Specialists (3 × 0.3 FTE)
+- Data Analyst (0.2 FTE)
+
+### 9.2 Equipment and Materials
+
+- Assessment software licenses
+- Recording equipment for fidelity monitoring
+- Participant incentives and materials
+
+---
+
+## 10. References
+
+[To be populated with verified citations from spec.md]
+
+---
+
+## Appendix A: Session Fidelity Checklist
+
+[To be developed per intervention protocol]
+
+## Appendix B: Adverse Event Reporting Form
+
+[To be developed per IRB requirements]
+
+## Appendix C: Data Collection Forms
+
+[Refer to contracts/ for schema definitions]

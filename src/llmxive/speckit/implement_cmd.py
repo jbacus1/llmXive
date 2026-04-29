@@ -205,19 +205,25 @@ class ImplementerAgent(SlashCommandAgent):
             tasks_path.write_text(text, encoding="utf-8")
             written.append(str(tasks_path.relative_to(repo)))
         elif verdict == "failed":
-            escalate_marker = (
-                ctx.project_dir / ".specify" / "memory" / "human_input_needed.yaml"
+            # Single-task failure should NOT escalate the entire
+            # project to human_input_needed (the lifecycle doesn't
+            # allow that transition from in_progress, AND a single
+            # bad task isn't grounds for halting research). Check
+            # the task off with a FAILED annotation and let the
+            # implementer move on; a downstream review will catch
+            # missing functionality.
+            tasks_path = Path(mechanical_output["tasks_path"])
+            text = tasks_path.read_text(encoding="utf-8")
+            failure_reason = doc.get("failure", {}).get("reason", "unspecified")
+            text = re.sub(
+                rf"^- \[ \] ({re.escape(task_id)}\b)([^\n]*)$",
+                rf"- [X] \1\2 <!-- FAILED: {failure_reason} -->",
+                text,
+                count=1,
+                flags=re.MULTILINE,
             )
-            escalate_marker.parent.mkdir(parents=True, exist_ok=True)
-            escalate_marker.write_text(
-                yaml.safe_dump(
-                    {
-                        "reason": doc.get("failure", {}).get("reason", "unspecified"),
-                        "task_id": task_id,
-                    }
-                ),
-                encoding="utf-8",
-            )
+            tasks_path.write_text(text, encoding="utf-8")
+            written.append(str(tasks_path.relative_to(repo)))
         elif verdict == "atomize":
             # Recorded for the Task-Atomizer Agent (US9) to pick up.
             # ALSO check the task off (with an ATOMIZE annotation) so

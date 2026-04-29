@@ -136,8 +136,8 @@
 
 ### Tests for User Story 4 ⚠️
 
-- [ ] T041 [P] [US4] Contract test for visualization output in tests/contract/test_visualization_schema.py
-- [ ] T042 [P] [US4] Integration test for GIS visualization in tests/integration/test_gis_visualization.py
+- [X] T041 [P] [US4] Contract test for visualization output in tests/contract/test_visualization_schema.py
+- [X] T042 [P] [US4] Integration test for GIS visualization in tests/integration/test_gis_visualization.py
 
 ### Implementation for User Story 4
 
