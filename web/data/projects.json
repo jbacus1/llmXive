@@ -62,7 +62,7 @@
       "name": "Qwen2.5-1.5B-Instruct"
     }
   ],
-  "generated_at": "2026-04-29T12:27:20.609619+00:00",
+  "generated_at": "2026-04-29T12:46:18.016479+00:00",
   "projects": [
     {
       "artifact_links": {
@@ -348,8 +348,8 @@
     {
       "artifact_links": {
         "citations": "state/citations/PROJ-006-agriculture-optimization.yaml",
-        "code": "projects/PROJ-006-agriculture-optimization/code",
-        "data": "projects/PROJ-006-agriculture-optimization/data",
+        "code": null,
+        "data": null,
         "idea": "projects/PROJ-006-agriculture-optimization/idea/agriculture-optimization.md",
         "paper_figures": null,
         "paper_pdf": null,
@@ -461,8 +461,8 @@
     {
       "artifact_links": {
         "citations": "state/citations/PROJ-007-energy-systems.yaml",
-        "code": "projects/PROJ-007-energy-systems/code",
-        "data": "projects/PROJ-007-energy-systems/data",
+        "code": null,
+        "data": null,
         "idea": "projects/PROJ-007-energy-systems/idea/energy-systems.md",
         "paper_figures": null,
         "paper_pdf": null,
@@ -574,8 +574,8 @@
     {
       "artifact_links": {
         "citations": "state/citations/PROJ-008-psychology-research.yaml",
-        "code": "projects/PROJ-008-psychology-research/code",
-        "data": "projects/PROJ-008-psychology-research/data",
+        "code": null,
+        "data": null,
         "idea": "projects/PROJ-008-psychology-research/idea/psychology-research.md",
         "paper_figures": null,
         "paper_pdf": null,
