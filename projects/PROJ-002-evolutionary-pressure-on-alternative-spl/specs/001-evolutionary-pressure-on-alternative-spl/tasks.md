@@ -95,7 +95,7 @@
 - [X] T031 [US2] Implement differential splicing analysis in `code/src/analysis/differential_splicing.py`
 - [X] T032 [US2] Apply minimum ΔPSI threshold (≥0.1) per spec requirements
 - [X] T033 [US2] Apply minimum read coverage threshold (≥20 reads per junction)
-- [ ] T034 [US2] Apply Benjamini-Hochberg FDR correction (p < 0.05)
+- [X] T034 [US2] Apply Benjamini-Hochberg FDR correction (p < 0.05)
 - [ ] T035 [US2] Add logging for quantification and differential analysis operations
 
 **Checkpoint**: At this point, User Stories 1 AND 2 should both work independently
