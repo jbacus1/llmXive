@@ -1,0 +1,50 @@
+$schema: "http://json-schema.org/draft-07/schema#"
+title: "Processed Dataset Schema"
+description: "Schema for windowed time series data stored in data/processed/."
+type: "object"
+required:
+  - metadata
+  - windows
+properties:
+  metadata:
+    type: "object"
+    required:
+      - source_dataset
+      - checksum
+      - created_at
+    properties:
+      source_dataset:
+        type: "string"
+      checksum:
+        type: "string"
+        description: "SHA-256 hash of the raw source file."
+      created_at:
+        type: "string"
+        format: "date-time"
+  windows:
+    type: "array"
+    items:
+      type: "object"
+      required:
+        - window_id
+        - values
+        - anomaly_indices
+      properties:
+        window_id:
+          type: "string"
+        values:
+          type: "array"
+          items:
+            type: "number"
+        anomaly_indices:
+          type: "array"
+          items:
+            type: "integer"
+          description: "Indices where synthetic anomalies were injected."
+        injection_type:
+          type: "string"
+          enum:
+            - "mean_shift"
+            - "variance_spike"
+            - "none"
+additionalProperties: false

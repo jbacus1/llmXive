@@ -1,0 +1,76 @@
+$schema: "http://json-schema.org/draft-07/schema#"
+title: "Inference Results"
+description: "Schema for anomaly detection inference outputs from Bayesian and Baseline models."
+type: "object"
+properties:
+  run_id:
+    type: "string"
+    description: "Unique identifier for the inference run."
+  dataset_name:
+    type: "string"
+    description: "Name of the UCR/UCI dataset used."
+  model_name:
+    type: "string"
+    enum: ["bayesian", "spc", "vae"]
+    description: "The model that generated these results."
+  windows:
+    type: "array"
+    items:
+      type: "object"
+      properties:
+        window_id:
+          type: "string"
+        start_index:
+          type: "integer"
+        anomaly_scores:
+          type: "array"
+          items:
+            type: "number"
+            minimum: 0.0
+            maximum: 1.0
+          description: "Per-point anomaly probability scores."
+        predicted_anomaly_indices:
+          type: "array"
+          items:
+            type: "integer"
+          description: "Indices flagged as anomalies based on threshold."
+      required:
+        - window_id
+        - start_index
+        - anomaly_scores
+        - predicted_anomaly_indices
+  metrics:
+    type: "object"
+    properties:
+      precision:
+        type: "number"
+        minimum: 0.0
+        maximum: 1.0
+      recall:
+        type: "number"
+        minimum: 0.0
+        maximum: 1.0
+      f1_score:
+        type: "number"
+        minimum: 0.0
+        maximum: 1.0
+      auc_roc:
+        type: "number"
+        minimum: 0.0
+        maximum: 1.0
+      convergence_status:
+        type: "string"
+        enum: ["converged", "failed", "warning"]
+    required:
+      - precision
+      - recall
+      - f1_score
+      - auc_roc
+      - convergence_status
+required:
+  - run_id
+  - dataset_name
+  - model_name
+  - windows
+  - metrics
+additionalProperties: false

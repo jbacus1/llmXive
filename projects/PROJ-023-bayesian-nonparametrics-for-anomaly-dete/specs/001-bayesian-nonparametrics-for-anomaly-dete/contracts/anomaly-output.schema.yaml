@@ -1,0 +1,71 @@
+$schema: "http://json-schema.org/draft-07/schema#"
+title: "Anomaly Detection Output Schema"
+description: "Schema for model prediction outputs validated by the Implementer Agent."
+type: "object"
+required:
+  - window_id
+  - dataset_source
+  - predictions
+  - model_metadata
+properties:
+  window_id:
+    type: "string"
+    description: "Unique identifier for the time series window."
+  dataset_source:
+    type: "string"
+    description: "Name of the original dataset (e.g., ECGFiveDays)."
+  predictions:
+    type: "array"
+    description: "List of anomaly scores per time point."
+    items:
+      type: "object"
+      required:
+        - index
+        - score
+        - label
+      properties:
+        index:
+          type: "integer"
+          description: "Index within the window."
+        score:
+          type: "number"
+          description: "Anomaly probability score (0.0 to 1.0)."
+          minimum: 0.0
+          maximum: 1.0
+        label:
+          type: "string"
+          enum:
+            - "normal"
+            - "anomaly"
+          description: "Binary classification based on threshold."
+  model_metadata:
+    type: "object"
+    required:
+      - model_name
+      - version
+      - inference_time_seconds
+      - peak_memory_mb
+    properties:
+      model_name:
+        type: "string"
+        description: "Name of the model used (e.g., Bayesian_GP, Shewhart)."
+      version:
+        type: "string"
+        description: "Git commit hash or version tag."
+      inference_time_seconds:
+        type: "number"
+        description: "Wall-clock time for inference."
+      peak_memory_mb:
+        type: "number"
+        description: "Peak memory usage in megabytes."
+      convergence_diagnostics:
+        type: "object"
+        description: "Optional diagnostics for Bayesian models."
+        properties:
+          r_hat:
+            type: "number"
+            description: "Potential scale reduction factor."
+          ess:
+            type: "integer"
+            description: "Effective sample size."
+additionalProperties: false
