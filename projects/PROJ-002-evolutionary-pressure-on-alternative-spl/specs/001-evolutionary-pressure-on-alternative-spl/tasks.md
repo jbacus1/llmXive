@@ -35,9 +35,9 @@
 - [X] T005 Create base configuration management in `code/src/utils/config.py`
 - [X] T006 [P] Implement checksum utilities in `code/src/utils/checksum.py`
 - [X] T007 Setup SQLite metadata database schema for sample tracking
-- [ ] T008 [P] Create data model contracts in `code/specs/contracts/`
-- [ ] T009 Setup environment configuration with random seeds for reproducibility
-- [ ] T010 [P] Implement logging infrastructure for pipeline operations
+- [X] T008 [P] Create data model contracts in `code/specs/contracts/`
+- [X] T009 Setup environment configuration with random seeds for reproducibility
+- [X] T010 [P] Implement logging infrastructure for pipeline operations
 
 **Checkpoint**: Foundation ready - user story implementation can now begin in parallel
 
@@ -53,7 +53,7 @@
 
 > **NOTE: Write these tests FIRST, ensure they FAIL before implementation**
 
-- [ ] T011 [P] [US1] Contract test for SRA downloader in `code/tests/contract/test_sra_downloader.py`
+- [X] T011 [P] [US1] Contract test for SRA downloader in `code/tests/contract/test_sra_downloader.py`
 - [ ] T012 [P] [US1] Contract test for STAR alignment in `code/tests/contract/test_star_alignment.py`
 - [ ] T013 [P] [US1] Integration test for data acquisition pipeline in `code/tests/integration/test_acquisition_pipeline.py`
 - [ ] T014 [P] [US1] Unit test for metadata parser in `code/tests/unit/test_metadata_parser.py`
