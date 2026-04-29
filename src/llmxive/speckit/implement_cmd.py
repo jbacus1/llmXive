@@ -192,6 +192,48 @@ class ImplementerAgent(SlashCommandAgent):
                 target.parent.mkdir(parents=True, exist_ok=True)
                 target.write_text(contents, encoding="utf-8")
                 written.append(str(target.relative_to(repo)))
+
+            # Code-execution step: if the LLM marked any artifact as
+            # `execute: true` (a runnable script that produces real
+            # data/figures), run it inside the project's venv and
+            # capture stdout/stderr. Reviewers later check that the
+            # task actually produced expected output, not just code.
+            from llmxive import sandbox as _sandbox
+            for art in doc.get("artifacts", []) or []:
+                if not art.get("execute"):
+                    continue
+                relpath = art.get("path", "").lstrip("/")
+                proj_prefix = f"projects/{project_root.name}/"
+                if relpath.startswith(proj_prefix):
+                    relpath = relpath[len(proj_prefix):]
+                if not relpath.endswith(".py"):
+                    continue  # only run python scripts
+                try:
+                    result = _sandbox.run_python_script(
+                        project_dir=project_root,
+                        script_relpath=relpath,
+                        timeout_s=int(art.get("timeout_s", 600)),
+                    )
+                except Exception as exc:  # pragma: no cover — defensive
+                    print(f"[implementer] sandbox failed for {relpath}: {exc}")
+                    continue
+                # Persist execution log next to the script.
+                log_path = (
+                    project_root
+                    / "code"
+                    / ".tasks"
+                    / f"{task_id}.{relpath.replace('/', '_')}.log"
+                )
+                log_path.parent.mkdir(parents=True, exist_ok=True)
+                log_path.write_text(
+                    f"# {relpath} (exit {result.returncode}, "
+                    f"{result.duration_s:.1f}s, ok={result.ok})\n\n"
+                    f"## stdout\n\n```\n{result.stdout}\n```\n\n"
+                    f"## stderr\n\n```\n{result.stderr}\n```\n",
+                    encoding="utf-8",
+                )
+                written.append(str(log_path.relative_to(repo)))
+
             # Check off the task in tasks.md.
             tasks_path = Path(mechanical_output["tasks_path"])
             text = tasks_path.read_text(encoding="utf-8")

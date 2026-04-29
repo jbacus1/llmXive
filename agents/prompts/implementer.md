@@ -34,6 +34,12 @@ artifacts:           # only when verdict=completed
   - path: <repo-relative path>
     contents: |
       <full file contents OR a unified diff if the file pre-exists>
+    execute: true     # OPTIONAL: when true and path ends in .py, the
+                      # runtime runs the script in the project's venv
+                      # and writes a stdout/stderr log next to it.
+                      # Use for scripts that PRODUCE real artifacts
+                      # (download data, fit a model, render a figure).
+    timeout_s: 600    # OPTIONAL: per-script wall-clock cap (default 600).
 failure:             # only when verdict=failed
   reason: <one sentence>
   required_human_action: <one sentence>
@@ -55,3 +61,31 @@ atomize:             # only when verdict=atomize (task too big for budget)
 - Every artifact written MUST live inside the project's canonical
   layout (`code/`, `data/`, `paper/`, etc.).
 - Output ONLY the YAML document.
+
+## Code execution (CRITICAL)
+
+This pipeline produces real research, not scaffolding. When a task
+asks for **runnable output** (downloaded data, computed statistics,
+rendered figures, model evaluations, etc.) the artifact MUST set
+`execute: true` so the runtime actually runs it and the resulting
+`stdout`/`stderr` is captured to `code/.tasks/<T###>.<script>.log`.
+
+Concretely:
+
+- Task says "Download dataset X to data/X.csv" → write a small
+  `code/scripts/download_X.py` that uses `urllib.request` /
+  `pandas.read_csv` etc., and set `execute: true`.
+- Task says "Compute correlation between A and B" → write
+  `code/scripts/compute_corr.py` that loads the data, computes
+  scipy.stats.pearsonr, prints the result, and saves a CSV/JSON to
+  `data/results/`. Set `execute: true`.
+- Task says "Render Figure 1" → write
+  `code/scripts/render_fig1.py` that produces a real matplotlib
+  PNG at `paper/figures/fig1.png`. Set `execute: true`.
+
+A research_complete project is one where the *output artifacts*
+exist on disk, not just the source code. Reviewers check this.
+
+For tasks that legitimately produce only source code (model
+classes, contract schemas, unit tests, configs) you do NOT need
+`execute: true`; the test harness runs separately.

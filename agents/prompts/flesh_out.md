@@ -87,3 +87,31 @@ caller will mark this idea rejected.
   what computation will be performed, and what statistical test (if
   any) will be applied.
 - Output ONLY the Markdown document.
+
+## SCOPE CONSTRAINTS (NON-NEGOTIABLE)
+
+This pipeline runs entirely on **GitHub Actions free-tier runners**:
+2 CPU cores, 7&nbsp;GB RAM, 14&nbsp;GB SSD, no GPU, max 6h per job.
+Each task in the eventual `tasks.md` will be implemented and
+**executed** on that runner. Your `Methodology sketch` MUST be
+realizable inside that envelope:
+
+- **No HPC / GPU / multi-node compute.** No CUDA, no SLURM, no
+  fine-tuning of >1B-param models. If a step needs more than 7&nbsp;GB
+  RAM or several CPU-hours, decompose it into ≤30-minute atomic
+  pieces or scale it down (smaller dataset, fewer epochs, fewer
+  parameter-grid points).
+- **No new experimental data collection.** Use public datasets:
+  UCI, OpenML, HuggingFace Datasets, Zenodo, NCBI, ENCODE,
+  NeuroVault, etc. Methodology MUST list explicit URLs / DOIs so
+  the implementer can `wget`/`curl` them.
+- **No specialized hardware.** No wet-lab, no MRI scanner, no
+  particle accelerator, no licensed corpora behind paywalls.
+- If the brainstormed idea is intrinsically out-of-scope (e.g.
+  "collect a new N=10000 survey"), set `Verdict: rejected — out
+  of scope` in the Duplicate-check block instead of writing a
+  fictional methodology.
+
+If your methodology can plausibly run inside a 6-hour GHA job
+end-to-end (download data → analyze → produce figures), it fits.
+Otherwise, scale it down or reject.
