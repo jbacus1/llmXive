@@ -96,7 +96,7 @@
 - [X] T032 [US2] Apply minimum ΔPSI threshold (≥0.1) per spec requirements
 - [X] T033 [US2] Apply minimum read coverage threshold (≥20 reads per junction)
 - [X] T034 [US2] Apply Benjamini-Hochberg FDR correction (p < 0.05)
-- [ ] T035 [US2] Add logging for quantification and differential analysis operations
+- [X] T035 [US2] Add logging for quantification and differential analysis operations
 
 **Checkpoint**: At this point, User Stories 1 AND 2 should both work independently
 
@@ -110,8 +110,8 @@
 
 ### Tests for User Story 3
 
-- [ ] T036 [P] [US3] Contract test for phyloP extractor in `code/tests/contract/test_phylo_extractor.py`
-- [ ] T037 [P] [US3] Contract test for enrichment analysis in `code/tests/contract/test_enrichment_test.py`
+- [X] T036 [P] [US3] Contract test for phyloP extractor in `code/tests/contract/test_phylo_extractor.py`
+- [X] T037 [P] [US3] Contract test for enrichment analysis in `code/tests/contract/test_enrichment_test.py`
 - [ ] T038 [P] [US3] Integration test for selection analysis pipeline in `code/tests/integration/test_selection_analysis.py`
 - [ ] T039 [P] [US3] Unit test for validation module in `code/tests/unit/test_validation.py`
 

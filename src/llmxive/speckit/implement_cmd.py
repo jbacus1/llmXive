@@ -114,7 +114,15 @@ class ImplementerAgent(SlashCommandAgent):
         try:
             doc = parse_yaml_lenient(llm_response.text)
         except yaml.YAMLError as exc:
-            raise RuntimeError(f"Implementer returned invalid YAML: {exc}") from exc
+            # Implementer responses with `contents: |` blocks are
+            # frequently invalid YAML when the embedded code contains
+            # docstrings, mixed indentation, or YAML-incompatible
+            # constructs. Fall back to a regex-based parser that pulls
+            # task_id/verdict/artifact paths/contents using markers
+            # rather than YAML structure.
+            doc = _regex_parse_implementer(llm_response.text)
+            if doc is None:
+                raise RuntimeError(f"Implementer returned invalid YAML: {exc}") from exc
         if not isinstance(doc, dict):
             raise RuntimeError("Implementer YAML must be a mapping")
 
@@ -189,6 +197,75 @@ class ImplementerAgent(SlashCommandAgent):
             )
 
         return written
+
+
+def _regex_parse_implementer(text: str) -> dict[str, Any] | None:
+    """Best-effort recovery when the LLM's YAML is malformed.
+
+    Looks for:
+      - top-level `task_id:` and `verdict:` lines
+      - one or more artifact entries with `path:` and `contents: |`
+        followed by an indented block (at least 2 spaces) terminated
+        by EOF or a top-level `verdict:` / `task_id:` / blank-then-key
+        line.
+
+    Returns a dict shaped like the YAML success case so the caller's
+    code path doesn't change. Returns None if recovery fails.
+    """
+    # Strip ```yaml / ``` fences if present.
+    body = text.strip()
+    if body.startswith("```"):
+        m = re.match(r"^```(?:yaml|yml)?\s*\n(.*)\n```\s*$", body, re.DOTALL | re.IGNORECASE)
+        if m:
+            body = m.group(1)
+
+    task_id_m = re.search(r"^task_id:\s*([^\s\n]+)\s*$", body, re.MULTILINE)
+    verdict_m = re.search(r"^verdict:\s*(\w+)\s*$", body, re.MULTILINE)
+    if not (task_id_m and verdict_m):
+        return None
+
+    out: dict[str, Any] = {
+        "task_id": task_id_m.group(1),
+        "verdict": verdict_m.group(1),
+    }
+
+    if out["verdict"] != "completed":
+        return out
+
+    artifacts: list[dict[str, str]] = []
+    # Find every "  path: <p>\n  contents: |" pair, then read the
+    # indented block until next "  path:" or end of artifacts list.
+    art_re = re.compile(
+        r"^\s*-\s*path:\s*(?P<path>[^\n]+)\s*\n"
+        r"\s*contents:\s*\|\s*\n"
+        r"(?P<block>(?:.*\n)*?)"
+        r"(?=^\s*-\s*path:|\Z)",
+        re.MULTILINE,
+    )
+    for m in art_re.finditer(body):
+        path = m.group("path").strip().strip('"').strip("'")
+        block = m.group("block").rstrip("\n")
+        # Determine the leading indent of the block from its first
+        # non-empty line, then strip that indent from every line.
+        indent = None
+        for ln in block.splitlines():
+            if ln.strip():
+                indent = len(ln) - len(ln.lstrip(" "))
+                break
+        if indent is None or indent == 0:
+            contents = block
+        else:
+            stripped = []
+            for ln in block.splitlines():
+                if len(ln) >= indent and ln[:indent].strip() == "":
+                    stripped.append(ln[indent:])
+                else:
+                    stripped.append(ln)
+            contents = "\n".join(stripped)
+        artifacts.append({"path": path, "contents": contents})
+
+    out["artifacts"] = artifacts
+    return out
 
 
 __all__ = ["ImplementerAgent"]

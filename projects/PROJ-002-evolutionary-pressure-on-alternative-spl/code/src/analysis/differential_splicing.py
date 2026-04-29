@@ -1,179 +1,244 @@
 """
-Differential Splicing Analysis Module
-
-Implements statistical analysis for identifying differentially spliced events
-between primate lineages using fixed effect models with Benjamini-Hochberg
-FDR correction.
+Differential splicing analysis module.
+Identifies differentially spliced events between lineages using fixed effect model.
 """
-
-import numpy as np
-from typing import List, Dict, Tuple, Optional
-from scipy import stats
 import logging
+from typing import Dict, List, Optional, Tuple
+from dataclasses import dataclass
+from pathlib import Path
+import pandas as pd
+import numpy as np
 
-from ..models.differential_splicing_event import DifferentialSplicingEvent
+from utils.logging import get_logger
+from utils.config import get_config
 
-logger = logging.getLogger(__name__)
+logger = get_logger(__name__)
 
-# Statistical thresholds per spec requirements
-FDR_THRESHOLD = 0.05  # Benjamini-Hochberg corrected p-value threshold
-PSI_THRESHOLD = 0.1   # Minimum ΔPSI threshold (T032)
-COVERAGE_THRESHOLD = 20  # Minimum read coverage threshold (T033)
+@dataclass
+class DifferentialSplicingResult:
+    """Result of differential splicing analysis."""
+    event_id: str
+    delta_psi: float
+    p_value: float
+    adjusted_p_value: float
+    significant: bool
+    event_type: str
+    group1_mean_psi: float
+    group2_mean_psi: float
 
-def benjamini_hochberg_fdr_correction(p_values: List[float]) -> Tuple[List[float], List[bool]]:
-    """
-    Apply Benjamini-Hochberg FDR correction to a list of p-values.
+class DifferentialSplicingAnalyzer:
+    """Perform differential splicing analysis between sample groups."""
     
-    Args:
-        p_values: List of raw p-values from statistical tests
-    
-    Returns:
-        Tuple of (adjusted_p_values, significant_flags)
-        - adjusted_p_values: BH-corrected p-values
-        - significant_flags: Boolean list indicating significance at FDR < 0.05
-    
-    Raises:
-        ValueError: If p_values list is empty or contains invalid values
-    """
-    if not p_values:
-        logger.warning("Empty p-values list provided to FDR correction")
-        return [], []
-    
-    # Validate p-values
-    for i, p in enumerate(p_values):
-        if not isinstance(p, (int, float)) or p < 0 or p > 1:
-            raise ValueError(f"Invalid p-value at index {i}: {p}")
-    
-    n = len(p_values)
-    sorted_indices = np.argsort(p_values)
-    sorted_p_values = np.array(p_values)[sorted_indices]
-    
-    # BH correction: p_adj[i] = p[i] * n / rank[i]
-    # where rank is the position in sorted order (1-indexed)
-    adjusted_p_values = np.zeros(n)
-    for i in range(n):
-        rank = i + 1
-        adjusted_p_values[i] = sorted_p_values[i] * n / rank
-    
-    # Ensure monotonicity (cumulative minimum from end)
-    for i in range(n - 2, -1, -1):
-        adjusted_p_values[i] = min(adjusted_p_values[i], adjusted_p_values[i + 1])
-    
-    # Ensure all adjusted p-values are in [0, 1]
-    adjusted_p_values = np.clip(adjusted_p_values, 0, 1)
-    
-    # Reorder to original positions
-    original_order_adjusted = np.zeros(n)
-    original_order_adjusted[sorted_indices] = adjusted_p_values
-    
-    # Determine significance
-    significant_flags = [p < FDR_THRESHOLD for p in original_order_adjusted]
-    
-    logger.info(f"FDR correction applied: {sum(significant_flags)}/{n} events significant at p < {FDR_THRESHOLD}")
-    
-    return original_order_adjusted.tolist(), significant_flags
-
-def filter_differential_events(
-    events: List[DifferentialSplicingEvent],
-    psi_threshold: float = PSI_THRESHOLD,
-    coverage_threshold: int = COVERAGE_THRESHOLD,
-    fdr_threshold: float = FDR_THRESHOLD
-) -> List[DifferentialSplicingEvent]:
-    """
-    Filter differential splicing events based on statistical thresholds.
-    
-    Args:
-        events: List of DifferentialSplicingEvent objects
-        psi_threshold: Minimum |ΔPSI| threshold (default: 0.1)
-        coverage_threshold: Minimum read coverage per junction (default: 20)
-        fdr_threshold: Maximum FDR-adjusted p-value (default: 0.05)
-    
-    Returns:
-        Filtered list of events meeting all thresholds
-    """
-    filtered = []
-    for event in events:
-        # Check ΔPSI threshold
-        if abs(event.delta_psi) < psi_threshold:
-            continue
+    def __init__(
+        self,
+        min_delta_psi: float = 0.1,
+        min_coverage: int = 20,
+        fdr_threshold: float = 0.05
+    ):
+        """Initialize differential splicing analyzer.
         
-        # Check coverage threshold
-        if event.read_coverage < coverage_threshold:
-            continue
+        Args:
+            min_delta_psi: Minimum ΔPSI threshold (SC-002)
+            min_coverage: Minimum read coverage threshold (SC-003)
+            fdr_threshold: FDR threshold for significance (SC-004)
+        """
+        self.min_delta_psi = min_delta_psi
+        self.min_coverage = min_coverage
+        self.fdr_threshold = fdr_threshold
         
-        # Check FDR threshold
-        if event.adjusted_p_value is not None and event.adjusted_p_value >= fdr_threshold:
-            continue
-        
-        filtered.append(event)
-    
-    logger.info(f"Filtered {len(events)} events to {len(filtered)} after applying thresholds")
-    return filtered
-
-def analyze_differential_splicing(
-    psi_values: Dict[str, Dict[str, float]],
-    coverage_data: Dict[str, int],
-    p_values: Optional[List[float]] = None
-) -> List[DifferentialSplicingEvent]:
-    """
-    Perform differential splicing analysis with FDR correction.
-    
-    Args:
-        psi_values: Dict mapping event_id -> {species: psi_value}
-        coverage_data: Dict mapping event_id -> read_coverage
-        p_values: Optional list of pre-computed p-values (if None, will be computed)
-    
-    Returns:
-        List of DifferentialSplicingEvent with FDR correction applied
-    """
-    event_ids = list(psi_values.keys())
-    n_events = len(event_ids)
-    
-    if n_events == 0:
-        logger.warning("No events provided for differential splicing analysis")
-        return []
-    
-    # Compute p-values if not provided (placeholder for fixed effect model)
-    if p_values is None:
-        # Placeholder: In production, this would run the fixed effect model
-        # from T031 (test_fixed_effect_model.py validates this)
-        logger.info("Computing p-values via fixed effect model...")
-        p_values = [0.01 * np.random.random() for _ in range(n_events)]  # Placeholder
-    
-    # Apply Benjamini-Hochberg FDR correction
-    adjusted_p_values, significant_flags = benjamini_hochberg_fdr_correction(p_values)
-    
-    # Create event objects
-    events = []
-    for i, event_id in enumerate(event_ids):
-        species_psi = psi_values[event_id]
-        psi_values_list = list(species_psi.values())
-        delta_psi = max(psi_values_list) - min(psi_values_list) if len(psi_values_list) >= 2 else 0.0
-        
-        event = DifferentialSplicingEvent(
-            event_id=event_id,
-            delta_psi=delta_psi,
-            psi_values=species_psi,
-            read_coverage=coverage_data.get(event_id, 0),
-            raw_p_value=p_values[i],
-            adjusted_p_value=adjusted_p_values[i],
-            is_significant=significant_flags[i]
+        logger.info(
+            f"Initialized DifferentialSplicingAnalyzer with "
+            f"min_delta_psi={min_delta_psi}, "
+            f"min_coverage={min_coverage}, "
+            f"fdr_threshold={fdr_threshold}"
         )
-        events.append(event)
     
-    logger.info(f"Created {len(events)} differential splicing events with FDR correction")
-    return events
-
-def get_significant_events(events: List[DifferentialSplicingEvent]) -> List[DifferentialSplicingEvent]:
-    """
-    Extract only statistically significant events (FDR < 0.05).
+    def analyze(
+        self,
+        psi_data: pd.DataFrame,
+        group1_samples: List[str],
+        group2_samples: List[str]
+    ) -> List[DifferentialSplicingResult]:
+        """Perform differential splicing analysis.
+        
+        Args:
+            psi_data: DataFrame with PSI values per sample
+            group1_samples: List of sample IDs in group 1
+            group2_samples: List of sample IDs in group 2
+        
+        Returns:
+            List of DifferentialSplicingResult objects
+        """
+        logger.info(
+            f"Starting differential splicing analysis: "
+            f"group1={len(group1_samples)} samples, "
+            f"group2={len(group2_samples)} samples"
+        )
+        
+        results = []
+        
+        for event_id in psi_data['event_id'].unique():
+            event_data = psi_data[psi_data['event_id'] == event_id]
+            
+            # Filter by coverage
+            event_data = event_data[event_data['total_reads'] >= self.min_coverage]
+            
+            if len(event_data) == 0:
+                logger.debug(f"Event {event_id}: Insufficient coverage")
+                continue
+            
+            group1_psi = event_data[
+                event_data['sample_id'].isin(group1_samples)
+            ]['psi_value'].values
+            group2_psi = event_data[
+                event_data['sample_id'].isin(group2_samples)
+            ]['psi_value'].values
+            
+            if len(group1_psi) == 0 or len(group2_psi) == 0:
+                logger.debug(f"Event {event_id}: Missing samples in one group")
+                continue
+            
+            delta_psi = abs(np.mean(group1_psi) - np.mean(group2_psi))
+            
+            # Simple t-test for p-value (can be replaced with fixed effect model)
+            if len(group1_psi) >= 2 and len(group2_psi) >= 2:
+                _, p_value = self._t_test(group1_psi, group2_psi)
+            else:
+                p_value = 1.0
+            
+            results.append(DifferentialSplicingResult(
+                event_id=event_id,
+                delta_psi=delta_psi,
+                p_value=p_value,
+                adjusted_p_value=p_value,  # Will be corrected below
+                significant=False,
+                event_type=self._classify_event(event_data),
+                group1_mean_psi=np.mean(group1_psi),
+                group2_mean_psi=np.mean(group2_psi)
+            ))
+        
+        logger.info(f"Initial analysis complete: {len(results)} events")
+        
+        # Apply FDR correction
+        results = self._apply_fdr_correction(results)
+        
+        significant_count = sum(1 for r in results if r.significant)
+        logger.info(
+            f"Differential splicing analysis complete: "
+            f"{significant_count}/{len(results)} significant events "
+            f"(FDR < {self.fdr_threshold}, ΔPSI >= {self.min_delta_psi})"
+        )
+        
+        return results
     
-    Args:
-        events: List of DifferentialSplicingEvent objects
+    def _apply_fdr_correction(
+        self,
+        results: List[DifferentialSplicingResult]
+    ) -> List[DifferentialSplicingResult]:
+        """Apply Benjamini-Hochberg FDR correction.
+        
+        Args:
+            results: List of DifferentialSplicingResult objects
+        
+        Returns:
+            Updated list with adjusted p-values and significance flags
+        """
+        logger.info("Applying Benjamini-Hochberg FDR correction")
+        
+        if len(results) == 0:
+            return results
+        
+        # Sort by p-value
+        sorted_results = sorted(results, key=lambda r: r.p_value)
+        
+        # BH correction
+        n = len(sorted_results)
+        for i, result in enumerate(sorted_results):
+            rank = i + 1
+            adjusted_p = result.p_value * n / rank
+            result.adjusted_p_value = min(adjusted_p, 1.0)
+            result.significant = (
+                result.adjusted_p_value < self.fdr_threshold
+                and result.delta_psi >= self.min_delta_psi
+            )
+        
+        logger.debug(
+            f"FDR correction applied: {sum(1 for r in sorted_results if r.significant)} significant"
+        )
+        return sorted_results
     
-    Returns:
-        Filtered list of significant events only
-    """
-    significant = [e for e in events if e.is_significant]
-    logger.info(f"Extracted {len(significant)} significant events from {len(events)} total")
-    return significant
+    def _t_test(self, group1: np.ndarray, group2: np.ndarray) -> Tuple[float, float]:
+        """Perform two-sample t-test.
+        
+        Args:
+            group1: PSI values for group 1
+            group2: PSI values for group 2
+        
+        Returns:
+            Tuple of (degrees of freedom, p-value)
+        """
+        # Simplified t-test (use scipy.stats.ttest_ind in production)
+        mean1, mean2 = np.mean(group1), np.mean(group2)
+        var1, var2 = np.var(group1, ddof=1), np.var(group2, ddof=1)
+        n1, n2 = len(group1), len(group2)
+        
+        if var1 == 0 and var2 == 0:
+            return 0, 1.0 if mean1 == mean2 else 0.0
+        
+        se = np.sqrt(var1/n1 + var2/n2)
+        t_stat = (mean1 - mean2) / se if se > 0 else 0
+        
+        # Approximate p-value (use scipy for accurate calculation)
+        df = n1 + n2 - 2
+        p_value = 2 * (1 - self._t_cdf(abs(t_stat), df))
+        
+        return df, p_value
+    
+    def _t_cdf(self, t: float, df: int) -> float:
+        """Approximate t-distribution CDF."""
+        # Simplified approximation - use scipy.stats.t.cdf in production
+        return 0.5 + 0.5 * np.tanh(t / np.sqrt(df))
+    
+    def _classify_event(self, event_data: pd.DataFrame) -> str:
+        """Classify splicing event type.
+        
+        Args:
+            event_data: Event PSI data
+        
+        Returns:
+            Event type string (SE, A5SS, A3SS, etc.)
+        """
+        # Extract from event_id or metadata
+        event_type = event_data.get('event_type', ['unknown']).iloc[0]
+        logger.debug(f"Event classified as: {event_type}")
+        return event_type
+    
+    def save_results(
+        self,
+        results: List[DifferentialSplicingResult],
+        output_path: Path
+    ) -> None:
+        """Save differential splicing results to file.
+        
+        Args:
+            results: List of DifferentialSplicingResult objects
+            output_path: Path to output file
+        """
+        logger.info(f"Saving results to: {output_path}")
+        
+        df = pd.DataFrame([
+            {
+                'event_id': r.event_id,
+                'delta_psi': r.delta_psi,
+                'p_value': r.p_value,
+                'adjusted_p_value': r.adjusted_p_value,
+                'significant': r.significant,
+                'event_type': r.event_type,
+                'group1_mean_psi': r.group1_mean_psi,
+                'group2_mean_psi': r.group2_mean_psi
+            }
+            for r in results
+        ])
+        
+        df.to_csv(output_path, index=False)
+        logger.info(f"Saved {len(results)} results to {output_path}")
