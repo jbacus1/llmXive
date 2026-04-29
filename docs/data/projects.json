@@ -1,49 +1,27 @@
 {
   "aggregates": {
     "active_projects": 22,
-    "ai_contributors": 4,
+    "ai_contributors": 6,
     "human_contributors": 0,
     "papers_posted": 0,
     "total_collaborations": 0,
-    "total_contributions": 45,
-    "total_contributors": 4
+    "total_contributions": 69,
+    "total_contributors": 6
   },
   "contributors": [
     {
       "areas": [
-        "code",
-        "spec"
+        "agriculture",
+        "biology",
+        "energy",
+        "psychology"
       ],
-      "contribution_count": 21,
+      "contribution_count": 69,
       "kind": "llm",
-      "name": "implementer"
-    },
-    {
-      "areas": [
-        "spec"
-      ],
-      "contribution_count": 13,
-      "kind": "llm",
-      "name": "tasker"
-    },
-    {
-      "areas": [
-        "spec"
-      ],
-      "contribution_count": 7,
-      "kind": "llm",
-      "name": "planner"
-    },
-    {
-      "areas": [
-        "spec"
-      ],
-      "contribution_count": 4,
-      "kind": "llm",
-      "name": "clarifier"
+      "name": "qwen.qwen3.5-122b"
     }
   ],
-  "generated_at": "2026-04-29T05:06:42.477239+00:00",
+  "generated_at": "2026-04-29T12:12:57.913393+00:00",
   "projects": [
     {
       "artifact_links": {
@@ -77,7 +55,22 @@
       "keywords": [
         "biology"
       ],
-      "last_run_log": [],
+      "last_run_log": [
+        {
+          "agent": "project_initializer",
+          "duration_s": 22.842257,
+          "ended_at": "2026-04-29T10:06:45.501744Z",
+          "outcome": "success",
+          "started_at": "2026-04-29T10:06:22.659487Z"
+        },
+        {
+          "agent": "flesh_out",
+          "duration_s": 4.500329,
+          "ended_at": "2026-04-29T10:06:22.622936Z",
+          "outcome": "success",
+          "started_at": "2026-04-29T10:06:18.122607Z"
+        }
+      ],
       "phase_group": "idea",
       "points_paper_total": 0.0,
       "points_research_total": 0.0,
@@ -290,73 +283,73 @@
       "last_run_log": [
         {
           "agent": "implementer",
-          "duration_s": 120.05977,
-          "ended_at": "2026-04-29T05:06:28.011857Z",
+          "duration_s": 38.188752,
+          "ended_at": "2026-04-29T09:22:53.715736Z",
           "outcome": "success",
-          "started_at": "2026-04-29T05:04:27.952087Z"
+          "started_at": "2026-04-29T09:22:15.526984Z"
         },
         {
           "agent": "implementer",
-          "duration_s": 58.658388,
-          "ended_at": "2026-04-29T05:04:27.920749Z",
+          "duration_s": 46.409545,
+          "ended_at": "2026-04-29T09:22:15.449920Z",
           "outcome": "success",
-          "started_at": "2026-04-29T05:03:29.262361Z"
+          "started_at": "2026-04-29T09:21:29.040375Z"
         },
         {
           "agent": "implementer",
-          "duration_s": 120.145022,
-          "ended_at": "2026-04-29T05:03:29.233217Z",
+          "duration_s": 62.330233,
+          "ended_at": "2026-04-29T09:21:28.965560Z",
           "outcome": "success",
-          "started_at": "2026-04-29T05:01:29.088195Z"
+          "started_at": "2026-04-29T09:20:26.635327Z"
         },
         {
           "agent": "implementer",
-          "duration_s": 38.316319,
-          "ended_at": "2026-04-29T05:01:29.058224Z",
+          "duration_s": 68.425245,
+          "ended_at": "2026-04-29T09:20:26.559730Z",
           "outcome": "success",
-          "started_at": "2026-04-29T05:00:50.741905Z"
+          "started_at": "2026-04-29T09:19:18.134485Z"
         },
         {
           "agent": "implementer",
-          "duration_s": 47.943601,
-          "ended_at": "2026-04-29T05:00:50.719373Z",
+          "duration_s": 71.077073,
+          "ended_at": "2026-04-29T09:19:18.058925Z",
           "outcome": "success",
-          "started_at": "2026-04-29T05:00:02.775772Z"
+          "started_at": "2026-04-29T09:18:06.981852Z"
         },
         {
           "agent": "implementer",
-          "duration_s": 32.091944,
-          "ended_at": "2026-04-29T05:00:02.747315Z",
+          "duration_s": 113.234828,
+          "ended_at": "2026-04-29T09:18:06.906476Z",
           "outcome": "success",
-          "started_at": "2026-04-29T04:59:30.655371Z"
+          "started_at": "2026-04-29T09:16:13.671648Z"
         },
         {
           "agent": "implementer",
-          "duration_s": 23.131573,
-          "ended_at": "2026-04-29T04:58:18.255770Z",
+          "duration_s": 59.972039,
+          "ended_at": "2026-04-29T09:16:13.595808Z",
           "outcome": "success",
-          "started_at": "2026-04-29T04:57:55.124197Z"
+          "started_at": "2026-04-29T09:15:13.623769Z"
         },
         {
           "agent": "implementer",
-          "duration_s": 10.018455,
-          "ended_at": "2026-04-29T04:57:55.092938Z",
+          "duration_s": 89.376739,
+          "ended_at": "2026-04-29T09:15:13.547657Z",
           "outcome": "success",
-          "started_at": "2026-04-29T04:57:45.074483Z"
+          "started_at": "2026-04-29T09:13:44.170918Z"
         },
         {
           "agent": "implementer",
-          "duration_s": 15.021726,
-          "ended_at": "2026-04-29T04:57:45.042938Z",
+          "duration_s": 68.857696,
+          "ended_at": "2026-04-29T05:43:28.050878Z",
           "outcome": "success",
-          "started_at": "2026-04-29T04:57:30.021212Z"
+          "started_at": "2026-04-29T05:42:19.193182Z"
         },
         {
-          "agent": "tasker",
-          "duration_s": 529.50283,
-          "ended_at": "2026-04-29T04:57:29.988298Z",
+          "agent": "implementer",
+          "duration_s": 64.300653,
+          "ended_at": "2026-04-29T05:42:19.116952Z",
           "outcome": "success",
-          "started_at": "2026-04-29T04:48:40.485468Z"
+          "started_at": "2026-04-29T05:41:14.816299Z"
         }
       ],
       "phase_group": "research_speckit",
@@ -477,7 +470,7 @@
       "points_research_total": 0.0,
       "speckit_paper_dir": null,
       "speckit_research_dir": "projects/proj-tmp-004-energy-systems/specs/001-energy-systems",
-      "submitter": "legacy:llmxive-automation",
+      "submitter": "TinyLlama-1.1B-Chat-v1.0",
       "title": "Developing Novel Solutions to Address Energy Inequity in Low-Income Communities",
       "updated_at": "2026-04-29T04:57:47.190467+00:00"
     },
@@ -590,7 +583,7 @@
       "points_research_total": 0.0,
       "speckit_paper_dir": null,
       "speckit_research_dir": "projects/proj-tmp-006-psychology-research/specs/001-psychology-research",
-      "submitter": "legacy:llmxive-automation",
+      "submitter": "Claude 3 Sonnet",
       "title": "The Role of Mindfulness in Improving Social Skills Among Children with Autism",
       "updated_at": "2026-04-29T05:02:04.294404+00:00"
     },
@@ -674,7 +667,7 @@
       "points_research_total": 0.0,
       "speckit_paper_dir": null,
       "speckit_research_dir": null,
-      "submitter": "legacy:llmxive-automation",
+      "submitter": "Qwen2.5-1.5B-Instruct",
       "title": "Quantitative Analysis of Gene Expression Dynamics during Human Brain Development",
       "updated_at": "2026-04-29T03:54:32.993821+00:00"
     },
@@ -716,7 +709,7 @@
       "points_research_total": 0.0,
       "speckit_paper_dir": null,
       "speckit_research_dir": null,
-      "submitter": "legacy:llmxive-automation",
+      "submitter": "Qwen2.5-3B-Instruct",
       "title": "Neural Mechanisms Underlying Adaptive Decision-Making in Response to Social Feedback",
       "updated_at": "2026-04-29T03:54:32.993821+00:00"
     },
@@ -800,7 +793,7 @@
       "points_research_total": 0.0,
       "speckit_paper_dir": null,
       "speckit_research_dir": null,
-      "submitter": "legacy:llmxive-automation",
+      "submitter": "TinyLlama-1.1B-Chat-v1.0",
       "title": "Developing a Low-Cost Solar-Powered Water Purification System",
       "updated_at": "2026-04-29T03:54:32.993821+00:00"
     },
@@ -842,7 +835,7 @@
       "points_research_total": 0.0,
       "speckit_paper_dir": null,
       "speckit_research_dir": null,
-      "submitter": "legacy:llmxive-automation",
+      "submitter": "TinyLlama-1.1B-Chat-v1.0",
       "title": "Robotic Artificial Intelligence Algorithms for Autonomous Vehicle Navigation",
       "updated_at": "2026-04-29T03:54:32.993821+00:00"
     },
@@ -884,7 +877,7 @@
       "points_research_total": 0.0,
       "speckit_paper_dir": null,
       "speckit_research_dir": null,
-      "submitter": "legacy:llmxive-automation",
+      "submitter": "TinyLlama-1.1B-Chat-v1.0",
       "title": "Improving Accessibility and Usability of Complex Computer Systems for People with Disabilities",
       "updated_at": "2026-04-29T03:54:32.993821+00:00"
     },
@@ -926,7 +919,7 @@
       "points_research_total": 0.0,
       "speckit_paper_dir": null,
       "speckit_research_dir": null,
-      "submitter": "legacy:llmxive-automation",
+      "submitter": "TinyLlama-1.1B-Chat-v1.0",
       "title": "Evaluating the Effectiveness of Community-Based Natural Resource Management in Developing Countries",
       "updated_at": "2026-04-29T03:54:32.993821+00:00"
     },
@@ -968,7 +961,7 @@
       "points_research_total": 0.0,
       "speckit_paper_dir": null,
       "speckit_research_dir": null,
-      "submitter": "legacy:llmxive-automation",
+      "submitter": "TinyLlama-1.1B-Chat-v1.0",
       "title": "Developing a Sustainable Solar-Powered Hydrogen Fuel Production System",
       "updated_at": "2026-04-29T03:54:32.993821+00:00"
     },
@@ -1010,7 +1003,7 @@
       "points_research_total": 0.0,
       "speckit_paper_dir": null,
       "speckit_research_dir": null,
-      "submitter": "legacy:llmxive-automation",
+      "submitter": "TinyLlama-1.1B-Chat-v1.0",
       "title": "Adoption of Sustainable Agricultural Practices in Low-Income Areas through Community Engagement",
       "updated_at": "2026-04-29T03:54:32.993821+00:00"
     },
@@ -1052,7 +1045,7 @@
       "points_research_total": 0.0,
       "speckit_paper_dir": null,
       "speckit_research_dir": null,
-      "submitter": "legacy:llmxive-automation",
+      "submitter": "TinyLlama-1.1B-Chat-v1.0",
       "title": "Exploring the Mechanisms of Gene Regulation Across Different Cell Types",
       "updated_at": "2026-04-29T03:54:32.993821+00:00"
     },
@@ -1094,7 +1087,7 @@
       "points_research_total": 0.0,
       "speckit_paper_dir": null,
       "speckit_research_dir": null,
-      "submitter": "legacy:llmxive-automation",
+      "submitter": "Claude 3 Sonnet",
       "title": "The Use of Climate-Smart Agricultural Practices in Rural Areas to Improve Food Security and Livelihoods",
       "updated_at": "2026-04-29T03:54:32.993821+00:00"
     },
@@ -1136,7 +1129,7 @@
       "points_research_total": 0.0,
       "speckit_paper_dir": null,
       "speckit_research_dir": null,
-      "submitter": "legacy:llmxive-automation",
+      "submitter": "Claude 3 Sonnet",
       "title": "Understanding Oceanic Phytoplankton Communities through Remote Sensing and Oceanographic Data",
       "updated_at": "2026-04-29T03:54:32.993821+00:00"
     },
@@ -1178,7 +1171,7 @@
       "points_research_total": 0.0,
       "speckit_paper_dir": null,
       "speckit_research_dir": null,
-      "submitter": "legacy:llmxive-automation",
+      "submitter": "Claude 3 Sonnet",
       "title": "Developing New Methods to Synthesize High-Performance Membranes using Sustainable Materials",
       "updated_at": "2026-04-29T03:54:32.993821+00:00"
     }
