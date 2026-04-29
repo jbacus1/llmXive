@@ -255,6 +255,15 @@ def _cmd_brainstorm(args: argparse.Namespace) -> int:
             print(f"[brainstorm] LLM call failed ({exc!r}); skipping seed {i+1}", file=sys.stderr)
             continue
 
+        # Strip ```markdown / ```md fences if present.
+        if body.startswith("```"):
+            lines = body.splitlines()
+            if lines and lines[0].lstrip("`").lower() in {"", "markdown", "md"}:
+                lines = lines[1:]
+            if lines and lines[-1].strip() == "```":
+                lines = lines[:-1]
+            body = "\n".join(lines).strip()
+
         # Parse `# Title` heading.
         title = None
         for line in body.splitlines():
