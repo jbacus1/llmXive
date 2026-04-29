@@ -1,0 +1,299 @@
+# Assessment Schema - Mindfulness and Social Skills in Children with ASD
+# Defines outcome measures and timepoints for research data validation
+# Version: 1.0.0
+# Last Updated: 2025-01-15
+
+$schema: http://json-schema.org/draft-07/schema#
+$id: contracts/assessment.schema.yaml
+
+title: Assessment Record
+description: Schema for research assessment outcome measures across timepoints
+
+type: object
+required:
+  - assessment_id
+  - participant_id
+  - timepoint
+  - assessment_date
+  - outcome_measures
+
+properties:
+  assessment_id:
+    type: string
+    pattern: "^ASSESS-[0-9]{4}-[0-9]{3}$"
+    description: Unique identifier for this assessment record
+    example: "ASSESS-2025-001"
+
+  participant_id:
+    type: string
+    pattern: "^P[0-9]{3}$"
+    description: Reference to participant demographics (contracts/participant.schema.yaml)
+    example: "P001"
+
+  timepoint:
+    type: string
+    enum:
+      - baseline
+      - post_intervention
+      - follow_up_3mo
+      - follow_up_6mo
+    description: Assessment timepoint relative to intervention
+    example: "baseline"
+
+  assessment_date:
+    type: string
+    format: date
+    description: Date assessment was administered (YYYY-MM-DD)
+    example: "2025-03-15"
+
+  administered_by:
+    type: string
+    pattern: "^STAFF-[0-9]{2}$"
+    description: Staff member who administered the assessment
+    example: "STAFF-01"
+
+  outcome_measures:
+    type: object
+    description: Core outcome measure scores and metadata
+    required:
+      - srs_2
+      - ffmq
+      - csqs
+    properties:
+      srs_2:
+        type: object
+        description: Social Responsiveness Scale, 2nd Edition
+        required:
+          - raw_score
+          - t_score
+          - severity
+        properties:
+          raw_score:
+            type: integer
+            minimum: 0
+            maximum: 195
+            description: Sum of item scores (30-65 items depending on form)
+          t_score:
+            type: integer
+            minimum: 30
+            maximum: 100
+            description: Standardized T-score (mean=50, SD=10)
+          severity:
+            type: string
+            enum:
+              - normal
+              - mild
+              - moderate
+              - severe
+            description: Social impairment severity classification
+          form_type:
+            type: string
+            enum:
+              - parent_preschool
+              - parent_school_age
+              - teacher_preschool
+              - teacher_school_age
+            description: Which form was administered
+
+      ffmq:
+        type: object
+        description: Five Facet Mindfulness Questionnaire
+        required:
+          - total_score
+          - facet_scores
+        properties:
+          total_score:
+            type: integer
+            minimum: 39
+            maximum: 195
+            description: Sum of all facet scores (39 items)
+          facet_scores:
+            type: object
+            required:
+              - observing
+              - describing
+              - acting_with_awareness
+              - non_judging
+              - non_reactivity
+            properties:
+              observing:
+                type: integer
+                minimum: 8
+                maximum: 40
+                description: Observing subscale score (8 items)
+              describing:
+                type: integer
+                minimum: 8
+                maximum: 40
+                description: Describing subscale score (8 items)
+              acting_with_awareness:
+                type: integer
+                minimum: 8
+                maximum: 40
+                description: Acting with awareness subscale score (8 items)
+              non_judging:
+                type: integer
+                minimum: 8
+                maximum: 40
+                description: Non-judging subscale score (8 items)
+              non_reactivity:
+                type: integer
+                minimum: 8
+                maximum: 40
+                description: Non-reactivity subscale score (8 items)
+
+      csqs:
+        type: object
+        description: Child Social Questionnaire (parent-report)
+        required:
+          - total_score
+          - subscale_scores
+        properties:
+          total_score:
+            type: integer
+            minimum: 0
+            maximum: 100
+            description: Normalized total social skills score
+          subscale_scores:
+            type: object
+            required:
+              - peer_relationships
+              - social_communication
+              - emotional_recognition
+            properties:
+              peer_relationships:
+                type: integer
+                minimum: 0
+                maximum: 33
+                description: Peer relationship quality score
+              social_communication:
+                type: integer
+                minimum: 0
+                maximum: 33
+                description: Social communication ability score
+              emotional_recognition:
+                type: integer
+                minimum: 0
+                maximum: 34
+                description: Emotional recognition ability score
+
+      secondary_measures:
+        type: object
+        description: Optional secondary outcome measures
+        properties:
+          abc_c:
+            type: object
+            description: Aberrant Behavior Checklist - Community
+            properties:
+              irritability:
+                type: integer
+                minimum: 0
+                maximum: 75
+              stereotypy:
+                type: integer
+                minimum: 0
+                maximum: 28
+              hyperactivity:
+                type: integer
+                minimum: 0
+                maximum: 75
+              inappropriate_speech:
+                type: integer
+                minimum: 0
+                maximum: 16
+              lethargy:
+                type: integer
+                minimum: 0
+                maximum: 44
+
+  quality_indicators:
+    type: object
+    description: Data quality and validity indicators
+    required:
+      - completion_status
+      - missing_data_percentage
+    properties:
+      completion_status:
+        type: string
+        enum:
+          - complete
+          - partial
+          - withdrawn
+        description: Overall assessment completion status
+      missing_data_percentage:
+        type: number
+        minimum: 0
+        maximum: 100
+        description: Percentage of items with missing responses
+      validity_flags:
+        type: array
+        items:
+          type: string
+          enum:
+            - no_flags
+            - inconsistent_responses
+            - straight_lining
+            - excessive_missing
+        description: Data quality flags for review
+
+  notes:
+    type: string
+    maxLength: 1000
+    description: Administrator notes or observations
+
+  created_at:
+    type: string
+    format: date-time
+    description: ISO 8601 timestamp when record was created
+  updated_at:
+    type: string
+    format: date-time
+    description: ISO 8601 timestamp when record was last modified
+
+# Additional schema constraints
+additionalProperties: false
+
+# Timepoint-specific validation rules
+if:
+  properties:
+    timepoint:
+      const: baseline
+then:
+  properties:
+    assessment_date:
+      description: Must be within 14 days of first intervention session
+  required:
+    - assessment_date
+
+if:
+  properties:
+    timepoint:
+      const: post_intervention
+then:
+  properties:
+    assessment_date:
+      description: Must be within 14 days of last intervention session
+  required:
+    - assessment_date
+
+if:
+  properties:
+    timepoint:
+      const: follow_up_3mo
+then:
+  properties:
+    assessment_date:
+      description: Must be 90±14 days after post-intervention assessment
+  required:
+    - assessment_date
+
+if:
+  properties:
+    timepoint:
+      const: follow_up_6mo
+then:
+  properties:
+    assessment_date:
+      description: Must be 180±14 days after post-intervention assessment
+  required:
+    - assessment_date

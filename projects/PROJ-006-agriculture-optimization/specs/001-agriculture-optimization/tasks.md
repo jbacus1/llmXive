@@ -40,7 +40,7 @@
 - [X] T005 [P] Implement fail-fast validation in src/cli/validate.py (API keys, disk space, file existence)
 - [X] T006 [P] Setup configuration management in src/config/constants.py (Principle I compliance)
 - [X] T007 [P] Create schema validation helpers in src/config/schemas.py
-- [ ] T008 [P] Implement caching layer in src/data/cache.py (SQLite-based)
+- [X] T008 [P] Implement caching layer in src/data/cache.py (SQLite-based)
 - [ ] T009 [P] Setup error handling and logging infrastructure
 - [ ] T010 Create data-model.md and contracts/dataset.schema.yaml
 - [ ] T011 Create contracts/output.schema.yaml for pipeline outputs
