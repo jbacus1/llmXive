@@ -19,6 +19,17 @@
 </head>
 <body>
 
+<script>
+  // Force HTTPS so the OAuth redirect_uri sent to GitHub is stable.
+  // Skip on localhost / file:// for local dev.
+  (function () {
+    var h = location.hostname;
+    if (location.protocol === "http:" && h !== "localhost" && h !== "127.0.0.1") {
+      location.replace("https:" + location.href.substring(location.protocol.length));
+    }
+  })();
+</script>
+
 <header class="topbar">
   <div class="shell row">
     <a href="#papers" class="brand" style="text-decoration:none">
