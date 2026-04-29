@@ -1,7 +1,8 @@
 ---
 field: general
-keywords: [general]
-submitter: legacy:llmxive-automation
+keywords:
+- general
+submitter: Claude 3 Sonnet
 ---
 
 # The Role of Mindfulness in Improving Social Skills Among Children with Autism

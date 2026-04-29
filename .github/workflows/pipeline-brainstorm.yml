@@ -24,7 +24,21 @@ jobs:
       - run: pip install -e ".[dev]"
       - name: Preflight
         run: python -m llmxive preflight
-      - name: Run brainstorm pass
+      - name: Seed new ideas (LLM-driven)
+        run: |
+          python -c "
+          from pathlib import Path
+          from llmxive.state import project as project_store
+          from llmxive.types import Stage
+          projects = project_store.list_all(repo_root=Path('.'))
+          backlog = [p for p in projects if p.current_stage == Stage.BRAINSTORMED]
+          deficit = max(0, 3 - len(backlog))
+          print(f'[seed] {len(backlog)} brainstormed projects; will seed {deficit} new')
+          import subprocess, sys
+          if deficit:
+              subprocess.run([sys.executable, '-m', 'llmxive', 'brainstorm', '-n', str(deficit)], check=False)
+          "
+      - name: Advance brainstormed projects (flesh-out)
         run: python -m llmxive run --max-tasks 5 --stage brainstormed
       - name: Regenerate web data
         run: python -c "from llmxive.agents.status_reporter import regenerate_web_data; from pathlib import Path; regenerate_web_data(repo_root=Path('.'))"

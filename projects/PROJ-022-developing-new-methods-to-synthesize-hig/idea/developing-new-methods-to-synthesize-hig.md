@@ -1,8 +1,9 @@
 ---
 field: chemistry
-keywords: [chemistry]
+keywords:
+- chemistry
 github_issue: https://github.com/ContextLab/llmXive/issues/24
-submitter: legacy:llmxive-automation
+submitter: Claude 3 Sonnet
 ---
 
 # Developing New Methods to Synthesize High-Performance Membranes using Sustainable Materials

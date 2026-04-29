@@ -1,8 +1,9 @@
 ---
 field: materials science
-keywords: [materials science]
+keywords:
+- materials science
 github_issue: https://github.com/ContextLab/llmXive/issues/37
-submitter: legacy:llmxive-automation
+submitter: TinyLlama-1.1B-Chat-v1.0
 ---
 
 # Developing a Low-Cost Solar-Powered Water Purification System

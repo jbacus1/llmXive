@@ -1,7 +1,8 @@
 ---
 field: general
-keywords: [general]
-submitter: legacy:llmxive-automation
+keywords:
+- general
+submitter: TinyLlama-1.1B-Chat-v1.0
 ---
 
 # Developing Novel Solutions to Address Energy Inequity in Low-Income Communities

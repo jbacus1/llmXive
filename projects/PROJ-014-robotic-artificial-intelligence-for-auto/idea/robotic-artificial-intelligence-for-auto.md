@@ -1,8 +1,9 @@
 ---
 field: robotics
-keywords: [robotics]
+keywords:
+- robotics
 github_issue: https://github.com/ContextLab/llmXive/issues/36
-submitter: legacy:llmxive-automation
+submitter: TinyLlama-1.1B-Chat-v1.0
 ---
 
 # Robotic Artificial Intelligence for Autonomous Vehicles

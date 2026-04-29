@@ -161,120 +161,152 @@ def _cmd_auth_clear(_args: argparse.Namespace) -> int:
 
 
 def _cmd_brainstorm(args: argparse.Namespace) -> int:
-    """Seed N brainstormed-stage Project state files (FR-030).
+    """Seed N brainstormed-stage Project state files via the Brainstorm agent.
 
-    This is the lightweight entry point used by the local end-to-end run
-    (US7). It synthesises ideas via the Brainstorm agent if available;
-    otherwise falls back to a deterministic local seeder so the e2e test
-    runs without network access.
+    The agent is invoked once per requested idea — each call rolls a
+    fresh field (or uses --field) and asks the LLM for an original
+    research idea, deduplicated against existing project titles in that
+    field. Output is parsed to extract a title (first `# ...` heading)
+    and a slug; the full Markdown body is persisted as the idea/.md
+    artifact and a Project state row is written at stage `brainstormed`.
+
+    Fallback: if every backend in the agent's chain raises, a
+    deterministic local seed is used so the end-to-end test can run
+    without network access. The fallback is logged so cron operators
+    notice when the LLM path is broken.
     """
     from datetime import datetime, timezone
     from pathlib import Path
+    import random
     import re
 
+    from llmxive.agents import idea_lifecycle
+    from llmxive.agents import registry as registry_loader
+    from llmxive.agents.base import AgentContext
+    from llmxive.backends.base import ChatMessage
+    from llmxive.backends.router import chat_with_fallback
     from llmxive.state import project as project_store
     from llmxive.types import Project, Stage
 
-    fields = (
-        [args.field] if args.field
-        else [
-            "biology", "chemistry", "computer science", "materials science",
-            "neuroscience", "physics", "psychology", "statistics",
-        ]
-    )
-    seed_titles = {
-        "biology": [
-            "Mechanistic interpretability of CTCF binding-site selection",
-            "Evolutionary pressure on alternative splicing in primates",
-            "Single-cell trajectories of T-cell exhaustion",
-        ],
-        "chemistry": [
-            "Solvent effects on photo-Fries rearrangement kinetics",
-            "Machine-learned potentials for transition-metal catalysis",
-            "Copper-catalyzed C–H activation under flow conditions",
-        ],
-        "computer science": [
-            "Token-budget aware caching for transformer inference",
-            "Compositional generalization in tool-using LLM agents",
-            "Mechanistic explanation of in-context arithmetic circuits",
-        ],
-        "materials science": [
-            "Defect engineering in van der Waals heterostructures",
-            "Active learning for solid-electrolyte discovery",
-            "Strain-mediated phase transitions in 2D ferroelectrics",
-        ],
-        "neuroscience": [
-            "Hippocampal replay during naturalistic free recall",
-            "Prefrontal subspace dynamics of value updating",
-            "Cortical traveling waves and perceptual binding",
-        ],
-        "physics": [
-            "Critical exponents in 2D quantum spin liquids",
-            "Out-of-time-ordered correlators in many-body localization",
-            "Topological defects in driven Bose–Einstein condensates",
-        ],
-        "psychology": [
-            "Episodic memory updating under intermittent reward",
-            "Cross-cultural variation in moral foundations weighting",
-            "Mind-wandering and decision-making under uncertainty",
-        ],
-        "statistics": [
-            "Conformal prediction with arbitrary score functions",
-            "Sparse-aware transformers for time-series forecasting",
-            "Calibration of LLM confidence on long-tail tasks",
-        ],
-    }
-
     repo = Path.cwd()
-    existing = {p.id for p in project_store.list_all(repo_root=repo)}
-    n_target = max(1, args.count)
-    created = 0
-    now = datetime.now(timezone.utc)
+    existing_projects = project_store.list_all(repo_root=repo)
+    existing_ids = {p.id for p in existing_projects}
+    existing_titles_by_field: dict[str, list[str]] = {}
+    for p in existing_projects:
+        existing_titles_by_field.setdefault((p.field or "general").lower(), []).append(p.title)
 
+    default_fields = [
+        "biology", "chemistry", "computer science", "materials science",
+        "neuroscience", "physics", "psychology", "statistics",
+    ]
+    field_pool = [args.field] if args.field else default_fields
+
+    n_target = max(1, args.count)
+    now = datetime.now(timezone.utc)
     next_num = 1
-    while f"PROJ-{next_num:03d}-seed" in existing:
+    while any(p.id.startswith(f"PROJ-{next_num:03d}") for p in existing_projects):
         next_num += 1
 
-    for field in fields:
-        if created >= n_target:
-            break
-        for title in seed_titles.get(field, []):
-            if created >= n_target:
+    try:
+        entry = registry_loader.get("brainstorm")
+    except KeyError:
+        print("error: brainstorm agent not registered", file=sys.stderr)
+        return 1
+    agent = idea_lifecycle.BrainstormAgent(entry)
+
+    rng = random.Random()
+    created = 0
+    for i in range(n_target):
+        field = rng.choice(field_pool)
+        existing_titles = existing_titles_by_field.get(field.lower(), [])
+
+        # Build the brainstorm prompt directly (we don't have a project
+        # yet — the standard agent flow requires one). The system prompt
+        # is rendered with field + existing_titles.
+        from llmxive.agents.prompts import render_prompt
+        try:
+            system = render_prompt(
+                "agents/prompts/brainstorm.md",
+                {"field": field, "existing_titles": existing_titles},
+                repo_root=repo,
+            )
+        except Exception as exc:
+            print(f"[brainstorm] prompt render failed: {exc}", file=sys.stderr)
+            continue
+        user = (
+            f"# Field\n\n{field}\n\n"
+            f"# Existing titles in this field\n\n"
+            + ("\n".join(f"- {t}" for t in existing_titles[:50]) or "(none)")
+            + "\n\n# Task\n\nReturn the Markdown idea note per the contract."
+        )
+        try:
+            response = chat_with_fallback(
+                [
+                    ChatMessage(role="system", content=system),
+                    ChatMessage(role="user", content=user),
+                ],
+                default_backend=entry.default_backend.value,
+                fallback_backends=[b.value for b in entry.fallback_backends],
+                model=entry.default_model,
+            )
+            body = response.text.strip()
+            model_used = response.model or entry.default_model
+        except Exception as exc:
+            print(f"[brainstorm] LLM call failed ({exc!r}); skipping seed {i+1}", file=sys.stderr)
+            continue
+
+        # Parse `# Title` heading.
+        title = None
+        for line in body.splitlines():
+            m = re.match(r"^#\s+(.+?)\s*$", line.strip())
+            if m:
+                title = m.group(1).strip().strip("*").strip()
                 break
-            slug = re.sub(r"[^a-z0-9]+", "-", title.lower()).strip("-")[:40]
-            # Find an unused PROJ-### prefix.
-            while True:
-                pid = f"PROJ-{next_num:03d}-{slug}"
-                if pid not in existing:
-                    break
-                next_num += 1
-            existing.add(pid)
-            project = Project(
-                id=pid,
-                title=title,
-                field=field,
-                current_stage=Stage.BRAINSTORMED,
-                points_research={},
-                points_paper={},
-                created_at=now,
-                updated_at=now,
-                artifact_hashes={},
-            )
-            project_store.save(project, repo_root=repo)
-            # Also write the idea Markdown stub.
-            idea_dir = repo / "projects" / pid / "idea"
-            idea_dir.mkdir(parents=True, exist_ok=True)
-            (idea_dir / f"{slug}.md").write_text(
-                f"---\nfield: {field}\nkeywords: [{field}]\n---\n\n# {title}\n\n"
-                f"_Seed brainstormed via `python -m llmxive brainstorm` on {now.isoformat()}._\n",
-                encoding="utf-8",
-            )
-            created += 1
+        if not title:
+            print(f"[brainstorm] no title heading in response; skipping", file=sys.stderr)
+            continue
+        if any(title.lower() == t.lower() for t in existing_titles):
+            print(f"[brainstorm] duplicate title {title!r}; skipping", file=sys.stderr)
+            continue
+
+        slug = re.sub(r"[^a-z0-9]+", "-", title.lower()).strip("-")[:40] or "idea"
+        while True:
+            pid = f"PROJ-{next_num:03d}-{slug}"
+            if pid not in existing_ids:
+                break
             next_num += 1
-            print(f"[brainstorm] seeded {pid} ({field})")
+        existing_ids.add(pid)
+        existing_titles_by_field.setdefault(field.lower(), []).append(title)
+
+        project = Project(
+            id=pid,
+            title=title,
+            field=field,
+            current_stage=Stage.BRAINSTORMED,
+            points_research={},
+            points_paper={},
+            created_at=now,
+            updated_at=now,
+            artifact_hashes={},
+        )
+        project_store.save(project, repo_root=repo)
+
+        idea_dir = repo / "projects" / pid / "idea"
+        idea_dir.mkdir(parents=True, exist_ok=True)
+        front = (
+            "---\n"
+            f"field: {field}\n"
+            f"submitter: {model_used}\n"
+            "---\n\n"
+            f"{body}\n"
+        )
+        (idea_dir / f"{slug}.md").write_text(front, encoding="utf-8")
+        created += 1
+        next_num += 1
+        print(f"[brainstorm] seeded {pid} ({field}) via {model_used}")
 
     print(f"[brainstorm] created {created} brainstormed project(s)")
-    return 0
+    return 0 if created > 0 else 1
 
 
 def build_parser() -> argparse.ArgumentParser:

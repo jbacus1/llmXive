@@ -119,6 +119,41 @@ class FleshOutAgent(_IdeaPhaseAgent):
 
     prompt_path = "agents/prompts/flesh_out.md"
 
+    def build_messages(self, ctx: AgentContext) -> list[ChatMessage]:
+        messages = super().build_messages(ctx)
+        # Augment the user prompt with a real lit-search result block so
+        # the LLM grounds its "Related work" section on actual papers
+        # instead of hallucinating URLs that 404 (PROJ-006 spec.md was
+        # citing non-existent worldagroforestry.org/...).
+        title = ctx.metadata.get("title", "")
+        field = ctx.metadata.get("field", "")
+        query = " ".join(filter(None, [title, field]))
+        if query:
+            try:
+                import sys as _sys
+                from pathlib import Path as _Path
+                _repo = _Path(__file__).resolve().parent.parent.parent.parent
+                if str(_repo) not in _sys.path:
+                    _sys.path.insert(0, str(_repo))
+                from agents.tools.lit_search import lit_search
+                papers = lit_search(query=query, max_results=8)
+            except Exception as exc:  # pragma: no cover — defensive
+                papers = []
+                print(f"[flesh_out] lit_search failed: {exc!r}")
+            if papers:
+                lines = ["# Verified literature search results (use ONLY these URLs)"]
+                for p in papers:
+                    yr = f" ({p.year})" if p.year else ""
+                    lines.append(f"- [{p.title}{yr}]({p.source_url}) — {p.abstract[:200]}")
+                lit_block = "\n".join(lines)
+                # Append to the last user message.
+                last = messages[-1]
+                messages[-1] = ChatMessage(
+                    role=last.role,
+                    content=last.content + "\n\n" + lit_block + "\n",
+                )
+        return messages
+
     def _persist(self, ctx: AgentContext, response: ChatResponse) -> list[str]:
         repo = Path(__file__).resolve().parent.parent.parent.parent
         title = ctx.metadata.get("title", ctx.project_id)

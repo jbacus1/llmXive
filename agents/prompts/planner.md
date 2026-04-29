@@ -57,4 +57,9 @@ $schema: ...
 - For computational projects, `contracts/` MUST include at least one
   schema (e.g., dataset schema, output schema) that the
   Implementer's tests can validate against.
+- NEVER invent URLs or citations. If the spec/idea has cited URLs,
+  copy them verbatim; do not add new ones, do not fabricate
+  `(verified YYYY-MM-DD)` annotations. The Reference-Validator
+  fetches every cited URL — fabricated URLs flip the verdict to
+  mismatch.
 - Output ONLY the markers + content; no preamble.

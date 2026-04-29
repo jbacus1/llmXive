@@ -1,8 +1,9 @@
 ---
 field: environmental science
-keywords: [environmental science]
+keywords:
+- environmental science
 github_issue: https://github.com/ContextLab/llmXive/issues/34
-submitter: legacy:llmxive-automation
+submitter: TinyLlama-1.1B-Chat-v1.0
 ---
 
 # Evaluating the Effectiveness of Community-Based Natural Resource Management in Developing Countries

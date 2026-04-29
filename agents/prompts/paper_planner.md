@@ -46,4 +46,7 @@ For paper artifacts, the documents have paper-specific content:
   Figure-Generation-Agent do that).
 - Pin LaTeX class + version explicitly. Pin every figure-generation
   library + version.
+- NEVER invent citations. The bibliography is built from URLs that
+  already passed the Reference-Validator at the research stage; do
+  not add new ones at the paper-planning stage.
 - Output ONLY the markers + content; no preamble.

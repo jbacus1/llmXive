@@ -44,4 +44,11 @@ A Markdown document conforming to the `spec_template` structure:
   invent material the idea didn't claim.
 - Keep `[NEEDS CLARIFICATION: …]` markers for genuinely ambiguous
   decisions; the Clarifier Agent will resolve them. Cap at 3.
+- NEVER invent URLs or citations. If the idea Markdown's
+  `Related work` section has citations, copy them verbatim. Do NOT
+  add new ones, do NOT add `(verified YYYY-MM-DD)` annotations,
+  and do NOT replace TODO markers with fabricated URLs. The
+  Reference-Validator fetches every cited URL — fabricated URLs
+  flip the project's review verdict to mismatch and waste a
+  review cycle.
 - Output ONLY the Markdown document.

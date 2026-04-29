@@ -1,8 +1,9 @@
 ---
 field: computer science
-keywords: [computer science]
+keywords:
+- computer science
 github_issue: https://github.com/ContextLab/llmXive/issues/35
-submitter: legacy:llmxive-automation
+submitter: TinyLlama-1.1B-Chat-v1.0
 ---
 
 # Improving Accessibility and Usability of Complex Computer Systems

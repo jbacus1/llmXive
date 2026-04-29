@@ -1,8 +1,9 @@
 ---
 field: agriculture
-keywords: [agriculture]
+keywords:
+- agriculture
 github_issue: https://github.com/ContextLab/llmXive/issues/27
-submitter: legacy:llmxive-automation
+submitter: Claude 3 Sonnet
 ---
 
 # The Use of Climate-Smart Agricultural Practices in Rural Areas to Improve Food Security and Livelihoods

@@ -1,8 +1,9 @@
 ---
 field: chemistry
-keywords: [chemistry]
+keywords:
+- chemistry
 github_issue: https://github.com/ContextLab/llmXive/issues/33
-submitter: legacy:llmxive-automation
+submitter: TinyLlama-1.1B-Chat-v1.0
 ---
 
 # Developing a Sustainable Solar-Powered Hydrogen Fuel Production System

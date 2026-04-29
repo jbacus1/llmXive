@@ -1,8 +1,9 @@
 ---
 field: agriculture
-keywords: [agriculture]
+keywords:
+- agriculture
 github_issue: https://github.com/ContextLab/llmXive/issues/32
-submitter: legacy:llmxive-automation
+submitter: TinyLlama-1.1B-Chat-v1.0
 ---
 
 # Adoption of Sustainable Agricultural Practices in Low-Income Areas through Community Engagement

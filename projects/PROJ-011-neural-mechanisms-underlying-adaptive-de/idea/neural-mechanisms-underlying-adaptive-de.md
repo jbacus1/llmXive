@@ -1,8 +1,9 @@
 ---
 field: psychology
-keywords: [psychology]
+keywords:
+- psychology
 github_issue: https://github.com/ContextLab/llmXive/issues/40
-submitter: legacy:llmxive-automation
+submitter: Qwen2.5-3B-Instruct
 ---
 
 # Neural Mechanisms Underlying Adaptive Decision-Making in Response to Social Feedback

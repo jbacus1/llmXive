@@ -191,10 +191,12 @@
     const underline = document.getElementById("underline");
 
     function moveUnderline(tab) {
-      const r = tab.getBoundingClientRect();
-      const parentR = tab.parentElement.getBoundingClientRect();
-      underline.style.left = (r.left - parentR.left) + "px";
-      underline.style.width = r.width + "px";
+      // tab.offsetLeft is relative to the scrollable parent's content origin,
+      // which is exactly the coordinate space the absolutely-positioned
+      // underline lives in. getBoundingClientRect() drifts off by scrollLeft
+      // when .tabs-row is horizontally scrolled.
+      underline.style.left = tab.offsetLeft + "px";
+      underline.style.width = tab.offsetWidth + "px";
     }
     function activate(name, tab) {
       tabs.forEach(t => t.classList.toggle("active", t === tab));

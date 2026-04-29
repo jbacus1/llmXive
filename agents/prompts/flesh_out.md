@@ -70,10 +70,19 @@ caller will mark this idea rejected.
 
 ## Rules
 
-- Every `Related work` bullet MUST come from an actual `lit_search`
-  result — no fabricated citations (Constitution Principle II).
-- Every cited URL MUST appear in a `lit_search` result; the
-  Reference-Validator Agent will verify each one shortly after.
+- Every `Related work` bullet MUST come from the literature block
+  appended to the user message (header: "Verified literature search
+  results — use ONLY these URLs"). NEVER invent URLs. The
+  Reference-Validator Agent will fetch every cited URL; any 404
+  flips the project's review verdict to mismatch (Constitution
+  Principle II).
+- If the literature block is empty or absent, write
+  `Related work: TODO — lit-search returned no results.` instead
+  of fabricating citations. A real TODO is always better than a
+  fake citation.
+- Do NOT add `(verified YYYY-MM-DD)` annotations. Verification is
+  the Reference-Validator's job; an LLM claim of verification is
+  always invalid.
 - The `Methodology sketch` MUST mention how data will be obtained,
   what computation will be performed, and what statistical test (if
   any) will be applied.

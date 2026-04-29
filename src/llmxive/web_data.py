@@ -348,6 +348,7 @@ def _collect_reviews(repo: Path) -> tuple[dict[ReviewerKind, set[str]], list[dic
     """Walk every projects/<PROJ-ID>/reviews tree and collect contributor names."""
     by_kind: dict[ReviewerKind, set[str]] = {ReviewerKind.LLM: set(), ReviewerKind.HUMAN: set()}
     contributor_rows: dict[tuple[str, str], dict[str, Any]] = {}
+    fields = _project_fields(repo)
     proj_root = repo / "projects"
     if not proj_root.is_dir():
         return by_kind, []
@@ -380,7 +381,9 @@ def _collect_reviews(repo: Path) -> tuple[dict[ReviewerKind, set[str]], list[dic
                     key, {"name": name, "kind": kind.value, "contribution_count": 0, "areas": set()}
                 )
                 row["contribution_count"] += 1
-                row["areas"].add(sub.split("/")[0])
+                field = fields.get(pdir.name, "")
+                if field and field != "general":
+                    row["areas"].add(field)
     rows = []
     for r in contributor_rows.values():
         r["areas"] = sorted(r["areas"])
@@ -388,10 +391,25 @@ def _collect_reviews(repo: Path) -> tuple[dict[ReviewerKind, set[str]], list[dic
     return by_kind, rows
 
 
+def _project_fields(repo: Path) -> dict[str, str]:
+    """Map PROJ-NNN id → research field, used to label contributor areas."""
+    out: dict[str, str] = {}
+    for p in project_store.list_all(repo_root=repo):
+        out[p.id] = (p.field or "").strip().lower() or "general"
+    return out
+
+
 def _agent_contributors(repo: Path) -> list[dict[str, Any]]:
-    """Aggregate AI contributors from successful run-log entries."""
+    """Aggregate AI contributors from successful run-log entries.
+
+    Identity = model name (e.g. ``qwen.qwen3.5-122b``), NOT the agent
+    role (``tasker``/``implementer``). Multiple roles using the same
+    model collapse into a single contributor row. Areas reflect the
+    research field of the project worked on, NOT the pipeline step.
+    """
     runlog_root = repo / "state" / "run-log"
     counts: dict[str, dict[str, Any]] = {}
+    fields = _project_fields(repo)
     if runlog_root.is_dir():
         for month_dir in runlog_root.iterdir():
             if not month_dir.is_dir() or month_dir.name.startswith("."):
@@ -406,31 +424,20 @@ def _agent_contributors(repo: Path) -> list[dict[str, Any]]:
                         continue
                     if e.get("outcome") != "success":
                         continue
-                    name = e.get("agent_name") or ""
-                    if not name:
+                    model = (e.get("model_name") or "").strip()
+                    if not model:
+                        # Skip entries with no model attribution. The
+                        # agent_name (e.g. "tasker") would mislead.
                         continue
                     row = counts.setdefault(
-                        name,
-                        {"name": name, "kind": "llm", "contribution_count": 0, "areas": set()},
+                        model,
+                        {"name": model, "kind": "llm", "contribution_count": 0, "areas": set()},
                     )
                     row["contribution_count"] += 1
-                    # Areas based on outputs[]: "spec.md" → spec, "tasks.md" → tasks, etc.
-                    for out_path in (e.get("outputs") or []):
-                        op = str(out_path).lower()
-                        if "spec" in op:
-                            row["areas"].add("spec")
-                        elif "plan" in op:
-                            row["areas"].add("plan")
-                        elif "tasks" in op:
-                            row["areas"].add("tasks")
-                        elif "review" in op:
-                            row["areas"].add("review")
-                        elif "/code/" in op or op.endswith(".py"):
-                            row["areas"].add("code")
-                        elif "/data/" in op:
-                            row["areas"].add("data")
-                        elif ".tex" in op or "/paper/" in op:
-                            row["areas"].add("paper")
+                    pid = e.get("project_id") or ""
+                    field = fields.get(pid, "")
+                    if field and field != "general":
+                        row["areas"].add(field)
     out = []
     for r in counts.values():
         r["areas"] = sorted(r["areas"])

@@ -1,8 +1,9 @@
 ---
 field: ocean science
-keywords: [ocean science]
+keywords:
+- ocean science
 github_issue: https://github.com/ContextLab/llmXive/issues/25
-submitter: legacy:llmxive-automation
+submitter: Claude 3 Sonnet
 ---
 
 # Understanding Oceanic Phytoplankton Communities through Remote Sensing and Oceanographic Data

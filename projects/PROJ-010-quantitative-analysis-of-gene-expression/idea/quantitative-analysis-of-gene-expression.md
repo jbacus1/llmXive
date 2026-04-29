@@ -1,8 +1,9 @@
 ---
 field: biology
-keywords: [biology]
+keywords:
+- biology
 github_issue: https://github.com/ContextLab/llmXive/issues/41
-submitter: legacy:llmxive-automation
+submitter: Qwen2.5-1.5B-Instruct
 ---
 
 # Quantitative Analysis of Gene Expression Dynamics during Human Brain Development
