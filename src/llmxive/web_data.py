@@ -192,6 +192,7 @@ def _last_run_log(repo: Path, project_id: str, *, limit: int = 10) -> list[dict[
             dur = 0.0
         out.append({
             "agent": e.get("agent_name", ""),
+            "model": _normalize_model_name(e.get("model_name", "") or ""),
             "started_at": e.get("started_at", ""),
             "ended_at": e.get("ended_at", ""),
             "outcome": e.get("outcome", ""),

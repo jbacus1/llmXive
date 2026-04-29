@@ -5,7 +5,7 @@
     "human_contributors": 0,
     "papers_posted": 0,
     "total_collaborations": 0,
-    "total_contributions": 87,
+    "total_contributions": 88,
     "total_contributors": 7
   },
   "contributors": [
@@ -16,7 +16,7 @@
         "energy",
         "psychology"
       ],
-      "contribution_count": 87,
+      "contribution_count": 88,
       "kind": "llm",
       "name": "qwen.qwen3.5-122b"
     },
@@ -62,7 +62,7 @@
       "name": "Qwen2.5-1.5B-Instruct"
     }
   ],
-  "generated_at": "2026-04-29T13:08:18.053239+00:00",
+  "generated_at": "2026-04-29T13:10:16.383515+00:00",
   "projects": [
     {
       "artifact_links": {
@@ -101,6 +101,7 @@
           "agent": "specifier",
           "duration_s": 71.516883,
           "ended_at": "2026-04-29T12:25:02.506263Z",
+          "model": "qwen.qwen3.5-122b",
           "outcome": "success",
           "started_at": "2026-04-29T12:23:50.989380Z"
         },
@@ -108,6 +109,7 @@
           "agent": "specifier",
           "duration_s": 95.94414,
           "ended_at": "2026-04-29T12:22:54.271184Z",
+          "model": "qwen.qwen3.5-122b",
           "outcome": "failed",
           "started_at": "2026-04-29T12:21:18.327044Z"
         },
@@ -115,6 +117,7 @@
           "agent": "specifier",
           "duration_s": 69.9851,
           "ended_at": "2026-04-29T12:21:18.044642Z",
+          "model": "qwen.qwen3.5-122b",
           "outcome": "failed",
           "started_at": "2026-04-29T12:20:08.059542Z"
         },
@@ -122,6 +125,7 @@
           "agent": "specifier",
           "duration_s": 33.714738,
           "ended_at": "2026-04-29T12:20:07.793786Z",
+          "model": "qwen.qwen3.5-122b",
           "outcome": "failed",
           "started_at": "2026-04-29T12:19:34.079048Z"
         },
@@ -129,6 +133,7 @@
           "agent": "specifier",
           "duration_s": 123.071056,
           "ended_at": "2026-04-29T12:19:33.839661Z",
+          "model": "qwen.qwen3.5-122b",
           "outcome": "failed",
           "started_at": "2026-04-29T12:17:30.768605Z"
         },
@@ -136,6 +141,7 @@
           "agent": "specifier",
           "duration_s": 34.171423,
           "ended_at": "2026-04-29T12:17:30.524973Z",
+          "model": "qwen.qwen3.5-122b",
           "outcome": "failed",
           "started_at": "2026-04-29T12:16:56.353550Z"
         },
@@ -143,6 +149,7 @@
           "agent": "specifier",
           "duration_s": 74.380287,
           "ended_at": "2026-04-29T12:16:56.081182Z",
+          "model": "qwen.qwen3.5-122b",
           "outcome": "failed",
           "started_at": "2026-04-29T12:15:41.700895Z"
         },
@@ -150,6 +157,7 @@
           "agent": "project_initializer",
           "duration_s": 66.221674,
           "ended_at": "2026-04-29T12:15:41.444592Z",
+          "model": "qwen.qwen3.5-122b",
           "outcome": "success",
           "started_at": "2026-04-29T12:14:35.222918Z"
         },
@@ -157,6 +165,7 @@
           "agent": "flesh_out",
           "duration_s": 17.554329,
           "ended_at": "2026-04-29T12:14:03.079299Z",
+          "model": "qwen.qwen3.5-122b",
           "outcome": "success",
           "started_at": "2026-04-29T12:13:45.524970Z"
         },
@@ -164,6 +173,7 @@
           "agent": "flesh_out",
           "duration_s": 14.726441,
           "ended_at": "2026-04-29T12:13:39.342104Z",
+          "model": "qwen.qwen3.5-122b",
           "outcome": "failed",
           "started_at": "2026-04-29T12:13:24.615663Z"
         }
@@ -212,8 +222,17 @@
       "last_run_log": [
         {
           "agent": "implementer",
+          "duration_s": 64.140017,
+          "ended_at": "2026-04-29T13:09:09.404107Z",
+          "model": "qwen.qwen3.5-122b",
+          "outcome": "success",
+          "started_at": "2026-04-29T13:08:05.264090Z"
+        },
+        {
+          "agent": "implementer",
           "duration_s": 24.05265,
           "ended_at": "2026-04-29T13:08:05.226208Z",
+          "model": "qwen.qwen3.5-122b",
           "outcome": "success",
           "started_at": "2026-04-29T13:07:41.173558Z"
         },
@@ -221,6 +240,7 @@
           "agent": "implementer",
           "duration_s": 53.134674,
           "ended_at": "2026-04-29T13:07:41.136375Z",
+          "model": "qwen.qwen3.5-122b",
           "outcome": "success",
           "started_at": "2026-04-29T13:06:48.001701Z"
         },
@@ -228,6 +248,7 @@
           "agent": "implementer",
           "duration_s": 14.089221,
           "ended_at": "2026-04-29T13:06:47.974625Z",
+          "model": "qwen.qwen3.5-122b",
           "outcome": "success",
           "started_at": "2026-04-29T13:06:33.885404Z"
         },
@@ -235,6 +256,7 @@
           "agent": "implementer",
           "duration_s": 17.770209,
           "ended_at": "2026-04-29T13:02:54.406487Z",
+          "model": "qwen.qwen3.5-122b",
           "outcome": "success",
           "started_at": "2026-04-29T13:02:36.636278Z"
         },
@@ -242,6 +264,7 @@
           "agent": "implementer",
           "duration_s": 12.488435,
           "ended_at": "2026-04-29T13:02:36.611716Z",
+          "model": "qwen.qwen3.5-122b",
           "outcome": "success",
           "started_at": "2026-04-29T13:02:24.123281Z"
         },
@@ -249,6 +272,7 @@
           "agent": "implementer",
           "duration_s": 16.194232,
           "ended_at": "2026-04-29T13:02:24.088172Z",
+          "model": "qwen.qwen3.5-122b",
           "outcome": "success",
           "started_at": "2026-04-29T13:02:07.893940Z"
         },
@@ -256,6 +280,7 @@
           "agent": "tasker",
           "duration_s": 634.195325,
           "ended_at": "2026-04-29T13:01:48.318263Z",
+          "model": "qwen.qwen3.5-122b",
           "outcome": "success",
           "started_at": "2026-04-29T12:51:14.122938Z"
         },
@@ -263,6 +288,7 @@
           "agent": "tasker",
           "duration_s": 665.686315,
           "ended_at": "2026-04-29T12:50:50.419033Z",
+          "model": "qwen.qwen3.5-122b",
           "outcome": "success",
           "started_at": "2026-04-29T12:39:44.732718Z"
         },
@@ -270,15 +296,9 @@
           "agent": "planner",
           "duration_s": 87.644184,
           "ended_at": "2026-04-29T12:39:29.671011Z",
+          "model": "qwen.qwen3.5-122b",
           "outcome": "success",
           "started_at": "2026-04-29T12:38:02.026827Z"
-        },
-        {
-          "agent": "clarifier",
-          "duration_s": 23.010487,
-          "ended_at": "2026-04-29T12:37:50.052157Z",
-          "outcome": "success",
-          "started_at": "2026-04-29T12:37:27.041670Z"
         }
       ],
       "phase_group": "research_speckit",
@@ -453,6 +473,7 @@
           "agent": "implementer",
           "duration_s": 38.188752,
           "ended_at": "2026-04-29T09:22:53.715736Z",
+          "model": "qwen.qwen3.5-122b",
           "outcome": "success",
           "started_at": "2026-04-29T09:22:15.526984Z"
         },
@@ -460,6 +481,7 @@
           "agent": "implementer",
           "duration_s": 46.409545,
           "ended_at": "2026-04-29T09:22:15.449920Z",
+          "model": "qwen.qwen3.5-122b",
           "outcome": "success",
           "started_at": "2026-04-29T09:21:29.040375Z"
         },
@@ -467,6 +489,7 @@
           "agent": "implementer",
           "duration_s": 62.330233,
           "ended_at": "2026-04-29T09:21:28.965560Z",
+          "model": "qwen.qwen3.5-122b",
           "outcome": "success",
           "started_at": "2026-04-29T09:20:26.635327Z"
         },
@@ -474,6 +497,7 @@
           "agent": "implementer",
           "duration_s": 68.425245,
           "ended_at": "2026-04-29T09:20:26.559730Z",
+          "model": "qwen.qwen3.5-122b",
           "outcome": "success",
           "started_at": "2026-04-29T09:19:18.134485Z"
         },
@@ -481,6 +505,7 @@
           "agent": "implementer",
           "duration_s": 71.077073,
           "ended_at": "2026-04-29T09:19:18.058925Z",
+          "model": "qwen.qwen3.5-122b",
           "outcome": "success",
           "started_at": "2026-04-29T09:18:06.981852Z"
         },
@@ -488,6 +513,7 @@
           "agent": "implementer",
           "duration_s": 113.234828,
           "ended_at": "2026-04-29T09:18:06.906476Z",
+          "model": "qwen.qwen3.5-122b",
           "outcome": "success",
           "started_at": "2026-04-29T09:16:13.671648Z"
         },
@@ -495,6 +521,7 @@
           "agent": "implementer",
           "duration_s": 59.972039,
           "ended_at": "2026-04-29T09:16:13.595808Z",
+          "model": "qwen.qwen3.5-122b",
           "outcome": "success",
           "started_at": "2026-04-29T09:15:13.623769Z"
         },
@@ -502,6 +529,7 @@
           "agent": "implementer",
           "duration_s": 89.376739,
           "ended_at": "2026-04-29T09:15:13.547657Z",
+          "model": "qwen.qwen3.5-122b",
           "outcome": "success",
           "started_at": "2026-04-29T09:13:44.170918Z"
         },
@@ -509,6 +537,7 @@
           "agent": "implementer",
           "duration_s": 68.857696,
           "ended_at": "2026-04-29T05:43:28.050878Z",
+          "model": "qwen.qwen3.5-122b",
           "outcome": "success",
           "started_at": "2026-04-29T05:42:19.193182Z"
         },
@@ -516,6 +545,7 @@
           "agent": "implementer",
           "duration_s": 64.300653,
           "ended_at": "2026-04-29T05:42:19.116952Z",
+          "model": "qwen.qwen3.5-122b",
           "outcome": "success",
           "started_at": "2026-04-29T05:41:14.816299Z"
         }
@@ -566,6 +596,7 @@
           "agent": "implementer",
           "duration_s": 33.333664,
           "ended_at": "2026-04-29T04:58:30.966812Z",
+          "model": "qwen.qwen3.5-122b",
           "outcome": "success",
           "started_at": "2026-04-29T04:57:57.633148Z"
         },
@@ -573,6 +604,7 @@
           "agent": "implementer",
           "duration_s": 10.385674,
           "ended_at": "2026-04-29T04:57:57.601616Z",
+          "model": "qwen.qwen3.5-122b",
           "outcome": "success",
           "started_at": "2026-04-29T04:57:47.215942Z"
         },
@@ -580,6 +612,7 @@
           "agent": "implementer",
           "duration_s": 27.050452,
           "ended_at": "2026-04-29T04:57:47.188553Z",
+          "model": "qwen.qwen3.5-122b",
           "outcome": "success",
           "started_at": "2026-04-29T04:57:20.138101Z"
         },
@@ -587,6 +620,7 @@
           "agent": "tasker",
           "duration_s": 655.325145,
           "ended_at": "2026-04-29T04:57:20.095487Z",
+          "model": "qwen.qwen3.5-122b",
           "outcome": "success",
           "started_at": "2026-04-29T04:46:24.770342Z"
         },
@@ -594,6 +628,7 @@
           "agent": "tasker",
           "duration_s": 520.733403,
           "ended_at": "2026-04-29T04:46:24.732567Z",
+          "model": "qwen.qwen3.5-122b",
           "outcome": "success",
           "started_at": "2026-04-29T04:37:43.999164Z"
         },
@@ -601,6 +636,7 @@
           "agent": "planner",
           "duration_s": 117.258056,
           "ended_at": "2026-04-29T04:37:43.976139Z",
+          "model": "qwen.qwen3.5-122b",
           "outcome": "success",
           "started_at": "2026-04-29T04:35:46.718083Z"
         },
@@ -608,6 +644,7 @@
           "agent": "tasker",
           "duration_s": 58.177009,
           "ended_at": "2026-04-29T04:35:03.305634Z",
+          "model": "qwen.qwen3.5-122b",
           "outcome": "failed",
           "started_at": "2026-04-29T04:34:05.128625Z"
         },
@@ -615,6 +652,7 @@
           "agent": "tasker",
           "duration_s": 91.291208,
           "ended_at": "2026-04-29T04:34:05.087920Z",
+          "model": "qwen.qwen3.5-122b",
           "outcome": "success",
           "started_at": "2026-04-29T04:32:33.796712Z"
         },
@@ -622,6 +660,7 @@
           "agent": "planner",
           "duration_s": 9.297569,
           "ended_at": "2026-04-29T04:15:13.464711Z",
+          "model": "qwen.qwen3.5-122b",
           "outcome": "success",
           "started_at": "2026-04-29T04:15:04.167142Z"
         },
@@ -629,6 +668,7 @@
           "agent": "clarifier",
           "duration_s": 5.104839,
           "ended_at": "2026-04-29T04:15:04.116852Z",
+          "model": "qwen.qwen3.5-122b",
           "outcome": "success",
           "started_at": "2026-04-29T04:14:59.012013Z"
         }
@@ -679,6 +719,7 @@
           "agent": "implementer",
           "duration_s": 35.072601,
           "ended_at": "2026-04-29T05:05:52.359410Z",
+          "model": "qwen.qwen3.5-122b",
           "outcome": "success",
           "started_at": "2026-04-29T05:05:17.286809Z"
         },
@@ -686,6 +727,7 @@
           "agent": "implementer",
           "duration_s": 37.792554,
           "ended_at": "2026-04-29T05:05:17.250117Z",
+          "model": "qwen.qwen3.5-122b",
           "outcome": "success",
           "started_at": "2026-04-29T05:04:39.457563Z"
         },
@@ -693,6 +735,7 @@
           "agent": "implementer",
           "duration_s": 33.188492,
           "ended_at": "2026-04-29T05:04:39.426309Z",
+          "model": "qwen.qwen3.5-122b",
           "outcome": "success",
           "started_at": "2026-04-29T05:04:06.237817Z"
         },
@@ -700,6 +743,7 @@
           "agent": "implementer",
           "duration_s": 15.4468,
           "ended_at": "2026-04-29T05:02:39.036393Z",
+          "model": "qwen.qwen3.5-122b",
           "outcome": "success",
           "started_at": "2026-04-29T05:02:23.589593Z"
         },
@@ -707,6 +751,7 @@
           "agent": "implementer",
           "duration_s": 19.221107,
           "ended_at": "2026-04-29T05:02:23.551103Z",
+          "model": "qwen.qwen3.5-122b",
           "outcome": "success",
           "started_at": "2026-04-29T05:02:04.329996Z"
         },
@@ -714,6 +759,7 @@
           "agent": "implementer",
           "duration_s": 13.362739,
           "ended_at": "2026-04-29T05:02:04.293592Z",
+          "model": "qwen.qwen3.5-122b",
           "outcome": "success",
           "started_at": "2026-04-29T05:01:50.930853Z"
         },
@@ -721,6 +767,7 @@
           "agent": "tasker",
           "duration_s": 722.703345,
           "ended_at": "2026-04-29T05:01:50.902532Z",
+          "model": "qwen.qwen3.5-122b",
           "outcome": "success",
           "started_at": "2026-04-29T04:49:48.199187Z"
         },
@@ -728,6 +775,7 @@
           "agent": "tasker",
           "duration_s": 695.74169,
           "ended_at": "2026-04-29T04:49:48.159156Z",
+          "model": "qwen.qwen3.5-122b",
           "outcome": "success",
           "started_at": "2026-04-29T04:38:12.417466Z"
         },
@@ -735,6 +783,7 @@
           "agent": "planner",
           "duration_s": 144.477238,
           "ended_at": "2026-04-29T04:38:12.385919Z",
+          "model": "qwen.qwen3.5-122b",
           "outcome": "success",
           "started_at": "2026-04-29T04:35:47.908681Z"
         },
@@ -742,6 +791,7 @@
           "agent": "tasker",
           "duration_s": 58.627331,
           "ended_at": "2026-04-29T04:35:05.759781Z",
+          "model": "qwen.qwen3.5-122b",
           "outcome": "failed",
           "started_at": "2026-04-29T04:34:07.132450Z"
         }

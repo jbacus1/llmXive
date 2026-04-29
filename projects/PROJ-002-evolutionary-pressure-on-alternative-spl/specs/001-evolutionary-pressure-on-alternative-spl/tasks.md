@@ -34,7 +34,7 @@
 
 - [X] T005 Create base configuration management in `code/src/utils/config.py`
 - [X] T006 [P] Implement checksum utilities in `code/src/utils/checksum.py`
-- [ ] T007 Setup SQLite metadata database schema for sample tracking
+- [X] T007 Setup SQLite metadata database schema for sample tracking
 - [ ] T008 [P] Create data model contracts in `code/specs/contracts/`
 - [ ] T009 Setup environment configuration with random seeds for reproducibility
 - [ ] T010 [P] Implement logging infrastructure for pipeline operations

@@ -83,9 +83,13 @@
     return '<div class="ad-runlog">' +
       rows.map(r => {
         const dur = (r.duration_s != null) ? r.duration_s.toFixed(1) + "s" : "—";
+        const who = r.model || r.agent || "";
+        const subAgent = (r.model && r.agent) ? r.agent : "";
         return '<div class="row">' +
           '<span class="ts">' + escapeHtml((r.ended_at || "").slice(0, 10)) + '</span>' +
-          '<span class="agent">' + escapeHtml(r.agent || "") + '</span>' +
+          '<span class="agent">' + escapeHtml(who) +
+          (subAgent ? ' <span class="role" style="color:var(--muted); font-size:10px;">(' + escapeHtml(subAgent) + ')</span>' : "") +
+          '</span>' +
           '<span class="outcome ' + escapeHtml(r.outcome || "") + '">' + escapeHtml(r.outcome || "") + '</span>' +
           '<span class="dur" style="margin-left:auto;">' + escapeHtml(dur) + '</span>' +
           '</div>';
