@@ -102,7 +102,11 @@ def run_python_script(
     try:
         proc = subprocess.run(
             [str(py), str(script)],
-            cwd=str(cwd or (project_dir / "code")),
+            # Run with cwd=project_dir so scripts can write to data/raw/,
+            # paper/figures/ etc. with paths relative to the project
+            # root. Previously cwd=code/ which meant scripts created
+            # code/data/raw/ which subsequent scripts couldn't find.
+            cwd=str(cwd or project_dir),
             timeout=timeout_s,
             capture_output=True,
             text=True,
