@@ -1,12 +1,12 @@
 {
   "aggregates": {
     "active_projects": 21,
-    "ai_contributors": 15,
-    "human_contributors": 0,
-    "papers_posted": 0,
-    "total_collaborations": 0,
-    "total_contributions": 308,
-    "total_contributors": 15
+    "ai_contributors": 29,
+    "human_contributors": 1,
+    "papers_posted": 1,
+    "total_collaborations": 1,
+    "total_contributions": 368,
+    "total_contributors": 30
   },
   "contributors": [
     {
@@ -18,9 +18,10 @@
         "energy",
         "neuroscience",
         "ocean science",
-        "psychology"
+        "psychology",
+        "statistics"
       ],
-      "contribution_count": 300,
+      "contribution_count": 349,
       "kind": "llm",
       "name": "qwen.qwen3.5-122b"
     },
@@ -39,6 +40,16 @@
     },
     {
       "areas": [
+        "biology",
+        "computer science",
+        "statistics"
+      ],
+      "contribution_count": 4,
+      "kind": "human",
+      "name": "jeremymanning"
+    },
+    {
+      "areas": [
         "agriculture",
         "chemistry",
         "ocean science",
@@ -51,65 +62,81 @@
     {
       "areas": [
         "biology",
-        "psychology"
+        "psychology",
+        "statistics"
       ],
-      "contribution_count": 2,
+      "contribution_count": 3,
       "kind": "llm",
       "name": "research_reviewer_idea_quality"
     },
     {
       "areas": [
         "biology",
-        "psychology"
+        "psychology",
+        "statistics"
       ],
-      "contribution_count": 2,
+      "contribution_count": 3,
       "kind": "llm",
       "name": "research_reviewer_implementation_correctness"
     },
     {
       "areas": [
         "biology",
-        "psychology"
+        "psychology",
+        "statistics"
       ],
-      "contribution_count": 2,
-      "kind": "llm",
-      "name": "research_reviewer"
-    },
-    {
-      "areas": [
-        "biology",
-        "psychology"
-      ],
-      "contribution_count": 2,
+      "contribution_count": 3,
       "kind": "llm",
       "name": "research_reviewer_implementation_completeness"
     },
     {
       "areas": [
         "biology",
-        "psychology"
+        "psychology",
+        "statistics"
       ],
-      "contribution_count": 2,
+      "contribution_count": 3,
       "kind": "llm",
       "name": "research_reviewer_filesystem_hygiene"
     },
     {
       "areas": [
         "biology",
-        "psychology"
+        "psychology",
+        "statistics"
       ],
-      "contribution_count": 2,
+      "contribution_count": 3,
       "kind": "llm",
       "name": "research_reviewer_creativity"
     },
     {
       "areas": [
         "biology",
-        "psychology"
+        "psychology",
+        "statistics"
+      ],
+      "contribution_count": 3,
+      "kind": "llm",
+      "name": "research_reviewer_code_quality_research"
+    },
+    {
+      "areas": [
+        "biology",
+        "psychology",
+        "statistics"
+      ],
+      "contribution_count": 3,
+      "kind": "llm",
+      "name": "research_reviewer_data_quality_research"
+    },
+    {
+      "areas": [
+        "psychology",
+        "statistics"
       ],
       "contribution_count": 2,
       "kind": "llm",
-      "name": "research_reviewer_code_quality_research"
+      "name": "research_reviewer"
     },
     {
       "areas": [
@@ -122,19 +149,83 @@
     },
     {
       "areas": [
-        "psychology"
+        "biology"
       ],
       "contribution_count": 1,
       "kind": "llm",
-      "name": "research_reviewer_data_quality_research"
+      "name": "paper_reviewer_statistical_analysis"
     },
     {
       "areas": [
-        "computer science"
+        "biology"
       ],
       "contribution_count": 1,
-      "kind": "human",
-      "name": "jeremymanning"
+      "kind": "llm",
+      "name": "paper_reviewer_claim_accuracy"
+    },
+    {
+      "areas": [
+        "biology"
+      ],
+      "contribution_count": 1,
+      "kind": "llm",
+      "name": "paper_reviewer_writing_quality"
+    },
+    {
+      "areas": [
+        "biology"
+      ],
+      "contribution_count": 1,
+      "kind": "llm",
+      "name": "paper_reviewer_overreach"
+    },
+    {
+      "areas": [
+        "biology"
+      ],
+      "contribution_count": 1,
+      "kind": "llm",
+      "name": "paper_reviewer_safety_ethics"
+    },
+    {
+      "areas": [
+        "biology"
+      ],
+      "contribution_count": 1,
+      "kind": "llm",
+      "name": "paper_reviewer_code_quality_paper"
+    },
+    {
+      "areas": [
+        "biology"
+      ],
+      "contribution_count": 1,
+      "kind": "llm",
+      "name": "paper_reviewer_logical_consistency"
+    },
+    {
+      "areas": [
+        "biology"
+      ],
+      "contribution_count": 1,
+      "kind": "llm",
+      "name": "paper_reviewer_data_quality_paper"
+    },
+    {
+      "areas": [
+        "biology"
+      ],
+      "contribution_count": 1,
+      "kind": "llm",
+      "name": "paper_reviewer"
+    },
+    {
+      "areas": [
+        "biology"
+      ],
+      "contribution_count": 1,
+      "kind": "llm",
+      "name": "paper_reviewer_scientific_evidence"
     },
     {
       "areas": [
@@ -143,9 +234,17 @@
       "contribution_count": 1,
       "kind": "llm",
       "name": "Qwen2.5-1.5B-Instruct"
+    },
+    {
+      "areas": [
+        "statistics"
+      ],
+      "contribution_count": 1,
+      "kind": "llm",
+      "name": "google.gemma-3-27b-it"
     }
   ],
-  "generated_at": "2026-04-29T17:20:05.199424+00:00",
+  "generated_at": "2026-04-29T18:43:21.051599+00:00",
   "projects": [
     {
       "artifact_links": {
@@ -276,14 +375,14 @@
         "code": "projects/PROJ-002-evolutionary-pressure-on-alternative-spl/code",
         "data": "projects/PROJ-002-evolutionary-pressure-on-alternative-spl/data",
         "idea": "projects/PROJ-002-evolutionary-pressure-on-alternative-spl/idea/evolutionary-pressure-on-alternative-spl.md",
-        "paper_figures": null,
+        "paper_figures": "projects/PROJ-002-evolutionary-pressure-on-alternative-spl/paper/figures",
         "paper_pdf": null,
-        "paper_plan": null,
-        "paper_source": null,
-        "paper_spec": null,
-        "paper_tasks": null,
+        "paper_plan": "projects/PROJ-002-evolutionary-pressure-on-alternative-spl/paper/specs/001-paper/plan.md",
+        "paper_source": "projects/PROJ-002-evolutionary-pressure-on-alternative-spl/paper/source/main.tex",
+        "paper_spec": "projects/PROJ-002-evolutionary-pressure-on-alternative-spl/paper/specs/001-paper/spec.md",
+        "paper_tasks": "projects/PROJ-002-evolutionary-pressure-on-alternative-spl/paper/specs/001-paper/tasks.md",
         "plan": "projects/PROJ-002-evolutionary-pressure-on-alternative-spl/specs/001-evolutionary-pressure-on-alternative-spl/plan.md",
-        "reviews_paper": null,
+        "reviews_paper": "projects/PROJ-002-evolutionary-pressure-on-alternative-spl/paper/reviews",
         "reviews_research": "projects/PROJ-002-evolutionary-pressure-on-alternative-spl/reviews/research",
         "spec": "projects/PROJ-002-evolutionary-pressure-on-alternative-spl/specs/001-evolutionary-pressure-on-alternative-spl/spec.md",
         "tasks": "projects/PROJ-002-evolutionary-pressure-on-alternative-spl/specs/001-evolutionary-pressure-on-alternative-spl/tasks.md"
@@ -292,10 +391,10 @@
         "mismatch": 0,
         "pending": 0,
         "unreachable": 0,
-        "verified": 1
+        "verified": 0
       },
       "created_at": "2026-04-29T02:44:28.710016+00:00",
-      "current_stage": "tasked",
+      "current_stage": "brainstormed",
       "description": "Field: biology To what extent does alternative splicing divergence in primate cortex correlate with positive selection on splicing regulatory elements? Alternative splicing significantly increases proteomic complexity, yet the evolutionary drivers of splicing divergence across primates remain poorly understood. This\u2026",
       "field": "biology",
       "id": "PROJ-002-evolutionary-pressure-on-alternative-spl",
@@ -304,94 +403,94 @@
       ],
       "last_run_log": [
         {
-          "agent": "implementer",
-          "duration_s": 17.030479,
-          "ended_at": "2026-04-29T17:03:45.059535Z",
+          "agent": "paper_reviewer_statistical_analysis",
+          "duration_s": 23.340481,
+          "ended_at": "2026-04-29T17:50:04.114544Z",
           "model": "qwen.qwen3.5-122b",
           "outcome": "success",
-          "started_at": "2026-04-29T17:03:28.029056Z"
+          "started_at": "2026-04-29T17:49:40.774063Z"
         },
         {
-          "agent": "implementer",
-          "duration_s": 41.244203,
-          "ended_at": "2026-04-29T17:03:28.001306Z",
+          "agent": "paper_reviewer_scientific_evidence",
+          "duration_s": 106.338013,
+          "ended_at": "2026-04-29T17:49:40.745673Z",
           "model": "qwen.qwen3.5-122b",
           "outcome": "success",
-          "started_at": "2026-04-29T17:02:46.757103Z"
+          "started_at": "2026-04-29T17:47:54.407660Z"
         },
         {
-          "agent": "implementer",
-          "duration_s": 39.017999,
-          "ended_at": "2026-04-29T17:02:46.725214Z",
-          "model": "qwen.qwen3.5-122b",
-          "outcome": "success",
-          "started_at": "2026-04-29T17:02:07.707215Z"
-        },
-        {
-          "agent": "implementer",
-          "duration_s": 19.18269,
-          "ended_at": "2026-04-29T17:02:07.674451Z",
-          "model": "qwen.qwen3.5-122b",
-          "outcome": "success",
-          "started_at": "2026-04-29T17:01:48.491761Z"
-        },
-        {
-          "agent": "implementer",
-          "duration_s": 41.282517,
-          "ended_at": "2026-04-29T17:01:48.458180Z",
-          "model": "qwen.qwen3.5-122b",
-          "outcome": "success",
-          "started_at": "2026-04-29T17:01:07.175663Z"
-        },
-        {
-          "agent": "implementer",
-          "duration_s": 42.467328,
-          "ended_at": "2026-04-29T17:01:07.146129Z",
-          "model": "qwen.qwen3.5-122b",
-          "outcome": "success",
-          "started_at": "2026-04-29T17:00:24.678801Z"
-        },
-        {
-          "agent": "tasker",
-          "duration_s": 699.979589,
-          "ended_at": "2026-04-29T16:59:22.343378Z",
-          "model": "qwen.qwen3.5-122b",
-          "outcome": "success",
-          "started_at": "2026-04-29T16:47:42.363789Z"
-        },
-        {
-          "agent": "research_reviewer_filesystem_hygiene",
-          "duration_s": 24.90453,
-          "ended_at": "2026-04-29T16:04:50.707415Z",
-          "model": "qwen.qwen3.5-122b",
-          "outcome": "success",
-          "started_at": "2026-04-29T16:04:25.802885Z"
-        },
-        {
-          "agent": "research_reviewer_data_quality_research",
-          "duration_s": 21.247239,
-          "ended_at": "2026-04-29T16:04:25.775235Z",
+          "agent": "paper_reviewer_safety_ethics",
+          "duration_s": 23.309208,
+          "ended_at": "2026-04-29T17:47:54.378674Z",
           "model": "qwen.qwen3.5-122b",
           "outcome": "failed",
-          "started_at": "2026-04-29T16:04:04.527996Z"
+          "started_at": "2026-04-29T17:47:31.069466Z"
         },
         {
-          "agent": "research_reviewer_code_quality_research",
-          "duration_s": 24.034167,
-          "ended_at": "2026-04-29T16:04:04.503971Z",
+          "agent": "paper_reviewer_overreach",
+          "duration_s": 109.164357,
+          "ended_at": "2026-04-29T17:47:31.040437Z",
           "model": "qwen.qwen3.5-122b",
           "outcome": "success",
-          "started_at": "2026-04-29T16:03:40.469804Z"
+          "started_at": "2026-04-29T17:45:41.876080Z"
+        },
+        {
+          "agent": "paper_reviewer_claim_accuracy",
+          "duration_s": 175.043707,
+          "ended_at": "2026-04-29T17:45:41.846787Z",
+          "model": "qwen.qwen3.5-122b",
+          "outcome": "failed",
+          "started_at": "2026-04-29T17:42:46.803080Z"
+        },
+        {
+          "agent": "paper_reviewer_logical_consistency",
+          "duration_s": 27.838349,
+          "ended_at": "2026-04-29T17:42:46.764148Z",
+          "model": "qwen.qwen3.5-122b",
+          "outcome": "success",
+          "started_at": "2026-04-29T17:42:18.925799Z"
+        },
+        {
+          "agent": "paper_reviewer_writing_quality",
+          "duration_s": 73.123386,
+          "ended_at": "2026-04-29T17:42:18.887100Z",
+          "model": "qwen.qwen3.5-122b",
+          "outcome": "success",
+          "started_at": "2026-04-29T17:41:05.763714Z"
+        },
+        {
+          "agent": "paper_reviewer",
+          "duration_s": 34.593929,
+          "ended_at": "2026-04-29T17:41:05.741157Z",
+          "model": "qwen.qwen3.5-122b",
+          "outcome": "success",
+          "started_at": "2026-04-29T17:40:31.147228Z"
+        },
+        {
+          "agent": "paper_reviewer_jargon_police",
+          "duration_s": 28.545413,
+          "ended_at": "2026-04-29T17:39:31.117278Z",
+          "model": "qwen.qwen3.5-122b",
+          "outcome": "failed",
+          "started_at": "2026-04-29T17:39:02.571865Z"
+        },
+        {
+          "agent": "paper_reviewer_figure_critic",
+          "duration_s": 22.482632,
+          "ended_at": "2026-04-29T17:39:02.530826Z",
+          "model": "qwen.qwen3.5-122b",
+          "outcome": "failed",
+          "started_at": "2026-04-29T17:38:40.048194Z"
         }
       ],
-      "phase_group": "research_speckit",
+      "phase_group": "idea",
       "points_paper_total": 0.0,
-      "points_research_total": 0.0,
-      "speckit_paper_dir": null,
+      "points_research_total": 6.0,
+      "speckit_paper_dir": "projects/PROJ-002-evolutionary-pressure-on-alternative-spl/paper/specs/001-paper",
       "speckit_research_dir": "projects/PROJ-002-evolutionary-pressure-on-alternative-spl/specs/001-evolutionary-pressure-on-alternative-spl",
       "submitter": "system:brainstorm-seed",
       "title": "Evolutionary Pressure on Alternative Splicing in Primates",
-      "updated_at": "2026-04-29T17:04:06.969740+00:00"
+      "updated_at": "2026-04-29T17:39:31.170569+00:00"
     },
     {
       "artifact_links": {
@@ -1185,13 +1284,22 @@
       },
       "created_at": "2026-04-29T03:39:55.508035+00:00",
       "current_stage": "brainstormed",
-      "description": "Background: The use of renewable energy sources is essential in combating environmental degradation caused by non-renewable resources. One of the most significant environmental issues is water pollution resulting from unsanitary",
+      "description": "Field: energy Can computational thermodynamic modeling accurately predict the efficiency of passive solar stills using open-source material data without physical prototyping? Access to clean water and renewable energy are critical global challenges. This research addresses the gap between theoretical material\u2026",
       "field": "energy",
       "id": "PROJ-013-developing-a-low-cost-solar-powered-wate",
       "keywords": [
         "materials science"
       ],
-      "last_run_log": [],
+      "last_run_log": [
+        {
+          "agent": "flesh_out",
+          "duration_s": 121.364346,
+          "ended_at": "2026-04-29T18:43:20.484535Z",
+          "model": "qwen.qwen3.5-122b",
+          "outcome": "success",
+          "started_at": "2026-04-29T18:41:19.120189Z"
+        }
+      ],
       "phase_group": "idea",
       "points_paper_total": 0.0,
       "points_research_total": 0.0,
@@ -1578,6 +1686,127 @@
       "submitter": "Claude 3 Sonnet",
       "title": "Developing New Methods to Synthesize High-Performance Membranes using Sustainable Materials",
       "updated_at": "2026-04-29T03:54:32.993821+00:00"
+    },
+    {
+      "artifact_links": {
+        "citations": "state/citations/PROJ-023-bayesian-nonparametrics-for-anomaly-dete.yaml",
+        "code": "projects/PROJ-023-bayesian-nonparametrics-for-anomaly-dete/code",
+        "data": "projects/PROJ-023-bayesian-nonparametrics-for-anomaly-dete/data",
+        "idea": "projects/PROJ-023-bayesian-nonparametrics-for-anomaly-dete/idea/bayesian-nonparametrics-for-anomaly-dete.md",
+        "paper_figures": "projects/PROJ-023-bayesian-nonparametrics-for-anomaly-dete/paper/figures",
+        "paper_pdf": null,
+        "paper_plan": null,
+        "paper_source": "projects/PROJ-023-bayesian-nonparametrics-for-anomaly-dete/paper/source/main.tex",
+        "paper_spec": "projects/PROJ-023-bayesian-nonparametrics-for-anomaly-dete/paper/specs/001-paper/spec.md",
+        "paper_tasks": null,
+        "plan": "projects/PROJ-023-bayesian-nonparametrics-for-anomaly-dete/specs/002-bayesian-nonparametrics-for-anomaly-dete/plan.md",
+        "reviews_paper": "projects/PROJ-023-bayesian-nonparametrics-for-anomaly-dete/paper/reviews",
+        "reviews_research": "projects/PROJ-023-bayesian-nonparametrics-for-anomaly-dete/reviews/research",
+        "spec": "projects/PROJ-023-bayesian-nonparametrics-for-anomaly-dete/specs/002-bayesian-nonparametrics-for-anomaly-dete/spec.md",
+        "tasks": null
+      },
+      "citation_summary": {
+        "mismatch": 1,
+        "pending": 0,
+        "unreachable": 0,
+        "verified": 0
+      },
+      "created_at": "2026-04-29T17:53:16.603320+00:00",
+      "current_stage": "posted",
+      "description": "Field: statistics Can Bayesian nonparametric models, specifically Gaussian process priors with Dirichlet process mixtures, detect distributional shifts in non-stationary univariate time series more effectively than traditional Statistical Process Control (SPC) charts? Traditional SPC charts assume stationarity and\u2026",
+      "field": "statistics",
+      "id": "PROJ-023-bayesian-nonparametrics-for-anomaly-dete",
+      "keywords": [],
+      "last_run_log": [
+        {
+          "agent": "paper_reviewer_figure_critic",
+          "duration_s": 141.47635,
+          "ended_at": "2026-04-29T18:37:09.358502Z",
+          "model": "qwen.qwen3.5-122b",
+          "outcome": "failed",
+          "started_at": "2026-04-29T18:34:47.882152Z"
+        },
+        {
+          "agent": "paper_reviewer_text_formatting",
+          "duration_s": 20.409433,
+          "ended_at": "2026-04-29T18:34:47.839644Z",
+          "model": "qwen.qwen3.5-122b",
+          "outcome": "failed",
+          "started_at": "2026-04-29T18:34:27.430211Z"
+        },
+        {
+          "agent": "paper_reviewer_data_quality_paper",
+          "duration_s": 19.760341,
+          "ended_at": "2026-04-29T18:34:27.388743Z",
+          "model": "qwen.qwen3.5-122b",
+          "outcome": "failed",
+          "started_at": "2026-04-29T18:34:07.628402Z"
+        },
+        {
+          "agent": "paper_reviewer_code_quality_paper",
+          "duration_s": 34.332602,
+          "ended_at": "2026-04-29T18:34:07.587116Z",
+          "model": "qwen.qwen3.5-122b",
+          "outcome": "failed",
+          "started_at": "2026-04-29T18:33:33.254514Z"
+        },
+        {
+          "agent": "paper_reviewer_statistical_analysis",
+          "duration_s": 47.060834,
+          "ended_at": "2026-04-29T18:33:33.189477Z",
+          "model": "qwen.qwen3.5-122b",
+          "outcome": "failed",
+          "started_at": "2026-04-29T18:32:46.128643Z"
+        },
+        {
+          "agent": "paper_reviewer_scientific_evidence",
+          "duration_s": 75.74017,
+          "ended_at": "2026-04-29T18:32:46.087274Z",
+          "model": "qwen.qwen3.5-122b",
+          "outcome": "failed",
+          "started_at": "2026-04-29T18:31:30.347104Z"
+        },
+        {
+          "agent": "paper_reviewer_safety_ethics",
+          "duration_s": 20.447824,
+          "ended_at": "2026-04-29T18:31:30.307973Z",
+          "model": "qwen.qwen3.5-122b",
+          "outcome": "failed",
+          "started_at": "2026-04-29T18:31:09.860149Z"
+        },
+        {
+          "agent": "paper_reviewer_overreach",
+          "duration_s": 20.330001,
+          "ended_at": "2026-04-29T18:31:09.830611Z",
+          "model": "qwen.qwen3.5-122b",
+          "outcome": "failed",
+          "started_at": "2026-04-29T18:30:49.500610Z"
+        },
+        {
+          "agent": "paper_reviewer_claim_accuracy",
+          "duration_s": 17.121271,
+          "ended_at": "2026-04-29T18:30:49.460776Z",
+          "model": "qwen.qwen3.5-122b",
+          "outcome": "failed",
+          "started_at": "2026-04-29T18:30:32.339505Z"
+        },
+        {
+          "agent": "paper_reviewer_logical_consistency",
+          "duration_s": 97.612434,
+          "ended_at": "2026-04-29T18:30:32.298350Z",
+          "model": "qwen.qwen3.5-122b",
+          "outcome": "failed",
+          "started_at": "2026-04-29T18:28:54.685916Z"
+        }
+      ],
+      "phase_group": "posted",
+      "points_paper_total": 6.0,
+      "points_research_total": 6.0,
+      "speckit_paper_dir": "projects/PROJ-023-bayesian-nonparametrics-for-anomaly-dete/paper/specs/001-paper",
+      "speckit_research_dir": "projects/PROJ-023-bayesian-nonparametrics-for-anomaly-dete/specs/002-bayesian-nonparametrics-for-anomaly-dete",
+      "submitter": "google.gemma-3-27b-it",
+      "title": "Bayesian Nonparametrics for Anomaly Detection in Time Series",
+      "updated_at": "2026-04-29T18:38:40.708874+00:00"
     }
   ],
   "schema_version": "2.0.0"
