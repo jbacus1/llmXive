@@ -89,6 +89,7 @@ STAGE_TO_AGENT: dict[Stage, str] = {
     # US5: at paper_complete the project waits for at least one
     # paper-stage review record to exist, then auto-transitions to
     # paper_review (handled by advancement.evaluate).
+    Stage.PAPER_COMPLETE: "paper_reviewer",
     Stage.PAPER_REVIEW: "paper_reviewer",
 }
 
@@ -264,7 +265,7 @@ def run_one_step(
                 n for n in registry_loader.list_names(repo_root=repo)
                 if n == "research_reviewer" or n.startswith("research_reviewer_")
             ]
-        elif project.current_stage == Stage.PAPER_REVIEW:
+        elif project.current_stage in {Stage.PAPER_COMPLETE, Stage.PAPER_REVIEW}:
             agents_to_run = [
                 n for n in registry_loader.list_names(repo_root=repo)
                 if n == "paper_reviewer" or n.startswith("paper_reviewer_")
@@ -299,7 +300,8 @@ def run_one_step(
                 },
             )
             is_review_dispatch = project.current_stage in {
-                Stage.RESEARCH_COMPLETE, Stage.RESEARCH_REVIEW, Stage.PAPER_REVIEW
+                Stage.RESEARCH_COMPLETE, Stage.RESEARCH_REVIEW,
+                Stage.PAPER_COMPLETE, Stage.PAPER_REVIEW,
             }
             if is_review_dispatch:
                 # Specialist reviewer failures are non-fatal — log and
@@ -377,6 +379,15 @@ def _decide_next_stage(
     if _human_input_marker(project_dir):
         return Stage.HUMAN_INPUT_NEEDED
 
+    # Scope-rejection from flesh-out: roll back to brainstormed so
+    # the brainstorm agent can propose a tighter, GHA-feasible idea
+    # on the next cycle. The marker file is consumed (deleted) so
+    # we don't loop indefinitely.
+    scope_marker = project_dir / ".specify" / "memory" / "scope_rejected.yaml"
+    if scope_marker.exists():
+        scope_marker.unlink()
+        return Stage.BRAINSTORMED
+
     cur = project.current_stage
     # Implementer special-case: stay in_progress until all tasks done.
     if cur in {Stage.ANALYZED, Stage.IN_PROGRESS}:
@@ -402,7 +413,7 @@ def _decide_next_stage(
         return evaluated.current_stage
 
     # Paper-Reviewer (US5) — same pattern.
-    if cur == Stage.PAPER_REVIEW:
+    if cur in {Stage.PAPER_COMPLETE, Stage.PAPER_REVIEW}:
         evaluated = advancement_evaluate(project, repo_root=repo_root)
         return evaluated.current_stage
 

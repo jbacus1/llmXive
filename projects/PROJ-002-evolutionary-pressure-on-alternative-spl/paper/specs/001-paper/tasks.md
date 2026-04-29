@@ -42,9 +42,9 @@
 
 **Purpose**: Project initialization and basic LaTeX structure
 
-- [ ] T001 [P] [Setup] Initialize LaTeX project structure per implementation plan in `paper/source/` [kind:latex-build]
-- [ ] T002 [P] [Setup] Create `main.tex` with arxiv-style class and required packages [kind:latex-build]
-- [ ] T003 [P] [Setup] Initialize `refs.bib` bibliography file scaffold in `paper/source/` [kind:reference-verification]
+- [X] T001 [P] [Setup] Initialize LaTeX project structure per implementation plan in `paper/source/` [kind:latex-build]
+- [X] T002 [P] [Setup] Create `main.tex` with arxiv-style class and required packages [kind:latex-build]
+- [X] T003 [P] [Setup] Initialize `refs.bib` bibliography file scaffold in `paper/source/` [kind:reference-verification]
 
 ---
 
@@ -56,11 +56,11 @@
 
 Examples of foundational tasks (adjust based on your project):
 
-- [ ] T004 [P] [Foundational] Create `figure-data.schema.yaml` contract in `paper/contracts/` [kind:statistics]
-- [ ] T005 [P] [Foundational] Create `bibliography.schema.yaml` contract in `paper/contracts/` [kind:reference-verification]
-- [ ] T006 [P] [Foundational] Scaffold Python scripts for Figures 1-5 in `paper/scripts/figures/` [kind:figure]
-- [ ] T007 [Foundational] Implement checksum verification script for `data/` artifacts per Principle III [kind:statistics]
-- [ ] T008 [P] [Foundational] Configure `pdflatex` build gate in CI/CD pipeline [kind:latex-build]
+- [X] T004 [P] [Foundational] Create `figure-data.schema.yaml` contract in `paper/contracts/` [kind:statistics]
+- [X] T005 [P] [Foundational] Create `bibliography.schema.yaml` contract in `paper/contracts/` [kind:reference-verification]
+- [X] T006 [P] [Foundational] Scaffold Python scripts for Figures 1-5 in `paper/scripts/figures/` [kind:figure]
+- [X] T007 [Foundational] Implement checksum verification script for `data/` artifacts per Principle III [kind:statistics]
+- [X] T008 [P] [Foundational] Configure `pdflatex` build gate in CI/CD pipeline [kind:latex-build]
 
 **Checkpoint**: Foundation ready - user story implementation can now begin in parallel
 
@@ -76,16 +76,16 @@ Examples of foundational tasks (adjust based on your project):
 
 > **NOTE: Write these tests FIRST, ensure they FAIL before implementation**
 
-- [ ] T009 [P] [US1] Contract test for pipeline checksums in `tests/contract/test_checksums.py` [kind:statistics]
-- [ ] T010 [P] [US1] Integration test for pipeline reproducibility in `tests/integration/test_repro.py` [kind:statistics]
+- [X] T009 [P] [US1] Contract test for pipeline checksums in `tests/contract/test_checksums.py` [kind:statistics]
+- [X] T010 [P] [US1] Integration test for pipeline reproducibility in `tests/integration/test_repro.py` [kind:statistics]
 
 ### Implementation for User Story 1
 
-- [ ] T011 [P] [US1] Draft Methods section - Pipeline description (STAR/rMATS) in `paper/source/sections/methods.tex` [kind:prose]
-- [ ] T012 [P] [US1] Document tool versions (STAR v2.7.10a, rMATS v4.1.2) in `paper/source/sections/methods.tex` [kind:prose]
-- [ ] T013 [US1] Document random seeds used for pipeline reproducibility in `paper/source/sections/methods.tex` [kind:prose]
-- [ ] T014 [US1] Generate alignment statistics checksums for `data/` artifacts [kind:statistics]
-- [ ] T015 [US1] Verify alignment throughput > 10M reads/min constraint in pipeline logs [kind:statistics]
+- [X] T011 [P] [US1] Draft Methods section - Pipeline description (STAR/rMATS) in `paper/source/sections/methods.tex` [kind:prose]
+- [X] T012 [P] [US1] Document tool versions (STAR v2.7.10a, rMATS v4.1.2) in `paper/source/sections/methods.tex` [kind:prose]
+- [X] T013 [US1] Document random seeds used for pipeline reproducibility in `paper/source/sections/methods.tex` [kind:prose]
+- [X] T014 [US1] Generate alignment statistics checksums for `data/` artifacts [kind:statistics]
+- [X] T015 [US1] Verify alignment throughput > 10M reads/min constraint in pipeline logs [kind:statistics]
 
 **Checkpoint**: At this point, User Story 1 should be fully functional and testable independently
 
@@ -99,14 +99,14 @@ Examples of foundational tasks (adjust based on your project):
 
 ### Tests for User Story 2 (OPTIONAL - only if tests requested) ⚠️
 
-- [ ] T016 [P] [US2] Validation test for tool version consistency in `tests/contract/test_versions.py` [kind:statistics]
+- [X] T016 [P] [US2] Validation test for tool version consistency in `tests/contract/test_versions.py` [kind:statistics]
 
 ### Implementation for User Story 2
 
-- [ ] T017 [P] [US2] Draft Methods section - Orthology mapping approach (Ensembl Compara) in `paper/source/sections/methods.tex` [kind:prose]
-- [ ] T018 [US2] Document end-to-end pipeline completion constraint (< 48h) in `paper/source/sections/methods.tex` [kind:prose]
-- [ ] T019 [US2] Verify tool versions in Methods match `paper/requirements.txt` [kind:reference-verification]
-- [ ] T020 [US2] Verify memory constraints (< 64GB per alignment job) documented in Methods [kind:prose]
+- [X] T017 [P] [US2] Draft Methods section - Orthology mapping approach (Ensembl Compara) in `paper/source/sections/methods.tex` [kind:prose]
+- [X] T018 [US2] Document end-to-end pipeline completion constraint (< 48h) in `paper/source/sections/methods.tex` [kind:prose]
+- [X] T019 [US2] Verify tool versions in Methods match `paper/requirements.txt` [kind:reference-verification]
+- [X] T020 [US2] Verify memory constraints (< 64GB per alignment job) documented in Methods [kind:prose]
 
 **Checkpoint**: At this point, User Stories 1 AND 2 should both work independently
 
@@ -120,18 +120,18 @@ Examples of foundational tasks (adjust based on your project):
 
 ### Tests for User Story 3 (OPTIONAL - only if tests requested) ⚠️
 
-- [ ] T021 [P] [US3] Traceability test for Claim 1 to Figure 4 in `tests/contract/test_claims.py` [kind:statistics]
-- [ ] T022 [P] [US3] Traceability test for Claim 2 to Figure 3/5 in `tests/contract/test_claims.py` [kind:statistics]
+- [X] T021 [P] [US3] Traceability test for Claim 1 to Figure 4 in `tests/contract/test_claims.py` [kind:statistics]
+- [X] T022 [P] [US3] Traceability test for Claim 2 to Figure 3/5 in `tests/contract/test_claims.py` [kind:statistics]
 
 ### Implementation for User Story 3
 
-- [ ] T023 [P] [US3] Draft Results section - Differential splicing analysis across species in `paper/source/sections/results.tex` [kind:prose]
-- [ ] T024 [P] [US3] Generate Figure 4 (Comparative splicing conservation heatmap) at `paper/source/figures/fig4.pdf` [kind:figure]
-- [ ] T025 [US3] Generate Figure 5 (Differential splicing events with statistical significance) at `paper/source/figures/fig5.pdf` [kind:figure]
-- [ ] T026 [US3] Verify Claim 1 (Conservation across orthologous genes) traces to Figure 4 data [kind:statistics]
-- [ ] T027 [US3] Verify Claim 2 (Event types evolutionary pressure) traces to Figure 3/5 data [kind:statistics]
-- [ ] T028 [US3] Verify statistical claims in Results computed on checksummed artifacts per Principle III [kind:statistics]
-- [ ] T029 [P] [US3] Verify citations for prior splicing studies in References section [kind:reference-verification]
+- [X] T023 [P] [US3] Draft Results section - Differential splicing analysis across species in `paper/source/sections/results.tex` [kind:prose]
+- [X] T024 [P] [US3] Generate Figure 4 (Comparative splicing conservation heatmap) at `paper/source/figures/fig4.pdf` [kind:figure]
+- [X] T025 [US3] Generate Figure 5 (Differential splicing events with statistical significance) at `paper/source/figures/fig5.pdf` [kind:figure]
+- [X] T026 [US3] Verify Claim 1 (Conservation across orthologous genes) traces to Figure 4 data [kind:statistics]
+- [X] T027 [US3] Verify Claim 2 (Event types evolutionary pressure) traces to Figure 3/5 data [kind:statistics]
+- [X] T028 [US3] Verify statistical claims in Results computed on checksummed artifacts per Principle III [kind:statistics]
+- [X] T029 [P] [US3] Verify citations for prior splicing studies in References section [kind:reference-verification]
 
 **Checkpoint**: At this point, User Stories 1, 2, AND 3 should all work independently
 
@@ -145,15 +145,15 @@ Examples of foundational tasks (adjust based on your project):
 
 ### Tests for User Story 4 (OPTIONAL - only if tests requested) ⚠️
 
-- [ ] T030 [P] [US4] Validation test for species pair identification in `tests/contract/test_species.py` [kind:prose]
+- [X] T030 [P] [US4] Validation test for species pair identification in `tests/contract/test_species.py` [kind:prose]
 
 ### Implementation for User Story 4
 
-- [ ] T031 [P] [US4] Draft Results section - Species comparison framework in `paper/source/sections/results.tex` [kind:prose]
-- [ ] T032 [US4] Document rMATS event types included (exon skipping, mutually exclusive, etc.) in Methods [kind:prose]
-- [ ] T033 [US4] Draft Discussion section - Evolutionary pressure interpretation vs observed differences [kind:prose]
-- [ ] T034 [P] [US4] Perform lit-search for evolutionary pressure background in Introduction [kind:lit-search]
-- [ ] T035 [US4] Verify orthology mapping coverage percentage documented in Discussion [kind:statistics]
+- [X] T031 [P] [US4] Draft Results section - Species comparison framework in `paper/source/sections/results.tex` [kind:prose]
+- [X] T032 [US4] Document rMATS event types included (exon skipping, mutually exclusive, etc.) in Methods [kind:prose]
+- [X] T033 [US4] Draft Discussion section - Evolutionary pressure interpretation vs observed differences [kind:prose]
+- [X] T034 [P] [US4] Perform lit-search for evolutionary pressure background in Introduction [kind:lit-search]
+- [X] T035 [US4] Verify orthology mapping coverage percentage documented in Discussion [kind:statistics]
 
 **Checkpoint**: All user stories should now be independently functional
 
@@ -167,14 +167,14 @@ Examples of foundational tasks (adjust based on your project):
 
 ### Tests for User Story 5 (OPTIONAL - only if tests requested) ⚠️
 
-- [ ] T036 [P] [US5] Validation test for supplementary file references in `tests/contract/test_supplementary.py` [kind:prose]
+- [X] T036 [P] [US5] Validation test for supplementary file references in `tests/contract/test_supplementary.py` [kind:prose]
 
 ### Implementation for User Story 5
 
-- [ ] T037 [P] [US5] Generate Supplementary Table of splicing events in `paper/source/supplementary/` [kind:statistics]
-- [ ] T038 [US5] Generate Supplementary Figures referenced in main text [kind:figure]
-- [ ] T039 [US5] Verify supplementary material data sources match `data/` directory checksums [kind:statistics]
-- [ ] T040 [US5] Verify tool version documentation in Supplementary Materials matches `requirements.txt` [kind:reference-verification]
+- [X] T037 [P] [US5] Generate Supplementary Table of splicing events in `paper/source/supplementary/` [kind:statistics]
+- [X] T038 [US5] Generate Supplementary Figures referenced in main text [kind:figure]
+- [X] T039 [US5] Verify supplementary material data sources match `data/` directory checksums [kind:statistics]
+- [X] T040 [US5] Verify tool version documentation in Supplementary Materials matches `requirements.txt` [kind:reference-verification]
 
 ---
 
@@ -182,12 +182,12 @@ Examples of foundational tasks (adjust based on your project):
 
 **Purpose**: Improvements that affect multiple user stories
 
-- [ ] T041 [P] [Polish] Proofread Abstract, Introduction, and Discussion for clarity and jargon discipline [kind:proofread]
-- [ ] T042 [P] [Polish] Run `pdflatex` build gate and verify no warnings in log [kind:latex-build]
-- [ ] T043 [Polish] Fix any LaTeX compilation errors encountered during build [kind:latex-fix]
-- [ ] T044 [P] [Polish] Verify all 5 required figures present with captions referencing `data/` files [kind:figure]
-- [ ] T045 [P] [Polish] Verify all 5 required claims traceable to evidence in paper [kind:prose]
-- [ ] T046 [P] [Polish] Run `check_figures.py` (checksum verification) [kind:statistics]
+- [X] T041 [P] [Polish] Proofread Abstract, Introduction, and Discussion for clarity and jargon discipline [kind:proofread]
+- [X] T042 [P] [Polish] Run `pdflatex` build gate and verify no warnings in log [kind:latex-build]
+- [X] T043 [Polish] Fix any LaTeX compilation errors encountered during build [kind:latex-fix]
+- [X] T044 [P] [Polish] Verify all 5 required figures present with captions referencing `data/` files [kind:figure]
+- [X] T045 [P] [Polish] Verify all 5 required claims traceable to evidence in paper [kind:prose]
+- [X] T046 [P] [Polish] Run `check_figures.py` (checksum verification) [kind:statistics]
 
 ---
 

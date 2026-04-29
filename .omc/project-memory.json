@@ -189,15 +189,15 @@
       "type": "file"
     },
     {
-      "path": "specs/001-agentic-pipeline-refactor/data-model.md",
-      "accessCount": 6,
-      "lastAccessed": 1777429371151,
+      "path": "src/llmxive/agents/lifecycle.py",
+      "accessCount": 8,
+      "lastAccessed": 1777485128872,
       "type": "file"
     },
     {
-      "path": "src/llmxive/agents/lifecycle.py",
+      "path": "specs/001-agentic-pipeline-refactor/data-model.md",
       "accessCount": 6,
-      "lastAccessed": 1777480068652,
+      "lastAccessed": 1777429371151,
       "type": "file"
     },
     {

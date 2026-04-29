@@ -197,6 +197,31 @@ class FleshOutAgent(_IdeaPhaseAgent):
         if not body.startswith("# "):
             body = f"# {title}\n\n{body}"
         target.write_text(front + body + "\n", encoding="utf-8")
+
+        # Scope check: if the LLM declared the idea out-of-scope per
+        # the brainstorm/flesh-out scope constraints, write a sentinel
+        # so the dispatcher rolls the project back to BRAINSTORMED.
+        # The Brainstorm agent will then propose a different idea on
+        # the next cycle.
+        body_lower = body.lower()
+        if (
+            "verdict: rejected" in body_lower
+            or "out of scope" in body_lower
+            or "out-of-scope" in body_lower
+            or "exceeds gha" in body_lower
+            or "exceeds github actions" in body_lower
+        ):
+            scope_marker = (
+                repo / "projects" / ctx.project_id / ".specify" / "memory" / "scope_rejected.yaml"
+            )
+            scope_marker.parent.mkdir(parents=True, exist_ok=True)
+            from datetime import datetime, timezone as _tz
+            scope_marker.write_text(
+                f"reason: flesh-out judged idea out of GHA-feasible scope\n"
+                f"detected_at: {datetime.now(_tz.utc).isoformat()}\n",
+                encoding="utf-8",
+            )
+            print(f"[flesh_out] {ctx.project_id} marked OUT-OF-SCOPE")
         return [str(target.relative_to(repo))]
 
 

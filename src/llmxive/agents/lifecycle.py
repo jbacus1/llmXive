@@ -23,7 +23,11 @@ ALLOWED_TRANSITIONS: dict[Stage, set[Stage]] = {
     # optional checkpoint for long-running flesh-out work.
     Stage.BRAINSTORMED: {Stage.FLESH_OUT_IN_PROGRESS, Stage.FLESH_OUT_COMPLETE, Stage.HUMAN_INPUT_NEEDED},
     Stage.FLESH_OUT_IN_PROGRESS: {Stage.FLESH_OUT_COMPLETE, Stage.HUMAN_INPUT_NEEDED},
-    Stage.FLESH_OUT_COMPLETE: {Stage.PROJECT_INITIALIZED, Stage.HUMAN_INPUT_NEEDED},
+    Stage.FLESH_OUT_COMPLETE: {
+        Stage.PROJECT_INITIALIZED,
+        Stage.HUMAN_INPUT_NEEDED,
+        Stage.BRAINSTORMED,  # scope rejection rolls back for re-brainstorm
+    },
     # Per-project research Spec Kit pipeline (US1):
     Stage.PROJECT_INITIALIZED: {Stage.SPECIFIED},
     # The CLARIFY_IN_PROGRESS / ANALYZE_IN_PROGRESS intermediates are
@@ -68,7 +72,16 @@ ALLOWED_TRANSITIONS: dict[Stage, set[Stage]] = {
     Stage.PAPER_TASKED: {Stage.PAPER_ANALYZED},
     Stage.PAPER_ANALYZED: {Stage.PAPER_IN_PROGRESS},
     Stage.PAPER_IN_PROGRESS: {Stage.PAPER_COMPLETE, Stage.PAPER_IN_PROGRESS},
-    Stage.PAPER_COMPLETE: {Stage.PAPER_REVIEW},
+    # paper_complete is now a brief checkpoint where the 12 paper
+    # specialists run before paper_review.
+    Stage.PAPER_COMPLETE: {
+        Stage.PAPER_REVIEW,
+        Stage.PAPER_ACCEPTED,
+        Stage.PAPER_MINOR_REVISION,
+        Stage.PAPER_MAJOR_REVISION_WRITING,
+        Stage.PAPER_MAJOR_REVISION_SCIENCE,
+        Stage.PAPER_FUNDAMENTAL_FLAWS,
+    },
     # Final paper review (US5):
     Stage.PAPER_REVIEW: {
         Stage.PAPER_ACCEPTED,
