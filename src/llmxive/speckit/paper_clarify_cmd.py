@@ -13,6 +13,8 @@ from typing import Any
 
 import yaml
 
+from llmxive.speckit.yaml_extract import parse_yaml_lenient
+
 from llmxive.agents.prompts import render_prompt
 from llmxive.backends.base import ChatMessage, ChatResponse
 from llmxive.speckit.clarify_cmd import CLARIFY_MARKER_RE
@@ -84,7 +86,7 @@ class PaperClarifierAgent(SlashCommandAgent):
         repo = ctx.project_dir.parent.parent
         spec_path = Path(mechanical_output["spec_path"])
         try:
-            report = yaml.safe_load(llm_response.text)
+            report = parse_yaml_lenient(llm_response.text)
         except yaml.YAMLError as exc:
             raise RuntimeError(f"Paper-Clarifier returned invalid YAML: {exc}") from exc
         if not isinstance(report, dict):

@@ -20,6 +20,8 @@ from typing import Any
 
 import yaml
 
+from llmxive.speckit.yaml_extract import parse_yaml_lenient
+
 from llmxive.agents.base import Agent, AgentContext
 from llmxive.agents.prompts import render_prompt
 from llmxive.backends.base import ChatMessage, ChatResponse
@@ -164,7 +166,7 @@ class StatusReporterAgent(Agent):
 
         # Persist the LLM narrative + metrics to a per-run summary file.
         try:
-            doc = yaml.safe_load(response.text) or {}
+            doc = parse_yaml_lenient(response.text) or {}
         except yaml.YAMLError:
             doc = {}
         if not isinstance(doc, dict):

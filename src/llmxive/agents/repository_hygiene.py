@@ -16,6 +16,8 @@ from typing import Any
 
 import yaml
 
+from llmxive.speckit.yaml_extract import parse_yaml_lenient
+
 from llmxive.agents.base import Agent, AgentContext
 from llmxive.agents.prompts import render_prompt
 from llmxive.backends.base import ChatMessage, ChatResponse
@@ -179,7 +181,7 @@ class RepositoryHygieneAgent(Agent):
     def handle_response(self, ctx: AgentContext, response: ChatResponse) -> list[str]:
         repo = Path(__file__).resolve().parent.parent.parent.parent
         try:
-            doc = yaml.safe_load(response.text) or {}
+            doc = parse_yaml_lenient(response.text) or {}
         except yaml.YAMLError:
             doc = {}
         if not isinstance(doc, dict):

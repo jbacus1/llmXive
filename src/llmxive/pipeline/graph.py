@@ -253,7 +253,9 @@ def run_one_step(
         )
         run_agent(agent, ctx, repo_root=repo)
     elif agent_name in _SPECKIT_AGENTS:
-        speckit_agent = _SPECKIT_AGENTS[agent_name](entry)
+        # SlashCommandAgents take no constructor args; the registry
+        # entry is consulted at run() time via the SlashCommandContext.
+        speckit_agent = _SPECKIT_AGENTS[agent_name]()
         sk_ctx = SlashCommandContext(
             project_id=project.id,
             project_dir=project_dir,

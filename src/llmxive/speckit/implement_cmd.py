@@ -19,6 +19,8 @@ from typing import Any
 
 import yaml
 
+from llmxive.speckit.yaml_extract import parse_yaml_lenient
+
 from llmxive.agents.prompts import render_prompt
 from llmxive.backends.base import ChatMessage, ChatResponse
 from llmxive.config import LEAF_TASK_BUDGET_SECONDS
@@ -110,7 +112,7 @@ class ImplementerAgent(SlashCommandAgent):
             return []
 
         try:
-            doc = yaml.safe_load(llm_response.text)
+            doc = parse_yaml_lenient(llm_response.text)
         except yaml.YAMLError as exc:
             raise RuntimeError(f"Implementer returned invalid YAML: {exc}") from exc
         if not isinstance(doc, dict):

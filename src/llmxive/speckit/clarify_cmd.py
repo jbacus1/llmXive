@@ -18,6 +18,8 @@ from typing import Any
 
 import yaml
 
+from llmxive.speckit.yaml_extract import parse_yaml_lenient
+
 from llmxive.agents.prompts import render_prompt
 from llmxive.backends.base import ChatMessage, ChatResponse
 from llmxive.config import TASKER_MAX_REVISION_ROUNDS
@@ -88,7 +90,7 @@ class ClarifierAgent(SlashCommandAgent):
         repo = ctx.project_dir.parent.parent
         spec_path = Path(mechanical_output["spec_path"])
         try:
-            report = yaml.safe_load(llm_response.text)
+            report = parse_yaml_lenient(llm_response.text)
         except yaml.YAMLError as exc:
             raise RuntimeError(f"Clarifier returned invalid YAML: {exc}") from exc
         if not isinstance(report, dict):
