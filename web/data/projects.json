@@ -1,12 +1,12 @@
 {
   "aggregates": {
-    "active_projects": 22,
-    "ai_contributors": 7,
+    "active_projects": 21,
+    "ai_contributors": 15,
     "human_contributors": 0,
     "papers_posted": 0,
     "total_collaborations": 0,
-    "total_contributions": 158,
-    "total_contributors": 7
+    "total_contributions": 301,
+    "total_contributors": 15
   },
   "contributors": [
     {
@@ -20,7 +20,7 @@
         "ocean science",
         "psychology"
       ],
-      "contribution_count": 158,
+      "contribution_count": 293,
       "kind": "llm",
       "name": "qwen.qwen3.5-122b"
     },
@@ -50,12 +50,83 @@
     },
     {
       "areas": [
+        "biology",
+        "psychology"
+      ],
+      "contribution_count": 2,
+      "kind": "llm",
+      "name": "research_reviewer_idea_quality"
+    },
+    {
+      "areas": [
+        "biology",
+        "psychology"
+      ],
+      "contribution_count": 2,
+      "kind": "llm",
+      "name": "research_reviewer_implementation_correctness"
+    },
+    {
+      "areas": [
+        "biology",
+        "psychology"
+      ],
+      "contribution_count": 2,
+      "kind": "llm",
+      "name": "research_reviewer"
+    },
+    {
+      "areas": [
+        "biology",
+        "psychology"
+      ],
+      "contribution_count": 2,
+      "kind": "llm",
+      "name": "research_reviewer_implementation_completeness"
+    },
+    {
+      "areas": [
+        "biology",
+        "psychology"
+      ],
+      "contribution_count": 2,
+      "kind": "llm",
+      "name": "research_reviewer_filesystem_hygiene"
+    },
+    {
+      "areas": [
+        "biology",
+        "psychology"
+      ],
+      "contribution_count": 2,
+      "kind": "llm",
+      "name": "research_reviewer_creativity"
+    },
+    {
+      "areas": [
+        "biology",
+        "psychology"
+      ],
+      "contribution_count": 2,
+      "kind": "llm",
+      "name": "research_reviewer_code_quality_research"
+    },
+    {
+      "areas": [
         "neuroscience",
         "ocean science"
       ],
       "contribution_count": 2,
       "kind": "llm",
       "name": "Qwen2.5-3B-Instruct"
+    },
+    {
+      "areas": [
+        "psychology"
+      ],
+      "contribution_count": 1,
+      "kind": "llm",
+      "name": "research_reviewer_data_quality_research"
     },
     {
       "areas": [
@@ -66,12 +137,12 @@
       "name": "Qwen2.5-1.5B-Instruct"
     }
   ],
-  "generated_at": "2026-04-29T15:37:34.241257+00:00",
+  "generated_at": "2026-04-29T16:33:29.526209+00:00",
   "projects": [
     {
       "artifact_links": {
         "citations": "state/citations/PROJ-001-mechanistic-interpretability-of-ctcf-bin.yaml",
-        "code": null,
+        "code": "projects/PROJ-001-mechanistic-interpretability-of-ctcf-bin/code",
         "data": null,
         "idea": "projects/PROJ-001-mechanistic-interpretability-of-ctcf-bin/idea/mechanistic-interpretability-of-ctcf-bin.md",
         "paper_figures": null,
@@ -84,16 +155,16 @@
         "reviews_paper": null,
         "reviews_research": null,
         "spec": "projects/PROJ-001-mechanistic-interpretability-of-ctcf-bin/specs/001-mechanistic-interpretability-of-ctcf-bin/spec.md",
-        "tasks": null
+        "tasks": "projects/PROJ-001-mechanistic-interpretability-of-ctcf-bin/specs/001-mechanistic-interpretability-of-ctcf-bin/tasks.md"
       },
       "citation_summary": {
         "mismatch": 0,
         "pending": 0,
         "unreachable": 0,
-        "verified": 0
+        "verified": 1
       },
       "created_at": "2026-04-29T02:44:28.710016+00:00",
-      "current_stage": "clarified",
+      "current_stage": "in_progress",
       "description": "Field: biology Which sequence motifs and neighboring chromatin features causally drive CTCF site selection across cell types, and how can mechanistic interpretability methods applied to sequence-context-aware binding predictors reveal these determinants? CTCF binds tens of thousands of genomic sites but engages only a\u2026",
       "field": "biology",
       "id": "PROJ-001-mechanistic-interpretability-of-ctcf-bin",
@@ -101,6 +172,38 @@
         "biology"
       ],
       "last_run_log": [
+        {
+          "agent": "implementer",
+          "duration_s": 12.708389,
+          "ended_at": "2026-04-29T15:58:20.993401Z",
+          "model": "qwen.qwen3.5-122b",
+          "outcome": "success",
+          "started_at": "2026-04-29T15:58:08.285012Z"
+        },
+        {
+          "agent": "tasker",
+          "duration_s": 741.499757,
+          "ended_at": "2026-04-29T15:58:08.253827Z",
+          "model": "qwen.qwen3.5-122b",
+          "outcome": "success",
+          "started_at": "2026-04-29T15:45:46.754070Z"
+        },
+        {
+          "agent": "tasker",
+          "duration_s": 646.070938,
+          "ended_at": "2026-04-29T15:45:46.711762Z",
+          "model": "qwen.qwen3.5-122b",
+          "outcome": "success",
+          "started_at": "2026-04-29T15:35:00.640824Z"
+        },
+        {
+          "agent": "planner",
+          "duration_s": 130.822476,
+          "ended_at": "2026-04-29T15:35:00.600384Z",
+          "model": "qwen.qwen3.5-122b",
+          "outcome": "success",
+          "started_at": "2026-04-29T15:32:49.777908Z"
+        },
         {
           "agent": "clarifier",
           "duration_s": 12.903697,
@@ -148,38 +251,6 @@
           "model": "qwen.qwen3.5-122b",
           "outcome": "failed",
           "started_at": "2026-04-29T12:19:34.079048Z"
-        },
-        {
-          "agent": "specifier",
-          "duration_s": 123.071056,
-          "ended_at": "2026-04-29T12:19:33.839661Z",
-          "model": "qwen.qwen3.5-122b",
-          "outcome": "failed",
-          "started_at": "2026-04-29T12:17:30.768605Z"
-        },
-        {
-          "agent": "specifier",
-          "duration_s": 34.171423,
-          "ended_at": "2026-04-29T12:17:30.524973Z",
-          "model": "qwen.qwen3.5-122b",
-          "outcome": "failed",
-          "started_at": "2026-04-29T12:16:56.353550Z"
-        },
-        {
-          "agent": "specifier",
-          "duration_s": 74.380287,
-          "ended_at": "2026-04-29T12:16:56.081182Z",
-          "model": "qwen.qwen3.5-122b",
-          "outcome": "failed",
-          "started_at": "2026-04-29T12:15:41.700895Z"
-        },
-        {
-          "agent": "project_initializer",
-          "duration_s": 66.221674,
-          "ended_at": "2026-04-29T12:15:41.444592Z",
-          "model": "qwen.qwen3.5-122b",
-          "outcome": "success",
-          "started_at": "2026-04-29T12:14:35.222918Z"
         }
       ],
       "phase_group": "research_speckit",
@@ -189,7 +260,7 @@
       "speckit_research_dir": "projects/PROJ-001-mechanistic-interpretability-of-ctcf-bin/specs/001-mechanistic-interpretability-of-ctcf-bin",
       "submitter": "system:brainstorm-seed",
       "title": "Mechanistic Interpretability of CTCF Binding-Site Selection",
-      "updated_at": "2026-04-29T15:32:49.744123+00:00"
+      "updated_at": "2026-04-29T15:58:20.996143+00:00"
     },
     {
       "artifact_links": {
@@ -205,7 +276,7 @@
         "paper_tasks": null,
         "plan": "projects/PROJ-002-evolutionary-pressure-on-alternative-spl/specs/001-evolutionary-pressure-on-alternative-spl/plan.md",
         "reviews_paper": null,
-        "reviews_research": null,
+        "reviews_research": "projects/PROJ-002-evolutionary-pressure-on-alternative-spl/reviews/research",
         "spec": "projects/PROJ-002-evolutionary-pressure-on-alternative-spl/specs/001-evolutionary-pressure-on-alternative-spl/spec.md",
         "tasks": "projects/PROJ-002-evolutionary-pressure-on-alternative-spl/specs/001-evolutionary-pressure-on-alternative-spl/tasks.md"
       },
@@ -216,7 +287,7 @@
         "verified": 0
       },
       "created_at": "2026-04-29T02:44:28.710016+00:00",
-      "current_stage": "in_progress",
+      "current_stage": "research_minor_revision",
       "description": "Field: biology To what extent does alternative splicing divergence in primate cortex correlate with positive selection on splicing regulatory elements? Alternative splicing significantly increases proteomic complexity, yet the evolutionary drivers of splicing divergence across primates remain poorly understood. This\u2026",
       "field": "biology",
       "id": "PROJ-002-evolutionary-pressure-on-alternative-spl",
@@ -225,94 +296,94 @@
       ],
       "last_run_log": [
         {
-          "agent": "implementer",
-          "duration_s": 63.126849,
-          "ended_at": "2026-04-29T15:32:50.127619Z",
+          "agent": "research_reviewer_filesystem_hygiene",
+          "duration_s": 24.90453,
+          "ended_at": "2026-04-29T16:04:50.707415Z",
           "model": "qwen.qwen3.5-122b",
           "outcome": "success",
-          "started_at": "2026-04-29T15:31:47.000770Z"
+          "started_at": "2026-04-29T16:04:25.802885Z"
         },
         {
-          "agent": "implementer",
-          "duration_s": 65.165212,
-          "ended_at": "2026-04-29T15:31:46.964183Z",
+          "agent": "research_reviewer_data_quality_research",
+          "duration_s": 21.247239,
+          "ended_at": "2026-04-29T16:04:25.775235Z",
           "model": "qwen.qwen3.5-122b",
-          "outcome": "success",
-          "started_at": "2026-04-29T15:30:41.798971Z"
+          "outcome": "failed",
+          "started_at": "2026-04-29T16:04:04.527996Z"
         },
         {
-          "agent": "implementer",
-          "duration_s": 37.730661,
-          "ended_at": "2026-04-29T15:30:41.733548Z",
+          "agent": "research_reviewer_code_quality_research",
+          "duration_s": 24.034167,
+          "ended_at": "2026-04-29T16:04:04.503971Z",
           "model": "qwen.qwen3.5-122b",
           "outcome": "success",
-          "started_at": "2026-04-29T15:30:04.002887Z"
+          "started_at": "2026-04-29T16:03:40.469804Z"
         },
         {
-          "agent": "implementer",
-          "duration_s": 68.420553,
-          "ended_at": "2026-04-29T15:30:03.965563Z",
+          "agent": "research_reviewer_implementation_completeness",
+          "duration_s": 25.422287,
+          "ended_at": "2026-04-29T16:03:40.432932Z",
           "model": "qwen.qwen3.5-122b",
           "outcome": "success",
-          "started_at": "2026-04-29T15:28:55.545010Z"
+          "started_at": "2026-04-29T16:03:15.010645Z"
         },
         {
-          "agent": "implementer",
-          "duration_s": 76.523309,
-          "ended_at": "2026-04-29T15:28:55.513119Z",
+          "agent": "research_reviewer_implementation_correctness",
+          "duration_s": 29.328523,
+          "ended_at": "2026-04-29T16:03:14.973535Z",
           "model": "qwen.qwen3.5-122b",
           "outcome": "success",
-          "started_at": "2026-04-29T15:27:38.989810Z"
+          "started_at": "2026-04-29T16:02:45.645012Z"
         },
         {
-          "agent": "implementer",
-          "duration_s": 68.427226,
-          "ended_at": "2026-04-29T15:27:38.964242Z",
+          "agent": "research_reviewer_creativity",
+          "duration_s": 21.098483,
+          "ended_at": "2026-04-29T16:02:45.608873Z",
           "model": "qwen.qwen3.5-122b",
           "outcome": "success",
-          "started_at": "2026-04-29T15:26:30.537016Z"
+          "started_at": "2026-04-29T16:02:24.510390Z"
         },
         {
-          "agent": "implementer",
-          "duration_s": 41.156963,
-          "ended_at": "2026-04-29T15:26:30.510835Z",
+          "agent": "research_reviewer_idea_quality",
+          "duration_s": 27.946661,
+          "ended_at": "2026-04-29T16:02:24.472168Z",
           "model": "qwen.qwen3.5-122b",
           "outcome": "success",
-          "started_at": "2026-04-29T15:25:49.353872Z"
+          "started_at": "2026-04-29T16:01:56.525507Z"
         },
         {
-          "agent": "implementer",
-          "duration_s": 69.944799,
-          "ended_at": "2026-04-29T15:25:49.328222Z",
+          "agent": "research_reviewer",
+          "duration_s": 28.779463,
+          "ended_at": "2026-04-29T16:01:56.490403Z",
           "model": "qwen.qwen3.5-122b",
           "outcome": "success",
-          "started_at": "2026-04-29T15:24:39.383423Z"
+          "started_at": "2026-04-29T16:01:27.710940Z"
         },
         {
-          "agent": "implementer",
-          "duration_s": 32.597758,
-          "ended_at": "2026-04-29T15:24:39.358484Z",
+          "agent": "research_reviewer_filesystem_hygiene",
+          "duration_s": 35.634278,
+          "ended_at": "2026-04-29T16:00:38.415198Z",
           "model": "qwen.qwen3.5-122b",
-          "outcome": "success",
-          "started_at": "2026-04-29T15:24:06.760726Z"
+          "outcome": "failed",
+          "started_at": "2026-04-29T16:00:02.780920Z"
         },
         {
-          "agent": "implementer",
-          "duration_s": 43.951431,
-          "ended_at": "2026-04-29T15:24:06.735185Z",
+          "agent": "research_reviewer_data_quality_research",
+          "duration_s": 22.71958,
+          "ended_at": "2026-04-29T16:00:02.757067Z",
           "model": "qwen.qwen3.5-122b",
-          "outcome": "success",
-          "started_at": "2026-04-29T15:23:22.783754Z"
+          "outcome": "failed",
+          "started_at": "2026-04-29T15:59:40.037487Z"
         }
       ],
-      "phase_group": "research_speckit",
+      "phase_group": "research_review",
       "points_paper_total": 0.0,
       "points_research_total": 0.0,
       "speckit_paper_dir": null,
       "speckit_research_dir": "projects/PROJ-002-evolutionary-pressure-on-alternative-spl/specs/001-evolutionary-pressure-on-alternative-spl",
       "submitter": "system:brainstorm-seed",
       "title": "Evolutionary Pressure on Alternative Splicing in Primates",
-      "updated_at": "2026-04-29T13:02:24.090613+00:00"
+      "updated_at": "2026-04-29T16:04:50.774168+00:00"
     },
     {
       "artifact_links": {
@@ -367,7 +438,7 @@
     },
     {
       "artifact_links": {
-        "citations": null,
+        "citations": "state/citations/PROJ-004-solvent-effects-on-photo-fries-rearrange.yaml",
         "code": null,
         "data": null,
         "idea": "projects/PROJ-004-solvent-effects-on-photo-fries-rearrange/idea/solvent-effects-on-photo-fries-rearrange.md",
@@ -377,20 +448,20 @@
         "paper_source": null,
         "paper_spec": null,
         "paper_tasks": null,
-        "plan": null,
+        "plan": "projects/PROJ-004-solvent-effects-on-photo-fries-rearrange/specs/001-solvent-effects-on-photo-fries-rearrange/plan.md",
         "reviews_paper": null,
         "reviews_research": null,
-        "spec": null,
-        "tasks": null
+        "spec": "projects/PROJ-004-solvent-effects-on-photo-fries-rearrange/specs/001-solvent-effects-on-photo-fries-rearrange/spec.md",
+        "tasks": "projects/PROJ-004-solvent-effects-on-photo-fries-rearrange/specs/001-solvent-effects-on-photo-fries-rearrange/tasks.md"
       },
       "citation_summary": {
         "mismatch": 0,
         "pending": 0,
         "unreachable": 0,
-        "verified": 0
+        "verified": 10
       },
       "created_at": "2026-04-29T02:44:28.710016+00:00",
-      "current_stage": "project_initialized",
+      "current_stage": "tasked",
       "description": "Field: chemistry How does solvent polarity quantitatively affect the singlet-radical-pair intermediate lifetime and product distribution in aryl ester photo-Fries rearrangement? Photo-Fries rearrangement is a fundamental photochemical transformation with applications in materials synthesis and mechanistic\u2026",
       "field": "chemistry",
       "id": "PROJ-004-solvent-effects-on-photo-fries-rearrange",
@@ -398,6 +469,38 @@
         "chemistry"
       ],
       "last_run_log": [
+        {
+          "agent": "tasker",
+          "duration_s": 772.644522,
+          "ended_at": "2026-04-29T15:52:33.714712Z",
+          "model": "qwen.qwen3.5-122b",
+          "outcome": "success",
+          "started_at": "2026-04-29T15:39:41.070190Z"
+        },
+        {
+          "agent": "planner",
+          "duration_s": 130.761442,
+          "ended_at": "2026-04-29T15:39:41.040999Z",
+          "model": "qwen.qwen3.5-122b",
+          "outcome": "success",
+          "started_at": "2026-04-29T15:37:30.279557Z"
+        },
+        {
+          "agent": "clarifier",
+          "duration_s": 164.965681,
+          "ended_at": "2026-04-29T15:37:30.240517Z",
+          "model": "qwen.qwen3.5-122b",
+          "outcome": "success",
+          "started_at": "2026-04-29T15:34:45.274836Z"
+        },
+        {
+          "agent": "specifier",
+          "duration_s": 111.124155,
+          "ended_at": "2026-04-29T15:34:45.235905Z",
+          "model": "qwen.qwen3.5-122b",
+          "outcome": "success",
+          "started_at": "2026-04-29T15:32:54.111750Z"
+        },
         {
           "agent": "project_initializer",
           "duration_s": 89.201757,
@@ -415,14 +518,14 @@
           "started_at": "2026-04-29T15:24:49.319855Z"
         }
       ],
-      "phase_group": "idea",
+      "phase_group": "research_speckit",
       "points_paper_total": 0.0,
       "points_research_total": 0.0,
       "speckit_paper_dir": null,
-      "speckit_research_dir": null,
+      "speckit_research_dir": "projects/PROJ-004-solvent-effects-on-photo-fries-rearrange/specs/001-solvent-effects-on-photo-fries-rearrange",
       "submitter": "system:brainstorm-seed",
       "title": "Solvent Effects on Photo-Fries Rearrangement Kinetics",
-      "updated_at": "2026-04-29T15:32:54.077406+00:00"
+      "updated_at": "2026-04-29T15:52:33.716563+00:00"
     },
     {
       "artifact_links": {
@@ -478,7 +581,7 @@
     {
       "artifact_links": {
         "citations": "state/citations/PROJ-006-agriculture-optimization.yaml",
-        "code": null,
+        "code": "projects/PROJ-006-agriculture-optimization/code",
         "data": null,
         "idea": "projects/PROJ-006-agriculture-optimization/idea/agriculture-optimization.md",
         "paper_figures": null,
@@ -494,9 +597,9 @@
         "tasks": null
       },
       "citation_summary": {
-        "mismatch": 6,
+        "mismatch": 7,
         "pending": 0,
-        "unreachable": 1,
+        "unreachable": 2,
         "verified": 6
       },
       "created_at": "2026-04-29T03:39:25.118444+00:00",
@@ -510,83 +613,83 @@
       "last_run_log": [
         {
           "agent": "implementer",
-          "duration_s": 91.321982,
-          "ended_at": "2026-04-29T15:32:07.095515Z",
+          "duration_s": 9.612569,
+          "ended_at": "2026-04-29T16:03:02.947630Z",
           "model": "qwen.qwen3.5-122b",
           "outcome": "success",
-          "started_at": "2026-04-29T15:30:35.773533Z"
+          "started_at": "2026-04-29T16:02:53.335061Z"
         },
         {
           "agent": "implementer",
-          "duration_s": 104.481089,
-          "ended_at": "2026-04-29T15:30:35.740907Z",
+          "duration_s": 10.851137,
+          "ended_at": "2026-04-29T16:02:53.293588Z",
           "model": "qwen.qwen3.5-122b",
           "outcome": "success",
-          "started_at": "2026-04-29T15:28:51.259818Z"
+          "started_at": "2026-04-29T16:02:42.442451Z"
         },
         {
           "agent": "implementer",
-          "duration_s": 89.367893,
-          "ended_at": "2026-04-29T15:28:51.234660Z",
+          "duration_s": 11.014716,
+          "ended_at": "2026-04-29T16:02:42.402126Z",
           "model": "qwen.qwen3.5-122b",
           "outcome": "success",
-          "started_at": "2026-04-29T15:27:21.866767Z"
+          "started_at": "2026-04-29T16:02:31.387410Z"
         },
         {
           "agent": "implementer",
-          "duration_s": 94.719875,
-          "ended_at": "2026-04-29T15:25:43.001716Z",
+          "duration_s": 7.558423,
+          "ended_at": "2026-04-29T16:02:31.344630Z",
           "model": "qwen.qwen3.5-122b",
-          "outcome": "failed",
-          "started_at": "2026-04-29T15:24:08.281841Z"
+          "outcome": "success",
+          "started_at": "2026-04-29T16:02:23.786207Z"
         },
         {
           "agent": "implementer",
-          "duration_s": 55.35659,
-          "ended_at": "2026-04-29T15:24:08.256931Z",
+          "duration_s": 10.148176,
+          "ended_at": "2026-04-29T16:02:23.722925Z",
           "model": "qwen.qwen3.5-122b",
           "outcome": "success",
-          "started_at": "2026-04-29T15:23:12.900341Z"
+          "started_at": "2026-04-29T16:02:13.574749Z"
         },
         {
           "agent": "implementer",
-          "duration_s": 81.696599,
-          "ended_at": "2026-04-29T15:23:12.873865Z",
+          "duration_s": 12.720056,
+          "ended_at": "2026-04-29T16:02:13.534141Z",
           "model": "qwen.qwen3.5-122b",
           "outcome": "success",
-          "started_at": "2026-04-29T15:21:51.177266Z"
+          "started_at": "2026-04-29T16:02:00.814085Z"
         },
         {
           "agent": "implementer",
-          "duration_s": 38.188752,
-          "ended_at": "2026-04-29T09:22:53.715736Z",
+          "duration_s": 10.183157,
+          "ended_at": "2026-04-29T16:02:00.773005Z",
           "model": "qwen.qwen3.5-122b",
           "outcome": "success",
-          "started_at": "2026-04-29T09:22:15.526984Z"
+          "started_at": "2026-04-29T16:01:50.589848Z"
         },
         {
           "agent": "implementer",
-          "duration_s": 46.409545,
-          "ended_at": "2026-04-29T09:22:15.449920Z",
+          "duration_s": 9.838501,
+          "ended_at": "2026-04-29T16:01:50.548233Z",
           "model": "qwen.qwen3.5-122b",
           "outcome": "success",
-          "started_at": "2026-04-29T09:21:29.040375Z"
+          "started_at": "2026-04-29T16:01:40.709732Z"
         },
         {
           "agent": "implementer",
-          "duration_s": 62.330233,
-          "ended_at": "2026-04-29T09:21:28.965560Z",
+          "duration_s": 8.654428,
+          "ended_at": "2026-04-29T16:01:40.671019Z",
           "model": "qwen.qwen3.5-122b",
           "outcome": "success",
-          "started_at": "2026-04-29T09:20:26.635327Z"
+          "started_at": "2026-04-29T16:01:32.016591Z"
         },
         {
           "agent": "implementer",
-          "duration_s": 68.425245,
-          "ended_at": "2026-04-29T09:20:26.559730Z",
+          "duration_s": 10.169052,
+          "ended_at": "2026-04-29T16:01:31.988303Z",
           "model": "qwen.qwen3.5-122b",
           "outcome": "success",
-          "started_at": "2026-04-29T09:19:18.134485Z"
+          "started_at": "2026-04-29T16:01:21.819251Z"
         }
       ],
       "phase_group": "research_speckit",
@@ -610,11 +713,11 @@
         "paper_source": null,
         "paper_spec": null,
         "paper_tasks": null,
-        "plan": null,
+        "plan": "projects/PROJ-007-energy-systems/specs/001-energy-systems/plan.md",
         "reviews_paper": null,
         "reviews_research": null,
-        "spec": null,
-        "tasks": null
+        "spec": "projects/PROJ-007-energy-systems/specs/001-energy-systems/spec.md",
+        "tasks": "projects/PROJ-007-energy-systems/specs/001-energy-systems/tasks.md"
       },
       "citation_summary": {
         "mismatch": 1,
@@ -623,7 +726,7 @@
         "verified": 0
       },
       "created_at": "2026-04-29T03:39:25.118444+00:00",
-      "current_stage": "in_progress",
+      "current_stage": "planned",
       "description": "Project ID: energy-20250704-001 Date: 2025-07-04 Author: LLM (Automated) Issue: #29 Title: Developing Novel Solutions to Address Energy Inequity in Low-Income Communities: A Technical Design Document Introduction This technical design document aims to present a comprehensive approach to address energy inequity in\u2026",
       "field": "energy",
       "id": "PROJ-007-energy-systems",
@@ -716,7 +819,7 @@
       "points_paper_total": 0.0,
       "points_research_total": 0.0,
       "speckit_paper_dir": null,
-      "speckit_research_dir": "projects/proj-tmp-004-energy-systems/specs/001-energy-systems",
+      "speckit_research_dir": "projects/PROJ-007-energy-systems/specs/001-energy-systems",
       "submitter": "TinyLlama-1.1B-Chat-v1.0",
       "title": "Developing Novel Solutions to Address Energy Inequity in Low-Income Communities",
       "updated_at": "2026-04-29T04:57:47.190467+00:00"
@@ -724,7 +827,7 @@
     {
       "artifact_links": {
         "citations": "state/citations/PROJ-008-psychology-research.yaml",
-        "code": null,
+        "code": "projects/PROJ-008-psychology-research/code",
         "data": null,
         "idea": "projects/PROJ-008-psychology-research/idea/psychology-research.md",
         "paper_figures": null,
@@ -735,7 +838,7 @@
         "paper_tasks": null,
         "plan": null,
         "reviews_paper": null,
-        "reviews_research": null,
+        "reviews_research": "projects/PROJ-008-psychology-research/reviews/research",
         "spec": null,
         "tasks": null
       },
@@ -746,7 +849,7 @@
         "verified": 0
       },
       "created_at": "2026-04-29T03:39:25.118444+00:00",
-      "current_stage": "in_progress",
+      "current_stage": "research_rejected",
       "description": "Project ID: psychology-20250704-001 Date: 2025-07-04 Author: LLM (Automated) Issue: #26 [Insert your name and affiliation] Title: The Role of Mindfulness in Improving Social Skills Among Children with Autism Spectrum Disorder (ASD)",
       "field": "psychology",
       "id": "PROJ-008-psychology-research",
@@ -755,94 +858,94 @@
       ],
       "last_run_log": [
         {
-          "agent": "implementer",
-          "duration_s": 70.552415,
-          "ended_at": "2026-04-29T15:32:40.154693Z",
+          "agent": "research_reviewer_filesystem_hygiene",
+          "duration_s": 20.240441,
+          "ended_at": "2026-04-29T16:32:19.174452Z",
           "model": "qwen.qwen3.5-122b",
           "outcome": "success",
-          "started_at": "2026-04-29T15:31:29.602278Z"
+          "started_at": "2026-04-29T16:31:58.934011Z"
         },
         {
-          "agent": "implementer",
-          "duration_s": 37.679101,
-          "ended_at": "2026-04-29T15:31:29.571942Z",
+          "agent": "research_reviewer_data_quality_research",
+          "duration_s": 31.346921,
+          "ended_at": "2026-04-29T16:31:58.908666Z",
           "model": "qwen.qwen3.5-122b",
           "outcome": "success",
-          "started_at": "2026-04-29T15:30:51.892841Z"
+          "started_at": "2026-04-29T16:31:27.561745Z"
         },
         {
-          "agent": "implementer",
-          "duration_s": 35.072601,
-          "ended_at": "2026-04-29T05:05:52.359410Z",
+          "agent": "research_reviewer_code_quality_research",
+          "duration_s": 69.724472,
+          "ended_at": "2026-04-29T16:31:27.537055Z",
           "model": "qwen.qwen3.5-122b",
           "outcome": "success",
-          "started_at": "2026-04-29T05:05:17.286809Z"
+          "started_at": "2026-04-29T16:30:17.812583Z"
         },
         {
-          "agent": "implementer",
-          "duration_s": 37.792554,
-          "ended_at": "2026-04-29T05:05:17.250117Z",
+          "agent": "research_reviewer_implementation_completeness",
+          "duration_s": 27.421834,
+          "ended_at": "2026-04-29T16:30:17.769620Z",
           "model": "qwen.qwen3.5-122b",
-          "outcome": "success",
-          "started_at": "2026-04-29T05:04:39.457563Z"
+          "outcome": "failed",
+          "started_at": "2026-04-29T16:29:50.347786Z"
         },
         {
-          "agent": "implementer",
-          "duration_s": 33.188492,
-          "ended_at": "2026-04-29T05:04:39.426309Z",
+          "agent": "research_reviewer_implementation_correctness",
+          "duration_s": 33.376199,
+          "ended_at": "2026-04-29T16:29:50.307872Z",
           "model": "qwen.qwen3.5-122b",
           "outcome": "success",
-          "started_at": "2026-04-29T05:04:06.237817Z"
+          "started_at": "2026-04-29T16:29:16.931673Z"
         },
         {
-          "agent": "implementer",
-          "duration_s": 15.4468,
-          "ended_at": "2026-04-29T05:02:39.036393Z",
+          "agent": "research_reviewer_creativity",
+          "duration_s": 33.193512,
+          "ended_at": "2026-04-29T16:29:16.891761Z",
           "model": "qwen.qwen3.5-122b",
           "outcome": "success",
-          "started_at": "2026-04-29T05:02:23.589593Z"
+          "started_at": "2026-04-29T16:28:43.698249Z"
         },
         {
-          "agent": "implementer",
-          "duration_s": 19.221107,
-          "ended_at": "2026-04-29T05:02:23.551103Z",
+          "agent": "research_reviewer_idea_quality",
+          "duration_s": 24.493315,
+          "ended_at": "2026-04-29T16:28:43.656105Z",
           "model": "qwen.qwen3.5-122b",
           "outcome": "success",
-          "started_at": "2026-04-29T05:02:04.329996Z"
+          "started_at": "2026-04-29T16:28:19.162790Z"
         },
         {
-          "agent": "implementer",
-          "duration_s": 13.362739,
-          "ended_at": "2026-04-29T05:02:04.293592Z",
+          "agent": "research_reviewer",
+          "duration_s": 24.575858,
+          "ended_at": "2026-04-29T16:28:19.125301Z",
           "model": "qwen.qwen3.5-122b",
           "outcome": "success",
-          "started_at": "2026-04-29T05:01:50.930853Z"
+          "started_at": "2026-04-29T16:27:54.549443Z"
         },
         {
-          "agent": "tasker",
-          "duration_s": 722.703345,
-          "ended_at": "2026-04-29T05:01:50.902532Z",
+          "agent": "research_reviewer_filesystem_hygiene",
+          "duration_s": 26.162425,
+          "ended_at": "2026-04-29T16:27:38.270420Z",
           "model": "qwen.qwen3.5-122b",
           "outcome": "success",
-          "started_at": "2026-04-29T04:49:48.199187Z"
+          "started_at": "2026-04-29T16:27:12.107995Z"
         },
         {
-          "agent": "tasker",
-          "duration_s": 695.74169,
-          "ended_at": "2026-04-29T04:49:48.159156Z",
+          "agent": "research_reviewer_data_quality_research",
+          "duration_s": 27.62314,
+          "ended_at": "2026-04-29T16:27:12.075094Z",
           "model": "qwen.qwen3.5-122b",
           "outcome": "success",
-          "started_at": "2026-04-29T04:38:12.417466Z"
+          "started_at": "2026-04-29T16:26:44.451954Z"
         }
       ],
-      "phase_group": "research_speckit",
+      "phase_group": "research_review",
       "points_paper_total": 0.0,
       "points_research_total": 0.0,
       "speckit_paper_dir": null,
       "speckit_research_dir": "projects/proj-tmp-006-psychology-research/specs/001-psychology-research",
       "submitter": "Claude 3 Sonnet",
       "title": "The Role of Mindfulness in Improving Social Skills Among Children with Autism",
-      "updated_at": "2026-04-29T05:02:04.294404+00:00"
+      "updated_at": "2026-04-29T16:32:19.245705+00:00"
     },
     {
       "artifact_links": {
