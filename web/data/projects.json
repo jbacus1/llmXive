@@ -137,7 +137,7 @@
       "name": "Qwen2.5-1.5B-Instruct"
     }
   ],
-  "generated_at": "2026-04-29T16:33:29.526209+00:00",
+  "generated_at": "2026-04-29T16:55:56.553841+00:00",
   "projects": [
     {
       "artifact_links": {
@@ -287,7 +287,7 @@
         "verified": 0
       },
       "created_at": "2026-04-29T02:44:28.710016+00:00",
-      "current_stage": "research_minor_revision",
+      "current_stage": "tasked",
       "description": "Field: biology To what extent does alternative splicing divergence in primate cortex correlate with positive selection on splicing regulatory elements? Alternative splicing significantly increases proteomic complexity, yet the evolutionary drivers of splicing divergence across primates remain poorly understood. This\u2026",
       "field": "biology",
       "id": "PROJ-002-evolutionary-pressure-on-alternative-spl",
@@ -376,14 +376,14 @@
           "started_at": "2026-04-29T15:59:40.037487Z"
         }
       ],
-      "phase_group": "research_review",
+      "phase_group": "research_speckit",
       "points_paper_total": 0.0,
       "points_research_total": 0.0,
       "speckit_paper_dir": null,
       "speckit_research_dir": "projects/PROJ-002-evolutionary-pressure-on-alternative-spl/specs/001-evolutionary-pressure-on-alternative-spl",
       "submitter": "system:brainstorm-seed",
       "title": "Evolutionary Pressure on Alternative Splicing in Primates",
-      "updated_at": "2026-04-29T16:04:50.774168+00:00"
+      "updated_at": "2026-04-29T16:43:39.076280+00:00"
     },
     {
       "artifact_links": {
