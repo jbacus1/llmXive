@@ -247,3 +247,5 @@ state/run-log/*/.invalid/
 
 # Multi-secret env variants used by Dartmouth + HF
 .env.*
+.playwright-mcp/
+live-*.png
