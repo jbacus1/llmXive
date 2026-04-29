@@ -105,12 +105,19 @@ class TaskerAgent(SlashCommandAgent):
         ]
         if existing_tasks.strip():
             user_parts.append(
-                "# Existing tasks.md (revise — keep what's done, add tasks that "
-                "address review concerns)\n\n" + existing_tasks
+                "# Existing tasks.md (revise — keep [X] tasks already done, "
+                "add new [ ] tasks that address review concerns)\n\n" + existing_tasks
             )
         if review_block:
             user_parts.append(review_block)
-        user_parts.append("# Task\n\nReturn the full tasks.md Markdown.")
+        user_parts.append(
+            "# Task\n\nReturn the FULL contents of tasks.md as Markdown. "
+            "DO NOT return a diff or partial patch — return the entire "
+            "file from the first line to the last. Preserve all existing "
+            "[X]-marked tasks verbatim and append new [ ]-marked tasks "
+            "for the revision concerns. The output MUST contain at least "
+            "one line beginning with `- [ ] T###`."
+        )
         user = "\n\n".join(user_parts)
         return [
             ChatMessage(role="system", content=system),
