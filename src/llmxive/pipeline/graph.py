@@ -288,6 +288,15 @@ def run_one_step(
                 "last_run_id": run_id,
             }
         )
+        # Issue-lifecycle hook: close the linked GitHub issue when the
+        # project transitions to POSTED. Best-effort — failures here do
+        # not abort the pipeline.
+        if next_stage == Stage.POSTED:
+            try:
+                from llmxive.integrations import issues as issues_mod
+                issues_mod.close_issue_for_project(repo, project)
+            except Exception as exc:  # pragma: no cover — telemetry only
+                print(f"[graph] issue-close hook failed for {project.id}: {exc}")
     project_store.save(project, repo_root=repo)
     return project
 
