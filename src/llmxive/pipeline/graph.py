@@ -259,7 +259,7 @@ def run_one_step(
         # specialist accepting (FR-028); failing to dispatch them
         # means projects can never satisfy the gate.
         agents_to_run: list[str] = []
-        if project.current_stage == Stage.RESEARCH_REVIEW:
+        if project.current_stage in {Stage.RESEARCH_COMPLETE, Stage.RESEARCH_REVIEW}:
             agents_to_run = [
                 n for n in registry_loader.list_names(repo_root=repo)
                 if n == "research_reviewer" or n.startswith("research_reviewer_")
@@ -299,7 +299,7 @@ def run_one_step(
                 },
             )
             is_review_dispatch = project.current_stage in {
-                Stage.RESEARCH_REVIEW, Stage.PAPER_REVIEW
+                Stage.RESEARCH_COMPLETE, Stage.RESEARCH_REVIEW, Stage.PAPER_REVIEW
             }
             if is_review_dispatch:
                 # Specialist reviewer failures are non-fatal — log and
@@ -394,8 +394,10 @@ def _decide_next_stage(
 
     # Research-reviewer leaves the project at research_review and lets
     # the Advancement-Evaluator decide the next stage based on the
-    # accumulated review records.
-    if cur == Stage.RESEARCH_REVIEW:
+    # accumulated review records. We treat RESEARCH_COMPLETE the same
+    # way once the specialists have run (the review records already
+    # exist on disk, so advancement_evaluate can decide).
+    if cur in {Stage.RESEARCH_COMPLETE, Stage.RESEARCH_REVIEW}:
         evaluated = advancement_evaluate(project, repo_root=repo_root)
         return evaluated.current_stage
 

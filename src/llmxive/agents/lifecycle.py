@@ -38,7 +38,17 @@ ALLOWED_TRANSITIONS: dict[Stage, set[Stage]] = {
     Stage.ANALYZE_IN_PROGRESS: {Stage.ANALYZED, Stage.HUMAN_INPUT_NEEDED},
     Stage.ANALYZED: {Stage.IN_PROGRESS},
     Stage.IN_PROGRESS: {Stage.RESEARCH_COMPLETE, Stage.IN_PROGRESS, Stage.HUMAN_INPUT_NEEDED},
-    Stage.RESEARCH_COMPLETE: {Stage.RESEARCH_REVIEW},
+    # research_complete is now a brief checkpoint where the
+    # specialist reviewers run before research_review, so we allow
+    # the same outgoing transitions as research_review (review
+    # records already exist on disk; advancement_evaluate decides).
+    Stage.RESEARCH_COMPLETE: {
+        Stage.RESEARCH_REVIEW,
+        Stage.RESEARCH_ACCEPTED,
+        Stage.RESEARCH_MINOR_REVISION,
+        Stage.RESEARCH_FULL_REVISION,
+        Stage.RESEARCH_REJECTED,
+    },
     # Research-quality review (US3):
     Stage.RESEARCH_REVIEW: {
         Stage.RESEARCH_ACCEPTED,

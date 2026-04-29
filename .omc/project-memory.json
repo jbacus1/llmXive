@@ -195,6 +195,12 @@
       "type": "file"
     },
     {
+      "path": "src/llmxive/agents/lifecycle.py",
+      "accessCount": 6,
+      "lastAccessed": 1777480068652,
+      "type": "file"
+    },
+    {
       "path": "specs/001-agentic-pipeline-refactor/plan.md",
       "accessCount": 5,
       "lastAccessed": 1777429371259,
@@ -204,12 +210,6 @@
       "path": "src/llmxive/types.py",
       "accessCount": 5,
       "lastAccessed": 1777429853351,
-      "type": "file"
-    },
-    {
-      "path": "src/llmxive/agents/lifecycle.py",
-      "accessCount": 5,
-      "lastAccessed": 1777477838918,
       "type": "file"
     },
     {
