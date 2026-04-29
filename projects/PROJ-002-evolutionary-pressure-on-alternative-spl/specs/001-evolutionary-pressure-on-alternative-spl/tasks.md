@@ -134,7 +134,7 @@
 
 **Purpose**: Improvements that affect multiple user stories
 
-- [ ] T048 [P] Documentation updates in `code/docs/`
+- [X] T048 [P] Documentation updates in `code/docs/`
 - [ ] T049 Code cleanup and refactoring across all modules
 - [ ] T050 Performance optimization for alignment throughput (>10M reads/min per plan.md)
 - [ ] T051 [P] Additional unit tests in `code/tests/unit/`

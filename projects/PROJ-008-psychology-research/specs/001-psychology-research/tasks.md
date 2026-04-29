@@ -68,8 +68,8 @@
 
 - [X] T014 [P] [US1] Create data collector interface in `src/services/data_collector.py`
 - [X] T015 [P] [US1] Implement raw data storage logic in `data/raw/` with HIPAA-compliant naming
-- [ ] T016 [US1] Add validation and error handling for data ingestion pipeline
-- [ ] T017 [US1] Add logging for data collection operations in `src/services/data_collector.py`
+- [X] T016 [US1] Add validation and error handling for data ingestion pipeline
+- [X] T017 [US1] Add logging for data collection operations in `src/services/data_collector.py`
 
 **Checkpoint**: At this point, Data Collection should be fully functional and testable independently
 
@@ -83,12 +83,12 @@
 
 ### Tests for User Story 2 (Required) ⚠️
 
-- [ ] T018 [P] [US2] Integration test for analysis pipeline in `tests/integration/test_analysis_pipeline.py`
-- [ ] T019 [P] [US2] Unit test for statistical routines in `tests/unit/test_analysis.py`
+- [X] T018 [P] [US2] Integration test for analysis pipeline in `tests/integration/test_analysis_pipeline.py`
+- [X] T019 [P] [US2] Unit test for statistical routines in `tests/unit/test_analysis.py`
 
 ### Implementation for User Story 2
 
-- [ ] T020 [P] [US2] Create analysis service in `src/services/analysis.py`
+- [X] T020 [P] [US2] Create analysis service in `src/services/analysis.py`
 - [ ] T021 [US2] Implement statistical routines (t-tests, ANOVA for RCT) using scipy/pingouin
 - [ ] T022 [US2] Implement report generation (Markdown/PDF) in `docs/analysis-plan.md`
 - [ ] T023 [US2] Integrate with User Story 1 components (load processed data from `data/processed/`)
