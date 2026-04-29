@@ -29,9 +29,9 @@ A computational model would theoretically predict thermal efficiency rates under
 ## Methodology sketch
 
 - Download public water quality datasets (e.g., UCI Water Quality) to define input parameters.
-- Acquire thermal property data for common solar still materials from open repositories.
+- Acquire thermal property data for common solar still materials from open repositories (e.g., NIST Thermophysical Properties, MatWeb).
 - Implement a 1D heat transfer simulation using Python on the runner.
-- Run simulations for varying solar irradiance levels using public weather data.
+- Run simulations for varying solar irradiance levels using public weather data (e.g., NASA POWER API).
 - **Constraint Note**: Physical validation requires wet-lab equipment and hardware construction, which violates the "No specialized hardware" and "No new experimental data collection" scope constraints.
 
 ## Duplicate-check
