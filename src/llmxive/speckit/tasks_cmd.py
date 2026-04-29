@@ -65,18 +65,53 @@ class TaskerAgent(SlashCommandAgent):
             if tasks_template_path.exists()
             else ""
         )
+        # On a revision pass, surface prior review feedback so the
+        # Tasker can write tasks that explicitly address each
+        # reviewer's complaints. Without this, the Tasker would
+        # regenerate the same tasks and the reviewers would reject
+        # again.
+        existing_tasks_path = Path(mechanical_output["tasks_path"])
+        existing_tasks = (
+            existing_tasks_path.read_text(encoding="utf-8")
+            if existing_tasks_path.exists()
+            else ""
+        )
+        reviews_dir = ctx.project_dir / "reviews" / "research"
+        review_block = ""
+        if reviews_dir.is_dir():
+            review_chunks: list[str] = []
+            for md in sorted(reviews_dir.glob("*.md")):
+                try:
+                    text = md.read_text(encoding="utf-8")
+                except OSError:
+                    continue
+                review_chunks.append(f"## {md.name}\n\n{text}")
+            if review_chunks:
+                review_block = (
+                    "\n\n# Prior research-stage reviews "
+                    "(address every reviewer's concerns in the new tasks list)\n\n"
+                    + "\n\n---\n\n".join(review_chunks)
+                )
         system = render_prompt(
             "agents/prompts/tasker.md",
             {"project_id": ctx.project_id, "mode": "A"},
             repo_root=repo,
         )
-        user = (
-            "Mode: A (generate tasks.md)\n\n"
-            f"# spec.md\n\n{spec_text}\n\n"
-            f"# plan.md\n\n{plan_text}\n\n"
-            f"# tasks template\n\n{tasks_template}\n\n"
-            "# Task\n\nReturn the full tasks.md Markdown."
-        )
+        user_parts = [
+            "Mode: A (generate tasks.md)",
+            f"# spec.md\n\n{spec_text}",
+            f"# plan.md\n\n{plan_text}",
+            f"# tasks template\n\n{tasks_template}",
+        ]
+        if existing_tasks.strip():
+            user_parts.append(
+                "# Existing tasks.md (revise — keep what's done, add tasks that "
+                "address review concerns)\n\n" + existing_tasks
+            )
+        if review_block:
+            user_parts.append(review_block)
+        user_parts.append("# Task\n\nReturn the full tasks.md Markdown.")
+        user = "\n\n".join(user_parts)
         return [
             ChatMessage(role="system", content=system),
             ChatMessage(role="user", content=user),

@@ -3,7 +3,7 @@
 **Input**: Design documents from `/specs/001-evolutionary-pressure-alternative-splicing/`
 **Prerequisites**: plan.md (required), spec.md (required for user stories), research.md, data-model.md, contracts/
 
-**Tests**: The examples below include test tasks based on acceptance scenarios from spec.md. Tests are included to verify each user story works independently.
+**Tests**: The examples below include test tasks. Tests are OPTIONAL - only include them if explicitly requested in the feature specification.
 
 **Organization**: Tasks are grouped by user story to enable independent implementation and testing of each story.
 
@@ -13,16 +13,22 @@
 - **[Story]**: Which user story this task belongs to (e.g., US1, US2, US3)
 - Include exact file paths in descriptions
 
+## Path Conventions
+
+- **Single project**: `src/`, `tests/` at repository root
+- **Web app**: `backend/src/`, `frontend/src/`
+- **Mobile**: `api/src/`, `ios/src/` or `android/src/`
+- Paths shown below assume single project - adjust based on plan.md structure
+
 ---
 
 ## Phase 1: Setup (Shared Infrastructure)
 
 **Purpose**: Project initialization and basic structure
 
-- [X] T001 Create project structure per implementation plan (`projects/PROJ-002-evolutionary-pressure-on-alternative-spl/`)
-- [X] T002 Initialize Python 3.11 project with dependencies in `code/requirements.txt`
-- [X] T003 [P] Configure linting and formatting tools (black, flake8, isort)
-- [X] T004 [P] Setup pytest configuration in `code/tests/`
+- [ ] T001 Create project structure per implementation plan in `projects/PROJ-002-evolutionary-pressure-on-alternative-spl/`
+- [ ] T002 Initialize Python 3.11 project with dependencies in `code/requirements.txt` and `code/setup.py`
+- [ ] T003 [P] Configure linting (black, flake8) and formatting tools in `code/`
 
 ---
 
@@ -32,12 +38,12 @@
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete
 
-- [X] T005 Create base configuration management in `code/src/utils/config.py`
-- [X] T006 [P] Implement checksum utilities in `code/src/utils/checksum.py`
-- [X] T007 Setup SQLite metadata database schema for sample tracking
-- [X] T008 [P] Create data model contracts in `code/specs/contracts/`
-- [X] T009 Setup environment configuration with random seeds for reproducibility
-- [X] T010 [P] Implement logging infrastructure for pipeline operations
+- [ ] T004 Create base configuration management in `code/src/utils/config.py`
+- [ ] T005 [P] Setup checksum utility for data integrity in `code/src/utils/checksum.py`
+- [ ] T006 [P] Create metadata schema and YAML parser in `code/src/acquisition/metadata_parser.py`
+- [ ] T007 Setup environment configuration management with random seed pinning
+- [ ] T008 Configure logging infrastructure for pipeline operations
+- [ ] T009 Create data directory structure (`data/raw/`, `data/processed/`, `data/metadata.yaml`)
 
 **Checkpoint**: Foundation ready - user story implementation can now begin in parallel
 
@@ -45,29 +51,25 @@
 
 ## Phase 3: User Story 1 - Data Acquisition and Preprocessing Pipeline (Priority: P1) 🎯 MVP
 
-**Goal**: Acquire matched RNA-seq data from cortex tissue for human, chimpanzee, macaque, and marmoset; align raw reads to respective reference genomes using STAR
+**Goal**: Acquire matched RNA-seq data from cortex tissue for human, chimpanzee, macaque, and marmoset from public repositories and align raw reads to respective reference genomes using STAR
 
 **Independent Test**: Can be fully tested by successfully downloading and aligning RNA-seq reads from one species and producing aligned BAM files with acceptable mapping rates
 
-### Tests for User Story 1
+### Tests for User Story 1 (OPTIONAL - only if tests requested) ⚠️
 
 > **NOTE: Write these tests FIRST, ensure they FAIL before implementation**
 
-- [X] T011 [P] [US1] Contract test for SRA downloader in `code/tests/contract/test_sra_downloader.py`
-- [X] T012 [P] [US1] Contract test for STAR alignment in `code/tests/contract/test_star_alignment.py`
-- [X] T013 [P] [US1] Integration test for data acquisition pipeline in `code/tests/integration/test_acquisition_pipeline.py`
-- [X] T014 [P] [US1] Unit test for metadata parser in `code/tests/unit/test_metadata_parser.py`
+- [ ] T010 [P] [US1] Contract test for SRA downloader in `code/tests/contract/test_sra_downloader.py`
+- [ ] T011 [P] [US1] Integration test for STAR alignment pipeline in `code/tests/integration/test_star_alignment.py`
 
 ### Implementation for User Story 1
 
-- [X] T015 [P] [US1] Create RNA-seq sample entity model in `code/src/models/rna_seq_sample.py`
-- [X] T016 [P] [US1] Create sample metadata schema in `code/data/metadata.yaml`
-- [X] T017 [US1] Implement SRA downloader in `code/src/acquisition/sra_downloader.py`
-- [X] T018 [US1] Implement metadata parser in `code/src/acquisition/metadata_parser.py`
-- [X] T019 [US1] Implement STAR alignment runner in `code/src/alignment/star_runner.py`
-- [X] T020 [US1] Implement quality control checks in `code/src/alignment/quality_control.py`
-- [X] T021 [US1] Add validation for mapping rate thresholds (≥70% per SC-001)
-- [X] T022 [US1] Add logging for acquisition and alignment operations
+- [ ] T012 [P] [US1] Implement SRA Toolkit downloader in `code/src/acquisition/sra_downloader.py`
+- [ ] T013 [P] [US1] Create RNA-seq sample entity model in `code/src/acquisition/sample.py`
+- [ ] T014 [US1] Implement STAR alignment runner in `code/src/alignment/star_runner.py`
+- [ ] T015 [US1] Implement quality control metrics for alignment in `code/src/alignment/quality_control.py`
+- [ ] T016 [US1] Add validation for species-specific reference genomes (GRCh38, PanTro6, Mmul10, CalJac1)
+- [ ] T017 [US1] Add logging for data acquisition and alignment operations
 
 **Checkpoint**: At this point, User Story 1 should be fully functional and testable independently
 
@@ -75,28 +77,25 @@
 
 ## Phase 4: User Story 2 - Splicing Quantification and Differential Analysis (Priority: P2)
 
-**Goal**: Quantify splice junction usage and PSI values, identify differentially spliced events between lineages using fixed effect model
+**Goal**: Quantify splice junction usage and PSI values, then identify differentially spliced events between lineages using a fixed effect model
 
 **Independent Test**: Can be fully tested by running splicing quantification on a subset of data and producing PSI values and differential splicing calls that can be validated against known benchmarks
 
-### Tests for User Story 2
+### Tests for User Story 2 (OPTIONAL - only if tests requested) ⚠️
 
-- [X] T023 [P] [US2] Contract test for PSI calculator in `code/tests/contract/test_psi_calculator.py`
-- [X] T024 [P] [US2] Contract test for differential splicing in `code/tests/contract/test_differential_splicing.py`
-- [X] T025 [P] [US2] Integration test for quantification pipeline in `code/tests/integration/test_quantification_pipeline.py`
-- [X] T026 [P] [US2] Unit test for fixed effect model in `code/tests/unit/test_fixed_effect_model.py`
+- [ ] T018 [P] [US2] Contract test for PSI calculator in `code/tests/contract/test_psi_calculator.py`
+- [ ] T019 [P] [US2] Integration test for differential splicing analysis in `code/tests/integration/test_differential_splicing.py`
 
 ### Implementation for User Story 2
 
-- [X] T027 [P] [US2] Create splice junction entity model in `code/src/models/splice_junction.py`
-- [X] T028 [P] [US2] Create differential splicing event model in `code/src/models/differential_splicing_event.py`
-- [X] T029 [US2] Implement rMATS wrapper in `code/src/quantification/rmats_wrapper.py`
-- [X] T030 [US2] Implement PSI calculator in `code/src/quantification/psi_calculator.py`
-- [X] T031 [US2] Implement differential splicing analysis in `code/src/analysis/differential_splicing.py`
-- [X] T032 [US2] Apply minimum ΔPSI threshold (≥0.1) per spec requirements
-- [X] T033 [US2] Apply minimum read coverage threshold (≥20 reads per junction)
-- [X] T034 [US2] Apply Benjamini-Hochberg FDR correction (p < 0.05)
-- [X] T035 [US2] Add logging for quantification and differential analysis operations
+- [ ] T020 [P] [US2] Create SpliceJunction entity model in `code/src/quantification/splice_junction.py`
+- [ ] T021 [P] [US2] Create DifferentialSplicingEvent entity model in `code/src/analysis/differential_splicing_event.py`
+- [ ] T022 [US2] Implement rMATS wrapper in `code/src/quantification/rmats_wrapper.py`
+- [ ] T023 [US2] Implement SUPPA2 wrapper as alternative in `code/src/quantification/suppa2_wrapper.py`
+- [ ] T024 [US2] Implement PSI value calculator in `code/src/quantification/psi_calculator.py`
+- [ ] T025 [US2] Implement fixed effect model for differential splicing in `code/src/analysis/differential_splicing.py`
+- [ ] T026 [US2] Apply Benjamini-Hochberg FDR correction for multiple hypothesis testing
+- [ ] T027 [US2] Enforce statistical thresholds (ΔPSI ≥ 0.1, read coverage ≥ 20, FDR < 0.05)
 
 **Checkpoint**: At this point, User Stories 1 AND 2 should both work independently
 
@@ -104,27 +103,24 @@
 
 ## Phase 5: User Story 3 - Evolutionary Selection Analysis and Validation (Priority: P3)
 
-**Goal**: Extract flanking intronic sequences, calculate evolutionary conservation and selection metrics, perform enrichment analysis, validate key findings using orthogonal datasets
+**Goal**: Extract flanking intronic sequences, calculate evolutionary conservation and selection metrics, perform enrichment analysis, and validate key findings using orthogonal datasets
 
 **Independent Test**: Can be fully tested by running enrichment analysis on a subset of identified splicing events and producing selection metric calculations that can be compared to known positive selection regions
 
-### Tests for User Story 3
+### Tests for User Story 3 (OPTIONAL - only if tests requested) ⚠️
 
-- [X] T036 [P] [US3] Contract test for phyloP extractor in `code/tests/contract/test_phylo_extractor.py`
-- [X] T037 [P] [US3] Contract test for enrichment analysis in `code/tests/contract/test_enrichment_test.py`
-- [X] T038 [P] [US3] Integration test for selection analysis pipeline in `code/tests/integration/test_selection_analysis.py`
-- [X] T039 [P] [US3] Unit test for validation module in `code/tests/unit/test_validation.py`
+- [ ] T028 [P] [US3] Contract test for phyloP extractor in `code/tests/contract/test_phylo_extractor.py`
+- [ ] T029 [P] [US3] Integration test for enrichment analysis in `code/tests/integration/test_enrichment_analysis.py`
 
 ### Implementation for User Story 3
 
-- [X] T040 [P] [US3] Create regulatory region entity model in `code/src/models/regulatory_region.py`
-- [X] T041 [US3] Implement phyloP sequence extractor in `code/src/analysis/phylo_extractor.py`
-- [X] T042 [US3] Implement flanking intronic sequence extraction (±500bp)
-- [X] T043 [US3] Implement enrichment analysis in `code/src/analysis/enrichment_test.py`
-- [X] T044 [US3] Apply Benjamini-Hochberg FDR correction for enrichment (p < 0.05 per SC-003)
-- [X] T045 [US3] Implement validation module for orthogonal dataset comparison
-- [X] T046 [US3] Add support for phyloP conservation score handling (including missing data cases)
-- [X] T047 [US3] Add logging for selection analysis and validation operations
+- [ ] T030 [P] [US3] Create RegulatoryRegion entity model in `code/src/analysis/regulatory_region.py`
+- [ ] T031 [US3] Implement flanking intronic sequence extractor (±500bp) in `code/src/analysis/phylo_extractor.py`
+- [ ] T032 [US3] Implement phyloP conservation score calculator in `code/src/analysis/conservation_score.py`
+- [ ] T033 [US3] Implement selection metric calculation for regulatory regions
+- [ ] T034 [US3] Implement enrichment analysis with Benjamini-Hochberg correction in `code/src/analysis/enrichment_test.py`
+- [ ] T035 [US3] Add validation against orthogonal datasets or independent samples
+- [ ] T036 [US3] Handle edge cases: missing phyloP scores, incomplete annotations, sequence divergence issues
 
 **Checkpoint**: All user stories should now be independently functional
 
@@ -134,16 +130,14 @@
 
 **Purpose**: Improvements that affect multiple user stories
 
-- [X] T048 [P] Documentation updates in `code/docs/`
-- [X] T049 Code cleanup and refactoring across all modules <!-- ATOMIZE: requested -->
-- [X] T050 Performance optimization for alignment throughput (>10M reads/min per plan.md) <!-- ATOMIZE: requested -->
-- [X] T051 [P] Additional unit tests in `code/tests/unit/` <!-- ATOMIZE: requested -->
-- [X] T052 Security hardening for data access <!-- ATOMIZE: requested -->
-- [X] T053 Run quickstart.md validation <!-- FAILED: Task requires executing and verifying quickstart.md documentation steps which cannot be automated without access to the actual file content and runnable environment -->
-- [X] T054 [P] Create end-to-end pipeline integration test
-- [X] T055 Verify all acceptance criteria met (SC-001 through SC-004) <!-- FAILED: Verification of acceptance criteria SC-001 through SC-004 requires access to specification documents and human judgment to validate that all criteria have been met against the implementation. -->
-- [X] T056 [P] Benchmark test suite execution
-- [X] T057 [P] Add reproducibility audit trail in `state/projects/`
+- [ ] T037 [P] Documentation updates in `specs/001-evolutionary-pressure-alternative-splicing/`
+- [ ] T038 Code cleanup and refactoring across all modules
+- [ ] T039 Performance optimization for alignment throughput (> 10M reads/min target)
+- [ ] T040 [P] Additional unit tests in `code/tests/unit/`
+- [ ] T041 Security hardening for data access and PII scanning
+- [ ] T042 Run quickstart.md validation
+- [ ] T043 Verify reproducibility with fixed random seeds across all statistical models
+- [ ] T044 Validate orthology mapping via Ensembl Compara for cross-species aggregation
 
 ---
 
@@ -153,22 +147,22 @@
 
 - **Setup (Phase 1)**: No dependencies - can start immediately
 - **Foundational (Phase 2)**: Depends on Setup completion - BLOCKS all user stories
-- **User Stories (Phase 3-5)**: All depend on Foundational phase completion
+- **User Stories (Phase 3+)**: All depend on Foundational phase completion
   - User stories can then proceed in parallel (if staffed)
   - Or sequentially in priority order (P1 → P2 → P3)
-- **Polish (Phase 6)**: Depends on all desired user stories being complete
+- **Polish (Final Phase)**: Depends on all desired user stories being complete
 
 ### User Story Dependencies
 
 - **User Story 1 (P1)**: Can start after Foundational (Phase 2) - No dependencies on other stories
-- **User Story 2 (P2)**: Can start after Foundational (Phase 2) - May integrate with US1 outputs but should be independently testable
-- **User Story 3 (P3)**: Can start after Foundational (Phase 2) - Depends on US1 and US2 outputs for validation
+- **User Story 2 (P2)**: Can start after Foundational (Phase 2) - Depends on US1 alignment outputs
+- **User Story 3 (P3)**: Can start after Foundational (Phase 2) - Depends on US2 differential splicing outputs
 
 ### Within Each User Story
 
 - Tests (if included) MUST be written and FAIL before implementation
 - Models before services
-- Services before endpoints/analysis modules
+- Services before endpoints
 - Core implementation before integration
 - Story complete before moving to next priority
 
@@ -186,14 +180,13 @@
 ## Parallel Example: User Story 1
 
 ```bash
-# Launch all tests for User Story 1 together:
+# Launch all tests for User Story 1 together (if tests requested):
 Task: "Contract test for SRA downloader in code/tests/contract/test_sra_downloader.py"
-Task: "Contract test for STAR alignment in code/tests/contract/test_star_alignment.py"
-Task: "Integration test for data acquisition pipeline in code/tests/integration/test_acquisition_pipeline.py"
+Task: "Integration test for STAR alignment pipeline in code/tests/integration/test_star_alignment.py"
 
 # Launch all models for User Story 1 together:
-Task: "Create RNA-seq sample entity model in code/src/models/rna_seq_sample.py"
-Task: "Create sample metadata schema in code/data/metadata.yaml"
+Task: "Create RNA-seq sample entity model in code/src/acquisition/sample.py"
+Task: "Implement SRA Toolkit downloader in code/src/acquisition/sra_downloader.py"
 ```
 
 ---
@@ -222,9 +215,9 @@ With multiple developers:
 
 1. Team completes Setup + Foundational together
 2. Once Foundational is done:
-   - Developer A: User Story 1 (Data Acquisition)
-   - Developer B: User Story 2 (Splicing Quantification)
-   - Developer C: User Story 3 (Selection Analysis)
+   - Developer A: User Story 1 (Data Acquisition & Alignment)
+   - Developer B: User Story 2 (Splicing Quantification & Differential Analysis)
+   - Developer C: User Story 3 (Evolutionary Selection Analysis)
 3. Stories complete and integrate independently
 
 ---
@@ -238,5 +231,7 @@ With multiple developers:
 - Commit after each task or logical group
 - Stop at any checkpoint to validate story independently
 - Avoid: vague tasks, same file conflicts, cross-story dependencies that break independence
-- All statistical thresholds from spec.md must be implemented (ΔPSI ≥ 0.1, coverage ≥ 20, FDR < 0.05)
-- Success criteria SC-001 through SC-004 must be validated before feature completion
+- Memory constraint: < 64GB per alignment job
+- Reproducibility: All statistical models must use fixed random seeds
+- Data hygiene: All files under `data/` must be checksummed (SHA-256)
+- External tools: STAR (v2.7.10a), rMATS (v4.1.2), SAMtools (v1.17), Bedtools (v2.31.0), SRA Toolkit (v3.0.0)
