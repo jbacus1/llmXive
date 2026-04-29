@@ -20,7 +20,7 @@ Access to clean water and renewable energy are critical global challenges. This 
 
 ## Related work
 
-TODO — lit-search returned no results. The provided literature search results contained only high-energy physics and gravitational wave papers (CMS/LHCb, ATLAS, LIGO-Virgo-KAGRA, IceCube) with no relevance to solar thermal systems, water purification, or materials science for energy applications.
+- TODO — lit-search returned no relevant results for this domain. The provided literature search results contained only high-energy physics and gravitational wave papers with no relevance to solar thermal systems, water purification, or materials science for energy applications.
 
 ## Expected results
 
@@ -32,7 +32,6 @@ A computational model would theoretically predict thermal efficiency rates under
 - Acquire thermal property data for common solar still materials from open repositories (e.g., NIST Thermophysical Properties).
 - Implement a 1D heat transfer simulation using Python on the GitHub Actions runner (CPU only).
 - Run simulations for varying solar irradiance levels using public weather data (e.g., NASA POWER API).
-- Perform statistical error analysis comparing modeled output against existing published efficiency benchmarks from literature (if available).
 - **Constraint Note**: Physical validation requires wet-lab equipment and hardware construction, which violates the "No specialized hardware" and "No new experimental data collection" scope constraints.
 
 ## Duplicate-check
