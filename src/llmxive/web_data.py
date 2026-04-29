@@ -119,7 +119,14 @@ def _build_artifact_links(repo: Path, project: Project) -> dict[str, str | None]
     paper_plan = (repo / paper_speckit / "plan.md") if paper_speckit else None
     paper_tasks = (repo / paper_speckit / "tasks.md") if paper_speckit else None
     paper_source_main = pdir / "paper" / "source" / "main.tex"
-    paper_pdf = next(iter((pdir / "paper" / "pdf").glob("*.pdf")), None) if (pdir / "paper" / "pdf").exists() else None
+    # Look for the compiled PDF in two canonical locations:
+    #   paper/pdf/*.pdf   — used when a separate publish step copies it
+    #   paper/source/main.pdf — used when pdflatex runs in-place
+    paper_pdf = None
+    if (pdir / "paper" / "pdf").exists():
+        paper_pdf = next(iter((pdir / "paper" / "pdf").glob("*.pdf")), None)
+    if paper_pdf is None and (pdir / "paper" / "source" / "main.pdf").exists():
+        paper_pdf = pdir / "paper" / "source" / "main.pdf"
     figures_dir = pdir / "paper" / "figures"
     reviews_research = pdir / "reviews" / "research"
     reviews_paper = pdir / "paper" / "reviews"

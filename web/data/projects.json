@@ -244,7 +244,7 @@
       "name": "google.gemma-3-27b-it"
     }
   ],
-  "generated_at": "2026-04-29T23:50:30.677378+00:00",
+  "generated_at": "2026-04-29T23:52:41.490537+00:00",
   "projects": [
     {
       "artifact_links": {
@@ -376,7 +376,7 @@
         "data": "projects/PROJ-002-evolutionary-pressure-on-alternative-spl/data",
         "idea": "projects/PROJ-002-evolutionary-pressure-on-alternative-spl/idea/evolutionary-pressure-on-alternative-spl.md",
         "paper_figures": "projects/PROJ-002-evolutionary-pressure-on-alternative-spl/paper/figures",
-        "paper_pdf": null,
+        "paper_pdf": "projects/PROJ-002-evolutionary-pressure-on-alternative-spl/paper/source/main.pdf",
         "paper_plan": "projects/PROJ-002-evolutionary-pressure-on-alternative-spl/paper/specs/001-paper/plan.md",
         "paper_source": "projects/PROJ-002-evolutionary-pressure-on-alternative-spl/paper/source/main.tex",
         "paper_spec": "projects/PROJ-002-evolutionary-pressure-on-alternative-spl/paper/specs/001-paper/spec.md",
@@ -1758,7 +1758,7 @@
         "data": "projects/PROJ-023-bayesian-nonparametrics-for-anomaly-dete/data",
         "idea": "projects/PROJ-023-bayesian-nonparametrics-for-anomaly-dete/idea/bayesian-nonparametrics-for-anomaly-dete.md",
         "paper_figures": "projects/PROJ-023-bayesian-nonparametrics-for-anomaly-dete/paper/figures",
-        "paper_pdf": null,
+        "paper_pdf": "projects/PROJ-023-bayesian-nonparametrics-for-anomaly-dete/paper/source/main.pdf",
         "paper_plan": null,
         "paper_source": "projects/PROJ-023-bayesian-nonparametrics-for-anomaly-dete/paper/source/main.tex",
         "paper_spec": "projects/PROJ-023-bayesian-nonparametrics-for-anomaly-dete/paper/specs/001-paper/spec.md",

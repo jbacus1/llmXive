@@ -204,6 +204,13 @@
       ]
     }
   },
-  "hotPaths": [],
+  "hotPaths": [
+    {
+      "path": "src/llmxive/web_data.py",
+      "accessCount": 2,
+      "lastAccessed": 1777506752435,
+      "type": "file"
+    }
+  ],
   "userDirectives": []
 }
