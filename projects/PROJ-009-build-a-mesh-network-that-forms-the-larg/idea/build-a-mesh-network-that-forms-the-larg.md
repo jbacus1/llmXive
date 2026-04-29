@@ -2,7 +2,7 @@
 field: computer science
 keywords: [computer science]
 github_issue: https://github.com/ContextLab/llmXive/issues/44
-submitter: legacy:llmxive-automation
+submitter: jeremymanning
 ---
 
 # Mesh Network Supercomputer Using Pooled Idle Computing Resources
