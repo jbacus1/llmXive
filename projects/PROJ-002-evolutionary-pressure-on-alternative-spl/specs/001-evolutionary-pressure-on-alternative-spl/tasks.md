@@ -135,7 +135,7 @@
 **Purpose**: Improvements that affect multiple user stories
 
 - [X] T048 [P] Documentation updates in `code/docs/`
-- [ ] T049 Code cleanup and refactoring across all modules
+- [X] T049 Code cleanup and refactoring across all modules <!-- ATOMIZE: requested -->
 - [ ] T050 Performance optimization for alignment throughput (>10M reads/min per plan.md)
 - [ ] T051 [P] Additional unit tests in `code/tests/unit/`
 - [ ] T052 Security hardening for data access

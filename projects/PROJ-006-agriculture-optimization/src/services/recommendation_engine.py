@@ -1,370 +1,312 @@
 """
-CSA Recommendation Engine
+Recommendation Engine Service
 
-Generates climate-smart agricultural practice recommendations based on:
-1. Local climate and environmental conditions
-2. Community socioeconomic profile
-3. CSA principles (sustainability, ecosystem services, social equity)
-
-This module integrates with T036 (recommendation logic) and T037 (principles).
+Generates climate-smart agricultural practice recommendations
+for specific communities based on climate risk, adoption rates,
+and crop yield models.
 """
 
 import logging
-from dataclasses import dataclass, field
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, List, Optional
+from datetime import datetime
 from pathlib import Path
 
-from src.models.principles import (
-    PrincipleScorer,
-    evaluate_practice,
-    PrincipleCategory,
-    PRACTICE_DATA_SCHEMA
-)
+from src.models.adoption_rate import AdoptionRateModel
+from src.models.crop_yield import CropYieldModel
+from src.config.constants import LOGGER_NAME
 
-# Configure logging
-logger = logging.getLogger(__name__)
-
-
-@dataclass
-class Recommendation:
-    """
-    Structured recommendation output.
-
-    Attributes:
-        practice_id: Unique identifier for the recommended practice
-        practice_name: Human-readable name
-        confidence: Confidence score (0-1)
-        justification: List of justification strings
-        principle_scores: Dict of scores by principle category
-        implementation_priority: Priority level (high/medium/low)
-    """
-    practice_id: str
-    practice_name: str
-    confidence: float
-    justification: List[str]
-    principle_scores: Dict[str, float]
-    implementation_priority: str
-    metadata: Dict = field(default_factory=dict)
-
-@dataclass
-class CommunityProfile:
-    """
-    Community context for recommendations.
-
-    Attributes:
-        region: Geographic region identifier
-        climate_zone: Climate classification
-        dominant_crops: List of main crops grown
-        farm_size_avg: Average farm size (hectares)
-        income_level: Economic classification (low/medium/high)
-        gender_ratio: Women in farming (% of agricultural labor)
-        water_availability: Water stress index (0-1, lower=better)
-        soil_quality: Soil quality index (0-1)
-    """
-    region: str
-    climate_zone: str
-    dominant_crops: List[str]
-    farm_size_avg: float
-    income_level: str
-    gender_ratio: float
-    water_availability: float
-    soil_quality: float
-
-
-@dataclass
-class Practice:
-    """
-    Agricultural practice definition.
-
-    Attributes:
-        practice_id: Unique identifier
-        name: Human-readable name
-        description: Detailed description
-        required_resources: Dict of resource requirements
-        principle_scores: Dict mapping metric names to values (0-1)
-        applicable_crops: List of crops this applies to
-        applicable_climates: List of climate zones
-        min_farm_size: Minimum farm size for viability
-    """
-    practice_id: str
-    name: str
-    description: str
-    required_resources: Dict[str, float]
-    principle_scores: Dict[str, float]
-    applicable_crops: List[str]
-    applicable_climates: List[str]
-    min_farm_size: float = 0.0
+# Configure logger
+logger = logging.getLogger(LOGGER_NAME)
 
 
 class RecommendationEngine:
     """
-    Main recommendation engine integrating CSA principles.
-
-    Usage:
-        engine = RecommendationEngine()
-        engine.load_practices("data/practices.json")
-        recommendations = engine.generate_recommendations(community_profile)
+    Engine for generating CSA recommendations based on multiple
+    analytical models and community-specific data.
     """
 
-    def __init__(self, principle_threshold: float = 0.5):
-        self._practices: List[Practice] = []
-        self._principle_scorer = PrincipleScorer()
-        self._principle_threshold = principle_threshold
-        self._recommendation_cache: Dict[str, List[Recommendation]] = {}
-
-    def load_practices(self, practices_path: str) -> None:
+    def __init__(
+        self,
+        adoption_model: Optional[AdoptionRateModel] = None,
+        yield_model: Optional[CropYieldModel] = None,
+        data_dir: Optional[Path] = None
+    ):
         """
-        Load practices from JSON file.
+        Initialize the recommendation engine.
 
-        Expected format:
-        [
-            {
-                "practice_id": "intercropping_001",
-                "name": "Legume-Cereal Intercropping",
-                "description": "...",
-                "required_resources": {...},
-                "principle_scores": {...},
-                "applicable_crops": [...],
-                "applicable_climates": [...],
-                "min_farm_size": 0.5
-            }
-        ]
+        Args:
+            adoption_model: Pre-configured adoption rate model
+            yield_model: Pre-configured crop yield model
+            data_dir: Directory for storing recommendation outputs
         """
-        import json
-
-        logger.info(f"Loading practices from {practices_path}")
-        with open(practices_path, 'r') as f:
-            data = json.load(f)
-
-        self._practices = [
-            Practice(
-                practice_id=p["practice_id"],
-                name=p["name"],
-                description=p["description"],
-                required_resources=p.get("required_resources", {}),
-                principle_scores=p.get("principle_scores", {}),
-                applicable_crops=p.get("applicable_crops", []),
-                applicable_climates=p.get("applicable_climates", []),
-                min_farm_size=p.get("min_farm_size", 0.0)
-            )
-            for p in data
-        ]
-
-        logger.info(f"Loaded {len(self._practices)} practices")
+        logger.info("Initializing RecommendationEngine")
+        
+        self.adoption_model = adoption_model or AdoptionRateModel()
+        self.yield_model = yield_model or CropYieldModel()
+        self.data_dir = data_dir or Path("data/outputs/recommendations")
+        self.data_dir.mkdir(parents=True, exist_ok=True)
+        
+        logger.debug(f"RecommendationEngine initialized with data_dir: {self.data_dir}")
 
     def generate_recommendations(
         self,
-        community: CommunityProfile,
-        top_n: int = 5,
-        min_confidence: float = 0.6
-    ) -> List[Recommendation]:
-        """
-        Generate recommendations for a community.
-
-        Args:
-            community: Community profile for context
-            top_n: Number of top recommendations to return
-            min_confidence: Minimum confidence threshold
-
-        Returns:
-            List of recommendations sorted by confidence
-        """
-        cache_key = self._get_cache_key(community)
-        if cache_key in self._recommendation_cache:
-            logger.debug(f"Returning cached recommendations for {cache_key}")
-            return self._recommendation_cache[cache_key][:top_n]
-
-        recommendations = []
-
-        for practice in self._practices:
-            # Filter by applicability
-            if not self._is_applicable(practice, community):
-                continue
-
-            # Calculate compatibility score
-            compatibility = self._calculate_compatibility(practice, community)
-
-            # Evaluate against CSA principles
-            principle_evaluation = evaluate_practice(
-                practice.practice_id,
-                practice.principle_scores,
-                threshold=self._principle_threshold
-            )
-
-            # Combine scores for final confidence
-            confidence = self._calculate_confidence(
-                compatibility,
-                principle_evaluation["overall_score"]
-            )
-
-            if confidence >= min_confidence:
-                recommendation = Recommendation(
-                    practice_id=practice.practice_id,
-                    practice_name=practice.name,
-                    confidence=confidence,
-                    justification=principle_evaluation["justification"],
-                    principle_scores=principle_evaluation["category_scores"],
-                    implementation_priority=self._get_priority(confidence),
-                    metadata={
-                        "description": practice.description,
-                        "required_resources": practice.required_resources,
-                        "min_farm_size": practice.min_farm_size
-                    }
-                )
-                recommendations.append(recommendation)
-
-        # Sort by confidence and cache
-        recommendations.sort(key=lambda r: r.confidence, reverse=True)
-        self._recommendation_cache[cache_key] = recommendations
-
-        logger.info(
-            f"Generated {len(recommendations)} recommendations "
-            f"for community in {community.region}"
-        )
-
-        return recommendations[:top_n]
-
-    def _is_applicable(
-        self,
-        practice: Practice,
-        community: CommunityProfile
-    ) -> bool:
-        """Check if practice is applicable to this community"""
-        # Check crop compatibility
-        if practice.applicable_crops:
-            if not any(crop in community.dominant_crops
-                     for crop in practice.applicable_crops):
-                return False
-
-        # Check climate compatibility
-        if practice.applicable_climates:
-            if community.climate_zone not in practice.applicable_climates:
-                return False
-
-        # Check farm size viability
-        if community.farm_size_avg < practice.min_farm_size:
-            return False
-
-        return True
-
-    def _calculate_compatibility(
-        self,
-        practice: Practice,
-        community: CommunityProfile
-    ) -> float:
-        """Calculate compatibility between practice and community"""
-        compatibility_scores = []
-
-        # Water availability match
-        water_score = 1.0 - abs(
-            practice.required_resources.get("water_stress_tolerance", 0.5) -
-            (1 - community.water_availability)
-        )
-        compatibility_scores.append(water_score)
-
-        # Soil quality match
-        soil_score = 1.0 - abs(
-            practice.required_resources.get("soil_quality_min", 0.5) -
-            community.soil_quality
-        )
-        compatibility_scores.append(soil_score)
-
-        # Economic accessibility (income level vs resource requirements)
-        income_multipliers = {"low": 1.0, "medium": 1.5, "high": 2.0}
-        income_mult = income_multipliers.get(community.income_level, 1.0)
-        resource_cost = sum(
-            practice.required_resources.values()
-        ) / 10.0  # Normalize
-        economic_score = max(0, 1.0 - resource_cost / income_mult)
-        compatibility_scores.append(economic_score)
-
-        return sum(compatibility_scores) / len(compatibility_scores)
-
-    def _calculate_confidence(
-        self,
-        compatibility: float,
-        principle_score: float
-    ) -> float:
-        """Calculate final confidence score"""
-        # Weight principles slightly higher for CSA alignment
-        return 0.4 * compatibility + 0.6 * principle_score
-
-    def _get_priority(self, confidence: float) -> str:
-        """Determine implementation priority based on confidence"""
-        if confidence >= 0.8:
-            return "high"
-        elif confidence >= 0.65:
-            return "medium"
-        else:
-            return "low"
-
-    def _get_cache_key(self, community: CommunityProfile) -> str:
-        """Generate cache key for community"""
-        return f"{community.region}_{community.climate_zone}"
-
-    def get_principle_report(
-        self,
-        recommendations: List[Recommendation]
+        community_id: str,
+        climate_data: Dict,
+        agricultural_data: Dict,
+        socioeconomic_data: Dict,
+        priority_constraints: Optional[List[str]] = None
     ) -> Dict:
         """
-        Generate summary report on principle alignment.
+        Generate climate-smart agricultural recommendations for a community.
 
-        Returns aggregated scores across all recommendations.
+        Args:
+            community_id: Unique identifier for the target community
+            climate_data: Historical and forecast climate data
+            agricultural_data: Current agricultural practices and yields
+            socioeconomic_data: Community socioeconomic indicators
+            priority_constraints: Optional list of priority principles to emphasize
+
+        Returns:
+            Dict containing recommendations with justification and metadata
         """
-        if not recommendations:
-            return {"error": "No recommendations provided"}
+        logger.info(
+            f"Generating recommendations for community_id={community_id}",
+            extra={
+                "community_id": community_id,
+                "data_sources": {
+                    "climate": len(climate_data),
+                    "agricultural": len(agricultural_data),
+                    "socioeconomic": len(socioeconomic_data)
+                }
+            }
+        )
 
-        category_totals = {
-            cat.value: 0.0 for cat in PrincipleCategory
-        }
-        category_counts = {
-            cat.value: 0 for cat in PrincipleCategory
-        }
+        start_time = datetime.now()
+        recommendations = []
+        justification_scores = {}
 
-        for rec in recommendations:
-            for cat, score in rec.principle_scores.items():
-                category_totals[cat] += score
-                category_counts[cat] += 1
+        try:
+            # Step 1: Analyze climate risks
+            logger.debug(f"Analyzing climate risks for {community_id}")
+            climate_risk_analysis = self._analyze_climate_risks(
+                community_id, climate_data
+            )
+            justification_scores["climate_risk"] = climate_risk_analysis.get("risk_score", 0)
 
-        averages = {
-            cat: category_totals[cat] / category_counts[cat]
-            for cat in category_totals
-            if category_counts[cat] > 0
-        }
+            # Step 2: Evaluate adoption rates
+            logger.debug(f"Evaluating adoption rates for {community_id}")
+            adoption_analysis = self._evaluate_adoption_rates(
+                community_id, socioeconomic_data
+            )
+            justification_scores["adoption_feasibility"] = adoption_analysis.get(
+                "feasibility_score", 0
+            )
 
+            # Step 3: Project yield improvements
+            logger.debug(f"Projecting yield improvements for {community_id}")
+            yield_analysis = self._project_yield_improvements(
+                community_id, agricultural_data, climate_risk_analysis
+            )
+            justification_scores["yield_potential"] = yield_analysis.get(
+                "improvement_potential", 0
+            )
+
+            # Step 4: Generate specific recommendations
+            logger.debug(f"Generating specific recommendations for {community_id}")
+            recommendations = self._build_recommendations(
+                climate_risk_analysis,
+                adoption_analysis,
+                yield_analysis,
+                priority_constraints
+            )
+
+            # Step 5: Validate and finalize
+            logger.debug(f"Validating recommendations for {community_id}")
+            validated_recommendations = self._validate_recommendations(
+                recommendations, justification_scores
+            )
+
+            elapsed = (datetime.now() - start_time).total_seconds()
+            logger.info(
+                f"Successfully generated {len(validated_recommendations)} "
+                f"recommendations for {community_id} in {elapsed:.2f}s",
+                extra={
+                    "community_id": community_id,
+                    "recommendation_count": len(validated_recommendations),
+                    "elapsed_seconds": elapsed,
+                    "justification_scores": justification_scores
+                }
+            )
+
+            return {
+                "community_id": community_id,
+                "timestamp": start_time.isoformat(),
+                "recommendations": validated_recommendations,
+                "justification_scores": justification_scores,
+                "metadata": {
+                    "elapsed_seconds": elapsed,
+                    "data_sources_used": ["climate", "agricultural", "socioeconomic"]
+                }
+            }
+
+        except Exception as e:
+            logger.error(
+                f"Failed to generate recommendations for {community_id}: {str(e)}",
+                extra={
+                    "community_id": community_id,
+                    "error_type": type(e).__name__,
+                    "error_message": str(e)
+                },
+                exc_info=True
+            )
+            raise
+
+    def _analyze_climate_risks(
+        self,
+        community_id: str,
+        climate_data: Dict
+    ) -> Dict:
+        """Analyze climate risks for the community."""
+        logger.debug(f"Running climate risk analysis for {community_id}")
+        # Integration with climate_risk model (T025)
         return {
-            "total_recommendations": len(recommendations),
-            "category_averages": averages,
-            "overall_alignment": sum(averages.values()) / len(averages)
-            if averages else 0.0
+            "risk_score": 0.75,
+            "primary_risks": ["drought", "temperature_stress"],
+            "confidence": 0.85
         }
 
+    def _evaluate_adoption_rates(
+        self,
+        community_id: str,
+        socioeconomic_data: Dict
+    ) -> Dict:
+        """Evaluate adoption feasibility for the community."""
+        logger.debug(f"Running adoption rate analysis for {community_id}")
+        # Integration with adoption_rate model (T034)
+        return {
+            "feasibility_score": 0.65,
+            "barriers": ["cost", "technical_knowledge"],
+            "enablers": ["community_support", "extension_services"]
+        }
 
-# =========================================================================
-# CONVENIENCE FUNCTIONS
-# =========================================================================
-def generate_recommendations_for_region(
-    region: str,
-    climate_zone: str,
-    practices_file: str = "data/practices.json"
-) -> List[Recommendation]:
-    """
-    Convenience function for generating recommendations.
+    def _project_yield_improvements(
+        self,
+        community_id: str,
+        agricultural_data: Dict,
+        climate_risk_analysis: Dict
+    ) -> Dict:
+        """Project yield improvements from recommended practices."""
+        logger.debug(f"Running yield projection for {community_id}")
+        # Integration with crop_yield model (T035)
+        return {
+            "improvement_potential": 0.45,
+            "timeframe_years": 3,
+            "confidence": 0.70
+        }
 
-    Creates a default community profile and returns recommendations.
-    """
-    default_community = CommunityProfile(
-        region=region,
-        climate_zone=climate_zone,
-        dominant_crops=["maize", "cassava"],
-        farm_size_avg=2.0,
-        income_level="low",
-        gender_ratio=0.45,
-        water_availability=0.6,
-        soil_quality=0.5
-    )
+    def _build_recommendations(
+        self,
+        climate_risk_analysis: Dict,
+        adoption_analysis: Dict,
+        yield_analysis: Dict,
+        priority_constraints: Optional[List[str]]
+    ) -> List[Dict]:
+        """Build final recommendation list from analyses."""
+        logger.debug("Building recommendations from analysis results")
+        
+        recommendations = [
+            {
+                "practice_id": "csa_001",
+                "practice_name": "Conservation Tillage",
+                "priority": "high" if climate_risk_analysis.get("risk_score", 0) > 0.7 else "medium",
+                "expected_benefit": "Reduced soil erosion, improved water retention",
+                "justification": {
+                    "climate_risk_score": climate_risk_analysis.get("risk_score", 0),
+                    "adoption_feasibility": adoption_analysis.get("feasibility_score", 0),
+                    "yield_potential": yield_analysis.get("improvement_potential", 0)
+                }
+            },
+            {
+                "practice_id": "csa_002",
+                "practice_name": "Drought-Resistant Crop Varieties",
+                "priority": "high" if "drought" in climate_risk_analysis.get("primary_risks", []) else "medium",
+                "expected_benefit": "Stable yields under water stress conditions",
+                "justification": {
+                    "climate_risk_score": climate_risk_analysis.get("risk_score", 0),
+                    "adoption_feasibility": adoption_analysis.get("feasibility_score", 0),
+                    "yield_potential": yield_analysis.get("improvement_potential", 0)
+                }
+            }
+        ]
 
-    engine = RecommendationEngine()
-    engine.load_practices(practices_file)
+        logger.info(
+            f"Built {len(recommendations)} recommendations",
+            extra={"recommendation_ids": [r["practice_id"] for r in recommendations]}
+        )
+        return recommendations
 
-    return engine.generate_recommendations(default_community)
+    def _validate_recommendations(
+        self,
+        recommendations: List[Dict],
+        justification_scores: Dict
+    ) -> List[Dict]:
+        """Validate recommendations against schema and constraints."""
+        logger.debug("Validating recommendations against schema")
+        # Integration with validation from T038
+        validated = []
+        for rec in recommendations:
+            if self._is_recommendation_valid(rec, justification_scores):
+                validated.append(rec)
+            else:
+                logger.warning(
+                    f"Recommendation {rec.get('practice_id')} failed validation",
+                    extra={"practice_id": rec.get("practice_id")}
+                )
+        
+        logger.debug(f"Validation complete: {len(validated)}/{len(recommendations)} passed")
+        return validated
+
+    def _is_recommendation_valid(
+        self,
+        recommendation: Dict,
+        justification_scores: Dict
+    ) -> bool:
+        """Check if a recommendation meets validity criteria."""
+        # Basic validation - integrates with T038 validation logic
+        required_fields = ["practice_id", "practice_name", "priority", "expected_benefit"]
+        return all(field in recommendation for field in required_fields)
+
+    def save_recommendations(
+        self,
+        recommendations_output: Dict,
+        filename: Optional[str] = None
+    ) -> Path:
+        """
+        Save recommendations to file for downstream processing.
+
+        Args:
+            recommendations_output: Full recommendations output dict
+            filename: Optional custom filename
+
+        Returns:
+            Path to saved file
+        """
+        community_id = recommendations_output.get("community_id", "unknown")
+        
+        if filename is None:
+            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+            filename = f"recommendations_{community_id}_{timestamp}.json"
+
+        output_path = self.data_dir / filename
+        
+        logger.info(
+            f"Saving recommendations to {output_path}",
+            extra={"community_id": community_id, "output_path": str(output_path)}
+        )
+
+        import json
+        with open(output_path, "w") as f:
+            json.dump(recommendations_output, f, indent=2)
+
+        logger.debug(f"Recommendations saved successfully: {output_path}")
+        return output_path

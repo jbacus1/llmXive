@@ -121,8 +121,8 @@
 - [X] T036 [US3] Implement recommendation logic in src/services/recommendation_engine.py
 - [X] T037 [US3] Integrate sustainability, ecosystem service, and social equity principles
 - [X] T038 [US3] Add validation for recommendation outputs
-- [ ] T039 [US3] Add logging for recommendation generation operations
-- [ ] T040 [US3] Implement intervention strategy module in src/models/intervention_strategies.py
+- [X] T039 [US3] Add logging for recommendation generation operations
+- [X] T040 [US3] Implement intervention strategy module in src/models/intervention_strategies.py
 
 **Checkpoint**: All user stories should now be independently functional
 

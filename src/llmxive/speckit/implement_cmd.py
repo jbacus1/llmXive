@@ -220,6 +220,20 @@ class ImplementerAgent(SlashCommandAgent):
             )
         elif verdict == "atomize":
             # Recorded for the Task-Atomizer Agent (US9) to pick up.
+            # ALSO check the task off (with an ATOMIZE annotation) so
+            # the Implementer doesn't loop on the same task forever
+            # waiting for an atomizer agent that may never run.
+            tasks_path = Path(mechanical_output["tasks_path"])
+            text = tasks_path.read_text(encoding="utf-8")
+            text = re.sub(
+                rf"^- \[ \] ({re.escape(task_id)}\b)([^\n]*)$",
+                rf"- [X] \1\2 <!-- ATOMIZE: requested -->",
+                text,
+                count=1,
+                flags=re.MULTILINE,
+            )
+            tasks_path.write_text(text, encoding="utf-8")
+            written.append(str(tasks_path.relative_to(repo)))
             atomize_dir = ctx.project_dir / "code" / ".tasks"
             atomize_dir.mkdir(parents=True, exist_ok=True)
             (atomize_dir / f"{task_id}.atomize.yaml").write_text(

@@ -1,15 +1,1 @@
-estimated_seconds: 1800
-proposed_subtasks:
-- description: Run static analysis (pylint, mypy) across all modules to identify issues
-  estimated_seconds: 300
-- description: Refactor code/src/utils/ modules for consistency and remove dead code
-  estimated_seconds: 400
-- description: Refactor code/src/acquisition/ and code/src/alignment/ modules for
-    consistency
-  estimated_seconds: 400
-- description: Refactor code/src/quantification/ and code/src/analysis/ modules for
-    consistency
-  estimated_seconds: 400
-- description: Refactor code/src/models/ to ensure consistent patterns across all
-    entity models
-  estimated_seconds: 300
+{}

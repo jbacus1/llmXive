@@ -89,9 +89,9 @@
 ### Implementation for User Story 2
 
 - [X] T020 [P] [US2] Create analysis service in `src/services/analysis.py`
-- [ ] T021 [US2] Implement statistical routines (t-tests, ANOVA for RCT) using scipy/pingouin
-- [ ] T022 [US2] Implement report generation (Markdown/PDF) in `docs/analysis-plan.md`
-- [ ] T023 [US2] Integrate with User Story 1 components (load processed data from `data/processed/`)
+- [X] T021 [US2] Implement statistical routines (t-tests, ANOVA for RCT) using scipy/pingouin
+- [X] T022 [US2] Implement report generation (Markdown/PDF) in `docs/analysis-plan.md`
+- [X] T023 [US2] Integrate with User Story 1 components (load processed data from `data/processed/`)
 
 **Checkpoint**: At this point, User Stories 1 AND 2 should both work independently
 
@@ -105,7 +105,7 @@
 
 ### Tests for User Story 3 (Optional) ⚠️
 
-- [ ] T024 [P] [US3] Validation test for consent form templates in `tests/unit/test_docs.py`
+- [X] T024 [P] [US3] Validation test for consent form templates in `tests/unit/test_docs.py`
 
 ### Implementation for User Story 3
 

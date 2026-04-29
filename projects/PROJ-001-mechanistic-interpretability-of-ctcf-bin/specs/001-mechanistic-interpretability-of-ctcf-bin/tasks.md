@@ -3,7 +3,7 @@
 **Input**: Design documents from `/specs/001-ctcf-binding-interpretability/`
 **Prerequisites**: plan.md (required), spec.md (required for user stories), research.md, data-model.md, contracts/
 
-**Tests**: Contract tests and integration tests included per spec requirements.
+**Tests**: The examples below include test tasks. Tests are OPTIONAL - only include them if explicitly requested in the feature specification.
 
 **Organization**: Tasks are grouped by user story to enable independent implementation and testing of each story.
 
@@ -15,27 +15,21 @@
 
 ## Path Conventions
 
-- **Single project**: `projects/PROJ-001-mechanistic-interpretability-of-ctcf-bin/` at repository root
-- Paths shown below reflect plan.md structure - `code/`, `tests/`, `data/`, `state/`
+- **Single project**: `src/`, `tests/` at repository root
+- **Web app**: `backend/src/`, `frontend/src/`
+- **Mobile**: `api/src/`, `ios/src/` or `android/src/`
+- Paths shown below assume single project - adjust based on plan.md structure
 
-<!-- 
-  ============================================================================
-  IMPORTANT: The tasks below are generated from spec.md and plan.md.
-  
-  Tasks are organized by user story so each story can be:
-  - Implemented independently
-  - Tested independently
-  - Delivered as an MVP increment
-  ============================================================================
--->
+---
 
 ## Phase 1: Setup (Shared Infrastructure)
 
 **Purpose**: Project initialization and basic structure
 
-- [ ] T001 Create project structure per implementation plan in `projects/PROJ-001-mechanistic-interpretability-of-ctcf-bin/`
-- [ ] T002 Initialize Python 3.11 project with PyTorch 2.1, transformers 4.36, scikit-learn 1.3, pandas 2.1, numpy 1.24 in `code/requirements.txt`
-- [ ] T003 [P] Configure linting and formatting tools (black, flake8, mypy) in `code/.flake8`, `code/pyproject.toml`
+- [ ] T001 Create project structure per implementation plan (`projects/PROJ-001-mechanistic-interpretability-of-ctcf-bin/`)
+- [ ] T002 Initialize Python 3.11 project with PyTorch 2.1, transformers 4.36, scikit-learn 1.3, pandas 2.1, numpy 1.24 dependencies
+- [ ] T003 [P] Configure linting and formatting tools (black, flake8, isort)
+- [ ] T004 [P] Setup pytest 7.4 testing framework in tests/
 
 ---
 
@@ -45,15 +39,17 @@
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete
 
-- [ ] T004 [P] Create contract schemas in `specs/001-ctcf-binding-interpretability/contracts/`
-- [ ] T005 [P] Implement SequenceContext entity schema in `specs/001-ctcf-binding-interpretability/contracts/sequence_context.schema.yaml`
-- [ ] T006 [P] Implement LatentFeature entity schema in `specs/001-ctcf-binding-interpretability/contracts/latent_feature.schema.yaml`
-- [ ] T007 [P] Implement BindingPrediction entity schema in `specs/001-ctcf-binding-interpretability/contracts/binding_prediction.schema.yaml`
-- [ ] T008 Create data manifest structure in `code/data/manifest.json`
-- [ ] T009 Setup environment configuration management in `code/.env.example` and `code/config.py`
-- [ ] T010 Configure error handling and logging infrastructure in `code/utils/logging.py`
-- [ ] T011 [P] Setup pytest configuration in `code/pytest.ini` and `tests/conftest.py`
-- [ ] T012 Create base state tracking in `state/projects/PROJ-001-mechanistic-interpretability-of-ctcf-bin.yaml`
+- [ ] T005 Setup environment configuration management (state/projects/PROJ-001-mechanistic-interpretability-of-ctcf-bin.yaml)
+- [ ] T006 [P] Create data manifest.json schema for ENCODE accession tracking and checksums
+- [ ] T007 [P] Create contract test schemas in contracts/ (sequence_context.schema.yaml, latent_feature.schema.yaml, binding_prediction.schema.yaml)
+- [ ] T008 [P] Setup data/processed/ directory structure with checksum verification
+- [ ] T009 Create base SequenceContext entity model in code/models/sequence_context.py
+- [ ] T010 [P] Create base LatentFeature entity model in code/models/latent_feature.py
+- [ ] T011 [P] Create base BindingPrediction entity model in code/models/binding_prediction.py
+- [ ] T012 Configure random seed pinning for reproducibility (Constitution Principle I)
+- [ ] T013 Setup logging infrastructure with ENCODE accessions tracking
+- [ ] T014 Implement error handling for missing cell type data (US1 edge case)
+- [ ] T015 Implement sequence padding/truncation to 2048bp context window
 
 **Checkpoint**: Foundation ready - user story implementation can now begin in parallel
 
@@ -61,28 +57,29 @@
 
 ## Phase 3: User Story 1 - Data Ingestion and Preprocessing (Priority: P1) 🎯 MVP
 
-**Goal**: Load and preprocess ENCODE ChIP-seq, ATAC-seq, and histone modification data for multiple cell types with standardized output
+**Goal**: Load and preprocess ENCODE ChIP-seq, ATAC-seq, and histone modification data for multiple cell types into standardized datasets ready for model training
 
 **Independent Test**: Can be fully tested by executing the data loader script against a static subset of ENCODE data and verifying the output tensor shapes and metadata consistency without running the neural network
 
-### Tests for User Story 1
+### Tests for User Story 1 (OPTIONAL - only if tests requested) ⚠️
 
 > **NOTE: Write these tests FIRST, ensure they FAIL before implementation**
 
-- [ ] T013 [P] [US1] Contract test for SequenceContext schema in `code/tests/contract/test_sequence_context.py`
-- [ ] T014 [P] [US1] Integration test for data ingestion pipeline in `code/tests/integration/test_data_ingestion.py`
-- [ ] T015 [P] [US1] Unit test for data loader with static ENCODE subset in `code/tests/unit/test_loader.py`
-- [ ] T016 [P] [US1] Unit test for preprocessing padding/truncation in `code/tests/unit/test_preprocess.py`
+- [ ] T016 [P] [US1] Contract test for SequenceContext schema in tests/contract/test_sequence_context.py
+- [ ] T017 [P] [US1] Unit test for ENCODE data loader in tests/unit/test_loader.py
+- [ ] T018 [P] [US1] Unit test for preprocessing normalization in tests/unit/test_preprocess.py
+- [ ] T019 [P] [US1] Integration test for full data pipeline in tests/integration/test_data_pipeline.py
 
 ### Implementation for User Story 1
 
-- [ ] T017 [P] [US1] Implement ENCODE data loader in `code/data/loader.py` (FR-001)
-- [ ] T018 [P] [US1] Implement data normalization and alignment in `code/data/preprocess.py` (FR-001)
-- [ ] T019 [US1] Implement handling for missing cell type data with warning logging in `code/data/loader.py`
-- [ ] T020 [US1] Implement sequence padding/truncation to 2048bp context window in `code/data/preprocess.py`
-- [ ] T021 [US1] Add validation for 10+ cell type requirement in `code/data/loader.py`
-- [ ] T022 [US1] Add logging for data ingestion operations in `code/utils/logging.py`
-- [ ] T023 [US1] Implement checksum recording for processed data in `code/data/preprocess.py`
+- [ ] T020 [P] [US1] Implement ENCODE data ingestion in code/data/loader.py (FR-001)
+- [ ] T021 [P] [US1] Implement data normalization and alignment in code/data/preprocess.py (FR-001)
+- [ ] T022 [US1] Implement multi-cell-type support for 10+ cell types (FR-001)
+- [ ] T023 [US1] Implement warning logging for missing cell type data (edge case handling)
+- [ ] T024 [US1] Implement sequence alignment to common genomic coordinate system
+- [ ] T025 [US1] Add validation for 1M+ sequence contexts loading
+- [ ] T026 [US1] Add metadata consistency checks for tensor outputs
+- [ ] T027 [US1] Document data preprocessing pipeline in quickstart.md
 
 **Checkpoint**: At this point, User Story 1 should be fully functional and testable independently
 
@@ -90,27 +87,29 @@
 
 ## Phase 4: User Story 2 - Transformer Model Training and Execution (Priority: P2)
 
-**Goal**: Train a transformer-based sequence-context model to predict CTCF binding probability with validation metrics
+**Goal**: Train a transformer-based sequence-context model to predict CTCF binding probability
 
 **Independent Test**: Can be fully tested by training on a small dummy dataset and verifying loss convergence and validation AUC scores without applying sparse autoencoders
 
-### Tests for User Story 2
+### Tests for User Story 2 (OPTIONAL - only if tests requested) ⚠️
 
-- [ ] T024 [P] [US2] Contract test for BindingPrediction schema in `code/tests/contract/test_binding_prediction.py`
-- [ ] T025 [P] [US2] Integration test for training pipeline with dummy data in `code/tests/integration/test_training_pipeline.py`
-- [ ] T026 [P] [US2] Unit test for transformer model architecture in `code/tests/unit/test_transformer.py`
-- [ ] T027 [P] [US2] Unit test for inference speed (<10s per kilobase) in `code/tests/unit/test_inference.py`
+- [ ] T028 [P] [US2] Contract test for BindingPrediction schema in tests/contract/test_binding_prediction.py
+- [ ] T029 [P] [US2] Unit test for transformer model in tests/unit/test_transformer.py
+- [ ] T030 [P] [US2] Unit test for training loop in tests/unit/test_training.py
+- [ ] T031 [P] [US2] Integration test for model training and inference in tests/integration/test_training_pipeline.py
 
 ### Implementation for User Story 2
 
-- [ ] T028 [P] [US2] Create transformer architecture in `code/models/transformer.py` (FR-002)
-- [ ] T029 [US2] Implement training loop with loss convergence tracking in `code/training/train.py` (FR-002)
-- [ ] T030 [US2] Implement inference script for binding probability predictions in `code/training/inference.py` (FR-002)
-- [ ] T031 [US2] Add AUC metric calculation for validation in `code/training/train.py`
-- [ ] T032 [US2] Implement checkpoint saving/loading in `code/training/train.py`
-- [ ] T033 [US2] Add cross-cell-type generalization validation in `code/training/train.py`
-- [ ] T034 [US2] Add random seed pinning for reproducibility in `code/training/train.py`
-- [ ] T035 [US2] Integrate with User Story 1 data loader in `code/training/train.py`
+- [ ] T032 [P] [US2] Implement transformer architecture in code/models/transformer.py (FR-002)
+- [ ] T033 [US2] Implement model training loop in code/training/train.py (FR-002)
+- [ ] T034 [US2] Implement inference script in code/training/inference.py (FR-002)
+- [ ] T035 [US2] Implement loss convergence monitoring (threshold < defined value within 100 epochs)
+- [ ] T036 [US2] Implement AUC > 0.85 validation on held-out cell types (SC-001)
+- [ ] T037 [US2] Implement checkpoint saving and loading
+- [ ] T038 [US2] Implement performance monitoring (inference < 10 seconds per kilobase)
+- [ ] T039 [US2] Handle model convergence failure edge case (loss increases indefinitely)
+- [ ] T040 [US2] Add GPU memory optimization for < 200GB constraint
+- [ ] T041 [US2] Document model training pipeline in quickstart.md
 
 **Checkpoint**: At this point, User Stories 1 AND 2 should both work independently
 
@@ -122,23 +121,28 @@
 
 **Independent Test**: Can be fully tested by loading a pre-trained model and running the SAE decomposition on a fixed set of sequences to verify feature sparsity and motif correspondence
 
-### Tests for User Story 3
+### Tests for User Story 3 (OPTIONAL - only if tests requested) ⚠️
 
-- [ ] T036 [P] [US3] Contract test for LatentFeature schema in `code/tests/contract/test_latent_feature.py`
-- [ ] T037 [P] [US3] Integration test for perturbation pipeline in `code/tests/integration/test_perturbation_pipeline.py`
-- [ ] T038 [P] [US3] Unit test for sparse autoencoder decomposition in `code/tests/unit/test_sae.py`
-- [ ] T039 [P] [US3] Unit test for statistical significance testing in `code/tests/unit/test_significance.py`
+- [ ] T042 [P] [US3] Contract test for LatentFeature schema in tests/contract/test_latent_feature.py
+- [ ] T043 [P] [US3] Unit test for sparse autoencoder in tests/unit/test_sae.py
+- [ ] T044 [P] [US3] Unit test for feature attribution in tests/unit/test_feature_attribution.py
+- [ ] T045 [P] [US3] Unit test for statistical significance testing in tests/unit/test_significance.py
+- [ ] T046 [P] [US3] Integration test for perturbation experiments in tests/integration/test_perturbation_pipeline.py
 
 ### Implementation for User Story 3
 
-- [ ] T040 [P] [US3] Create sparse autoencoder model in `code/models/sae.py` (FR-003)
-- [ ] T041 [US3] Implement feature attribution analysis in `code/interpretation/feature_attribution.py` (FR-003)
-- [ ] T042 [US3] Implement synthetic sequence generation with motif perturbations in `code/interpretation/perturbation.py` (FR-004)
-- [ ] T043 [US3] Implement statistical significance testing (permutation tests, p < 0.05) in `code/validation/significance.py` (FR-005)
-- [ ] T044 [US3] Implement motif correspondence validation in `code/validation/motif_analysis.py` (FR-003)
-- [ ] T045 [US3] Add 3-5 interpretable latent feature extraction requirement in `code/models/sae.py`
-- [ ] T046 [US3] Integrate with User Story 2 model checkpoint in `code/interpretation/feature_attribution.py`
-- [ ] T047 [US3] Add perturbation effect significance testing in `code/validation/significance.py`
+- [ ] T047 [P] [US3] Implement sparse autoencoder in code/models/sae.py (FR-003)
+- [ ] T048 [US3] Implement feature attribution analysis in code/interpretation/feature_attribution.py (FR-003)
+- [ ] T049 [US3] Implement synthetic perturbation generation in code/interpretation/perturbation.py (FR-004)
+- [ ] T050 [US3] Implement statistical significance testing in code/validation/significance.py (FR-005)
+- [ ] T051 [US3] Implement motif correspondence analysis in code/validation/motif_analysis.py (FR-003)
+- [ ] T052 [US3] Extract 3-5 interpretable latent features (SC-002)
+- [ ] T053 [US3] Implement permutation tests for feature contributions
+- [ ] T054 [US3] Implement p-value threshold configuration (FR-006 - default p < 0.05)
+- [ ] T055 [US3] Validate synthetic perturbation correlation > 90% (SC-003)
+- [ ] T056 [US3] Handle SAE features not corresponding to known motifs edge case
+- [ ] T057 [US3] Integrate with CRISPRi perturbation datasets for external validation
+- [ ] T058 [US3] Document interpretability pipeline in quickstart.md
 
 **Checkpoint**: All user stories should now be independently functional
 
@@ -148,13 +152,16 @@
 
 **Purpose**: Improvements that affect multiple user stories
 
-- [ ] T048 [P] Documentation updates in `specs/001-ctcf-binding-interpretability/quickstart.md`
-- [ ] T049 Code cleanup and refactoring across `code/`
-- [ ] T050 Performance optimization for training (<48 hours) in `code/training/train.py`
-- [ ] T051 [P] Additional unit tests in `code/tests/unit/`
-- [ ] T052 Security hardening for data access in `code/data/loader.py`
-- [ ] T053 Run quickstart.md validation
-- [ ] T054 Verify reproducibility on fresh GitHub Actions runner
+- [ ] T059 [P] Documentation updates in docs/
+- [ ] T060 Code cleanup and refactoring across all modules
+- [ ] T061 Performance optimization across all stories
+- [ ] T062 [P] Additional unit tests in tests/unit/
+- [ ] T063 Security hardening for data access
+- [ ] T064 Run quickstart.md validation
+- [ ] T065 Verify Constitution Principles compliance (all 6 principles)
+- [ ] T066 Update state/ artifact_hashes on all changes
+- [ ] T067 Validate reproducibility on fresh GitHub Actions runner
+- [ ] T068 Cross-validate figures/statistics trace to data rows (Principle IV)
 
 ---
 
@@ -197,15 +204,15 @@
 ## Parallel Example: User Story 1
 
 ```bash
-# Launch all tests for User Story 1 together:
-Task: "Contract test for SequenceContext schema in code/tests/contract/test_sequence_context.py"
-Task: "Integration test for data ingestion pipeline in code/tests/integration/test_data_ingestion.py"
-Task: "Unit test for data loader with static ENCODE subset in code/tests/unit/test_loader.py"
-Task: "Unit test for preprocessing padding/truncation in code/tests/unit/test_preprocess.py"
+# Launch all tests for User Story 1 together (if tests requested):
+Task: "Contract test for SequenceContext schema in tests/contract/test_sequence_context.py"
+Task: "Unit test for ENCODE data loader in tests/unit/test_loader.py"
+Task: "Unit test for preprocessing normalization in tests/unit/test_preprocess.py"
+Task: "Integration test for full data pipeline in tests/integration/test_data_pipeline.py"
 
 # Launch all models for User Story 1 together:
-Task: "Implement ENCODE data loader in code/data/loader.py"
-Task: "Implement data normalization and alignment in code/data/preprocess.py"
+Task: "Implement ENCODE data ingestion in code/data/loader.py (FR-001)"
+Task: "Implement data normalization and alignment in code/data/preprocess.py (FR-001)"
 ```
 
 ---
@@ -234,9 +241,9 @@ With multiple developers:
 
 1. Team completes Setup + Foundational together
 2. Once Foundational is done:
-   - Developer A: User Story 1 (data pipeline)
-   - Developer B: User Story 2 (model training)
-   - Developer C: User Story 3 (interpretability)
+   - Developer A: User Story 1
+   - Developer B: User Story 2
+   - Developer C: User Story 3
 3. Stories complete and integrate independently
 
 ---
@@ -250,5 +257,5 @@ With multiple developers:
 - Commit after each task or logical group
 - Stop at any checkpoint to validate story independently
 - Avoid: vague tasks, same file conflicts, cross-story dependencies that break independence
-- All artifacts carry content hash per VI. Versioning Discipline
-- FR-006 threshold (p < 0.05) set by default per spec resolution
+- All data files under data/ must be checksummed per Constitution Principle III
+- All artifacts carry content hash per Constitution Principle V
