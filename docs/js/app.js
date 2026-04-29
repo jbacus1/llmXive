@@ -55,15 +55,22 @@
         : '<span><i class="fa-solid fa-star-half-stroke"></i> ' + (item.points_research_total || 0).toFixed(1) + ' pts</span>';
     const keys = (item.keywords || []).slice(0, 4)
       .map(k => '<span>' + escapeHtml(k) + '</span>').join("");
+    const desc = item.description || item.field || "";
+    const submitterIcon = (item.submitter || "").startsWith("system:") || (item.submitter || "").includes("/")
+      ? '<i class="fa-solid fa-robot"></i>'
+      : '<i class="fa-regular fa-user"></i>';
+    const submitter = item.submitter ? '<span class="submitter">' + submitterIcon + ' ' + escapeHtml(item.submitter) + '</span>' : "";
     return ''
       + '<article class="card" tabindex="0" data-pid="' + escapeHtml(item.id) + '">'
       + '<div class="kicker"><span class="dot"></span>' + kicker + '<span class="stage-pill ' + escapeHtml(stage) + '" style="margin-left:auto">' + escapeHtml(stageLabel) + '</span></div>'
       + '<h3>' + escapeHtml(item.title) + '</h3>'
-      + '<p class="desc">' + escapeHtml(item.field || "") + '</p>'
+      + '<p class="desc">' + escapeHtml(desc) + '</p>'
       + '<div class="meta">'
       + '<div class="keys">' + keys + '</div>'
       + '<div class="right">' + points + '<span><i class="fa-regular fa-clock"></i> ' + escapeHtml(updated) + '</span></div>'
-      + '</div></article>';
+      + '</div>'
+      + (submitter ? '<div class="submitter-row">submitted by ' + submitter + '</div>' : "")
+      + '</article>';
   }
 
   function renderCards(kind) {
@@ -105,12 +112,16 @@
     const html = stages.map(stage => {
       const items = lane[stage] || [];
       const label = D.STAGE_LABELS[stage] || stage;
-      const issues = items.map(p => ''
-        + '<div class="issue" data-pid="' + escapeHtml(p.id) + '">'
-        + '<div class="title">' + escapeHtml(p.title) + '</div>'
-        + '<div class="row"><span>' + escapeHtml(p.field || "") + '</span>'
-        + '<span class="upv"><i class="fa-solid fa-arrow-up"></i> ' + (p.points_research_total || 0).toFixed(1) + '</span></div>'
-        + '</div>').join("");
+      const issues = items.map(p => {
+        const desc = (p.description || "").slice(0, 140) + ((p.description || "").length > 140 ? "…" : "");
+        return ''
+          + '<div class="issue" data-pid="' + escapeHtml(p.id) + '">'
+          + '<div class="title">' + escapeHtml(p.title) + '</div>'
+          + (desc ? '<div class="issue-desc">' + escapeHtml(desc) + '</div>' : "")
+          + '<div class="row"><span>' + escapeHtml(p.field || "") + '</span>'
+          + '<span class="upv"><i class="fa-solid fa-arrow-up"></i> ' + (p.points_research_total || 0).toFixed(1) + '</span></div>'
+          + '</div>';
+      }).join("");
       return ''
         + '<div class="col" data-stage="' + escapeHtml(stage) + '">'
         + '<div class="col-head"><span class="name"><span class="dot"></span>' + escapeHtml(label) + '</span>'

@@ -129,16 +129,27 @@
   }
 
   async function submitIdea({ title, field, description, keywords }) {
-    const body = [
-      "**Field:** " + field,
+    // Structured markdown body — no leading "#" so GitHub doesn't render
+    // the whole content as an H1. Brief blockquote summary, then prose,
+    // then a metadata bullet list, then a footer pointing back to the site.
+    const summary = (description.split("\n", 1)[0] || "").slice(0, 200);
+    const lines = [
+      "> " + summary,
+      "",
+      "## Description",
       "",
       description,
       "",
-      keywords ? "**Keywords:** " + keywords : "",
+      "## Metadata",
       "",
-      "---",
-      "*Submitted via llmXive Dashboard.*",
-    ].filter(Boolean).join("\n");
+      "- **Field:** " + field,
+    ];
+    if (keywords) lines.push("- **Keywords:** " + keywords);
+    lines.push("- **Stage:** brainstormed");
+    lines.push("");
+    lines.push("---");
+    lines.push("*Submitted via the llmXive Dashboard. The Brainstorm and Flesh-Out agents will pick this up on the next pipeline cycle.*");
+    const body = lines.join("\n");
     return ghFetch("/repos/" + OWNER + "/" + REPO + "/issues", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
