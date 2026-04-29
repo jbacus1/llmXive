@@ -250,7 +250,7 @@ real data, no executed analyses, and no figures. These tasks set
 `execute: true` so the runtime actually runs each script and captures
 stdout/stderr in the runlog.
 
-- [X] T058 [P] Download a small public splicing example dataset from a real URL. Use scikit-learn iris (https://raw.githubusercontent.com/scikit-learn/scikit-learn/main/sklearn/datasets/data/iris.csv) as a placeholder splicing-like dataset (or any real ENA accession the LLM verifies first). Save to data/raw/example.csv via code/scripts/download_data.py. MUST execute and produce the file.
+- [ ] T058 [P] Download a small public splicing example dataset from a real URL. Use scikit-learn iris (https://raw.githubusercontent.com/scikit-learn/scikit-learn/main/sklearn/datasets/data/iris.csv) as a placeholder splicing-like dataset (or any real ENA accession the LLM verifies first). Save to data/raw/example.csv via code/scripts/download_data.py. MUST execute and produce the file.
 - [ ] T059 Compute basic descriptive statistics (mean, sd, n) on the downloaded PSI values in `code/scripts/describe_psi.py`, save to `data/results/psi_stats.json`. MUST execute and produce the JSON.
 - [ ] T060 Render Figure 1 — histogram of PSI values — in `code/scripts/render_fig1.py` using matplotlib. Save the PNG to `paper/figures/fig1_psi_hist.png`. MUST execute and produce the PNG.
 - [ ] T061 Render Figure 2 — scatterplot of mean PSI vs read coverage — in `code/scripts/render_fig2.py`. Save the PNG to `paper/figures/fig2_psi_vs_coverage.png`. MUST execute and produce the PNG.
