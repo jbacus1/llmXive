@@ -112,12 +112,12 @@
 
 - [X] T036 [P] [US3] Contract test for phyloP extractor in `code/tests/contract/test_phylo_extractor.py`
 - [X] T037 [P] [US3] Contract test for enrichment analysis in `code/tests/contract/test_enrichment_test.py`
-- [ ] T038 [P] [US3] Integration test for selection analysis pipeline in `code/tests/integration/test_selection_analysis.py`
-- [ ] T039 [P] [US3] Unit test for validation module in `code/tests/unit/test_validation.py`
+- [X] T038 [P] [US3] Integration test for selection analysis pipeline in `code/tests/integration/test_selection_analysis.py`
+- [X] T039 [P] [US3] Unit test for validation module in `code/tests/unit/test_validation.py`
 
 ### Implementation for User Story 3
 
-- [ ] T040 [P] [US3] Create regulatory region entity model in `code/src/models/regulatory_region.py`
+- [X] T040 [P] [US3] Create regulatory region entity model in `code/src/models/regulatory_region.py`
 - [ ] T041 [US3] Implement phyloP sequence extractor in `code/src/analysis/phylo_extractor.py`
 - [ ] T042 [US3] Implement flanking intronic sequence extraction (±500bp)
 - [ ] T043 [US3] Implement enrichment analysis in `code/src/analysis/enrichment_test.py`
