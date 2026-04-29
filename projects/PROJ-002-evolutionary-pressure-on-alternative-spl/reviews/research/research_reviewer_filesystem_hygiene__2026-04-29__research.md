@@ -1,11 +1,11 @@
 ---
-artifact_hash: f2eb4ef2c0528b40a1e794527debea07675dfa225b7e0f203aaa02004972c56e
+artifact_hash: 2160977a67c773f0fd9bc73a632f777b1efa924bfe2828c8ac12d265304ce048
 artifact_path: projects/PROJ-002-evolutionary-pressure-on-alternative-spl/specs/001-evolutionary-pressure-on-alternative-spl/tasks.md
 backend: dartmouth
 feedback: ''
 model_name: qwen.qwen3.5-122b
 prompt_version: 1.0.0
-reviewed_at: '2026-04-29T16:04:50.704384Z'
+reviewed_at: '2026-04-29T17:12:03.856717Z'
 reviewer_kind: llm
 reviewer_name: research_reviewer_filesystem_hygiene
 score: 0.0
@@ -14,35 +14,43 @@ verdict: minor_revision
 
 ## Filesystem Hygiene Review
 
-### Structure Violations
+### Critical Violations Per Constitution Principle V
 
-**Constitution Principle V (Versioning)** - The current file layout deviates from `plan.md`'s Project Structure specification:
+The current repository structure violates plan.md specifications and Constitution Principle V in multiple ways:
 
-1. **Root-level files vs. `projects/PROJ-002-.../code/`**: Per plan.md, all source code should be under `projects/PROJ-002-evolutionary-pressure-on-alternative-spl/code/`. The code summary shows files at apparent repository root:
-   - `pyproject.toml`, `requirements.txt` should be in `code/`
-   - `src/` should be `code/src/`
-   - `docs/` should be `code/docs/`
-   - `config/` should be `code/config/`
+**1. Root-Level Code Artifacts (T066, T067)**
+- `pyproject.toml` exists at root but should be `code/pyproject.toml`
+- `requirements.txt` exists at root but should be `code/requirements.txt`
+These files must be relocated per Phase 8 revision tasks.
 
-2. **Spec location**: plan.md specifies `specs/001-evolutionary-pressure-alternative-splicing/` should contain `spec.md`, `plan.md`, `tasks.md`, `research.md`, `data-model.md`, `quickstart.md`, and `contracts/`. The code summary shows `specs/contracts/` at root level, not nested under the feature directory.
+**2. Source Code Location (T068)**
+- `src/` directory exists at root level
+- Per plan.md, all source code must be under `code/src/`
+- Current paths like `src/acquisition/sra_downloader.py` violate the specification
 
-3. **Data directory inconsistency**: data summary reports "(no files)" but code summary lists `data/metadata.yaml` (6604 bytes). This needs reconciliation per Constitution Principle III (Data Hygiene).
+**3. Documentation Location (T069)**
+- `docs/` exists at root with `docs/API.md`, `docs/README.md`, etc.
+- Should be relocated to `code/docs/` per plan.md structure
 
-### Naming Convention Issues
+**4. Configuration Location (T070)**
+- `config/logging.yaml` at root should move to `code/config/`
 
-- Task T008 references `code/specs/contracts/` but plan.md shows `specs/001-evolutionary-pressure-alternative-splicing/contracts/`
-- Contract files use `.py` extension (e.g., `alignment_result_contract.py`) but plan.md's contracts section shows `.schema.yaml` convention
+**5. Contract Specification Location (T071, T072)**
+- `specs/contracts/*.py` files exist but should be:
+  - Relocated to `specs/001-evolutionary-pressure-alternative-splicing/contracts/`
+  - Renamed from `.py` to `.schema.yaml` per plan.md specification
 
-### Documentation Currency
+**6. Data Directory Structure (T073, T074, T075)**
+- `metadata.yaml` location unclear (should be `data/metadata.yaml` or `code/data/metadata.yaml`)
+- `data/raw/example.csv` exists but `data/raw/` directory structure needs explicit creation
+- `data/results/psi_stats.json` exists but `data/processed/` directory should be created
 
-- `docs/README.md` exists at root but plan.md specifies documentation should be in `code/docs/`
-- Quickstart validation (T053) failed - verify `quickstart.md` location matches plan.md
+### Documentation Currency Issues
 
-### Required Actions
+- `docs/README.md` (2686 bytes) at root should be moved and potentially consolidated
+- `paper/results.md` referenced in T087 but not present in file listing
+- `paper/figures/` directory structure referenced but not created
 
-1. Restructure to match plan.md: `projects/PROJ-002-.../code/{src,tests,docs,config}`
-2. Move `specs/001-evolutionary-pressure-alternative-splicing/` to proper location under `specs/`
-3. Reconcile data directory: ensure `data/raw/`, `data/processed/`, `data/metadata.yaml` structure exists
-4. Update contract file naming to `.schema.yaml` per plan.md specification
+### Recommendation
 
-These are structural corrections that do not affect functionality but are required for Constitution Principle compliance.
+Complete Phase 8 revision tasks (T066-T075) before proceeding. The filesystem structure currently blocks proper version control, reproducibility, and compliance with Constitution Principle V. After relocation, verify all import paths in code update accordingly.

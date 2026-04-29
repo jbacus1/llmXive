@@ -1,11 +1,11 @@
 ---
-artifact_hash: f2eb4ef2c0528b40a1e794527debea07675dfa225b7e0f203aaa02004972c56e
+artifact_hash: 2160977a67c773f0fd9bc73a632f777b1efa924bfe2828c8ac12d265304ce048
 artifact_path: projects/PROJ-002-evolutionary-pressure-on-alternative-spl/specs/001-evolutionary-pressure-on-alternative-spl/tasks.md
 backend: dartmouth
 feedback: ''
 model_name: qwen.qwen3.5-122b
 prompt_version: 1.0.0
-reviewed_at: '2026-04-29T16:02:45.606875Z'
+reviewed_at: '2026-04-29T17:08:54.200934Z'
 reviewer_kind: llm
 reviewer_name: research_reviewer_creativity
 score: 0.0
@@ -14,29 +14,34 @@ verdict: minor_revision
 
 ## Creativity & Novelty Assessment
 
-### Strengths
+### Current State: Incremental on Established Foundations
 
-**Clean pipeline architecture**: The modular design across acquisition, alignment, quantification, and analysis phases shows thoughtful engineering. The separation of concerns (US1 → US2 → US3) enables independent testing and iteration, which is aesthetically pleasing from a research reproducibility standpoint.
-
-**Multi-species comparative framework**: The four-species phylogenetic spread (human → chimp → macaque → marmoset) provides appropriate evolutionary breadth for detecting lineage-specific signals. This design choice demonstrates consideration of phylogenetic structure.
+The project implements a well-established comparative genomics pipeline (STAR → rMATS → differential splicing → phyloP conservation). This workflow is standard in the field, with explicit citations to prior work (Merkin et al. 2012, Necsulea et al. 2014, Khaitovich et al. 2005) in **tasks.md T079**.
 
 ### Novelty Concerns
 
-**Methodological convention**: The pipeline relies entirely on established tools (STAR, rMATS/SUPPA2, phyloP, Benjamini-Hochberg) with standard statistical thresholds (ΔPSI ≥ 0.1, FDR < 0.05, coverage ≥ 20). While this ensures validity, it represents incremental application rather than methodological innovation.
+**Core Pipeline (Low Novelty):**
+- The four-species primate splicing comparison has been extensively published
+- Using fixed-effect models for differential splicing is conventional
+- phyloP conservation scores are a standard metric, not a novel contribution
 
-**Research question familiarity**: Comparative transcriptomics across primates examining splicing divergence has been explored previously (e.g., Merkin et al. 2012, Necsulea et al. 2014). The hypothesis that "splicing changes correlate with positive selection" follows established comparative genomics paradigms without introducing new analytical frameworks.
+**Creative Elements Are Peripheral:**
+The most promising novelty additions are all deferred to **Phase 12 (T099-T102)**:
+- T099: Unsupervised clustering of splicing patterns
+- T100: Lineage-specific regulatory motif discovery
+- T101: Epigenetic data integration (ATAC-seq, ChIP-seq)
+- T102: ML prediction of splicing divergence from sequence features
 
-### Recommendations for Enhanced Creativity
+These are marked `[P]` as optional enhancements, not core research contributions.
 
-1. **Consider novel analytical angles**: What distinguishes this work from existing primate splicing studies? Consider adding:
-   - Lineage-specific regulatory motif discovery beyond phyloP
-   - Integration with epigenetic data (ATAC-seq, ChIP-seq) from same tissues
-   - Machine learning approaches to predict splicing divergence from sequence features
+### What Would Elevate This Project
 
-2. **Expand methodological scope**: The `spec.md` related work section is empty (`TODO — lit-search returned no results`). A proper literature review is essential to identify genuine novelty gaps.
+1. **Move Novelty to Core**: T099-T102 should inform the research design, not be revision afterthoughts. The specification should explicitly state what makes this analysis different from Merkin/Necsulea/Khaitovich.
 
-3. **Add exploratory analysis**: Consider including unsupervised clustering of splicing patterns across lineages to discover unexpected evolutionary patterns, not just hypothesis-driven testing.
+2. **Document the Knowledge Gap**: **T076/T079** (research.md) is still TODO. This document must articulate the specific novelty claim—otherwise the project appears to replicate prior work.
 
-### Verdict Justification
+3. **Aesthetic Interest**: The four-species comparative design is elegant but not innovative. Consider whether the pipeline could reveal something unexpected (e.g., splicing divergence patterns that don't correlate with phylogenetic distance).
 
-This is a well-structured computational biology project that would produce valid results, but from a creativity lens, it applies established methods to a familiar question. Minor revision is recommended to strengthen the novelty argument before research acceptance.
+### Recommendation
+
+**minor_revision** required before acceptance. The creative lens cannot validate novelty claims that remain in TODO tasks. Complete T076 (research.md) with explicit differentiation from cited prior work, and either integrate T099-T102 into the core methodology or document why they are excluded from the MVP.

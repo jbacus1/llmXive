@@ -1,11 +1,11 @@
 ---
-artifact_hash: f2eb4ef2c0528b40a1e794527debea07675dfa225b7e0f203aaa02004972c56e
+artifact_hash: 2160977a67c773f0fd9bc73a632f777b1efa924bfe2828c8ac12d265304ce048
 artifact_path: projects/PROJ-002-evolutionary-pressure-on-alternative-spl/specs/001-evolutionary-pressure-on-alternative-spl/tasks.md
 backend: dartmouth
 feedback: ''
 model_name: qwen.qwen3.5-122b
 prompt_version: 1.0.0
-reviewed_at: '2026-04-29T16:03:14.971520Z'
+reviewed_at: '2026-04-29T17:09:32.450183Z'
 reviewer_kind: llm
 reviewer_name: research_reviewer_implementation_correctness
 score: 0.0
@@ -14,34 +14,62 @@ verdict: minor_revision
 
 ## Implementation Correctness Review
 
-### Assessment
+### Filesystem Structure Violations (Plan.md Compliance)
 
-Based on the provided spec.md, plan.md, and tasks.md, I can verify the **task structure** and **code organization** align with the design, but I cannot verify **actual implementation logic** without access to code contents.
+Per **plan.md**, the project structure must follow:
+```
+projects/PROJ-002-evolutionary-pressure-on-alternative-splicing/
+  └── code/
+      ├── pyproject.toml
+      ├── requirements.txt
+      └── src/
+```
 
-### Verified Alignments
+**Current State (code summary)**: Files are at repository root:
+- `pyproject.toml` (1022 bytes) — **VIOLATION**: Should be `code/pyproject.toml` (T066)
+- `requirements.txt` (977 bytes) — **VIOLATION**: Should be `code/requirements.txt` (T067)
+- `src/acquisition/...` — **VIOLATION**: Should be `code/src/acquisition/` (T068)
+- `docs/...` — **VIOLATION**: Should be `code/docs/` (T069)
+- `specs/contracts/...` — **VIOLATION**: Should be `specs/001-evolutionary-pressure-alternative-splicing/contracts/` (T071)
 
-1. **FR-001 to FR-008**: All functional requirements have corresponding tasks (T017-T047) and source files in `code/src/`
-2. **Statistical thresholds**: Tasks T032, T033, T034, T044 explicitly implement spec requirements (ΔPSI ≥ 0.1, coverage ≥ 20, FDR < 0.05)
-3. **Contract tests**: All user stories have corresponding contract tests (T011-T014, T023-T026, T036-T039)
-4. **Project structure**: Matches plan.md specification (acquisition/, alignment/, quantification/, analysis/ modules)
+These are **Constitution Principle V** violations that block downstream tooling and reproducibility verification.
 
-### Critical Concerns
+### Data Directory Structure (T073-T075)
 
-1. **Empty data directory**: `data/` shows no files, but SC-001 requires 70% of samples processed. Without actual BAM/PSI outputs, success criteria cannot be validated.
+**spec.md** requires data artifacts checksummed per Principle III. Current data summary shows:
+- `data/metadata.yaml` ✓
+- `data/raw/example.csv` ✓
+- `data/results/psi_stats.json` ✓
+- `data/processed/` — **MISSING** (T075)
 
-2. ** unverifiable implementation**: Source files exist (e.g., `src/analysis/differential_splicing.py` 8380 bytes) but I cannot confirm:
-   - Fixed effect model (FR-004) is correctly implemented
-   - Benjamini-Hochberg correction (FR-008) applies to all events
-   - ±500bp flanking extraction (FR-005) matches spec
+### Acceptance Criteria Verification (T055, T094)
 
-3. **T055 status**: Task marked [FAILED] - "Verify all acceptance criteria met (SC-001 through SC-004)" - this blocks feature completion per tasks.md notes.
+**spec.md Success Criteria**:
+- SC-001: Mapping rates ≥70% — **UNVERIFIED** (T089 incomplete)
+- SC-002: ≥100 lineage-specific events — **UNVERIFIED** (T090 incomplete)
+- SC-003: FDR-corrected p < 0.05 — **UNVERIFIED** (T091 incomplete)
+- SC-004: Validation results — **UNVERIFIED**
 
-### Required Actions
+T053 (quickstart.md validation) and T055 (acceptance criteria verification) are marked **FAILED** in tasks.md with no remediation evidence.
 
-1. **Complete T055**: Provide evidence that SC-001 through SC-004 are met (mapping rates, event counts, FDR-corrected p-values, validation results)
+### Pipeline Execution Evidence (T083-T091)
 
-2. **Verify statistical thresholds**: Show code excerpts confirming ΔPSI ≥ 0.1, coverage ≥ 20, FDR < 0.05 are enforced in `src/analysis/differential_splicing.py` and `src/analysis/enrichment_test.py`
+Phase 10 revision tasks for actual data execution are **incomplete**:
+- T083-T087: Example dataset processing — Partially complete (example.csv exists, but no checksum verification)
+- T088-T091: Full pipeline execution — **NOT EXECUTED** (marked [ ])
 
-3. **Populate data directory**: At minimum, provide processed output files to validate pipeline execution
+### Tool Version Compliance (spec.md)
 
-Without access to actual code contents and data outputs, I cannot confirm implementation correctness. Minor revision required to address these verification gaps.
+**Required versions**: STAR v2.7.10a, rMATS v4.1.2, SAMtools v1.17, Bedtools v2.31.0, SRA Toolkit v3.0.0
+
+No evidence in current code summary that these versions are pinned or verified in `requirements.txt` or environment configuration.
+
+### Required Actions Before Accept
+
+1. **Complete T066-T075** (filesystem hygiene) — Move all files to plan.md-specified locations
+2. **Complete T092-T094** (state & verification) — Provide evidence that SC-001 through SC-004 are met
+3. **Complete T088-T091** (data execution) — Execute actual pipeline on primate RNA-seq data
+4. **Add version pinning** — Document tool versions per spec.md requirements
+5. **Fix T053/T055** — Provide working quickstart.md and acceptance criteria validation evidence
+
+**Verdict Justification**: The implementation has functional code but does not correctly realize the design specification due to filesystem structure violations, incomplete acceptance criteria verification, and missing pipeline execution evidence. These are structural deviations that affect reproducibility and constitution compliance, warranting **minor_revision** rather than full_revision since core logic appears implemented.

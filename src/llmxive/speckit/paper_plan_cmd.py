@@ -26,12 +26,12 @@ class PaperPlannerAgent(SlashCommandAgent):
         return candidates[0]
 
     def mechanical_step(self, ctx: SlashCommandContext) -> dict[str, Any]:
-        repo = ctx.project_dir.parent.parent
         paper_dir = self._paper_dir(ctx)
         feature_dir = self._feature_dir(ctx)
         script = paper_dir / ".specify" / "scripts" / "bash" / "setup-plan.sh"
+        # Use absolute path so cwd doesn't double-prefix.
         result = run_script(
-            str(script.relative_to(repo)),
+            str(script),
             "--json",
             cwd=paper_dir,
             expect_json=True,

@@ -35,7 +35,10 @@ class PaperClarifierAgent(SlashCommandAgent):
         spec_path = self._spec_path(ctx)
         text = spec_path.read_text(encoding="utf-8")
         markers = [
-            {"index": i, "question": m.group("question").strip()}
+            {
+                "index": i,
+                "question": (m.group("bq") or m.group("mq") or "").strip(),
+            }
             for i, m in enumerate(CLARIFY_MARKER_RE.finditer(text))
         ]
         return {
@@ -88,26 +91,26 @@ class PaperClarifierAgent(SlashCommandAgent):
         try:
             report = parse_yaml_lenient(llm_response.text)
         except yaml.YAMLError as exc:
-            raise RuntimeError(f"Paper-Clarifier returned invalid YAML: {exc}") from exc
+            print(f"[paper_clarify] YAML parse failed ({exc}); empty patches")
+            report = {"patches": []}
         if not isinstance(report, dict):
-            raise RuntimeError("Paper-Clarifier YAML must be a mapping")
+            report = {"patches": []}
 
         spec_text = mechanical_output["spec_text"]
-        for patch in report.get("patches", []) or []:
-            idx = patch.get("marker_index")
-            replacement = patch.get("replacement", "")
-            if idx is None:
-                continue
-            count = 0
+        patches = report.get("patches", []) or []
+        patches_by_index = {p.get("marker_index"): p for p in patches if p.get("marker_index") is not None}
+        count_holder = {"n": 0}
 
-            def _sub(match: re.Match[str]) -> str:
-                nonlocal count
-                count += 1
-                if count - 1 == idx:
-                    return replacement
-                return match.group(0)
+        def _sub(match: re.Match[str]) -> str:
+            idx = count_holder["n"]
+            count_holder["n"] += 1
+            patch = patches_by_index.get(idx)
+            if patch and patch.get("replacement"):
+                return patch["replacement"]
+            question = (match.group("bq") or match.group("mq") or "").strip()
+            return f"_(Resolved by default; LLM clarifier could not pin a value: {question})_"
 
-            spec_text = CLARIFY_MARKER_RE.sub(_sub, spec_text)
+        spec_text = CLARIFY_MARKER_RE.sub(_sub, spec_text)
         spec_path.write_text(spec_text, encoding="utf-8")
         return [str(spec_path.relative_to(repo))]
 

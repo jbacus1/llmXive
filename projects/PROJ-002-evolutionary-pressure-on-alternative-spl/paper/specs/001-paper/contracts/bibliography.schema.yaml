@@ -1,0 +1,43 @@
+$schema: http://json-schema.org/draft-07/schema#
+title: Bibliography Contract
+description: Defines the contract for citation verification per Constitution Principle III.
+type: object
+required:
+  - citation_id
+  - url
+  - verification_status
+properties:
+  citation_id:
+    type: string
+    description: "Unique identifier matching bib key"
+    pattern: "^[A-Za-z0-9_-]+$"
+  url:
+    type: string
+    description: "URL of the cited resource"
+    format: uri
+  verification_status:
+    type: string
+    enum:
+      - verified
+      - unreachable
+      - mismatch
+      - pending
+    description: "Status from Reference-Validator Agent"
+  title:
+    type: string
+    description: "Title of the work"
+  authors:
+    type: array
+    items:
+      type: string
+    description: "List of authors"
+  year:
+    type: integer
+    description: "Publication year"
+examples:
+  - citation_id: "Smith2020"
+    url: "https://doi.org/10.1038/s41586-020-00000-0"
+    verification_status: "verified"
+    title: "Alternative Splicing in Primates"
+    authors: ["Smith, J.", "Doe, A."]
+    year: 2020

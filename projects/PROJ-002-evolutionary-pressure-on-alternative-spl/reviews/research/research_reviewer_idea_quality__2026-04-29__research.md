@@ -1,44 +1,48 @@
 ---
-artifact_hash: f2eb4ef2c0528b40a1e794527debea07675dfa225b7e0f203aaa02004972c56e
+artifact_hash: 2160977a67c773f0fd9bc73a632f777b1efa924bfe2828c8ac12d265304ce048
 artifact_path: projects/PROJ-002-evolutionary-pressure-on-alternative-spl/specs/001-evolutionary-pressure-on-alternative-spl/tasks.md
 backend: dartmouth
 feedback: ''
 model_name: qwen.qwen3.5-122b
 prompt_version: 1.0.0
-reviewed_at: '2026-04-29T16:02:24.468761Z'
+reviewed_at: '2026-04-29T17:08:29.552582Z'
 reviewer_kind: llm
 reviewer_name: research_reviewer_idea_quality
 score: 0.0
 verdict: minor_revision
 ---
 
-## Strengths
+## Idea Quality Assessment
 
-**Well-posed research question**: The core question—"Do splicing divergence patterns across primates correlate with regions under positive selection?"—is clearly defined with appropriate phylogenetic scope (human, chimp, macaque, marmoset spanning 40 MY of divergence).
+### Strengths
 
-**Falsifiable hypothesis**: Success criteria SC-001 through SC-004 provide measurable, testable outcomes. The hypothesis that "splicing changes overlap with regions under positive selection" can be rejected if enrichment analysis fails to show statistically significant overlap (FDR-corrected p < 0.05 per SC-003).
+The research direction is well-scoped: comparative analysis of alternative splicing across four primate lineages using established bioinformatics pipelines (STAR, rMATS, phyloP). Success criteria are measurable (SC-001 through SC-004 specify mapping rates ≥70%, ≥100 lineage-specific events, FDR <0.05 validation).
 
-**Appropriate statistical thresholds**: Spec clearly defines ΔPSI ≥ 0.1, coverage ≥ 20 reads, and FDR < 0.05, aligning with field conventions (rMATS/SUPPA2 defaults).
+### Critical Gaps Affecting Idea Quality
 
-## Weaknesses
+**1. Hypothesis Not Clearly Articulated**
+The spec.md does not state a falsifiable research hypothesis. Tasks T079-T080 in Phase 9 explicitly flag missing literature review and knowledge gap documentation:
+- T079: "Complete literature review... addressing prior work"
+- T080: "Document knowledge gap this project fills"
 
-**Missing literature gap articulation**: The `spec.md` states `Related Work: TODO — lit-search returned no results`. Without a literature review, it is unclear:
-- What prior work exists on comparative splicing evolution in primates
-- Whether this specific hypothesis (splicing-divergence ↔ selection-signature correlation) has been tested before
-- What specific knowledge gap this project fills
+Without these, reviewers cannot assess whether the research question advances beyond prior work (Merkin et al. 2012, Necsulea et al. 2014, Khaitovich et al. 2005 are mentioned but not contextualized).
 
-This violates the "clearly identified gap" requirement for idea quality.
+**2. Methodological Specification Incomplete**
+T082 identifies missing phylogenetic model specification (PGLS vs. fixed effect model). This is fundamental to the evolutionary inference claims. The current tasks.md shows implementation of "fixed effect model" (T026) but the spec lacks justification for this choice over alternatives.
 
-**Critical data availability assumption**: The spec assumes "Public repositories contain sufficient matched RNA-seq data from cortex tissue for all four primate species with adequate sample sizes" without validation. If this assumption fails, the research question becomes untestable. Consider adding a contingency analysis plan.
+**3. Feasibility Not Validated**
+T081 (data feasibility check for RNA-seq availability across all 4 species) is incomplete. Without confirming data availability for matched cortex tissue across human/chimpanzee/macaque/marmoset, the core experimental design cannot proceed.
 
-**Phylogenetic non-independence**: While `plan.md` mentions "Phylogenetic Statistical Independence" (Constitution Principle VII), the spec doesn't explicitly address how shared evolutionary history will be modeled in the fixed effect model to avoid pseudoreplication.
+**4. Gap Between Success Criteria and Scientific Contribution**
+SC-002 requires "≥100 lineage-specific events" but does not specify what constitutes scientific novelty. Is the contribution the event count, the functional annotation, or the evolutionary interpretation? This affects falsifiability.
 
-## Recommendations
+### Required Revisions
 
-1. **Complete literature review** before Phase 0 research (as Constitution Check requires). Position findings against existing comparative transcriptomics work (e.g., Khaitovich et al., 2005; Merkin et al., 2012 on primate splicing evolution).
+1. **Complete T076-T080** before proceeding with data execution (Phase 10)
+2. **Specify the primary hypothesis** in spec.md (e.g., "Alternative splicing divergence in primates shows signatures of positive selection in regulatory regions beyond neutral expectation")
+3. **Justify phylogenetic model choice** (T082) with methodological rationale
+4. **Validate data feasibility** (T081) with confirmed SRA/ENA accession numbers for all 4 species
 
-2. **Add data feasibility check task** to validate RNA-seq availability for all 4 species before committing to full pipeline.
+### Verdict Rationale
 
-3. **Clarify phylogenetic model specification** in spec.md—specify whether phylogenetic generalized least squares (PGLS) or similar correction will be applied.
-
-The core research idea is sound and falsifiable, but gap identification requires completion before acceptance.
+The research pipeline is technically sound, but the scientific foundation requires documentation completion before the idea can be evaluated for quality. This is a minor_revision because the gaps are addressable through documentation tasks already identified in the plan.
