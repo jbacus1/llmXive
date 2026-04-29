@@ -91,7 +91,25 @@ class TaskerAgent(SlashCommandAgent):
         repo = ctx.project_dir.parent.parent
         tasks_path = Path(mechanical_output["tasks_path"])
         tasks_path.parent.mkdir(parents=True, exist_ok=True)
-        tasks_path.write_text(llm_response.text.strip() + "\n", encoding="utf-8")
+        # Strip ```markdown / ```md fences if the LLM wrapped its response.
+        text = llm_response.text.strip()
+        if text.startswith("```"):
+            lines = text.splitlines()
+            if lines[0].lstrip("`").lower() in {"", "markdown", "md"}:
+                lines = lines[1:]
+            if lines and lines[-1].strip() == "```":
+                lines = lines[:-1]
+            text = "\n".join(lines).strip()
+        # Sanity check: a tasks.md must contain at least one task checkbox.
+        # Without this, the analyze loop runs against an empty file and the
+        # Implementer has nothing to do (PROJ-007 hit this when the LLM
+        # returned a 180-byte preamble-only response).
+        if "- [ ]" not in text and "- [X]" not in text and "- [x]" not in text:
+            raise RuntimeError(
+                f"Tasker produced no checkbox tasks (got {len(text)} chars). "
+                "Re-running the Tasker on next pipeline cycle will retry."
+            )
+        tasks_path.write_text(text + "\n", encoding="utf-8")
         written = [str(tasks_path.relative_to(repo))]
 
         # Now run the analyze-resolve loop.

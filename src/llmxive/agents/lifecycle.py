@@ -18,9 +18,12 @@ from llmxive.types import Stage
 ALLOWED_TRANSITIONS: dict[Stage, set[Stage]] = {
     # Idea-generation phase (T056 will add details for transitions through
     # this section; for now the structural skeleton is here).
-    Stage.BRAINSTORMED: {Stage.FLESH_OUT_IN_PROGRESS},
+    # Allow direct BRAINSTORMED → FLESH_OUT_COMPLETE when the FleshOut
+    # agent finishes in one tick. The IN_PROGRESS intermediate is an
+    # optional checkpoint for long-running flesh-out work.
+    Stage.BRAINSTORMED: {Stage.FLESH_OUT_IN_PROGRESS, Stage.FLESH_OUT_COMPLETE, Stage.HUMAN_INPUT_NEEDED},
     Stage.FLESH_OUT_IN_PROGRESS: {Stage.FLESH_OUT_COMPLETE, Stage.HUMAN_INPUT_NEEDED},
-    Stage.FLESH_OUT_COMPLETE: {Stage.PROJECT_INITIALIZED},
+    Stage.FLESH_OUT_COMPLETE: {Stage.PROJECT_INITIALIZED, Stage.HUMAN_INPUT_NEEDED},
     # Per-project research Spec Kit pipeline (US1):
     Stage.PROJECT_INITIALIZED: {Stage.SPECIFIED},
     # The CLARIFY_IN_PROGRESS / ANALYZE_IN_PROGRESS intermediates are

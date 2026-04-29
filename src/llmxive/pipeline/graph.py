@@ -20,6 +20,11 @@ from typing import Callable
 from uuid import uuid4
 
 from llmxive.agents.advancement import evaluate as advancement_evaluate
+from llmxive.agents.idea_lifecycle import (
+    BrainstormAgent,
+    FleshOutAgent,
+    IdeaSelectorAgent,
+)
 from llmxive.agents.base import Agent, AgentContext
 from llmxive.agents.lifecycle import is_valid_transition
 from llmxive.agents.paper_initializer import PaperInitializerAgent
@@ -55,6 +60,8 @@ from llmxive.types import (
 # at the keyed stage. The agent's run() drives the transition to the
 # next stage.
 STAGE_TO_AGENT: dict[Stage, str] = {
+    Stage.BRAINSTORMED: "flesh_out",
+    Stage.FLESH_OUT_IN_PROGRESS: "flesh_out",
     Stage.FLESH_OUT_COMPLETE: "project_initializer",
     Stage.PROJECT_INITIALIZED: "specifier",
     Stage.SPECIFIED: "clarifier",
@@ -88,6 +95,8 @@ STAGE_TO_AGENT: dict[Stage, str] = {
 # each agent run — for non-LLM stages (e.g., the Implementer marks tasks
 # off and we transition to research_complete when all are done).
 STAGE_AFTER_AGENT: dict[Stage, Stage] = {
+    Stage.BRAINSTORMED: Stage.FLESH_OUT_COMPLETE,
+    Stage.FLESH_OUT_IN_PROGRESS: Stage.FLESH_OUT_COMPLETE,
     Stage.FLESH_OUT_COMPLETE: Stage.PROJECT_INITIALIZED,
     Stage.PROJECT_INITIALIZED: Stage.SPECIFIED,
     Stage.SPECIFIED: Stage.CLARIFIED,
@@ -109,6 +118,9 @@ STAGE_AFTER_AGENT: dict[Stage, Stage] = {
 
 
 _NON_SPECKIT_AGENTS: dict[str, Callable[[AgentRegistryEntry], Agent]] = {
+    "brainstorm": BrainstormAgent,
+    "flesh_out": FleshOutAgent,
+    "idea_selector": IdeaSelectorAgent,
     "project_initializer": ProjectInitializerAgent,
     "research_reviewer": ResearchReviewerAgent,
     "paper_initializer": PaperInitializerAgent,
