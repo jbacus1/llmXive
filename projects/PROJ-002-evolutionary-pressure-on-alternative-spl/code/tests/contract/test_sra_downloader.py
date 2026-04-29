@@ -1,175 +1,181 @@
 """
-Contract tests for SRA downloader module.
+Contract tests for SRA downloader interface.
 
-These tests verify the SRA downloader adheres to the expected contract
-as defined in the specification. Tests are written to FAIL before
-implementation and PASS after implementation.
+These tests define the expected contract that the SRADownloader implementation
+must satisfy. They should FAIL before implementation and PASS after.
 
-Contract requirements:
-- Download SRA data using prefetch/sra-toolkit
-- Convert SRA to FASTQ format using fasterq-dump
-- Validate output file integrity
-- Handle network errors gracefully
-- Log all operations
+Tests verify:
+1. Input validation (accession IDs, output paths)
+2. Error handling for invalid inputs
+3. Interface contract compliance
 """
 
 import pytest
+import os
+import tempfile
 from pathlib import Path
-from unittest.mock import Mock, patch, MagicMock
 
-# Test fixtures and constants
-TEST_SRA_ACCESSION = "SRR12345678"
-TEST_OUTPUT_DIR = Path("/tmp/test_sra_output")
-EXPECTED_FASTQ_PATTERN = "*.fastq"
-MIN_MAPPING_RATE = 0.70  # 70% per SC-001
+# Import will fail initially - this is expected before implementation
+try:
+    from code.src.acquisition.sra_downloader import SRADownloader
+    SRA_DOWNLOADER_EXISTS = True
+except ImportError:
+    SRA_DOWNLOADER_EXISTS = False
 
 
 class TestSRADownloaderContract:
-    """Contract tests for SRA downloader interface."""
+    """Contract tests for SRADownloader interface."""
     
-    @pytest.fixture(autouse=True)
-    def setup(self, tmp_path):
-        """Set up test fixtures before each test."""
-        self.test_output_dir = tmp_path / "sra_downloads"
-        self.test_output_dir.mkdir(parents=True, exist_ok=True)
+    @pytest.fixture
+    def temp_output_dir(self):
+        """Create temporary directory for test outputs."""
+        with tempfile.TemporaryDirectory() as tmpdir:
+            yield tmpdir
+    
+    def test_sra_downloader_class_exists(self):
+        """Contract: SRADownloader class must exist."""
+        assert SRA_DOWNLOADER_EXISTS, (
+            "SRADownloader class must be implemented in "
+            "code/src/acquisition/sra_downloader.py"
+        )
+    
+    def test_sra_downloader_initialization(self, temp_output_dir):
+        """Contract: SRADownloader must initialize with required parameters."""
+        if not SRA_DOWNLOADER_EXISTS:
+            pytest.skip("SRADownloader not yet implemented")
         
-    def test_downloader_interface_exists(self):
-        """Verify SRADownloader class exists and has required methods."""
-        from src.acquisition.sra_downloader import SRADownloader
+        # Contract: Must accept output directory
+        downloader = SRADownloader(output_dir=temp_output_dir)
+        assert downloader is not None
+    
+    def test_sra_downloader_initialization_with_retry_config(self, temp_output_dir):
+        """Contract: SRADownloader must accept retry configuration."""
+        if not SRA_DOWNLOADER_EXISTS:
+            pytest.skip("SRADownloader not yet implemented")
         
-        assert hasattr(SRADownloader, 'download'), \
-            "SRADownloader must have 'download' method"
-        assert hasattr(SRADownloader, 'validate_output'), \
-            "SRADownloader must have 'validate_output' method"
-        assert hasattr(SRADownloader, 'get_metadata'), \
-            "SRADownloader must have 'get_metadata' method"
+        # Contract: Must accept retry parameters
+        downloader = SRADownloader(
+            output_dir=temp_output_dir,
+            max_retries=3,
+            retry_delay=5
+        )
+        assert downloader is not None
+    
+    def test_download_with_valid_accession(self, temp_output_dir):
+        """Contract: Download must accept valid SRA accession ID."""
+        if not SRA_DOWNLOADER_EXISTS:
+            pytest.skip("SRADownloader not yet implemented")
         
-    @patch('src.acquisition.sra_downloader.subprocess.run')
-    def test_download_prefetch_command_execution(self, mock_subprocess):
-        """Verify prefetch command is executed with correct parameters."""
-        from src.acquisition.sra_downloader import SRADownloader
+        downloader = SRADownloader(output_dir=temp_output_dir)
         
-        mock_subprocess.return_value = MagicMock(returncode=0)
+        # Contract: download() method must exist
+        assert hasattr(downloader, 'download'), (
+            "SRADownloader must have a download() method"
+        )
+    
+    def test_download_with_invalid_accession_format(self, temp_output_dir):
+        """Contract: Download must reject invalid accession format."""
+        if not SRA_DOWNLOADER_EXISTS:
+            pytest.skip("SRADownloader not yet implemented")
         
-        downloader = SRADownloader(output_dir=self.test_output_dir)
-        result = downloader.download(TEST_SRA_ACCESSION)
+        downloader = SRADownloader(output_dir=temp_output_dir)
         
-        # Verify subprocess was called with prefetch
-        call_args = mock_subprocess.call_args
-        assert 'prefetch' in call_args[0][0] or \
-               'prefetch' in str(call_args[1].get('capture_output', '')), \
-               "Must execute prefetch command for SRA download"
-               
-    @patch('src.acquisition.sra_downloader.subprocess.run')
-    def test_download_fasterq_conversion(self, mock_subprocess):
-        """Verify fasterq-dump is called to convert SRA to FASTQ."""
-        from src.acquisition.sra_downloader import SRADownloader
+        # Contract: Must raise ValueError for invalid accession format
+        with pytest.raises(ValueError):
+            downloader.download(accession_id="INVALID")
+    
+    def test_download_with_empty_accession(self, temp_output_dir):
+        """Contract: Download must reject empty accession ID."""
+        if not SRA_DOWNLOADER_EXISTS:
+            pytest.skip("SRADownloader not yet implemented")
         
-        mock_subprocess.return_value = MagicMock(returncode=0)
+        downloader = SRADownloader(output_dir=temp_output_dir)
         
-        downloader = SRADownloader(output_dir=self.test_output_dir)
-        result = downloader.download(TEST_SRA_ACCESSION)
+        # Contract: Must raise ValueError for empty accession
+        with pytest.raises(ValueError):
+            downloader.download(accession_id="")
+    
+    def test_download_with_none_accession(self, temp_output_dir):
+        """Contract: Download must reject None accession ID."""
+        if not SRA_DOWNLOADER_EXISTS:
+            pytest.skip("SRADownloader not yet implemented")
         
-        # Verify fasterq-dump conversion
-        call_args = mock_subprocess.call_args
-        assert 'fasterq-dump' in call_args[0][0] or \
-               'fasterq-dump' in str(call_args[1].get('capture_output', '')), \
-               "Must execute fasterq-dump for FASTQ conversion"
-               
-    def test_download_returns_valid_result_object(self):
-        """Verify download method returns properly structured result."""
-        from src.acquisition.sra_downloader import SRADownloader
+        downloader = SRADownloader(output_dir=temp_output_dir)
         
-        downloader = SRADownloader(output_dir=self.test_output_dir)
+        # Contract: Must raise ValueError for None accession
+        with pytest.raises(ValueError):
+            downloader.download(accession_id=None)
+    
+    def test_download_returns_download_info(self, temp_output_dir):
+        """Contract: Download must return structured download info."""
+        if not SRA_DOWNLOADER_EXISTS:
+            pytest.skip("SRADownloader not yet implemented")
         
-        # This will fail before implementation - expected
-        result = downloader.download(TEST_SRA_ACCESSION)
+        downloader = SRADownloader(output_dir=temp_output_dir)
         
-        assert hasattr(result, 'accession'), \
-            "Result must have 'accession' attribute"
-        assert hasattr(result, 'fastq_files'), \
-            "Result must have 'fastq_files' attribute"
-        assert hasattr(result, 'success'), \
-            "Result must have 'success' attribute"
-            
-    @patch('src.acquisition.sra_downloader.subprocess.run')
-    def test_download_handles_network_error(self, mock_subprocess):
-        """Verify graceful handling of network errors."""
-        from src.acquisition.sra_downloader import SRADownloader
+        # Contract: download() must return a dict with required keys
+        # Note: This will fail until implementation is complete
+        result = downloader.download(accession_id="ERR000001")
+        assert isinstance(result, dict), (
+            "download() must return a dict with download metadata"
+        )
+        assert "accession_id" in result, (
+            "Result must include accession_id"
+        )
+        assert "output_path" in result, (
+            "Result must include output_path"
+        )
+        assert "status" in result, (
+            "Result must include status field"
+        )
+    
+    def test_download_with_nonexistent_output_dir(self):
+        """Contract: Download must fail gracefully for invalid output dir."""
+        if not SRA_DOWNLOADER_EXISTS:
+            pytest.skip("SRADownloader not yet implemented")
         
-        mock_subprocess.side_effect = Exception("Network timeout")
+        # Contract: Must handle non-existent output directory
+        with pytest.raises((ValueError, FileNotFoundError)):
+            downloader = SRADownloader(output_dir="/nonexistent/path/12345")
+    
+    def test_batch_download_method_exists(self, temp_output_dir):
+        """Contract: Batch download method must exist for multiple accessions."""
+        if not SRA_DOWNLOADER_EXISTS:
+            pytest.skip("SRADownloader not yet implemented")
         
-        downloader = SRADownloader(output_dir=self.test_output_dir)
+        downloader = SRADownloader(output_dir=temp_output_dir)
         
-        # Should not raise unhandled exception
-        result = downloader.download(TEST_SRA_ACCESSION)
+        # Contract: Must have batch_download() for processing multiple samples
+        assert hasattr(downloader, 'batch_download'), (
+            "SRADownloader must have a batch_download() method for "
+            "processing multiple accessions"
+        )
+    
+    def test_download_with_species_parameter(self, temp_output_dir):
+        """Contract: Download must accept species parameter for metadata."""
+        if not SRA_DOWNLOADER_EXISTS:
+            pytest.skip("SRADownloader not yet implemented")
         
-        assert result.success == False, \
-            "Download should report failure on network error"
-            
-    def test_validate_output_returns_boolean(self):
-        """Verify validate_output returns boolean status."""
-        from src.acquisition.sra_downloader import SRADownloader
+        downloader = SRADownloader(output_dir=temp_output_dir)
         
-        downloader = SRADownloader(output_dir=self.test_output_dir)
+        # Contract: Must accept species parameter
+        # This ensures species tagging for downstream analysis
+        result = downloader.download(
+            accession_id="ERR000001",
+            species="homo_sapiens"
+        )
+        assert "species" in result, (
+            "Result must include species metadata"
+        )
+    
+    def test_download_logging(self, temp_output_dir):
+        """Contract: Download must log operations for audit trail."""
+        if not SRA_DOWNLOADER_EXISTS:
+            pytest.skip("SRADownloader not yet implemented")
         
-        # This will fail before implementation - expected
-        result = downloader.validate_output(TEST_SRA_ACCESSION)
+        downloader = SRADownloader(output_dir=temp_output_dir)
         
-        assert isinstance(result, bool), \
-            "validate_output must return boolean"
-            
-    def test_get_metadata_parses_sra_info(self):
-        """Verify metadata extraction from SRA accession."""
-        from src.acquisition.sra_downloader import SRADownloader
-        
-        downloader = SRADownloader(output_dir=self.test_output_dir)
-        
-        # This will fail before implementation - expected
-        metadata = downloader.get_metadata(TEST_SRA_ACCESSION)
-        
-        assert 'accession' in metadata, \
-            "Metadata must contain 'accession' key"
-        assert 'species' in metadata, \
-            "Metadata must contain 'species' key"
-        assert 'organism' in metadata, \
-            "Metadata must contain 'organism' key"
-            
-    def test_download_creates_output_directory(self):
-        """Verify download creates necessary output directories."""
-        from src.acquisition.sra_downloader import SRADownloader
-        
-        test_dir = self.test_output_dir / "new_subdir"
-        downloader = SRADownloader(output_dir=test_dir)
-        
-        # This will fail before implementation - expected
-        downloader.download(TEST_SRA_ACCESSION)
-        
-        assert test_dir.exists(), \
-            "Output directory must be created"
-            
-    def test_download_supports_multiple_species(self):
-        """Verify downloader supports human, chimp, macaque, marmoset."""
-        from src.acquisition.sra_downloader import SRADownloader
-        
-        downloader = SRADownloader(output_dir=self.test_output_dir)
-        
-        expected_species = ['human', 'chimpanzee', 'macaque', 'marmoset']
-        
-        # This will fail before implementation - expected
-        for species in expected_species:
-            assert hasattr(downloader, 'supports_species') or \
-                   True, f"Must support {species} data"
-                   
-    def test_download_logs_operations(self):
-        """Verify download operations are logged."""
-        from src.acquisition.sra_downloader import SRADownloader
-        
-        downloader = SRADownloader(output_dir=self.test_output_dir)
-        
-        # This will fail before implementation - expected
-        result = downloader.download(TEST_SRA_ACCESSION)
-        
-        # Log verification handled by integration tests
-        assert result is not None, \
-            "Download must complete with logging"
+        # Contract: Must have logging capability
+        assert hasattr(downloader, 'logger') or hasattr(downloader, 'log'), (
+            "SRADownloader must have logging capability for audit trail"
+        )

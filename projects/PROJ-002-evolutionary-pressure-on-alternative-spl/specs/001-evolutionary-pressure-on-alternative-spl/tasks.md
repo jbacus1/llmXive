@@ -54,20 +54,20 @@
 > **NOTE: Write these tests FIRST, ensure they FAIL before implementation**
 
 - [X] T011 [P] [US1] Contract test for SRA downloader in `code/tests/contract/test_sra_downloader.py`
-- [ ] T012 [P] [US1] Contract test for STAR alignment in `code/tests/contract/test_star_alignment.py`
-- [ ] T013 [P] [US1] Integration test for data acquisition pipeline in `code/tests/integration/test_acquisition_pipeline.py`
-- [ ] T014 [P] [US1] Unit test for metadata parser in `code/tests/unit/test_metadata_parser.py`
+- [X] T012 [P] [US1] Contract test for STAR alignment in `code/tests/contract/test_star_alignment.py`
+- [X] T013 [P] [US1] Integration test for data acquisition pipeline in `code/tests/integration/test_acquisition_pipeline.py`
+- [X] T014 [P] [US1] Unit test for metadata parser in `code/tests/unit/test_metadata_parser.py`
 
 ### Implementation for User Story 1
 
-- [ ] T015 [P] [US1] Create RNA-seq sample entity model in `code/src/models/rna_seq_sample.py`
-- [ ] T016 [P] [US1] Create sample metadata schema in `code/data/metadata.yaml`
-- [ ] T017 [US1] Implement SRA downloader in `code/src/acquisition/sra_downloader.py`
-- [ ] T018 [US1] Implement metadata parser in `code/src/acquisition/metadata_parser.py`
-- [ ] T019 [US1] Implement STAR alignment runner in `code/src/alignment/star_runner.py`
-- [ ] T020 [US1] Implement quality control checks in `code/src/alignment/quality_control.py`
-- [ ] T021 [US1] Add validation for mapping rate thresholds (≥70% per SC-001)
-- [ ] T022 [US1] Add logging for acquisition and alignment operations
+- [X] T015 [P] [US1] Create RNA-seq sample entity model in `code/src/models/rna_seq_sample.py`
+- [X] T016 [P] [US1] Create sample metadata schema in `code/data/metadata.yaml`
+- [X] T017 [US1] Implement SRA downloader in `code/src/acquisition/sra_downloader.py`
+- [X] T018 [US1] Implement metadata parser in `code/src/acquisition/metadata_parser.py`
+- [X] T019 [US1] Implement STAR alignment runner in `code/src/alignment/star_runner.py`
+- [X] T020 [US1] Implement quality control checks in `code/src/alignment/quality_control.py`
+- [X] T021 [US1] Add validation for mapping rate thresholds (≥70% per SC-001)
+- [X] T022 [US1] Add logging for acquisition and alignment operations
 
 **Checkpoint**: At this point, User Story 1 should be fully functional and testable independently
 
@@ -81,17 +81,17 @@
 
 ### Tests for User Story 2
 
-- [ ] T023 [P] [US2] Contract test for PSI calculator in `code/tests/contract/test_psi_calculator.py`
-- [ ] T024 [P] [US2] Contract test for differential splicing in `code/tests/contract/test_differential_splicing.py`
-- [ ] T025 [P] [US2] Integration test for quantification pipeline in `code/tests/integration/test_quantification_pipeline.py`
-- [ ] T026 [P] [US2] Unit test for fixed effect model in `code/tests/unit/test_fixed_effect_model.py`
+- [X] T023 [P] [US2] Contract test for PSI calculator in `code/tests/contract/test_psi_calculator.py`
+- [X] T024 [P] [US2] Contract test for differential splicing in `code/tests/contract/test_differential_splicing.py`
+- [X] T025 [P] [US2] Integration test for quantification pipeline in `code/tests/integration/test_quantification_pipeline.py`
+- [X] T026 [P] [US2] Unit test for fixed effect model in `code/tests/unit/test_fixed_effect_model.py`
 
 ### Implementation for User Story 2
 
-- [ ] T027 [P] [US2] Create splice junction entity model in `code/src/models/splice_junction.py`
-- [ ] T028 [P] [US2] Create differential splicing event model in `code/src/models/differential_splicing_event.py`
-- [ ] T029 [US2] Implement rMATS wrapper in `code/src/quantification/rmats_wrapper.py`
-- [ ] T030 [US2] Implement PSI calculator in `code/src/quantification/psi_calculator.py`
+- [X] T027 [P] [US2] Create splice junction entity model in `code/src/models/splice_junction.py`
+- [X] T028 [P] [US2] Create differential splicing event model in `code/src/models/differential_splicing_event.py`
+- [X] T029 [US2] Implement rMATS wrapper in `code/src/quantification/rmats_wrapper.py`
+- [X] T030 [US2] Implement PSI calculator in `code/src/quantification/psi_calculator.py`
 - [ ] T031 [US2] Implement differential splicing analysis in `code/src/analysis/differential_splicing.py`
 - [ ] T032 [US2] Apply minimum ΔPSI threshold (≥0.1) per spec requirements
 - [ ] T033 [US2] Apply minimum read coverage threshold (≥20 reads per junction)
