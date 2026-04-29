@@ -77,7 +77,27 @@
       ],
       "contribution_count": 3,
       "kind": "llm",
+      "name": "research_reviewer_data_quality_research"
+    },
+    {
+      "areas": [
+        "biology",
+        "psychology",
+        "statistics"
+      ],
+      "contribution_count": 3,
+      "kind": "llm",
       "name": "research_reviewer_implementation_correctness"
+    },
+    {
+      "areas": [
+        "biology",
+        "psychology",
+        "statistics"
+      ],
+      "contribution_count": 3,
+      "kind": "llm",
+      "name": "research_reviewer_code_quality_research"
     },
     {
       "areas": [
@@ -111,26 +131,6 @@
     },
     {
       "areas": [
-        "biology",
-        "psychology",
-        "statistics"
-      ],
-      "contribution_count": 3,
-      "kind": "llm",
-      "name": "research_reviewer_code_quality_research"
-    },
-    {
-      "areas": [
-        "biology",
-        "psychology",
-        "statistics"
-      ],
-      "contribution_count": 3,
-      "kind": "llm",
-      "name": "research_reviewer_data_quality_research"
-    },
-    {
-      "areas": [
         "psychology",
         "statistics"
       ],
@@ -161,6 +161,46 @@
       ],
       "contribution_count": 1,
       "kind": "llm",
+      "name": "paper_reviewer_safety_ethics"
+    },
+    {
+      "areas": [
+        "biology"
+      ],
+      "contribution_count": 1,
+      "kind": "llm",
+      "name": "paper_reviewer_overreach"
+    },
+    {
+      "areas": [
+        "biology"
+      ],
+      "contribution_count": 1,
+      "kind": "llm",
+      "name": "paper_reviewer_logical_consistency"
+    },
+    {
+      "areas": [
+        "biology"
+      ],
+      "contribution_count": 1,
+      "kind": "llm",
+      "name": "paper_reviewer_code_quality_paper"
+    },
+    {
+      "areas": [
+        "biology"
+      ],
+      "contribution_count": 1,
+      "kind": "llm",
+      "name": "paper_reviewer"
+    },
+    {
+      "areas": [
+        "biology"
+      ],
+      "contribution_count": 1,
+      "kind": "llm",
       "name": "paper_reviewer_claim_accuracy"
     },
     {
@@ -177,31 +217,7 @@
       ],
       "contribution_count": 1,
       "kind": "llm",
-      "name": "paper_reviewer_overreach"
-    },
-    {
-      "areas": [
-        "biology"
-      ],
-      "contribution_count": 1,
-      "kind": "llm",
-      "name": "paper_reviewer_safety_ethics"
-    },
-    {
-      "areas": [
-        "biology"
-      ],
-      "contribution_count": 1,
-      "kind": "llm",
-      "name": "paper_reviewer_code_quality_paper"
-    },
-    {
-      "areas": [
-        "biology"
-      ],
-      "contribution_count": 1,
-      "kind": "llm",
-      "name": "paper_reviewer_logical_consistency"
+      "name": "paper_reviewer_scientific_evidence"
     },
     {
       "areas": [
@@ -210,22 +226,6 @@
       "contribution_count": 1,
       "kind": "llm",
       "name": "paper_reviewer_data_quality_paper"
-    },
-    {
-      "areas": [
-        "biology"
-      ],
-      "contribution_count": 1,
-      "kind": "llm",
-      "name": "paper_reviewer"
-    },
-    {
-      "areas": [
-        "biology"
-      ],
-      "contribution_count": 1,
-      "kind": "llm",
-      "name": "paper_reviewer_scientific_evidence"
     },
     {
       "areas": [
@@ -244,7 +244,7 @@
       "name": "google.gemma-3-27b-it"
     }
   ],
-  "generated_at": "2026-04-29T23:27:52.832117+00:00",
+  "generated_at": "2026-04-29T23:50:30.677378+00:00",
   "projects": [
     {
       "artifact_links": {
@@ -689,7 +689,7 @@
       "artifact_links": {
         "citations": "state/citations/PROJ-006-agriculture-optimization.yaml",
         "code": "projects/PROJ-006-agriculture-optimization/code",
-        "data": null,
+        "data": "projects/PROJ-006-agriculture-optimization/data",
         "idea": "projects/PROJ-006-agriculture-optimization/idea/agriculture-optimization.md",
         "paper_figures": null,
         "paper_pdf": null,
@@ -811,8 +811,8 @@
     {
       "artifact_links": {
         "citations": "state/citations/PROJ-007-energy-systems.yaml",
-        "code": null,
-        "data": null,
+        "code": "projects/PROJ-007-energy-systems/code",
+        "data": "projects/PROJ-007-energy-systems/data",
         "idea": "projects/PROJ-007-energy-systems/idea/energy-systems.md",
         "paper_figures": null,
         "paper_pdf": null,
@@ -935,7 +935,7 @@
       "artifact_links": {
         "citations": "state/citations/PROJ-008-psychology-research.yaml",
         "code": "projects/PROJ-008-psychology-research/code",
-        "data": null,
+        "data": "projects/PROJ-008-psychology-research/data",
         "idea": "projects/PROJ-008-psychology-research/idea/psychology-research.md",
         "paper_figures": null,
         "paper_pdf": null,

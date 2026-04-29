@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "lastScanned": 1777388432436,
+  "lastScanned": 1777506544543,
   "projectRoot": "/Users/jmanning/llmXive",
   "techStack": {
     "languages": [
@@ -11,16 +11,30 @@
         "markers": [
           "package.json"
         ]
+      },
+      {
+        "name": "Python",
+        "version": null,
+        "confidence": "high",
+        "markers": [
+          "pyproject.toml"
+        ]
       }
     ],
-    "frameworks": [],
+    "frameworks": [
+      {
+        "name": "pytest",
+        "version": null,
+        "category": "testing"
+      }
+    ],
     "packageManager": "npm",
     "runtime": null
   },
   "build": {
     "buildCommand": null,
-    "testCommand": null,
-    "lintCommand": null,
+    "testCommand": "pytest",
+    "lintCommand": "ruff check",
     "devCommand": null,
     "scripts": {}
   },
@@ -34,6 +48,7 @@
     "isMonorepo": false,
     "workspaces": [],
     "mainDirectories": [
+      "docs",
       "scripts",
       "src",
       "tests"
@@ -45,20 +60,36 @@
   },
   "customNotes": [],
   "directoryMap": {
-    "idea": {
-      "path": "idea",
+    "agents": {
+      "path": "agents",
       "purpose": null,
       "fileCount": 1,
-      "lastAccessed": 1777388432410,
+      "lastAccessed": 1777506544448,
       "keyFiles": [
-        "initial-idea.md"
+        "registry.yaml"
       ]
+    },
+    "docs": {
+      "path": "docs",
+      "purpose": "Documentation",
+      "fileCount": 2,
+      "lastAccessed": 1777506544463,
+      "keyFiles": [
+        "index.html"
+      ]
+    },
+    "infra": {
+      "path": "infra",
+      "purpose": null,
+      "fileCount": 0,
+      "lastAccessed": 1777506544471,
+      "keyFiles": []
     },
     "notes": {
       "path": "notes",
       "purpose": null,
       "fileCount": 10,
-      "lastAccessed": 1777388432420,
+      "lastAccessed": 1777506544473,
       "keyFiles": [
         "CONTEXT_COMPRESSION_REMINDER.md",
         "CRITICAL_FIXES_PLAN_2025-07-09.md",
@@ -71,14 +102,14 @@
       "path": "projects",
       "purpose": null,
       "fileCount": 1,
-      "lastAccessed": 1777388432420,
+      "lastAccessed": 1777506544474,
       "keyFiles": []
     },
     "prompts": {
       "path": "prompts",
       "purpose": null,
       "fileCount": 16,
-      "lastAccessed": 1777388432421,
+      "lastAccessed": 1777506544475,
       "keyFiles": [
         "README.md",
         "code_generation.md",
@@ -90,28 +121,44 @@
     "scripts": {
       "path": "scripts",
       "purpose": "Build/utility scripts",
-      "fileCount": 16,
-      "lastAccessed": 1777388432421,
+      "fileCount": 20,
+      "lastAccessed": 1777506544475,
       "keyFiles": [
+        "backfill_projects.py",
+        "backfill_submitters.py",
+        "cleanup_projects.py",
         "code_execution_manager.py",
-        "configurable_pipeline_orchestrator.py",
-        "generate-automated-reviews.js",
-        "generate-review-summary.js",
-        "llmxive-cli.py"
+        "configurable_pipeline_orchestrator.py"
       ]
+    },
+    "specs": {
+      "path": "specs",
+      "purpose": null,
+      "fileCount": 0,
+      "lastAccessed": 1777506544476,
+      "keyFiles": []
     },
     "src": {
       "path": "src",
       "purpose": "Source code",
       "fileCount": 1,
-      "lastAccessed": 1777388432421,
+      "lastAccessed": 1777506544477,
       "keyFiles": []
+    },
+    "state": {
+      "path": "state",
+      "purpose": null,
+      "fileCount": 1,
+      "lastAccessed": 1777506544478,
+      "keyFiles": [
+        "migration_metrics.yaml"
+      ]
     },
     "system_prompts": {
       "path": "system_prompts",
       "purpose": null,
       "fileCount": 1,
-      "lastAccessed": 1777388432421,
+      "lastAccessed": 1777506544479,
       "keyFiles": [
         "pipeline_orchestrator.md"
       ]
@@ -119,351 +166,44 @@
     "tests": {
       "path": "tests",
       "purpose": "Test files",
-      "fileCount": 12,
-      "lastAccessed": 1777388432421,
+      "fileCount": 15,
+      "lastAccessed": 1777506544481,
       "keyFiles": [
+        "__init__.py",
+        "conftest.py",
         "requirements.txt",
         "run_tests.py",
-        "setup.js",
-        "test_code_execution_manager.py",
-        "test_package_installation.py"
+        "setup.js"
       ]
     },
     "web": {
       "path": "web",
       "purpose": null,
-      "fileCount": 9,
-      "lastAccessed": 1777388432421,
+      "fileCount": 2,
+      "lastAccessed": 1777506544481,
       "keyFiles": [
-        "AUTHENTICATION.md",
-        "COMPREHENSIVE_TEST_REPORT.md",
-        "README.md",
-        "REPOSITORY_ROLES.md",
-        "about.html"
+        "index.html"
       ]
     },
-    "web/assets": {
-      "path": "web/assets",
-      "purpose": "Static assets",
+    "docs/data": {
+      "path": "docs/data",
+      "purpose": "Data files",
       "fileCount": 1,
-      "lastAccessed": 1777388432422,
+      "lastAccessed": 1777506544482,
       "keyFiles": [
-        "favicon.svg"
+        "projects.json"
       ]
     },
-    "web/docs": {
-      "path": "web/docs",
-      "purpose": "Documentation",
-      "fileCount": 3,
-      "lastAccessed": 1777388432423,
+    "web/data": {
+      "path": "web/data",
+      "purpose": "Data files",
+      "fileCount": 1,
+      "lastAccessed": 1777506544488,
       "keyFiles": [
-        "technical_design_ctcf_myc_regulation.md",
-        "technical_design_literature_review_automation.md",
-        "technical_design_llm_code_generation.md"
+        "projects.json"
       ]
     }
   },
-  "hotPaths": [
-    {
-      "path": "agents/registry.yaml",
-      "accessCount": 29,
-      "lastAccessed": 1777463783447,
-      "type": "file"
-    },
-    {
-      "path": "specs/001-agentic-pipeline-refactor/tasks.md",
-      "accessCount": 20,
-      "lastAccessed": 1777416940093,
-      "type": "file"
-    },
-    {
-      "path": "specs/001-agentic-pipeline-refactor/spec.md",
-      "accessCount": 12,
-      "lastAccessed": 1777429401252,
-      "type": "file"
-    },
-    {
-      "path": "src/llmxive/agents/advancement.py",
-      "accessCount": 8,
-      "lastAccessed": 1777481170197,
-      "type": "file"
-    },
-    {
-      "path": "src/llmxive/agents/lifecycle.py",
-      "accessCount": 8,
-      "lastAccessed": 1777485128872,
-      "type": "file"
-    },
-    {
-      "path": "specs/001-agentic-pipeline-refactor/data-model.md",
-      "accessCount": 6,
-      "lastAccessed": 1777429371151,
-      "type": "file"
-    },
-    {
-      "path": "specs/001-agentic-pipeline-refactor/plan.md",
-      "accessCount": 5,
-      "lastAccessed": 1777429371259,
-      "type": "file"
-    },
-    {
-      "path": "src/llmxive/types.py",
-      "accessCount": 5,
-      "lastAccessed": 1777429853351,
-      "type": "file"
-    },
-    {
-      "path": "specs/001-agentic-pipeline-refactor/quickstart.md",
-      "accessCount": 4,
-      "lastAccessed": 1777401071103,
-      "type": "file"
-    },
-    {
-      "path": "specs/001-agentic-pipeline-refactor/checklists/requirements.md",
-      "accessCount": 4,
-      "lastAccessed": 1777401093918,
-      "type": "file"
-    },
-    {
-      "path": "src/llmxive/state/runlog.py",
-      "accessCount": 4,
-      "lastAccessed": 1777429859097,
-      "type": "file"
-    },
-    {
-      "path": "src/llmxive/pipeline/scheduler.py",
-      "accessCount": 4,
-      "lastAccessed": 1777476160400,
-      "type": "file"
-    },
-    {
-      "path": "src/llmxive/backends/huggingface.py",
-      "accessCount": 3,
-      "lastAccessed": 1777417953676,
-      "type": "file"
-    },
-    {
-      "path": "src/llmxive/speckit/slash_command.py",
-      "accessCount": 3,
-      "lastAccessed": 1777420206320,
-      "type": "file"
-    },
-    {
-      "path": "README.md",
-      "accessCount": 3,
-      "lastAccessed": 1777428619043,
-      "type": "file"
-    },
-    {
-      "path": "specs/001-agentic-pipeline-refactor/contracts/project-state.schema.yaml",
-      "accessCount": 3,
-      "lastAccessed": 1777429375361,
-      "type": "file"
-    },
-    {
-      "path": "specs/001-agentic-pipeline-refactor/contracts/review-record.schema.yaml",
-      "accessCount": 3,
-      "lastAccessed": 1777429375878,
-      "type": "file"
-    },
-    {
-      "path": "specs/001-agentic-pipeline-refactor/contracts/agent-registry.schema.yaml",
-      "accessCount": 3,
-      "lastAccessed": 1777429381153,
-      "type": "file"
-    },
-    {
-      "path": "specs/001-agentic-pipeline-refactor/contracts/web-data.schema.yaml",
-      "accessCount": 3,
-      "lastAccessed": 1777429863665,
-      "type": "file"
-    },
-    {
-      "path": "src/llmxive/backends/router.py",
-      "accessCount": 3,
-      "lastAccessed": 1777437281330,
-      "type": "file"
-    },
-    {
-      "path": ".specify/memory/constitution.md",
-      "accessCount": 2,
-      "lastAccessed": 1777389004249,
-      "type": "file"
-    },
-    {
-      "path": "CLAUDE.md",
-      "accessCount": 2,
-      "lastAccessed": 1777391524200,
-      "type": "file"
-    },
-    {
-      "path": "specs/001-agentic-pipeline-refactor/research.md",
-      "accessCount": 2,
-      "lastAccessed": 1777400939698,
-      "type": "file"
-    },
-    {
-      "path": "specs/001-agentic-pipeline-refactor/contracts/citation.schema.yaml",
-      "accessCount": 2,
-      "lastAccessed": 1777429376703,
-      "type": "file"
-    },
-    {
-      "path": "specs/001-agentic-pipeline-refactor/contracts/run-log-entry.schema.json",
-      "accessCount": 2,
-      "lastAccessed": 1777429377063,
-      "type": "file"
-    },
-    {
-      "path": "src/llmxive/state/project.py",
-      "accessCount": 2,
-      "lastAccessed": 1777429858594,
-      "type": "file"
-    },
-    {
-      "path": "src/llmxive/config.py",
-      "accessCount": 2,
-      "lastAccessed": 1777481184892,
-      "type": "file"
-    },
-    {
-      "path": ".specify/templates/constitution-template.md",
-      "accessCount": 1,
-      "lastAccessed": 1777388913682,
-      "type": "file"
-    },
-    {
-      "path": ".specify/templates/plan-template.md",
-      "accessCount": 1,
-      "lastAccessed": 1777388914024,
-      "type": "file"
-    },
-    {
-      "path": ".specify/templates/spec-template.md",
-      "accessCount": 1,
-      "lastAccessed": 1777388914383,
-      "type": "file"
-    },
-    {
-      "path": ".specify/templates/tasks-template.md",
-      "accessCount": 1,
-      "lastAccessed": 1777388914750,
-      "type": "file"
-    },
-    {
-      "path": ".specify/templates/checklist-template.md",
-      "accessCount": 1,
-      "lastAccessed": 1777388915251,
-      "type": "file"
-    },
-    {
-      "path": ".specify/feature.json",
-      "accessCount": 1,
-      "lastAccessed": 1777390350635,
-      "type": "file"
-    },
-    {
-      "path": "pyproject.toml",
-      "accessCount": 1,
-      "lastAccessed": 1777417150170,
-      "type": "file"
-    },
-    {
-      "path": "ruff.toml",
-      "accessCount": 1,
-      "lastAccessed": 1777417164823,
-      "type": "file"
-    },
-    {
-      "path": "mypy.ini",
-      "accessCount": 1,
-      "lastAccessed": 1777417167704,
-      "type": "file"
-    },
-    {
-      "path": "scripts/migrate_legacy_layout.py",
-      "accessCount": 1,
-      "lastAccessed": 1777417266208,
-      "type": "file"
-    },
-    {
-      "path": "agents/templates/research_project_constitution.md",
-      "accessCount": 1,
-      "lastAccessed": 1777417311964,
-      "type": "file"
-    },
-    {
-      "path": "agents/templates/paper_project_constitution.md",
-      "accessCount": 1,
-      "lastAccessed": 1777417329443,
-      "type": "file"
-    },
-    {
-      "path": "src/llmxive/contract_validate.py",
-      "accessCount": 1,
-      "lastAccessed": 1777417494363,
-      "type": "file"
-    },
-    {
-      "path": "src/llmxive/state/citations.py",
-      "accessCount": 1,
-      "lastAccessed": 1777417549429,
-      "type": "file"
-    },
-    {
-      "path": "src/llmxive/pipeline/lock.py",
-      "accessCount": 1,
-      "lastAccessed": 1777417558941,
-      "type": "file"
-    },
-    {
-      "path": "src/llmxive/state/reviews.py",
-      "accessCount": 1,
-      "lastAccessed": 1777417585161,
-      "type": "file"
-    },
-    {
-      "path": "src/llmxive/backends/base.py",
-      "accessCount": 1,
-      "lastAccessed": 1777417616106,
-      "type": "file"
-    },
-    {
-      "path": "src/llmxive/backends/dartmouth.py",
-      "accessCount": 1,
-      "lastAccessed": 1777417629809,
-      "type": "file"
-    },
-    {
-      "path": "src/llmxive/backends/local.py",
-      "accessCount": 1,
-      "lastAccessed": 1777417648256,
-      "type": "file"
-    },
-    {
-      "path": "src/llmxive/speckit/runner.py",
-      "accessCount": 1,
-      "lastAccessed": 1777417679720,
-      "type": "file"
-    },
-    {
-      "path": "src/llmxive/agents/base.py",
-      "accessCount": 1,
-      "lastAccessed": 1777417707635,
-      "type": "file"
-    },
-    {
-      "path": "src/llmxive/agents/registry.py",
-      "accessCount": 1,
-      "lastAccessed": 1777417713132,
-      "type": "file"
-    },
-    {
-      "path": "src/llmxive/agents/runner.py",
-      "accessCount": 1,
-      "lastAccessed": 1777417729946,
-      "type": "file"
-    }
-  ],
+  "hotPaths": [],
   "userDirectives": []
 }
