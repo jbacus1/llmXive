@@ -129,8 +129,13 @@ class PaperReviewerAgent(Agent):
             or "(no prior paper reviews)"
         )
 
+        # Use the registry entry's prompt_path so specialist reviewers
+        # (paper_reviewer_writing_quality, _claim_accuracy, etc.) load
+        # their own focused prompts. The generic paper_reviewer agent
+        # falls back to agents/prompts/paper_reviewer.md.
+        prompt_path = self.entry.prompt_path or "agents/prompts/paper_reviewer.md"
         system = render_prompt(
-            "agents/prompts/paper_reviewer.md",
+            prompt_path,
             {"project_id": ctx.project_id, "reviewer_name": self.entry.name},
             repo_root=repo,
         )

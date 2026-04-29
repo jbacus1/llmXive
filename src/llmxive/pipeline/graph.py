@@ -251,19 +251,57 @@ def run_one_step(
     project_dir.mkdir(parents=True, exist_ok=True)
 
     if agent_name in _NON_SPECKIT_AGENTS:
-        agent = _NON_SPECKIT_AGENTS[agent_name](entry)
-        ctx = AgentContext(
-            project_id=project.id,
-            run_id=run_id,
-            task_id=str(uuid4()),
-            inputs=_collect_idea_inputs(project_dir, repo),
-            metadata={
-                "title": project.title,
-                "field": project.field,
-                "principal_agent_name": "flesh_out",
-            },
-        )
-        run_agent(agent, ctx, repo_root=repo)
+        # Special-case for review stages: dispatch to all specialist
+        # reviewers (each on a focused prompt) plus the generic
+        # reviewer. The Advancement-Evaluator gates on every
+        # specialist accepting (FR-028); failing to dispatch them
+        # means projects can never satisfy the gate.
+        agents_to_run: list[str] = []
+        if project.current_stage == Stage.RESEARCH_REVIEW:
+            agents_to_run = [
+                n for n in registry_loader.list_names(repo_root=repo)
+                if n == "research_reviewer" or n.startswith("research_reviewer_")
+            ]
+        elif project.current_stage == Stage.PAPER_REVIEW:
+            agents_to_run = [
+                n for n in registry_loader.list_names(repo_root=repo)
+                if n == "paper_reviewer" or n.startswith("paper_reviewer_")
+            ]
+        else:
+            agents_to_run = [agent_name]
+
+        for an in agents_to_run:
+            try:
+                aentry = registry_loader.get(an, repo_root=repo)
+            except KeyError:
+                continue
+            agent_cls = _NON_SPECKIT_AGENTS.get(an)
+            if agent_cls is None:
+                # Specialist reviewers reuse the generic class; route by stage.
+                if an.startswith("research_reviewer"):
+                    agent_cls = ResearchReviewerAgent
+                elif an.startswith("paper_reviewer"):
+                    agent_cls = PaperReviewerAgent
+                else:
+                    continue
+            agent = agent_cls(aentry)
+            ctx = AgentContext(
+                project_id=project.id,
+                run_id=run_id,
+                task_id=str(uuid4()),
+                inputs=_collect_idea_inputs(project_dir, repo),
+                metadata={
+                    "title": project.title,
+                    "field": project.field,
+                    "principal_agent_name": "flesh_out",
+                },
+            )
+            try:
+                run_agent(agent, ctx, repo_root=repo)
+            except Exception as exc:
+                # Specialist reviewer failures are non-fatal — log and
+                # move on so other specialists still vote.
+                print(f"[graph] reviewer {an!r} failed: {exc}")
     elif agent_name in _SPECKIT_AGENTS:
         # SlashCommandAgents take no constructor args; the registry
         # entry is consulted at run() time via the SlashCommandContext.
