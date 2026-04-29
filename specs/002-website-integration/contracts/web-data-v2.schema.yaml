@@ -93,6 +93,8 @@ properties:
         keywords:
           type: array
           items: { type: string }
+        description:
+          type: string
         speckit_research_dir: { type: ["string", "null"] }
         speckit_paper_dir:    { type: ["string", "null"] }
         artifact_links:

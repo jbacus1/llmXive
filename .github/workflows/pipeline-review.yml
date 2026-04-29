@@ -1,0 +1,36 @@
+name: Pipeline — Reviews (research + paper)
+on:
+  schedule:
+    - cron: '0 */16 * * *'   # every 16 hours
+  workflow_dispatch:
+permissions:
+  contents: write
+  issues: write
+concurrency:
+  group: pipeline-review
+  cancel-in-progress: false
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    env:
+      DARTMOUTH_CHAT_API_KEY: ${{ secrets.DARTMOUTH_CHAT_API_KEY }}
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+        with: { ref: main }
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.11", cache: pip }
+      - run: pip install -e ".[dev]"
+      - run: python -m llmxive preflight
+      - name: Run research reviewers (7 specialists)
+        run: python -m llmxive run --max-tasks 14 --stage research_complete
+      - name: Run paper reviewers (12 specialists)
+        run: python -m llmxive run --max-tasks 24 --stage paper_complete
+      - run: python -c "from llmxive.agents.status_reporter import regenerate_web_data; from pathlib import Path; regenerate_web_data(repo_root=Path('.'))"
+      - name: Commit + push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add state/ projects/ web/data/ || true
+          if git diff --cached --quiet; then echo "no changes"; else git commit -m "pipeline(review): 16h tick [skip ci]" && git push; fi

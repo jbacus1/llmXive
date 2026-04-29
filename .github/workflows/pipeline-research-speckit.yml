@@ -1,0 +1,34 @@
+name: Pipeline — Research Spec Kit (specify/clarify/plan/tasks)
+on:
+  schedule:
+    - cron: '30 */4 * * *'   # every 4 hours, offset 30min
+  workflow_dispatch:
+permissions:
+  contents: write
+  issues: write
+concurrency:
+  group: pipeline-research-speckit
+  cancel-in-progress: false
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    env:
+      DARTMOUTH_CHAT_API_KEY: ${{ secrets.DARTMOUTH_CHAT_API_KEY }}
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+        with: { ref: main }
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.11", cache: pip }
+      - run: pip install -e ".[dev]"
+      - run: python -m llmxive preflight
+      - name: Run Spec Kit pass (idea-selector → specifier → clarifier → planner → tasker)
+        run: python -m llmxive run --max-tasks 8
+      - run: python -c "from llmxive.agents.status_reporter import regenerate_web_data; from pathlib import Path; regenerate_web_data(repo_root=Path('.'))"
+      - name: Commit + push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add state/ projects/ web/data/ || true
+          if git diff --cached --quiet; then echo "no changes"; else git commit -m "pipeline(speckit): 4h tick [skip ci]" && git push; fi

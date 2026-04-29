@@ -10,6 +10,7 @@ Called by the Status-Reporter Agent after every successful pipeline cycle
 from __future__ import annotations
 
 import json
+import re
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
@@ -221,6 +222,57 @@ def _project_keywords(repo: Path, project_id: str) -> list[str]:
     return []
 
 
+def _project_submitter(repo: Path, project_id: str) -> str | None:
+    """Identify the submitter (GitHub username or model name) from idea front-matter."""
+    pdir = _project_dir(repo, project_id)
+    idea = next(iter(pdir.glob("idea/*.md")), None)
+    if idea is None or not idea.exists():
+        return None
+    text = idea.read_text(encoding="utf-8", errors="replace")
+    if not text.startswith("---"):
+        return None
+    try:
+        end = text.index("---", 3)
+        front = yaml.safe_load(text[3:end]) or {}
+    except (ValueError, yaml.YAMLError):
+        return None
+    sub = front.get("submitter") or front.get("submitted_by") or front.get("author")
+    if sub:
+        return str(sub).strip() or None
+    # Legacy bodies: "Model: Qwen/Qwen2.5-3B-Instruct"
+    m = re.search(r"\*Model:\s*([^\n*]+)", text)
+    if m:
+        return m.group(1).strip()
+    return None
+
+
+def _project_description(repo: Path, project_id: str, *, max_chars: int = 320) -> str:
+    """Card-level description excerpt extracted from the idea Markdown body."""
+    pdir = _project_dir(repo, project_id)
+    idea = next(iter(pdir.glob("idea/*.md")), None)
+    if idea is None or not idea.exists():
+        return ""
+    text = idea.read_text(encoding="utf-8", errors="replace")
+    if text.startswith("---"):
+        try:
+            text = text[text.index("---", 3) + 3:]
+        except ValueError:
+            pass
+    lines: list[str] = []
+    for line in text.splitlines():
+        s = line.strip()
+        if not s or s.startswith("#"):
+            continue
+        s = s.replace("**", "").replace("__", "")
+        lines.append(s)
+        if sum(len(x) + 1 for x in lines) >= max_chars:
+            break
+    blob = " ".join(lines)
+    if len(blob) > max_chars:
+        blob = blob[:max_chars].rsplit(" ", 1)[0] + "…"
+    return blob
+
+
 def _project_to_entry(repo: Path, project: Project) -> dict[str, Any]:
     research_total = float(sum(project.points_research.values()))
     paper_total = float(sum(project.points_paper.values()))
@@ -235,6 +287,8 @@ def _project_to_entry(repo: Path, project: Project) -> dict[str, Any]:
         "created_at": project.created_at.isoformat(),
         "updated_at": project.updated_at.isoformat(),
         "keywords": _project_keywords(repo, project.id),
+        "description": _project_description(repo, project.id),
+        "submitter": _project_submitter(repo, project.id),
         "speckit_research_dir": project.speckit_research_dir,
         "speckit_paper_dir": project.speckit_paper_dir,
         "artifact_links": _build_artifact_links(repo, project),

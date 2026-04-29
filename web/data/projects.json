@@ -1,6 +1,6 @@
 {
   "aggregates": {
-    "active_projects": 5,
+    "active_projects": 22,
     "ai_contributors": 0,
     "human_contributors": 0,
     "papers_posted": 0,
@@ -9,7 +9,7 @@
     "total_contributors": 0
   },
   "contributors": [],
-  "generated_at": "2026-04-29T02:48:09.321711+00:00",
+  "generated_at": "2026-04-29T03:58:13.149837+00:00",
   "projects": [
     {
       "artifact_links": {
@@ -37,6 +37,7 @@
       },
       "created_at": "2026-04-29T02:44:28.710016+00:00",
       "current_stage": "brainstormed",
+      "description": "CTCF binds tens of thousands of sites across the genome but engages only a fraction of them in any given cell type. We propose to apply mechanistic-interpretability tools developed for transformer models to a sequence-context-aware CTCF binding predictor, identifying which sequence motifs and neighboring chromatin\u2026",
       "field": "biology",
       "id": "PROJ-001-mechanistic-interpretability-of-ctcf-bin",
       "keywords": [
@@ -48,8 +49,9 @@
       "points_research_total": 0.0,
       "speckit_paper_dir": null,
       "speckit_research_dir": null,
-      "title": "Mechanistic interpretability of CTCF binding-site selection",
-      "updated_at": "2026-04-29T02:48:09.308240+00:00"
+      "submitter": "system:brainstorm-seed",
+      "title": "Mechanistic Interpretability of CTCF Binding-Site Selection",
+      "updated_at": "2026-04-29T03:54:32.993821+00:00"
     },
     {
       "artifact_links": {
@@ -77,6 +79,7 @@
       },
       "created_at": "2026-04-29T02:44:28.710016+00:00",
       "current_stage": "brainstormed",
+      "description": "Alternative splicing diversifies the proteome but its evolutionary trajectory in primates remains poorly characterized. We will compare splice-junction usage in matched RNA-seq from human, chimpanzee, macaque, and marmoset cortex to identify lineage-specific splicing changes and test whether they track with episodic\u2026",
       "field": "biology",
       "id": "PROJ-002-evolutionary-pressure-on-alternative-spl",
       "keywords": [
@@ -88,8 +91,9 @@
       "points_research_total": 0.0,
       "speckit_paper_dir": null,
       "speckit_research_dir": null,
-      "title": "Evolutionary pressure on alternative splicing in primates",
-      "updated_at": "2026-04-29T02:48:09.309494+00:00"
+      "submitter": "system:brainstorm-seed",
+      "title": "Evolutionary Pressure on Alternative Splicing in Primates",
+      "updated_at": "2026-04-29T03:54:32.993821+00:00"
     },
     {
       "artifact_links": {
@@ -117,6 +121,7 @@
       },
       "created_at": "2026-04-29T02:44:28.710016+00:00",
       "current_stage": "brainstormed",
+      "description": "T-cell exhaustion in chronic infection and tumors follows multiple mutually-exclusive trajectories in single-cell RNA-seq atlases, but the order of regulatory events is unclear. We propose to apply scVelo + a Markov-chain pseudotime aligner to public PD-1+ T-cell datasets to recover the canonical exhaustion trajectory\u2026",
       "field": "biology",
       "id": "PROJ-003-single-cell-trajectories-of-t-cell-exhau",
       "keywords": [
@@ -128,8 +133,9 @@
       "points_research_total": 0.0,
       "speckit_paper_dir": null,
       "speckit_research_dir": null,
-      "title": "Single-cell trajectories of T-cell exhaustion",
-      "updated_at": "2026-04-29T02:48:09.310707+00:00"
+      "submitter": "system:brainstorm-seed",
+      "title": "Single-Cell Trajectories of T-Cell Exhaustion",
+      "updated_at": "2026-04-29T03:54:32.993821+00:00"
     },
     {
       "artifact_links": {
@@ -157,6 +163,7 @@
       },
       "created_at": "2026-04-29T02:44:28.710016+00:00",
       "current_stage": "brainstormed",
+      "description": "The photo-Fries rearrangement of aryl esters proceeds through a singlet-radical-pair intermediate; rate constants and product distributions vary dramatically with solvent polarity. We will run a controlled solvent series (cyclohexane \u2192 methanol) with transient-absorption spectroscopy to extract the radical-pair\u2026",
       "field": "chemistry",
       "id": "PROJ-004-solvent-effects-on-photo-fries-rearrange",
       "keywords": [
@@ -168,8 +175,9 @@
       "points_research_total": 0.0,
       "speckit_paper_dir": null,
       "speckit_research_dir": null,
-      "title": "Solvent effects on photo-Fries rearrangement kinetics",
-      "updated_at": "2026-04-29T02:48:09.311859+00:00"
+      "submitter": "system:brainstorm-seed",
+      "title": "Solvent Effects on Photo-Fries Rearrangement Kinetics",
+      "updated_at": "2026-04-29T03:54:32.993821+00:00"
     },
     {
       "artifact_links": {
@@ -197,6 +205,7 @@
       },
       "created_at": "2026-04-29T02:44:28.710016+00:00",
       "current_stage": "brainstormed",
+      "description": "Density-functional calculations on transition-metal catalytic cycles are accurate but cost-prohibitive at scale. We propose to train a graph-neural-network potential on a benchmark set of (Pd, Ni, Cu) elementary steps and evaluate whether the learned potential reproduces DFT free-energy barriers to within 2 kcal/mol\u2026",
       "field": "chemistry",
       "id": "PROJ-005-machine-learned-potentials-for-transitio",
       "keywords": [
@@ -208,8 +217,723 @@
       "points_research_total": 0.0,
       "speckit_paper_dir": null,
       "speckit_research_dir": null,
-      "title": "Machine-learned potentials for transition-metal catalysis",
-      "updated_at": "2026-04-29T02:48:09.313332+00:00"
+      "submitter": "system:brainstorm-seed",
+      "title": "Machine-Learned Potentials for Transition-Metal Catalysis",
+      "updated_at": "2026-04-29T03:54:32.993821+00:00"
+    },
+    {
+      "artifact_links": {
+        "citations": null,
+        "code": "projects/PROJ-006-agriculture-optimization/code",
+        "data": "projects/PROJ-006-agriculture-optimization/data",
+        "idea": "projects/PROJ-006-agriculture-optimization/idea/agriculture-optimization.md",
+        "paper_figures": null,
+        "paper_pdf": null,
+        "paper_plan": null,
+        "paper_source": null,
+        "paper_spec": null,
+        "paper_tasks": null,
+        "plan": null,
+        "reviews_paper": null,
+        "reviews_research": null,
+        "spec": null,
+        "tasks": null
+      },
+      "citation_summary": {
+        "mismatch": 0,
+        "pending": 0,
+        "unreachable": 0,
+        "verified": 0
+      },
+      "created_at": "2026-04-29T03:39:25.118444+00:00",
+      "current_stage": "specified",
+      "description": "Project ID: agriculture-20250704-001 Date: 2025-07-04 Author: LLM (Automated) Issue: #27 Technical Design Document for \"The Use of Climate-Smart Agricultural Practices in Rural Areas to Improve Food Security and Livelihoods\" Abstract",
+      "field": "agriculture",
+      "id": "PROJ-006-agriculture-optimization",
+      "keywords": [
+        "general"
+      ],
+      "last_run_log": [],
+      "phase_group": "research_speckit",
+      "points_paper_total": 0.0,
+      "points_research_total": 0.0,
+      "speckit_paper_dir": null,
+      "speckit_research_dir": "projects/proj-tmp-003-agriculture-optimization/specs/001-agriculture-optimization",
+      "submitter": "legacy:llmxive-automation",
+      "title": "Climate-Smart Agricultural Practices in Rural Areas to Improve Food Security",
+      "updated_at": "2026-04-29T03:54:32.993821+00:00"
+    },
+    {
+      "artifact_links": {
+        "citations": null,
+        "code": "projects/PROJ-007-energy-systems/code",
+        "data": "projects/PROJ-007-energy-systems/data",
+        "idea": "projects/PROJ-007-energy-systems/idea/energy-systems.md",
+        "paper_figures": null,
+        "paper_pdf": null,
+        "paper_plan": null,
+        "paper_source": null,
+        "paper_spec": null,
+        "paper_tasks": null,
+        "plan": null,
+        "reviews_paper": null,
+        "reviews_research": null,
+        "spec": null,
+        "tasks": null
+      },
+      "citation_summary": {
+        "mismatch": 0,
+        "pending": 0,
+        "unreachable": 0,
+        "verified": 0
+      },
+      "created_at": "2026-04-29T03:39:25.118444+00:00",
+      "current_stage": "specified",
+      "description": "Project ID: energy-20250704-001 Date: 2025-07-04 Author: LLM (Automated) Issue: #29 Title: Developing Novel Solutions to Address Energy Inequity in Low-Income Communities: A Technical Design Document Introduction This technical design document aims to present a comprehensive approach to address energy inequity in\u2026",
+      "field": "energy",
+      "id": "PROJ-007-energy-systems",
+      "keywords": [
+        "general"
+      ],
+      "last_run_log": [],
+      "phase_group": "research_speckit",
+      "points_paper_total": 0.0,
+      "points_research_total": 0.0,
+      "speckit_paper_dir": null,
+      "speckit_research_dir": "projects/proj-tmp-004-energy-systems/specs/001-energy-systems",
+      "submitter": "legacy:llmxive-automation",
+      "title": "Developing Novel Solutions to Address Energy Inequity in Low-Income Communities",
+      "updated_at": "2026-04-29T03:54:32.993821+00:00"
+    },
+    {
+      "artifact_links": {
+        "citations": null,
+        "code": "projects/PROJ-008-psychology-research/code",
+        "data": "projects/PROJ-008-psychology-research/data",
+        "idea": "projects/PROJ-008-psychology-research/idea/psychology-research.md",
+        "paper_figures": null,
+        "paper_pdf": null,
+        "paper_plan": null,
+        "paper_source": null,
+        "paper_spec": null,
+        "paper_tasks": null,
+        "plan": null,
+        "reviews_paper": null,
+        "reviews_research": null,
+        "spec": null,
+        "tasks": null
+      },
+      "citation_summary": {
+        "mismatch": 0,
+        "pending": 0,
+        "unreachable": 0,
+        "verified": 0
+      },
+      "created_at": "2026-04-29T03:39:25.118444+00:00",
+      "current_stage": "specified",
+      "description": "Project ID: psychology-20250704-001 Date: 2025-07-04 Author: LLM (Automated) Issue: #26 [Insert your name and affiliation] Title: The Role of Mindfulness in Improving Social Skills Among Children with Autism Spectrum Disorder (ASD)",
+      "field": "psychology",
+      "id": "PROJ-008-psychology-research",
+      "keywords": [
+        "general"
+      ],
+      "last_run_log": [],
+      "phase_group": "research_speckit",
+      "points_paper_total": 0.0,
+      "points_research_total": 0.0,
+      "speckit_paper_dir": null,
+      "speckit_research_dir": "projects/proj-tmp-006-psychology-research/specs/001-psychology-research",
+      "submitter": "legacy:llmxive-automation",
+      "title": "The Role of Mindfulness in Improving Social Skills Among Children with Autism",
+      "updated_at": "2026-04-29T03:54:32.993821+00:00"
+    },
+    {
+      "artifact_links": {
+        "citations": null,
+        "code": null,
+        "data": null,
+        "idea": "projects/PROJ-009-build-a-mesh-network-that-forms-the-larg/idea/build-a-mesh-network-that-forms-the-larg.md",
+        "paper_figures": null,
+        "paper_pdf": null,
+        "paper_plan": null,
+        "paper_source": null,
+        "paper_spec": null,
+        "paper_tasks": null,
+        "plan": null,
+        "reviews_paper": null,
+        "reviews_research": null,
+        "spec": null,
+        "tasks": null
+      },
+      "citation_summary": {
+        "mismatch": 0,
+        "pending": 0,
+        "unreachable": 0,
+        "verified": 0
+      },
+      "created_at": "2026-04-29T03:39:55.508035+00:00",
+      "current_stage": "brainstormed",
+      "description": "Field: computer science Can we build a mesh network, comprised of the computers owned by whoever opts in, that collectively forms the largest supercomputer on earth? The idea is to use idle time from other machines to boost productivity. Keywords: mesh computing, supercomputer, network --- *Submitted via llmXive\u2026",
+      "field": "computer science",
+      "id": "PROJ-009-build-a-mesh-network-that-forms-the-larg",
+      "keywords": [
+        "computer science"
+      ],
+      "last_run_log": [],
+      "phase_group": "idea",
+      "points_paper_total": 0.0,
+      "points_research_total": 0.0,
+      "speckit_paper_dir": null,
+      "speckit_research_dir": null,
+      "submitter": "legacy:llmxive-automation",
+      "title": "Mesh Network Supercomputer Using Pooled Idle Computing Resources",
+      "updated_at": "2026-04-29T03:54:32.993821+00:00"
+    },
+    {
+      "artifact_links": {
+        "citations": null,
+        "code": null,
+        "data": null,
+        "idea": "projects/PROJ-010-quantitative-analysis-of-gene-expression/idea/quantitative-analysis-of-gene-expression.md",
+        "paper_figures": null,
+        "paper_pdf": null,
+        "paper_plan": null,
+        "paper_source": null,
+        "paper_spec": null,
+        "paper_tasks": null,
+        "plan": null,
+        "reviews_paper": null,
+        "reviews_research": null,
+        "spec": null,
+        "tasks": null
+      },
+      "citation_summary": {
+        "mismatch": 0,
+        "pending": 0,
+        "unreachable": 0,
+        "verified": 0
+      },
+      "created_at": "2026-04-29T03:39:55.508035+00:00",
+      "current_stage": "brainstormed",
+      "description": "Field: biology Description: Certainly! Here's an expanded research idea in the field of biology: Research Idea: \"Quantitative Analysis of Gene Expression Dynamics during Human Brain Development across Multiple Environments\" This comprehensive project aims to investigate how gene expression patterns evolve throughout\u2026",
+      "field": "biology",
+      "id": "PROJ-010-quantitative-analysis-of-gene-expression",
+      "keywords": [
+        "biology"
+      ],
+      "last_run_log": [],
+      "phase_group": "idea",
+      "points_paper_total": 0.0,
+      "points_research_total": 0.0,
+      "speckit_paper_dir": null,
+      "speckit_research_dir": null,
+      "submitter": "legacy:llmxive-automation",
+      "title": "Quantitative Analysis of Gene Expression Dynamics during Human Brain Development",
+      "updated_at": "2026-04-29T03:54:32.993821+00:00"
+    },
+    {
+      "artifact_links": {
+        "citations": null,
+        "code": null,
+        "data": null,
+        "idea": "projects/PROJ-011-neural-mechanisms-underlying-adaptive-de/idea/neural-mechanisms-underlying-adaptive-de.md",
+        "paper_figures": null,
+        "paper_pdf": null,
+        "paper_plan": null,
+        "paper_source": null,
+        "paper_spec": null,
+        "paper_tasks": null,
+        "plan": null,
+        "reviews_paper": null,
+        "reviews_research": null,
+        "spec": null,
+        "tasks": null
+      },
+      "citation_summary": {
+        "mismatch": 0,
+        "pending": 0,
+        "unreachable": 0,
+        "verified": 0
+      },
+      "created_at": "2026-04-29T03:39:55.508035+00:00",
+      "current_stage": "brainstormed",
+      "description": "Field: psychology Description: Title: \"Neural Mechanisms Underlying Adaptive Decision-Making in Response to Social Stress\" Abstract Suggested ID: psychology-20250706-001 Keywords: \"neural, mechanisms, underlying, adaptive, decision-making ---",
+      "field": "neuroscience",
+      "id": "PROJ-011-neural-mechanisms-underlying-adaptive-de",
+      "keywords": [
+        "psychology"
+      ],
+      "last_run_log": [],
+      "phase_group": "idea",
+      "points_paper_total": 0.0,
+      "points_research_total": 0.0,
+      "speckit_paper_dir": null,
+      "speckit_research_dir": null,
+      "submitter": "legacy:llmxive-automation",
+      "title": "Neural Mechanisms Underlying Adaptive Decision-Making in Response to Social Feedback",
+      "updated_at": "2026-04-29T03:54:32.993821+00:00"
+    },
+    {
+      "artifact_links": {
+        "citations": null,
+        "code": null,
+        "data": null,
+        "idea": "projects/PROJ-012-investigating-submarine-hydrothermal-ven/idea/investigating-submarine-hydrothermal-ven.md",
+        "paper_figures": null,
+        "paper_pdf": null,
+        "paper_plan": null,
+        "paper_source": null,
+        "paper_spec": null,
+        "paper_tasks": null,
+        "plan": null,
+        "reviews_paper": null,
+        "reviews_research": null,
+        "spec": null,
+        "tasks": null
+      },
+      "citation_summary": {
+        "mismatch": 0,
+        "pending": 0,
+        "unreachable": 0,
+        "verified": 0
+      },
+      "created_at": "2026-04-29T03:39:55.508035+00:00",
+      "current_stage": "brainstormed",
+      "description": "Field: ocean science Description: Research Idea: Investigating Submarine Hydrothermal Vent Microbial Communities as Indicators of Ocean Acidification Suggested ID: ocean-science-20250706-001 Keywords: investigating, submarine, hydrothermal, microbial, communities --- *This idea was automatically generated by the\u2026",
+      "field": "ocean science",
+      "id": "PROJ-012-investigating-submarine-hydrothermal-ven",
+      "keywords": [
+        "ocean science"
+      ],
+      "last_run_log": [],
+      "phase_group": "idea",
+      "points_paper_total": 0.0,
+      "points_research_total": 0.0,
+      "speckit_paper_dir": null,
+      "speckit_research_dir": null,
+      "submitter": "Qwen/Qwen2.5-3B-Instruct",
+      "title": "Submarine Hydrothermal Vent Microbial Communities as Indicators of Ocean Acidification",
+      "updated_at": "2026-04-29T03:54:32.993821+00:00"
+    },
+    {
+      "artifact_links": {
+        "citations": null,
+        "code": null,
+        "data": null,
+        "idea": "projects/PROJ-013-developing-a-low-cost-solar-powered-wate/idea/developing-a-low-cost-solar-powered-wate.md",
+        "paper_figures": null,
+        "paper_pdf": null,
+        "paper_plan": null,
+        "paper_source": null,
+        "paper_spec": null,
+        "paper_tasks": null,
+        "plan": null,
+        "reviews_paper": null,
+        "reviews_research": null,
+        "spec": null,
+        "tasks": null
+      },
+      "citation_summary": {
+        "mismatch": 0,
+        "pending": 0,
+        "unreachable": 0,
+        "verified": 0
+      },
+      "created_at": "2026-04-29T03:39:55.508035+00:00",
+      "current_stage": "brainstormed",
+      "description": "Background: The use of renewable energy sources is essential in combating environmental degradation caused by non-renewable resources. One of the most significant environmental issues is water pollution resulting from unsanitary",
+      "field": "energy",
+      "id": "PROJ-013-developing-a-low-cost-solar-powered-wate",
+      "keywords": [
+        "materials science"
+      ],
+      "last_run_log": [],
+      "phase_group": "idea",
+      "points_paper_total": 0.0,
+      "points_research_total": 0.0,
+      "speckit_paper_dir": null,
+      "speckit_research_dir": null,
+      "submitter": "legacy:llmxive-automation",
+      "title": "Developing a Low-Cost Solar-Powered Water Purification System",
+      "updated_at": "2026-04-29T03:54:32.993821+00:00"
+    },
+    {
+      "artifact_links": {
+        "citations": null,
+        "code": null,
+        "data": null,
+        "idea": "projects/PROJ-014-robotic-artificial-intelligence-for-auto/idea/robotic-artificial-intelligence-for-auto.md",
+        "paper_figures": null,
+        "paper_pdf": null,
+        "paper_plan": null,
+        "paper_source": null,
+        "paper_spec": null,
+        "paper_tasks": null,
+        "plan": null,
+        "reviews_paper": null,
+        "reviews_research": null,
+        "spec": null,
+        "tasks": null
+      },
+      "citation_summary": {
+        "mismatch": 0,
+        "pending": 0,
+        "unreachable": 0,
+        "verified": 0
+      },
+      "created_at": "2026-04-29T03:39:55.508035+00:00",
+      "current_stage": "brainstormed",
+      "description": "Abstract: This research idea proposes the development of robotic artificial intelligence (RAI) algorithms to enable autonomous driving on public roads. RAI algorithms work by analyzing large amounts of data generated by sensors and came",
+      "field": "robotics",
+      "id": "PROJ-014-robotic-artificial-intelligence-for-auto",
+      "keywords": [
+        "robotics"
+      ],
+      "last_run_log": [],
+      "phase_group": "idea",
+      "points_paper_total": 0.0,
+      "points_research_total": 0.0,
+      "speckit_paper_dir": null,
+      "speckit_research_dir": null,
+      "submitter": "legacy:llmxive-automation",
+      "title": "Robotic Artificial Intelligence Algorithms for Autonomous Vehicle Navigation",
+      "updated_at": "2026-04-29T03:54:32.993821+00:00"
+    },
+    {
+      "artifact_links": {
+        "citations": null,
+        "code": null,
+        "data": null,
+        "idea": "projects/PROJ-015-improving-accessibility-and-usability-of/idea/improving-accessibility-and-usability-of.md",
+        "paper_figures": null,
+        "paper_pdf": null,
+        "paper_plan": null,
+        "paper_source": null,
+        "paper_spec": null,
+        "paper_tasks": null,
+        "plan": null,
+        "reviews_paper": null,
+        "reviews_research": null,
+        "spec": null,
+        "tasks": null
+      },
+      "citation_summary": {
+        "mismatch": 0,
+        "pending": 0,
+        "unreachable": 0,
+        "verified": 0
+      },
+      "created_at": "2026-04-29T03:39:55.508035+00:00",
+      "current_stage": "brainstormed",
+      "description": "Introduction: The complexity and interconnectedness of modern computing systems has made them difficult to understand and use for individuals with disabilities. As technology advances, it is essential to ensure that these syst",
+      "field": "computer science",
+      "id": "PROJ-015-improving-accessibility-and-usability-of",
+      "keywords": [
+        "computer science"
+      ],
+      "last_run_log": [],
+      "phase_group": "idea",
+      "points_paper_total": 0.0,
+      "points_research_total": 0.0,
+      "speckit_paper_dir": null,
+      "speckit_research_dir": null,
+      "submitter": "legacy:llmxive-automation",
+      "title": "Improving Accessibility and Usability of Complex Computer Systems for People with Disabilities",
+      "updated_at": "2026-04-29T03:54:32.993821+00:00"
+    },
+    {
+      "artifact_links": {
+        "citations": null,
+        "code": null,
+        "data": null,
+        "idea": "projects/PROJ-016-evaluating-the-effectiveness-of-communit/idea/evaluating-the-effectiveness-of-communit.md",
+        "paper_figures": null,
+        "paper_pdf": null,
+        "paper_plan": null,
+        "paper_source": null,
+        "paper_spec": null,
+        "paper_tasks": null,
+        "plan": null,
+        "reviews_paper": null,
+        "reviews_research": null,
+        "spec": null,
+        "tasks": null
+      },
+      "citation_summary": {
+        "mismatch": 0,
+        "pending": 0,
+        "unreachable": 0,
+        "verified": 0
+      },
+      "created_at": "2026-04-29T03:39:55.508035+00:00",
+      "current_stage": "brainstormed",
+      "description": "Field: environmental science Description: Title: \"Evaluating the effectiveness of community-based natural resource management in promoting sustainable land use practices\" Abstract: Community-based natural resource management (CBNRM) programs aim to empower local communities to manage their natural resources\u2026",
+      "field": "environmental science",
+      "id": "PROJ-016-evaluating-the-effectiveness-of-communit",
+      "keywords": [
+        "environmental science"
+      ],
+      "last_run_log": [],
+      "phase_group": "idea",
+      "points_paper_total": 0.0,
+      "points_research_total": 0.0,
+      "speckit_paper_dir": null,
+      "speckit_research_dir": null,
+      "submitter": "legacy:llmxive-automation",
+      "title": "Evaluating the Effectiveness of Community-Based Natural Resource Management in Developing Countries",
+      "updated_at": "2026-04-29T03:54:32.993821+00:00"
+    },
+    {
+      "artifact_links": {
+        "citations": null,
+        "code": null,
+        "data": null,
+        "idea": "projects/PROJ-017-developing-a-sustainable-solar-powered-h/idea/developing-a-sustainable-solar-powered-h.md",
+        "paper_figures": null,
+        "paper_pdf": null,
+        "paper_plan": null,
+        "paper_source": null,
+        "paper_spec": null,
+        "paper_tasks": null,
+        "plan": null,
+        "reviews_paper": null,
+        "reviews_research": null,
+        "spec": null,
+        "tasks": null
+      },
+      "citation_summary": {
+        "mismatch": 0,
+        "pending": 0,
+        "unreachable": 0,
+        "verified": 0
+      },
+      "created_at": "2026-04-29T03:39:55.508035+00:00",
+      "current_stage": "brainstormed",
+      "description": "Introduction: Solar power has emerged as one of the most promising sources of clean energy due to its abundance, efficiency, and renewability. However, solar-powered hydrogen fuel production systems have not been well d",
+      "field": "energy",
+      "id": "PROJ-017-developing-a-sustainable-solar-powered-h",
+      "keywords": [
+        "chemistry"
+      ],
+      "last_run_log": [],
+      "phase_group": "idea",
+      "points_paper_total": 0.0,
+      "points_research_total": 0.0,
+      "speckit_paper_dir": null,
+      "speckit_research_dir": null,
+      "submitter": "legacy:llmxive-automation",
+      "title": "Developing a Sustainable Solar-Powered Hydrogen Fuel Production System",
+      "updated_at": "2026-04-29T03:54:32.993821+00:00"
+    },
+    {
+      "artifact_links": {
+        "citations": null,
+        "code": null,
+        "data": null,
+        "idea": "projects/PROJ-018-adoption-of-sustainable-agricultural-pra/idea/adoption-of-sustainable-agricultural-pra.md",
+        "paper_figures": null,
+        "paper_pdf": null,
+        "paper_plan": null,
+        "paper_source": null,
+        "paper_spec": null,
+        "paper_tasks": null,
+        "plan": null,
+        "reviews_paper": null,
+        "reviews_research": null,
+        "spec": null,
+        "tasks": null
+      },
+      "citation_summary": {
+        "mismatch": 0,
+        "pending": 0,
+        "unreachable": 0,
+        "verified": 0
+      },
+      "created_at": "2026-04-29T03:39:55.508035+00:00",
+      "current_stage": "brainstormed",
+      "description": "Field: agriculture Description: Title: Adoption of sustainable agricultural practices in low-income areas through community-led initiatives Background: Agriculture is one of the primary sources of employment in many low-income countries, but it is also responsible for significant environmental degradation, including\u2026",
+      "field": "agriculture",
+      "id": "PROJ-018-adoption-of-sustainable-agricultural-pra",
+      "keywords": [
+        "agriculture"
+      ],
+      "last_run_log": [],
+      "phase_group": "idea",
+      "points_paper_total": 0.0,
+      "points_research_total": 0.0,
+      "speckit_paper_dir": null,
+      "speckit_research_dir": null,
+      "submitter": "legacy:llmxive-automation",
+      "title": "Adoption of Sustainable Agricultural Practices in Low-Income Areas through Community Engagement",
+      "updated_at": "2026-04-29T03:54:32.993821+00:00"
+    },
+    {
+      "artifact_links": {
+        "citations": null,
+        "code": null,
+        "data": null,
+        "idea": "projects/PROJ-019-exploring-the-mechanisms-of-gene-regulat/idea/exploring-the-mechanisms-of-gene-regulat.md",
+        "paper_figures": null,
+        "paper_pdf": null,
+        "paper_plan": null,
+        "paper_source": null,
+        "paper_spec": null,
+        "paper_tasks": null,
+        "plan": null,
+        "reviews_paper": null,
+        "reviews_research": null,
+        "spec": null,
+        "tasks": null
+      },
+      "citation_summary": {
+        "mismatch": 0,
+        "pending": 0,
+        "unreachable": 0,
+        "verified": 0
+      },
+      "created_at": "2026-04-29T03:39:55.508035+00:00",
+      "current_stage": "brainstormed",
+      "description": "Abstract: This study aims to explore the mechanisms of gene regulation in different cell types by utilizing both experimental and computational methods. Specifically, we will investigate the roles of transcription factors (T",
+      "field": "biology",
+      "id": "PROJ-019-exploring-the-mechanisms-of-gene-regulat",
+      "keywords": [
+        "biology"
+      ],
+      "last_run_log": [],
+      "phase_group": "idea",
+      "points_paper_total": 0.0,
+      "points_research_total": 0.0,
+      "speckit_paper_dir": null,
+      "speckit_research_dir": null,
+      "submitter": "legacy:llmxive-automation",
+      "title": "Exploring the Mechanisms of Gene Regulation Across Different Cell Types",
+      "updated_at": "2026-04-29T03:54:32.993821+00:00"
+    },
+    {
+      "artifact_links": {
+        "citations": null,
+        "code": null,
+        "data": null,
+        "idea": "projects/PROJ-020-the-use-of-climate-smart-agricultural-pr/idea/the-use-of-climate-smart-agricultural-pr.md",
+        "paper_figures": null,
+        "paper_pdf": null,
+        "paper_plan": null,
+        "paper_source": null,
+        "paper_spec": null,
+        "paper_tasks": null,
+        "plan": null,
+        "reviews_paper": null,
+        "reviews_research": null,
+        "spec": null,
+        "tasks": null
+      },
+      "citation_summary": {
+        "mismatch": 0,
+        "pending": 0,
+        "unreachable": 0,
+        "verified": 0
+      },
+      "created_at": "2026-04-29T03:39:55.508035+00:00",
+      "current_stage": "brainstormed",
+      "description": "Field: agriculture Description: Title: The Use of Climate-Smart Agricultural Practices in Rural Areas to Improve Food Security and Livelihoods Background: The world's population is projected to reach 9.7 billion by 2050, placing immense pressure on food production systems to ensure sufficient caloric intake for all.\u2026",
+      "field": "agriculture",
+      "id": "PROJ-020-the-use-of-climate-smart-agricultural-pr",
+      "keywords": [
+        "agriculture"
+      ],
+      "last_run_log": [],
+      "phase_group": "idea",
+      "points_paper_total": 0.0,
+      "points_research_total": 0.0,
+      "speckit_paper_dir": null,
+      "speckit_research_dir": null,
+      "submitter": "legacy:llmxive-automation",
+      "title": "The Use of Climate-Smart Agricultural Practices in Rural Areas to Improve Food Security and Livelihoods",
+      "updated_at": "2026-04-29T03:54:32.993821+00:00"
+    },
+    {
+      "artifact_links": {
+        "citations": null,
+        "code": null,
+        "data": null,
+        "idea": "projects/PROJ-021-understanding-oceanic-phytoplankton-comm/idea/understanding-oceanic-phytoplankton-comm.md",
+        "paper_figures": null,
+        "paper_pdf": null,
+        "paper_plan": null,
+        "paper_source": null,
+        "paper_spec": null,
+        "paper_tasks": null,
+        "plan": null,
+        "reviews_paper": null,
+        "reviews_research": null,
+        "spec": null,
+        "tasks": null
+      },
+      "citation_summary": {
+        "mismatch": 0,
+        "pending": 0,
+        "unreachable": 0,
+        "verified": 0
+      },
+      "created_at": "2026-04-29T03:39:55.508035+00:00",
+      "current_stage": "brainstormed",
+      "description": "Field: ocean science Description: Title: Understanding Oceanic Phytoplankton Communities through Remote Sensing Technology Research Question: How do changes in oceanographic conditions such as temperature, salinity, and nutrient availability affect the distribution and abundance of phytoplankton in the ocean?\u2026",
+      "field": "ocean science",
+      "id": "PROJ-021-understanding-oceanic-phytoplankton-comm",
+      "keywords": [
+        "ocean science"
+      ],
+      "last_run_log": [],
+      "phase_group": "idea",
+      "points_paper_total": 0.0,
+      "points_research_total": 0.0,
+      "speckit_paper_dir": null,
+      "speckit_research_dir": null,
+      "submitter": "legacy:llmxive-automation",
+      "title": "Understanding Oceanic Phytoplankton Communities through Remote Sensing and Oceanographic Data",
+      "updated_at": "2026-04-29T03:54:32.993821+00:00"
+    },
+    {
+      "artifact_links": {
+        "citations": null,
+        "code": null,
+        "data": null,
+        "idea": "projects/PROJ-022-developing-new-methods-to-synthesize-hig/idea/developing-new-methods-to-synthesize-hig.md",
+        "paper_figures": null,
+        "paper_pdf": null,
+        "paper_plan": null,
+        "paper_source": null,
+        "paper_spec": null,
+        "paper_tasks": null,
+        "plan": null,
+        "reviews_paper": null,
+        "reviews_research": null,
+        "spec": null,
+        "tasks": null
+      },
+      "citation_summary": {
+        "mismatch": 0,
+        "pending": 0,
+        "unreachable": 0,
+        "verified": 0
+      },
+      "created_at": "2026-04-29T03:39:55.508035+00:00",
+      "current_stage": "brainstormed",
+      "description": "Field: chemistry Description: Title: \"Developing new methods to synthesize high-performance membranes using sustainable and cost-effective materials\" Background: Membrane technology is critical in various fields such as water treatment, energy production, and environmental remediation. However, conventional membrane\u2026",
+      "field": "chemistry",
+      "id": "PROJ-022-developing-new-methods-to-synthesize-hig",
+      "keywords": [
+        "chemistry"
+      ],
+      "last_run_log": [],
+      "phase_group": "idea",
+      "points_paper_total": 0.0,
+      "points_research_total": 0.0,
+      "speckit_paper_dir": null,
+      "speckit_research_dir": null,
+      "submitter": "legacy:llmxive-automation",
+      "title": "Developing New Methods to Synthesize High-Performance Membranes using Sustainable Materials",
+      "updated_at": "2026-04-29T03:54:32.993821+00:00"
     }
   ],
   "schema_version": "2.0.0"

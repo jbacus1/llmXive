@@ -701,3 +701,75 @@ a:hover { color: var(--accent-2); }
   letter-spacing: 0.04em; text-transform: uppercase;
 }
 .card .stage-pill.posted { background: oklch(0.92 0.12 150); color: oklch(0.4 0.15 150); }
+
+/* ── llmXive: kanban + dialog refinements ─────────────────────── */
+
+/* Make kanban columns scrollable instead of expanding to fit all cards */
+.col {
+  max-height: 480px;
+  overflow: hidden;
+}
+.col-body {
+  overflow-y: auto;
+  flex: 1;
+  scrollbar-width: thin;
+  padding-right: 6px;
+}
+.col-body::-webkit-scrollbar { width: 6px; }
+.col-body::-webkit-scrollbar-thumb {
+  background: var(--line); border-radius: 3px;
+}
+.col-body::-webkit-scrollbar-thumb:hover { background: var(--accent-soft); }
+
+/* Issue card descriptions in the kanban */
+.issue .issue-desc {
+  margin-top: 6px;
+  font-size: 11px;
+  color: var(--text-2);
+  line-height: 1.45;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Dialog: make sure the rightside artifact list always scrolls
+   independently and never overlaps anything in the PDF column. */
+.artifact-dialog .ad-body {
+  min-height: 480px;
+}
+.artifact-dialog .ad-list {
+  /* explicit max-height matched to body so the list scrolls within itself */
+  max-height: calc(100vh - 64px - 80px); /* 64 = head, 80 = top/bottom padding */
+  overflow-y: auto;
+}
+/* Section spacing to prevent visual collision between groups */
+.artifact-dialog .ad-list h4 {
+  margin: 18px 0 8px;
+  padding-top: 8px;
+  border-top: 1px solid var(--line-soft);
+}
+.artifact-dialog .ad-list h4:first-of-type {
+  margin-top: 0;
+  padding-top: 0;
+  border-top: 0;
+}
+/* Project state row should clearly belong to its own section */
+.artifact-dialog .ad-list .ad-row + .ad-row { margin-top: 6px; }
+
+/* Submitter pill on cards */
+.card .submitter-row {
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px dashed var(--line-soft);
+  font-size: 10px; color: var(--muted);
+  letter-spacing: 0.04em;
+  display: flex; align-items: center; gap: 6px;
+}
+.card .submitter-row .submitter {
+  display: inline-flex; align-items: center; gap: 4px;
+  background: var(--bg-2); padding: 2px 8px; border-radius: 999px;
+  font-family: var(--mono);
+  color: var(--text-2);
+}
+.card .submitter-row .submitter i { font-size: 9px; }

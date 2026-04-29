@@ -1,8 +1,9 @@
 ---
 field: biology
 keywords: [biology]
+submitter: system:brainstorm-seed
 ---
 
 # Evolutionary pressure on alternative splicing in primates
 
-_Seed brainstormed via `python -m llmxive brainstorm` on 2026-04-29T02:44:28.710016+00:00._
+Alternative splicing diversifies the proteome but its evolutionary trajectory in primates remains poorly characterized. We will compare splice-junction usage in matched RNA-seq from human, chimpanzee, macaque, and marmoset cortex to identify lineage-specific splicing changes and test whether they track with episodic positive selection on regulatory elements.

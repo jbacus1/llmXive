@@ -1,8 +1,9 @@
 ---
 field: chemistry
 keywords: [chemistry]
+submitter: system:brainstorm-seed
 ---
 
 # Solvent effects on photo-Fries rearrangement kinetics
 
-_Seed brainstormed via `python -m llmxive brainstorm` on 2026-04-29T02:44:28.710016+00:00._
+The photo-Fries rearrangement of aryl esters proceeds through a singlet-radical-pair intermediate; rate constants and product distributions vary dramatically with solvent polarity. We will run a controlled solvent series (cyclohexane → methanol) with transient-absorption spectroscopy to extract the radical-pair lifetime and correlate it with computed solvation free energies.

@@ -1,8 +1,9 @@
 ---
 field: chemistry
 keywords: [chemistry]
+submitter: system:brainstorm-seed
 ---
 
 # Machine-learned potentials for transition-metal catalysis
 
-_Seed brainstormed via `python -m llmxive brainstorm` on 2026-04-29T02:44:28.710016+00:00._
+Density-functional calculations on transition-metal catalytic cycles are accurate but cost-prohibitive at scale. We propose to train a graph-neural-network potential on a benchmark set of (Pd, Ni, Cu) elementary steps and evaluate whether the learned potential reproduces DFT free-energy barriers to within 2 kcal/mol on held-out reactions.

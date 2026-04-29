@@ -1,0 +1,17 @@
+artifact_hashes: {}
+assigned_agent: null
+created_at: '2026-04-29T03:39:55.508035Z'
+current_stage: brainstormed
+failed_stage: null
+field: biology
+human_escalation_reason: null
+id: PROJ-019-exploring-the-mechanisms-of-gene-regulat
+last_run_id: null
+last_run_status: null
+points_paper: {}
+points_research: {}
+revision_round: 0
+speckit_paper_dir: null
+speckit_research_dir: null
+title: Exploring the Mechanisms of Gene Regulation Across Different Cell Types
+updated_at: '2026-04-29T03:54:32.993821Z'

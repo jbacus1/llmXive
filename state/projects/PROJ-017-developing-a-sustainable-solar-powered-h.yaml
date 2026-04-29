@@ -1,0 +1,17 @@
+artifact_hashes: {}
+assigned_agent: null
+created_at: '2026-04-29T03:39:55.508035Z'
+current_stage: brainstormed
+failed_stage: null
+field: energy
+human_escalation_reason: null
+id: PROJ-017-developing-a-sustainable-solar-powered-h
+last_run_id: null
+last_run_status: null
+points_paper: {}
+points_research: {}
+revision_round: 0
+speckit_paper_dir: null
+speckit_research_dir: null
+title: Developing a Sustainable Solar-Powered Hydrogen Fuel Production System
+updated_at: '2026-04-29T03:54:32.993821Z'
