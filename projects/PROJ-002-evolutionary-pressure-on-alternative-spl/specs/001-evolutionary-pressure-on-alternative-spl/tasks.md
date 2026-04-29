@@ -118,7 +118,7 @@
 ### Implementation for User Story 3
 
 - [X] T040 [P] [US3] Create regulatory region entity model in `code/src/models/regulatory_region.py`
-- [ ] T041 [US3] Implement phyloP sequence extractor in `code/src/analysis/phylo_extractor.py`
+- [X] T041 [US3] Implement phyloP sequence extractor in `code/src/analysis/phylo_extractor.py`
 - [ ] T042 [US3] Implement flanking intronic sequence extraction (±500bp)
 - [ ] T043 [US3] Implement enrichment analysis in `code/src/analysis/enrichment_test.py`
 - [ ] T044 [US3] Apply Benjamini-Hochberg FDR correction for enrichment (p < 0.05 per SC-003)

@@ -1,0 +1,254 @@
+# Intervention Schema for Mindfulness and Social Skills Study
+# Children with ASD - Session Logs and Adherence Metrics
+# Version: 1.0.0
+# Last Updated: 2025-01-09
+
+$schema: http://json-schema.org/draft-07/schema#
+title: Intervention
+description: >-
+  Schema for tracking intervention sessions, adherence metrics, and
+  session-level data for the RCT on mindfulness and social skills
+  training in children with ASD.
+
+type: object
+required:
+  - intervention_id
+  - participant_id
+  - session_number
+  - session_date
+  - adherence_metrics
+additionalProperties: false
+
+properties:
+  intervention_id:
+    type: string
+    pattern: "^INT-[0-9]{6}$"
+    description: >-
+      Unique intervention record identifier. Format: INT-XXXXXX where
+      XXXXXX is a sequential number.
+
+  participant_id:
+    type: string
+    pattern: "^P-[0-9]{4}$"
+    description: >-
+      Reference to participant demographics (contracts/participant.schema.yaml).
+      Format: P-XXXX where XXXX is a sequential number.
+
+  session_number:
+    type: integer
+    minimum: 1
+    maximum: 12
+    description: >-
+      Session number within the intervention protocol. Based on T004
+      resolution, protocol allows 8-12 sessions depending on group
+      assignment and progress.
+
+  session_date:
+    type: string
+    format: date
+    description: >-
+      Date of the intervention session in ISO 8601 format (YYYY-MM-DD).
+
+  session_type:
+    type: string
+    enum:
+      - individual
+      - group
+      - parent_training
+      - booster
+    description: >-
+      Type of intervention session conducted.
+
+  duration_minutes:
+    type: integer
+    minimum: 15
+    maximum: 120
+    description: >-
+      Actual duration of the session in minutes. Typical sessions
+      range from 45-60 minutes for children, 30-45 for parent training.
+
+  scheduled_duration_minutes:
+    type: integer
+    minimum: 15
+    maximum: 120
+    description: >-
+      Planned duration of the session in minutes.
+
+  location:
+    type: string
+    enum:
+      - clinic
+      - school
+      - home
+      - telehealth
+    description: >-
+      Physical or virtual location where the session was conducted.
+
+  facilitator_id:
+    type: string
+    pattern: "^F-[0-9]{3}$"
+    description: >-
+      Identifier for the intervention facilitator/therapist.
+      Format: F-XXX where XXX is a sequential number.
+
+  activities_completed:
+    type: array
+    items:
+      type: object
+      required:
+        - activity_name
+        - completion_status
+      properties:
+        activity_name:
+          type: string
+          description: Name of the mindfulness or social skills activity.
+        completion_status:
+          type: string
+          enum:
+            - completed
+            - partially_completed
+            - not_started
+            - skipped
+        duration_minutes:
+          type: integer
+          minimum: 0
+          description: Time spent on this activity in minutes.
+        notes:
+          type: string
+          maxLength: 500
+          description: Optional notes about the activity execution.
+
+  adherence_metrics:
+    type: object
+    required:
+      - attendance_status
+      - protocol_adherence_percentage
+    description: >-
+      Core metrics for tracking intervention fidelity and participant
+      engagement.
+
+    properties:
+      attendance_status:
+        type: string
+        enum:
+          - present
+          - absent
+          - late_arrival
+          - early_departure
+          - partial
+        description: Participant attendance status for the session.
+
+      protocol_adherence_percentage:
+        type: number
+        minimum: 0
+        maximum: 100
+        description: >-
+          Percentage of planned protocol activities completed during
+          this session (0-100).
+
+      engagement_score:
+        type: number
+        minimum: 0
+        maximum: 5
+        description: >-
+          Facilitator-rated participant engagement on a 5-point scale
+          (0=none, 5=excellent).
+
+      homework_assigned:
+        type: boolean
+        description: Whether homework/practice was assigned.
+
+      homework_completed:
+        type: boolean
+        description: Whether assigned homework was completed before next session.
+
+      behavioral_incidents:
+        type: array
+        items:
+          type: object
+          required:
+            - incident_type
+            - severity
+          properties:
+            incident_type:
+              type: string
+              enum:
+                - withdrawal
+                - agitation
+                - non_compliance
+                - sensory_overload
+                - other
+            severity:
+              type: string
+              enum:
+                - minor
+                - moderate
+                - severe
+            duration_minutes:
+              type: integer
+              minimum: 0
+            intervention_taken:
+              type: string
+              maxLength: 200
+
+  session_notes:
+    type: string
+    maxLength: 2000
+    description: >-
+      General observations and notes from the session. HIPAA-compliant
+      language only - no identifiable information.
+
+  next_session_scheduled:
+    type: string
+    format: date
+    description: >-
+      Date of the next scheduled session, if applicable.
+
+  session_completed:
+    type: boolean
+    default: true
+    description: >-
+      Flag indicating whether the session was fully completed.
+
+  data_collected_by:
+    type: string
+    description: >-
+      Initials or ID of staff member who entered this session record.
+
+  data_entry_timestamp:
+    type: string
+    format: date-time
+    description: >-
+      ISO 8601 timestamp when the record was created or last updated.
+
+  data_quality_flags:
+    type: array
+    items:
+      type: string
+      enum:
+        - pending_review
+        - data_anomaly
+        - missing_required_field
+        - late_entry
+        - backdated
+    description: >-
+      Flags for data quality monitoring and IRB compliance tracking.
+
+# Schema validation rules
+if:
+  properties:
+    attendance_status:
+      const: present
+  required:
+    - attendance_status
+then:
+  required:
+    - activities_completed
+    - adherence_metrics
+
+# References to related schemas
+definitions:
+  participant_reference:
+    $ref: contracts/participant.schema.yaml#/properties/participant_id
+  assessment_reference:
+    $ref: contracts/assessment.schema.yaml#/properties/assessment_id

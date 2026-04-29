@@ -41,7 +41,7 @@
 - [X] T004 Finalize Intervention Protocol Details (resolve 8 vs 12 session conflict) in `docs/protocol.md`
 - [X] T005 [P] Create `contracts/participant.schema.yaml` defining participant demographics and consent data
 - [X] T006 [P] Create `contracts/assessment.schema.yaml` defining outcome measures and timepoints
-- [ ] T007 [P] Create `contracts/intervention.schema.yaml` defining session logs and adherence metrics
+- [X] T007 [P] Create `contracts/intervention.schema.yaml` defining session logs and adherence metrics
 - [ ] T008 Implement Pydantic models in `src/models/data_models.py` reflecting contracts
 - [ ] T009 Implement validation utilities in `src/lib/validators.py` for schema compliance checks
 - [ ] T010 Configure environment configuration management for IRB-protected paths in `.env.example`
