@@ -123,15 +123,36 @@ class ImplementerAgent(SlashCommandAgent):
         written: list[str] = []
 
         if verdict == "completed":
+            project_root = ctx.project_dir
             for art in doc.get("artifacts", []) or []:
                 relpath = art.get("path")
                 contents = art.get("contents", "")
                 if not relpath:
                     continue
-                target = repo / relpath
+                # Confine all artifact writes to projects/<PROJ-ID>/.
+                # The LLM occasionally produces paths like "src/" or
+                # absolute paths into the repo's own source code; we
+                # MUST NOT write outside the project's own tree.
+                rel = relpath.lstrip("/")
+                proj_prefix = f"projects/{project_root.name}/"
+                if rel.startswith(proj_prefix):
+                    rel = rel[len(proj_prefix):]
+                target = project_root / rel
+                # Reject paths that escape the project directory.
+                try:
+                    target.resolve().relative_to(project_root.resolve())
+                except ValueError:
+                    print(f"[implementer] refused out-of-project path: {relpath!r}")
+                    continue
+                # Skip if target is an existing directory (LLM bug).
+                if target.exists() and target.is_dir():
+                    print(f"[implementer] skipping directory path: {relpath!r}")
+                    continue
+                if not contents:
+                    continue
                 target.parent.mkdir(parents=True, exist_ok=True)
                 target.write_text(contents, encoding="utf-8")
-                written.append(relpath)
+                written.append(str(target.relative_to(repo)))
             # Check off the task in tasks.md.
             tasks_path = Path(mechanical_output["tasks_path"])
             text = tasks_path.read_text(encoding="utf-8")
