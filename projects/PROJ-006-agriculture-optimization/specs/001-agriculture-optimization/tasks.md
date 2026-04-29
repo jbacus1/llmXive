@@ -95,7 +95,7 @@
 - [X] T026 [US2] Implement statistical analysis using pandas and scikit-learn
 - [X] T027 [US2] Implement time series analysis for historical climate patterns
 - [X] T028 [US2] Implement regression analysis for yield prediction
-- [ ] T029 [US2] Add GIS-based risk mapping in src/services/gis_mapper.py
+- [X] T029 [US2] Add GIS-based risk mapping in src/services/gis_mapper.py
 - [ ] T030 [US2] Add validation and error handling for risk calculations
 - [ ] T031 [US2] Add logging for climate risk assessment operations
 

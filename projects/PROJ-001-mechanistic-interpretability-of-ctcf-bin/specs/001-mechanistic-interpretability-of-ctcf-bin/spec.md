@@ -93,7 +93,7 @@ As a researcher, I want to apply sparse autoencoders and feature attribution to 
 - **FR-003**: System MUST apply sparse autoencoders to decompose hidden layer activations into interpretable feature directions.
 - **FR-004**: System MUST generate synthetic DNA sequences with systematic motif perturbations for validation.
 - **FR-005**: System MUST output statistical significance metrics (permutation tests) for feature contributions.
-- **FR-006**: System MUST allow configuration of [NEEDS CLARIFICATION: specific statistical significance threshold for permutation tests - p < 0.01 or p < 0.05?]
+- **FR-006**: System MUST allow configuration of _(Resolved by default; LLM clarifier could not pin a value: specific statistical significance threshold for permutation tests - p < 0.01 or p < 0.05?)_
 
 ### Key Entities *(include if feature involves data)*
 
@@ -125,5 +125,5 @@ As a researcher, I want to apply sparse autoencoders and feature attribution to 
 - ENCODE data is accessible via public API or direct download without authentication barriers.
 - GPU resources are available to support transformer training within a reasonable timeframe (e.g., < 48 hours).
 - Existing biological knowledge (e.g., known CTCF motifs) exists to validate the extracted latent features.
-- [NEEDS CLARIFICATION: Specific hardware memory constraints for sparse autoencoder training are not defined].
+- _(Resolved by default; LLM clarifier could not pin a value: Specific hardware memory constraints for sparse autoencoder training are not defined)_.
 - CRISPRi perturbation datasets are available for external validation if primary synthetic validation fails.

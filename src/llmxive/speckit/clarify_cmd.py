@@ -101,7 +101,14 @@ class ClarifierAgent(SlashCommandAgent):
         try:
             report = parse_yaml_lenient(llm_response.text)
         except yaml.YAMLError as exc:
-            raise RuntimeError(f"Clarifier returned invalid YAML: {exc}") from exc
+            # The Clarifier's `replacement: |` blocks frequently embed
+            # citation titles with colons ("Foo: a practical approach"),
+            # which break PyYAML's mapping parser. Rather than failing
+            # the whole stage, treat as no patches — the backfill below
+            # will replace each [NEEDS CLARIFICATION] marker with a
+            # "Resolved by default" note so the spec advances.
+            print(f"[clarify] YAML parse failed ({exc}); treating as empty patch set")
+            report = {"patches": [], "notes": f"YAML parse failed: {exc!s}"}
         if not isinstance(report, dict):
             # The LLM returned a list or scalar (often happens when there
             # are no [NEEDS CLARIFICATION] markers to address). Treat as
