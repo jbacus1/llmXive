@@ -67,12 +67,12 @@
 
 - [X] T015 [P] [US1] Create survey data collector in src/data/collectors/survey_collector.py
 - [X] T016 [P] [US1] Create climate data collector in src/data/collectors/climate_collector.py
-- [ ] T017 [US1] Implement remote sensing collector in src/data/collectors/remote_sensing_collector.py (uses rasterio)
-- [ ] T018 [US1] Implement API client in src/services/api_client.py (OpenWeatherMap, USGS)
-- [ ] T019 [US1] Add validation and error handling for all data collectors
-- [ ] T020 [US1] Add logging for data collection operations
-- [ ] T021 [US1] Implement data preprocessing in src/data/processors/survey_processor.py
-- [ ] T022 [US1] Implement data preprocessing in src/data/processors/climate_processor.py
+- [X] T017 [US1] Implement remote sensing collector in src/data/collectors/remote_sensing_collector.py (uses rasterio)
+- [X] T018 [US1] Implement API client in src/services/api_client.py (OpenWeatherMap, USGS)
+- [X] T019 [US1] Add validation and error handling for all data collectors
+- [X] T020 [US1] Add logging for data collection operations
+- [X] T021 [US1] Implement data preprocessing in src/data/processors/survey_processor.py
+- [X] T022 [US1] Implement data preprocessing in src/data/processors/climate_processor.py
 
 **Checkpoint**: At this point, User Story 1 should be fully functional and testable independently
 
@@ -86,8 +86,8 @@
 
 ### Tests for User Story 2 ⚠️
 
-- [ ] T023 [P] [US2] Contract test for risk assessment output in tests/contract/test_risk_schema.py
-- [ ] T024 [P] [US2] Integration test for climate risk model in tests/integration/test_climate_risk.py
+- [X] T023 [P] [US2] Contract test for risk assessment output in tests/contract/test_risk_schema.py
+- [X] T024 [P] [US2] Integration test for climate risk model in tests/integration/test_climate_risk.py
 
 ### Implementation for User Story 2
 

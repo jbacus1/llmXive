@@ -5,7 +5,7 @@
     "human_contributors": 0,
     "papers_posted": 0,
     "total_collaborations": 0,
-    "total_contributions": 52,
+    "total_contributions": 60,
     "total_contributors": 4
   },
   "contributors": [
@@ -14,7 +14,7 @@
         "code",
         "spec"
       ],
-      "contribution_count": 28,
+      "contribution_count": 36,
       "kind": "llm",
       "name": "implementer"
     },
@@ -43,7 +43,7 @@
       "name": "clarifier"
     }
   ],
-  "generated_at": "2026-04-29T09:06:54.239078+00:00",
+  "generated_at": "2026-04-29T09:22:54.217992+00:00",
   "projects": [
     {
       "artifact_links": {
@@ -290,6 +290,62 @@
       "last_run_log": [
         {
           "agent": "implementer",
+          "duration_s": 38.188752,
+          "ended_at": "2026-04-29T09:22:53.715736Z",
+          "outcome": "success",
+          "started_at": "2026-04-29T09:22:15.526984Z"
+        },
+        {
+          "agent": "implementer",
+          "duration_s": 46.409545,
+          "ended_at": "2026-04-29T09:22:15.449920Z",
+          "outcome": "success",
+          "started_at": "2026-04-29T09:21:29.040375Z"
+        },
+        {
+          "agent": "implementer",
+          "duration_s": 62.330233,
+          "ended_at": "2026-04-29T09:21:28.965560Z",
+          "outcome": "success",
+          "started_at": "2026-04-29T09:20:26.635327Z"
+        },
+        {
+          "agent": "implementer",
+          "duration_s": 68.425245,
+          "ended_at": "2026-04-29T09:20:26.559730Z",
+          "outcome": "success",
+          "started_at": "2026-04-29T09:19:18.134485Z"
+        },
+        {
+          "agent": "implementer",
+          "duration_s": 71.077073,
+          "ended_at": "2026-04-29T09:19:18.058925Z",
+          "outcome": "success",
+          "started_at": "2026-04-29T09:18:06.981852Z"
+        },
+        {
+          "agent": "implementer",
+          "duration_s": 113.234828,
+          "ended_at": "2026-04-29T09:18:06.906476Z",
+          "outcome": "success",
+          "started_at": "2026-04-29T09:16:13.671648Z"
+        },
+        {
+          "agent": "implementer",
+          "duration_s": 59.972039,
+          "ended_at": "2026-04-29T09:16:13.595808Z",
+          "outcome": "success",
+          "started_at": "2026-04-29T09:15:13.623769Z"
+        },
+        {
+          "agent": "implementer",
+          "duration_s": 89.376739,
+          "ended_at": "2026-04-29T09:15:13.547657Z",
+          "outcome": "success",
+          "started_at": "2026-04-29T09:13:44.170918Z"
+        },
+        {
+          "agent": "implementer",
           "duration_s": 68.857696,
           "ended_at": "2026-04-29T05:43:28.050878Z",
           "outcome": "success",
@@ -301,62 +357,6 @@
           "ended_at": "2026-04-29T05:42:19.116952Z",
           "outcome": "success",
           "started_at": "2026-04-29T05:41:14.816299Z"
-        },
-        {
-          "agent": "implementer",
-          "duration_s": 65.1439,
-          "ended_at": "2026-04-29T05:41:14.740961Z",
-          "outcome": "success",
-          "started_at": "2026-04-29T05:40:09.597061Z"
-        },
-        {
-          "agent": "implementer",
-          "duration_s": 36.921206,
-          "ended_at": "2026-04-29T05:40:09.521267Z",
-          "outcome": "success",
-          "started_at": "2026-04-29T05:39:32.600061Z"
-        },
-        {
-          "agent": "implementer",
-          "duration_s": 29.626273,
-          "ended_at": "2026-04-29T05:39:32.524062Z",
-          "outcome": "success",
-          "started_at": "2026-04-29T05:39:02.897789Z"
-        },
-        {
-          "agent": "implementer",
-          "duration_s": 55.996455,
-          "ended_at": "2026-04-29T05:39:02.821353Z",
-          "outcome": "success",
-          "started_at": "2026-04-29T05:38:06.824898Z"
-        },
-        {
-          "agent": "implementer",
-          "duration_s": 69.208036,
-          "ended_at": "2026-04-29T05:38:06.748156Z",
-          "outcome": "success",
-          "started_at": "2026-04-29T05:36:57.540120Z"
-        },
-        {
-          "agent": "implementer",
-          "duration_s": 65.985025,
-          "ended_at": "2026-04-29T05:36:57.462535Z",
-          "outcome": "success",
-          "started_at": "2026-04-29T05:35:51.477510Z"
-        },
-        {
-          "agent": "implementer",
-          "duration_s": 58.658388,
-          "ended_at": "2026-04-29T05:04:27.920749Z",
-          "outcome": "success",
-          "started_at": "2026-04-29T05:03:29.262361Z"
-        },
-        {
-          "agent": "implementer",
-          "duration_s": 120.145022,
-          "ended_at": "2026-04-29T05:03:29.233217Z",
-          "outcome": "success",
-          "started_at": "2026-04-29T05:01:29.088195Z"
         }
       ],
       "phase_group": "research_speckit",
