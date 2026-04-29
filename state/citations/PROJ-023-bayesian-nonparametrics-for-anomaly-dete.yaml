@@ -1,1 +1,11 @@
-[]
+- artifact_hash: 7b9d435d91b985848c61e8631d718093514fecb9cd5e7fd6b6620c988fa09d6c
+  artifact_path: projects/PROJ-023-bayesian-nonparametrics-for-anomaly-dete/specs/001-bayesian-nonparametrics-for-anomaly-dete/tasks.md
+  cite_id: c-001
+  cited_authors: []
+  cited_title: null
+  fetched_title: null
+  kind: url
+  value: https://raw.githubusercontent.com/cbergmeir/numerical_time_series_data/master/data/NormalDistribution.txt
+  verification_status: mismatch
+  verified_against_url: https://raw.githubusercontent.com/cbergmeir/numerical_time_series_data/master/data/NormalDistribution.txt
+  verified_at: '2026-04-29T18:15:24.727333Z'
