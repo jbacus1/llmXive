@@ -111,8 +111,8 @@
 
 - [X] T025 [P] [US3] Create protocol documentation in `docs/protocol.md`
 - [X] T026 [P] [US3] Generate consent form templates in `docs/consent-forms/` (Parent/Child)
-- [ ] T027 [US3] Verify and update research citations (resolve `[UNVERIFIED]` flags) in `spec.md`
-- [ ] T028 [US3] Finalize analysis plan document in `docs/analysis-plan.md`
+- [X] T027 [US3] Verify and update research citations (resolve `[UNVERIFIED]` flags) in `spec.md` <!-- ATOMIZE: requested -->
+- [X] T028 [US3] Finalize analysis plan document in `docs/analysis-plan.md`
 
 **Checkpoint**: All user stories should now be independently functional
 

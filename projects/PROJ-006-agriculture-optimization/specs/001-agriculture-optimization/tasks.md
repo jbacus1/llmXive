@@ -141,7 +141,7 @@
 
 ### Implementation for User Story 4
 
-- [ ] T043 [P] [US4] Create GIS mapper service in src/services/gis_mapper.py (uses geopandas, rasterio)
+- [X] T043 [P] [US4] Create GIS mapper service in src/services/gis_mapper.py (uses geopandas, rasterio)
 - [ ] T044 [US4] Implement visualization generation in src/services/visualization.py (matplotlib)
 - [ ] T045 [US4] Implement report generation in src/services/report_generator.py
 - [ ] T046 [US4] Add validation for visualization outputs

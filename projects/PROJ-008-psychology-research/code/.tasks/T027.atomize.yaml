@@ -1,0 +1,14 @@
+estimated_seconds: 1800
+proposed_subtasks:
+- description: Read spec.md and identify all [UNVERIFIED] citation flags with line
+    numbers
+  estimated_seconds: 300
+- description: Research and verify each unverified citation against academic databases
+    (PubMed, Google Scholar, PsycINFO)
+  estimated_seconds: 900
+- description: Update spec.md with proper citation format (APA 7th edition) and remove
+    [UNVERIFIED] flags
+  estimated_seconds: 450
+- description: Create citations bibliography file in docs/references.bib with all
+    verified sources
+  estimated_seconds: 150
