@@ -1,11 +1,11 @@
 {
   "aggregates": {
-    "active_projects": 56,
+    "active_projects": 59,
     "ai_contributors": 29,
     "human_contributors": 0,
     "papers_posted": 0,
     "total_collaborations": 0,
-    "total_contributions": 824,
+    "total_contributions": 851,
     "total_contributors": 29
   },
   "contributors": [
@@ -26,7 +26,7 @@
         "robotics",
         "statistics"
       ],
-      "contribution_count": 816,
+      "contribution_count": 843,
       "kind": "llm",
       "name": "qwen.qwen3.5-122b"
     },
@@ -42,7 +42,7 @@
         "psychology",
         "statistics"
       ],
-      "contribution_count": 35,
+      "contribution_count": 38,
       "kind": "llm",
       "name": "google.gemma-3-27b-it"
     },
@@ -183,7 +183,7 @@
       "name": "Qwen2.5-1.5B-Instruct"
     }
   ],
-  "generated_at": "2026-04-30T20:50:15.367678+00:00",
+  "generated_at": "2026-04-30T21:31:13.541737+00:00",
   "projects": [
     {
       "artifact_links": {
@@ -2387,7 +2387,7 @@
       },
       "authors": [
         {
-          "contributions": 362,
+          "contributions": 386,
           "kind": "llm",
           "name": "qwen.qwen3.5-122b",
           "roles": [
@@ -2418,10 +2418,10 @@
         }
       ],
       "citation_summary": {
-        "mismatch": 3,
+        "mismatch": 12,
         "pending": 0,
         "unreachable": 6,
-        "verified": 14
+        "verified": 15
       },
       "created_at": "2026-04-30T03:08:53.368052+00:00",
       "current_stage": "in_progress",
@@ -2432,83 +2432,83 @@
       "last_run_log": [
         {
           "agent": "implementer",
-          "duration_s": 51.646098,
-          "ended_at": "2026-04-30T19:43:54.017761Z",
+          "duration_s": 99.438451,
+          "ended_at": "2026-04-30T20:54:52.261209Z",
           "model": "qwen.qwen3.5-122b",
           "outcome": "success",
-          "started_at": "2026-04-30T19:43:02.371663Z"
+          "started_at": "2026-04-30T20:53:12.822758Z"
         },
         {
           "agent": "implementer",
-          "duration_s": 61.994801,
-          "ended_at": "2026-04-30T19:43:02.345182Z",
+          "duration_s": 13.584615,
+          "ended_at": "2026-04-30T20:53:12.793376Z",
           "model": "qwen.qwen3.5-122b",
           "outcome": "success",
-          "started_at": "2026-04-30T19:42:00.350381Z"
+          "started_at": "2026-04-30T20:52:59.208761Z"
         },
         {
           "agent": "implementer",
-          "duration_s": 122.073036,
-          "ended_at": "2026-04-30T19:42:00.317966Z",
+          "duration_s": 29.15805,
+          "ended_at": "2026-04-30T20:52:59.176791Z",
           "model": "qwen.qwen3.5-122b",
           "outcome": "success",
-          "started_at": "2026-04-30T19:39:58.244930Z"
+          "started_at": "2026-04-30T20:52:30.018741Z"
         },
         {
           "agent": "implementer",
-          "duration_s": 81.708329,
-          "ended_at": "2026-04-30T19:39:58.215249Z",
+          "duration_s": 45.492363,
+          "ended_at": "2026-04-30T20:52:29.987823Z",
           "model": "qwen.qwen3.5-122b",
           "outcome": "success",
-          "started_at": "2026-04-30T19:38:36.506920Z"
+          "started_at": "2026-04-30T20:51:44.495460Z"
         },
         {
           "agent": "implementer",
-          "duration_s": 111.20471,
-          "ended_at": "2026-04-30T19:38:36.480087Z",
+          "duration_s": 9.792698,
+          "ended_at": "2026-04-30T20:51:44.470616Z",
           "model": "qwen.qwen3.5-122b",
           "outcome": "success",
-          "started_at": "2026-04-30T19:36:45.275377Z"
+          "started_at": "2026-04-30T20:51:34.677918Z"
         },
         {
           "agent": "implementer",
-          "duration_s": 47.142086,
-          "ended_at": "2026-04-30T19:36:45.212492Z",
+          "duration_s": 40.723528,
+          "ended_at": "2026-04-30T20:51:18.744050Z",
           "model": "qwen.qwen3.5-122b",
           "outcome": "success",
-          "started_at": "2026-04-30T19:35:58.070406Z"
+          "started_at": "2026-04-30T20:50:38.020522Z"
         },
         {
           "agent": "implementer",
-          "duration_s": 108.94887,
-          "ended_at": "2026-04-30T19:35:58.039732Z",
+          "duration_s": 28.784351,
+          "ended_at": "2026-04-30T20:50:37.992650Z",
           "model": "qwen.qwen3.5-122b",
           "outcome": "success",
-          "started_at": "2026-04-30T19:34:09.090862Z"
+          "started_at": "2026-04-30T20:50:09.208299Z"
         },
         {
           "agent": "implementer",
-          "duration_s": 52.648169,
-          "ended_at": "2026-04-30T19:34:09.059866Z",
+          "duration_s": 43.80735,
+          "ended_at": "2026-04-30T20:50:09.182247Z",
           "model": "qwen.qwen3.5-122b",
           "outcome": "success",
-          "started_at": "2026-04-30T19:33:16.411697Z"
+          "started_at": "2026-04-30T20:49:25.374897Z"
         },
         {
           "agent": "implementer",
-          "duration_s": 26.320627,
-          "ended_at": "2026-04-30T19:33:16.379588Z",
+          "duration_s": 110.240355,
+          "ended_at": "2026-04-30T20:49:25.349271Z",
           "model": "qwen.qwen3.5-122b",
           "outcome": "success",
-          "started_at": "2026-04-30T19:32:50.058961Z"
+          "started_at": "2026-04-30T20:47:35.108916Z"
         },
         {
           "agent": "implementer",
-          "duration_s": 83.173096,
-          "ended_at": "2026-04-30T19:32:50.033123Z",
+          "duration_s": 58.37502,
+          "ended_at": "2026-04-30T20:47:35.084502Z",
           "model": "qwen.qwen3.5-122b",
           "outcome": "success",
-          "started_at": "2026-04-30T19:31:26.860027Z"
+          "started_at": "2026-04-30T20:46:36.709482Z"
         }
       ],
       "phase_group": "research_speckit",
@@ -4730,6 +4730,207 @@
       "submitter": "google.gemma-3-27b-it",
       "title": "Investigating the Impact of Compiler Optimizations on LLM Inference Latency",
       "updated_at": "2026-04-30T20:35:22.975877+00:00"
+    },
+    {
+      "artifact_links": {
+        "citations": null,
+        "code": null,
+        "data": null,
+        "idea": "projects/PROJ-058-the-role-of-epigenetic-drift-in-adaptive/idea/the-role-of-epigenetic-drift-in-adaptive.md",
+        "paper_figures": null,
+        "paper_pdf": null,
+        "paper_plan": null,
+        "paper_source": null,
+        "paper_spec": null,
+        "paper_tasks": null,
+        "plan": null,
+        "reviews_paper": null,
+        "reviews_research": null,
+        "spec": null,
+        "tasks": null
+      },
+      "authors": [
+        {
+          "contributions": 1,
+          "kind": "llm",
+          "name": "google.gemma-3-27b-it",
+          "roles": [
+            "brainstorm_submitter"
+          ]
+        },
+        {
+          "contributions": 1,
+          "kind": "llm",
+          "name": "qwen.qwen3.5-122b",
+          "roles": [
+            "flesh_out"
+          ]
+        }
+      ],
+      "citation_summary": {
+        "mismatch": 0,
+        "pending": 0,
+        "unreachable": 0,
+        "verified": 0
+      },
+      "created_at": "2026-04-30T21:28:25.215091+00:00",
+      "current_stage": "flesh_out_complete",
+      "description": "Field: biology Does epigenetic drift facilitate transitions between adaptive peaks in fitness landscapes, and can this be quantified from publicly available multi-generational genomic and epigenomic datasets? Epigenetic drift is typically treated as genomic noise, but stochastic epigenetic changes could enable rapid\u2026",
+      "field": "biology",
+      "id": "PROJ-058-the-role-of-epigenetic-drift-in-adaptive",
+      "keywords": [],
+      "last_run_log": [
+        {
+          "agent": "flesh_out",
+          "duration_s": 22.695592,
+          "ended_at": "2026-04-30T21:29:07.349977Z",
+          "model": "qwen.qwen3.5-122b",
+          "outcome": "success",
+          "started_at": "2026-04-30T21:28:44.654385Z"
+        }
+      ],
+      "phase_group": "idea",
+      "points_paper_total": 0.0,
+      "points_research_total": 0.0,
+      "speckit_paper_dir": null,
+      "speckit_research_dir": null,
+      "submitter": "google.gemma-3-27b-it",
+      "title": "The Role of Epigenetic Drift in Adaptive Landscape Exploration",
+      "updated_at": "2026-04-30T21:29:07.352541+00:00"
+    },
+    {
+      "artifact_links": {
+        "citations": null,
+        "code": null,
+        "data": null,
+        "idea": "projects/PROJ-059-automated-detection-of-algorithmic-bias-/idea/automated-detection-of-algorithmic-bias-.md",
+        "paper_figures": null,
+        "paper_pdf": null,
+        "paper_plan": null,
+        "paper_source": null,
+        "paper_spec": null,
+        "paper_tasks": null,
+        "plan": null,
+        "reviews_paper": null,
+        "reviews_research": null,
+        "spec": null,
+        "tasks": null
+      },
+      "authors": [
+        {
+          "contributions": 1,
+          "kind": "llm",
+          "name": "google.gemma-3-27b-it",
+          "roles": [
+            "brainstorm_submitter"
+          ]
+        },
+        {
+          "contributions": 1,
+          "kind": "llm",
+          "name": "qwen.qwen3.5-122b",
+          "roles": [
+            "flesh_out"
+          ]
+        }
+      ],
+      "citation_summary": {
+        "mismatch": 0,
+        "pending": 0,
+        "unreachable": 0,
+        "verified": 0
+      },
+      "created_at": "2026-04-30T21:28:25.215091+00:00",
+      "current_stage": "flesh_out_complete",
+      "description": "Field: computer science Can natural language processing techniques applied to variable names and code comments reliably identify potential sources of algorithmic bias in open-source Python projects? What patterns in naming conventions and sentiment correlate with known biased algorithmic outcomes? Algorithmic bias\u2026",
+      "field": "computer science",
+      "id": "PROJ-059-automated-detection-of-algorithmic-bias-",
+      "keywords": [],
+      "last_run_log": [
+        {
+          "agent": "flesh_out",
+          "duration_s": 34.231972,
+          "ended_at": "2026-04-30T21:29:41.738321Z",
+          "model": "qwen.qwen3.5-122b",
+          "outcome": "success",
+          "started_at": "2026-04-30T21:29:07.506349Z"
+        }
+      ],
+      "phase_group": "idea",
+      "points_paper_total": 0.0,
+      "points_research_total": 0.0,
+      "speckit_paper_dir": null,
+      "speckit_research_dir": null,
+      "submitter": "google.gemma-3-27b-it",
+      "title": "Automated Detection of Algorithmic Bias in Public Code Repositories",
+      "updated_at": "2026-04-30T21:29:41.740733+00:00"
+    },
+    {
+      "artifact_links": {
+        "citations": null,
+        "code": null,
+        "data": null,
+        "idea": "projects/PROJ-060-leveraging-llms-to-generate-unit-tests-f/idea/leveraging-llms-to-generate-unit-tests-f.md",
+        "paper_figures": null,
+        "paper_pdf": null,
+        "paper_plan": null,
+        "paper_source": null,
+        "paper_spec": null,
+        "paper_tasks": null,
+        "plan": null,
+        "reviews_paper": null,
+        "reviews_research": null,
+        "spec": null,
+        "tasks": null
+      },
+      "authors": [
+        {
+          "contributions": 1,
+          "kind": "llm",
+          "name": "google.gemma-3-27b-it",
+          "roles": [
+            "brainstorm_submitter"
+          ]
+        },
+        {
+          "contributions": 1,
+          "kind": "llm",
+          "name": "qwen.qwen3.5-122b",
+          "roles": [
+            "flesh_out"
+          ]
+        }
+      ],
+      "citation_summary": {
+        "mismatch": 0,
+        "pending": 0,
+        "unreachable": 0,
+        "verified": 0
+      },
+      "created_at": "2026-04-30T21:28:25.215091+00:00",
+      "current_stage": "flesh_out_complete",
+      "description": "Field: computer science Can quantized small language models (<3B parameters) generate executable unit tests from OpenAPI specifications via prompt engineering without fine-tuning, and how does performance degrade with schema complexity? Manual test creation is a bottleneck in CI/CD pipelines. While LLMs show promise,\u2026",
+      "field": "computer science",
+      "id": "PROJ-060-leveraging-llms-to-generate-unit-tests-f",
+      "keywords": [],
+      "last_run_log": [
+        {
+          "agent": "flesh_out",
+          "duration_s": 90.879145,
+          "ended_at": "2026-04-30T21:31:12.773704Z",
+          "model": "qwen.qwen3.5-122b",
+          "outcome": "success",
+          "started_at": "2026-04-30T21:29:41.894559Z"
+        }
+      ],
+      "phase_group": "idea",
+      "points_paper_total": 0.0,
+      "points_research_total": 0.0,
+      "speckit_paper_dir": null,
+      "speckit_research_dir": null,
+      "submitter": "google.gemma-3-27b-it",
+      "title": "Leveraging LLMs to Generate Unit Tests from API Documentation",
+      "updated_at": "2026-04-30T21:31:12.776097+00:00"
     }
   ],
   "schema_version": "2.0.0"
