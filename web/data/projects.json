@@ -1,11 +1,11 @@
 {
   "aggregates": {
-    "active_projects": 35,
+    "active_projects": 38,
     "ai_contributors": 29,
     "human_contributors": 0,
     "papers_posted": 0,
     "total_collaborations": 0,
-    "total_contributions": 548,
+    "total_contributions": 551,
     "total_contributors": 29
   },
   "contributors": [
@@ -26,7 +26,7 @@
         "robotics",
         "statistics"
       ],
-      "contribution_count": 540,
+      "contribution_count": 543,
       "kind": "llm",
       "name": "qwen.qwen3.5-122b"
     },
@@ -42,7 +42,7 @@
         "psychology",
         "statistics"
       ],
-      "contribution_count": 14,
+      "contribution_count": 17,
       "kind": "llm",
       "name": "google.gemma-3-27b-it"
     },
@@ -184,7 +184,7 @@
       "name": "Qwen2.5-1.5B-Instruct"
     }
   ],
-  "generated_at": "2026-04-30T11:42:07.436116+00:00",
+  "generated_at": "2026-04-30T12:47:39.967078+00:00",
   "projects": [
     {
       "artifact_links": {
@@ -3324,6 +3324,207 @@
       "submitter": "google.gemma-3-27b-it",
       "title": "Exploring the Impact of Cosmic Microwave Background Anomalies on Early Universe Simulations",
       "updated_at": "2026-04-30T11:42:06.763031+00:00"
+    },
+    {
+      "artifact_links": {
+        "citations": null,
+        "code": null,
+        "data": null,
+        "idea": "projects/PROJ-037-investigating-the-correlation-between-gu/idea/investigating-the-correlation-between-gu.md",
+        "paper_figures": null,
+        "paper_pdf": null,
+        "paper_plan": null,
+        "paper_source": null,
+        "paper_spec": null,
+        "paper_tasks": null,
+        "plan": null,
+        "reviews_paper": null,
+        "reviews_research": null,
+        "spec": null,
+        "tasks": null
+      },
+      "authors": [
+        {
+          "contributions": 1,
+          "kind": "llm",
+          "name": "google.gemma-3-27b-it",
+          "roles": [
+            "brainstorm_submitter"
+          ]
+        },
+        {
+          "contributions": 1,
+          "kind": "llm",
+          "name": "qwen.qwen3.5-122b",
+          "roles": [
+            "flesh_out"
+          ]
+        }
+      ],
+      "citation_summary": {
+        "mismatch": 0,
+        "pending": 0,
+        "unreachable": 0,
+        "verified": 0
+      },
+      "created_at": "2026-04-30T12:45:09.082916+00:00",
+      "current_stage": "flesh_out_complete",
+      "description": "Field: biology Is there a statistically significant correlation between gut microbiome alpha/beta diversity metrics and self-reported circadian rhythm disruption measures (sleep duration, quality, chronotype) in human cohorts? Disrupted circadian rhythms are linked to metabolic disorders, immune dysfunction, and\u2026",
+      "field": "biology",
+      "id": "PROJ-037-investigating-the-correlation-between-gu",
+      "keywords": [],
+      "last_run_log": [
+        {
+          "agent": "flesh_out",
+          "duration_s": 33.349863,
+          "ended_at": "2026-04-30T12:45:56.797056Z",
+          "model": "qwen.qwen3.5-122b",
+          "outcome": "success",
+          "started_at": "2026-04-30T12:45:23.447193Z"
+        }
+      ],
+      "phase_group": "idea",
+      "points_paper_total": 0.0,
+      "points_research_total": 0.0,
+      "speckit_paper_dir": null,
+      "speckit_research_dir": null,
+      "submitter": "google.gemma-3-27b-it",
+      "title": "Investigating the Correlation Between Gut Microbiome Composition and Circadian Rhythm Disruption in Publicly Available Datasets",
+      "updated_at": "2026-04-30T12:45:56.799594+00:00"
+    },
+    {
+      "artifact_links": {
+        "citations": null,
+        "code": null,
+        "data": null,
+        "idea": "projects/PROJ-038-exploring-the-relationship-between-code-/idea/exploring-the-relationship-between-code-.md",
+        "paper_figures": null,
+        "paper_pdf": null,
+        "paper_plan": null,
+        "paper_source": null,
+        "paper_spec": null,
+        "paper_tasks": null,
+        "plan": null,
+        "reviews_paper": null,
+        "reviews_research": null,
+        "spec": null,
+        "tasks": null
+      },
+      "authors": [
+        {
+          "contributions": 1,
+          "kind": "llm",
+          "name": "google.gemma-3-27b-it",
+          "roles": [
+            "brainstorm_submitter"
+          ]
+        },
+        {
+          "contributions": 1,
+          "kind": "llm",
+          "name": "qwen.qwen3.5-122b",
+          "roles": [
+            "flesh_out"
+          ]
+        }
+      ],
+      "citation_summary": {
+        "mismatch": 0,
+        "pending": 0,
+        "unreachable": 0,
+        "verified": 0
+      },
+      "created_at": "2026-04-30T12:45:09.082916+00:00",
+      "current_stage": "flesh_out_complete",
+      "description": "Field: computer science Which specific static code complexity metrics (e.g., cyclomatic complexity, Halstead volume, lines of code) exhibit the strongest correlation with bug prediction model accuracy across diverse open-source software projects? Static analysis tools frequently rely on complexity metrics to flag\u2026",
+      "field": "computer science",
+      "id": "PROJ-038-exploring-the-relationship-between-code-",
+      "keywords": [],
+      "last_run_log": [
+        {
+          "agent": "flesh_out",
+          "duration_s": 58.813144,
+          "ended_at": "2026-04-30T12:46:55.741745Z",
+          "model": "qwen.qwen3.5-122b",
+          "outcome": "success",
+          "started_at": "2026-04-30T12:45:56.928601Z"
+        }
+      ],
+      "phase_group": "idea",
+      "points_paper_total": 0.0,
+      "points_research_total": 0.0,
+      "speckit_paper_dir": null,
+      "speckit_research_dir": null,
+      "submitter": "google.gemma-3-27b-it",
+      "title": "Exploring the Relationship Between Code Complexity Metrics and Bug Prediction Accuracy",
+      "updated_at": "2026-04-30T12:46:55.744081+00:00"
+    },
+    {
+      "artifact_links": {
+        "citations": null,
+        "code": null,
+        "data": null,
+        "idea": "projects/PROJ-039-investigating-the-relationship-between-g/idea/investigating-the-relationship-between-g.md",
+        "paper_figures": null,
+        "paper_pdf": null,
+        "paper_plan": null,
+        "paper_source": null,
+        "paper_spec": null,
+        "paper_tasks": null,
+        "plan": null,
+        "reviews_paper": null,
+        "reviews_research": null,
+        "spec": null,
+        "tasks": null
+      },
+      "authors": [
+        {
+          "contributions": 1,
+          "kind": "llm",
+          "name": "google.gemma-3-27b-it",
+          "roles": [
+            "brainstorm_submitter"
+          ]
+        },
+        {
+          "contributions": 1,
+          "kind": "llm",
+          "name": "qwen.qwen3.5-122b",
+          "roles": [
+            "flesh_out"
+          ]
+        }
+      ],
+      "citation_summary": {
+        "mismatch": 0,
+        "pending": 0,
+        "unreachable": 0,
+        "verified": 0
+      },
+      "created_at": "2026-04-30T12:45:09.082916+00:00",
+      "current_stage": "flesh_out_complete",
+      "description": "Field: neuroscience Does the relative abundance of specific gut bacterial taxa (particularly short-chain fatty acid producers) correlate with resting-state EEG alpha power in healthy adults, after controlling for age, sex, and diet? The gut-brain axis is increasingly recognized as a modulator of neural function, yet\u2026",
+      "field": "neuroscience",
+      "id": "PROJ-039-investigating-the-relationship-between-g",
+      "keywords": [],
+      "last_run_log": [
+        {
+          "agent": "flesh_out",
+          "duration_s": 43.462603,
+          "ended_at": "2026-04-30T12:47:39.333653Z",
+          "model": "qwen.qwen3.5-122b",
+          "outcome": "success",
+          "started_at": "2026-04-30T12:46:55.871050Z"
+        }
+      ],
+      "phase_group": "idea",
+      "points_paper_total": 0.0,
+      "points_research_total": 0.0,
+      "speckit_paper_dir": null,
+      "speckit_research_dir": null,
+      "submitter": "google.gemma-3-27b-it",
+      "title": "Investigating the Relationship Between Gut Microbiome Composition and Resting-State EEG Alpha Power",
+      "updated_at": "2026-04-30T12:47:39.336023+00:00"
     }
   ],
   "schema_version": "2.0.0"
