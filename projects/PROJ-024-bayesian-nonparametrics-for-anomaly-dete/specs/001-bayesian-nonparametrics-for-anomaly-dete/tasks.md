@@ -208,14 +208,14 @@
 
 - [X] T080 [P] Verify presence of research.md, data-model.md, quickstart.md in `specs/001-bayesian-nonparametrics-anomaly-detection/` directory per plan.md <!-- FAILED-IN-EXECUTION: code/scripts/verify_spec_files.py exit=1 -->
 - [X] T081 [P] Update research.md to articulate theoretical distinction between ADVI streaming update and existing Online Variational Inference for DPs per creativity review
-- [ ] T082 [P] Add LICENSE file to project root with appropriate open-source license
-- [ ] T083 [P] Document data licenses for UCI datasets in data-dictionary.md per data quality review
+- [X] T082 [P] Add LICENSE file to project root with appropriate open-source license
+- [X] T083 [P] Document data licenses for UCI datasets in data-dictionary.md per data quality review
 
 ### Repository Hygiene & Reproducibility
 
-- [ ] T084 [P] Add `.gitignore` entries for `__pycache__/`, `*.pyc`, `*.log` (except ELBO logs in `logs/elbo/`) per Constitution Principle I reproducibility requirements
-- [ ] T085 [P] Ensure `requirements.txt` is fully pinned with exact versions per Constitution Principle I reproducibility requirements
-- [ ] T086 [P] Create `code/src/services/anomaly_detector.py` service wrapper per plan.md Project Structure specification
+- [X] T084 [P] Add `.gitignore` entries for `__pycache__/`, `*.pyc`, `*.log` (except ELBO logs in `logs/elbo/`) per Constitution Principle I reproducibility requirements
+- [X] T085 [P] Ensure `requirements.txt` is fully pinned with exact versions per Constitution Principle I reproducibility requirements
+- [X] T086 [P] Create `code/src/services/anomaly_detector.py` service wrapper per plan.md Project Structure specification <!-- FAILED-IN-EXECUTION: code/src/services/anomaly_detector.py exit=1 -->
 - [ ] T087 [P] Create `code/src/services/threshold_calibrator.py` service wrapper per plan.md Project Structure specification
 - [ ] T088 [P] Add `.gitignore` for `*.pyc` and compiled artifacts to ensure clean checkout reproducibility per filesystem hygiene review
 - [ ] T089 [P] Verify `config.yaml` contains only hyperparameters, seeds, and base paths (no derived statistics) per Constitution Principle I and T073 requirement

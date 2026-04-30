@@ -310,7 +310,51 @@
   verification_status: mismatch
   verified_against_url: https://archive.ics.uci.edu/ml/datasets/Synthetic+Control+Chart+Time+Series%60
   verified_at: '2026-04-30T20:50:04.526699Z'
-- artifact_hash: 19a421b69a04e3bada74c6b787fe2d99bddf41ceed8e93cea0139cd797d2fc2f
+- artifact_hash: d9b3e9efefcf8cc801a2a15613dcd35ec7d71157fd2542e88a4ce2f1c15c733b
+  artifact_path: projects/PROJ-024-bayesian-nonparametrics-for-anomaly-dete/specs/001-bayesian-nonparametrics-anomaly-detection/data-dictionary.md
+  cite_id: c-001
+  cited_authors: []
+  cited_title: null
+  fetched_title: UCI Machine Learning Repository
+  kind: url
+  value: https://archive.ics.uci.edu/dataset/493/electricityloaddiagrams20112014
+  verification_status: verified
+  verified_against_url: https://archive.ics.uci.edu/dataset/493/electricityloaddiagrams20112014
+  verified_at: '2026-04-30T20:52:28.169843Z'
+- artifact_hash: d9b3e9efefcf8cc801a2a15613dcd35ec7d71157fd2542e88a4ce2f1c15c733b
+  artifact_path: projects/PROJ-024-bayesian-nonparametrics-for-anomaly-dete/specs/001-bayesian-nonparametrics-anomaly-detection/data-dictionary.md
+  cite_id: c-002
+  cited_authors: []
+  cited_title: null
+  fetched_title: UCI Machine Learning Repository
+  kind: url
+  value: http://archive.ics.uci.edu/ml
+  verification_status: verified
+  verified_against_url: http://archive.ics.uci.edu/
+  verified_at: '2026-04-30T20:52:28.169843Z'
+- artifact_hash: d9b3e9efefcf8cc801a2a15613dcd35ec7d71157fd2542e88a4ce2f1c15c733b
+  artifact_path: projects/PROJ-024-bayesian-nonparametrics-for-anomaly-dete/specs/001-bayesian-nonparametrics-anomaly-detection/data-dictionary.md
+  cite_id: c-003
+  cited_authors: []
+  cited_title: null
+  fetched_title: UCI Machine Learning Repository
+  kind: url
+  value: https://archive.ics.uci.edu/dataset/483/pems-bay
+  verification_status: verified
+  verified_against_url: https://archive.ics.uci.edu/dataset/483/pems-bay
+  verified_at: '2026-04-30T20:52:28.169843Z'
+- artifact_hash: d9b3e9efefcf8cc801a2a15613dcd35ec7d71157fd2542e88a4ce2f1c15c733b
+  artifact_path: projects/PROJ-024-bayesian-nonparametrics-for-anomaly-dete/specs/001-bayesian-nonparametrics-anomaly-detection/data-dictionary.md
+  cite_id: c-004
+  cited_authors: []
+  cited_title: null
+  fetched_title: UCI Machine Learning Repository
+  kind: url
+  value: https://archive.ics.uci.edu/dataset/61/synthetic_control
+  verification_status: verified
+  verified_against_url: https://archive.ics.uci.edu/dataset/61/synthetic_control
+  verified_at: '2026-04-30T20:52:28.169843Z'
+- artifact_hash: c582f6f2e7cf8a13149bb8df9ee12480b0836818723c869af767bd94b61cd1f0
   artifact_path: projects/PROJ-024-bayesian-nonparametrics-for-anomaly-dete/specs/001-bayesian-nonparametrics-for-anomaly-dete/tasks.md
   cite_id: c-001
   cited_authors: []
@@ -320,4 +364,4 @@
   value: https://raw.githubusercontent.com/numenta/NAB/master/data/realKnownCause/
   verification_status: unreachable
   verified_against_url: https://raw.githubusercontent.com/numenta/NAB/master/data/realKnownCause/
-  verified_at: '2026-04-30T20:51:18.632549Z'
+  verified_at: '2026-04-30T20:54:52.178524Z'
