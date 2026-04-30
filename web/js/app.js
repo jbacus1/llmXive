@@ -56,10 +56,23 @@
     const keys = (item.keywords || []).slice(0, 4)
       .map(k => '<span>' + escapeHtml(k) + '</span>').join("");
     const desc = item.description || item.field || "";
-    const submitterIcon = (item.submitter || "").startsWith("system:") || (item.submitter || "").includes("/")
-      ? '<i class="fa-solid fa-robot"></i>'
-      : '<i class="fa-regular fa-user"></i>';
-    const submitter = item.submitter ? '<span class="submitter">' + submitterIcon + ' ' + escapeHtml(item.submitter) + '</span>' : "";
+    const authors = item.authors || [];
+    const authorIcon = a => a.kind === "human"
+      ? '<i class="fa-regular fa-user"></i>'
+      : '<i class="fa-solid fa-robot"></i>';
+    const authorPills = authors.slice(0, 3).map(a =>
+      '<span class="submitter">' + authorIcon(a) + ' ' + escapeHtml(a.name) + '</span>'
+    ).join(" ");
+    const more = authors.length > 3 ? ` <span class="submitter-more">+${authors.length - 3} more</span>` : "";
+    const authorsRow = authors.length
+      ? '<div class="submitter-row">authors ' + authorPills + more + '</div>'
+      : (item.submitter
+          ? '<div class="submitter-row">submitted by <span class="submitter">'
+            + ((item.submitter || "").includes("/") || /qwen|gemma|claude|tinyllama|gpt|mistral|llama/i.test(item.submitter)
+              ? '<i class="fa-solid fa-robot"></i>'
+              : '<i class="fa-regular fa-user"></i>')
+            + ' ' + escapeHtml(item.submitter) + '</span></div>'
+          : "");
     return ''
       + '<article class="card" tabindex="0" data-pid="' + escapeHtml(item.id) + '">'
       + '<div class="kicker"><span class="dot"></span>' + kicker + '<span class="stage-pill ' + escapeHtml(stage) + '" style="margin-left:auto">' + escapeHtml(stageLabel) + '</span></div>'
@@ -69,7 +82,7 @@
       + '<div class="keys">' + keys + '</div>'
       + '<div class="right">' + points + '<span><i class="fa-regular fa-clock"></i> ' + escapeHtml(updated) + '</span></div>'
       + '</div>'
-      + (submitter ? '<div class="submitter-row">submitted by ' + submitter + '</div>' : "")
+      + authorsRow
       + '</article>';
   }
 

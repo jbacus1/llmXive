@@ -39,6 +39,28 @@ def save(project: Project, *, repo_root: Path | None = None) -> Path:
     validate("project-state", payload)
     path = _project_state_path(project.id, repo_root=repo_root)
     path.parent.mkdir(parents=True, exist_ok=True)
+    # Audit trail: append every stage transition (with timestamp + last_run_id)
+    # to state/projects/<PROJ-ID>.history.jsonl. This makes manual override
+    # detectable post-hoc — a stage transition without a corresponding
+    # runlog entry from the previous agent is suspicious.
+    try:
+        prev = load(project.id, repo_root=repo_root)
+        if prev.current_stage != project.current_stage:
+            import json as _json
+            from datetime import datetime as _dt, timezone as _tz
+            history = path.with_suffix(".history.jsonl")
+            history.parent.mkdir(parents=True, exist_ok=True)
+            entry = {
+                "at": _dt.now(_tz.utc).isoformat(),
+                "from_stage": prev.current_stage.value,
+                "to_stage": project.current_stage.value,
+                "last_run_id": project.last_run_id,
+            }
+            with history.open("a", encoding="utf-8") as fh:
+                fh.write(_json.dumps(entry, sort_keys=True) + "\n")
+    except FileNotFoundError:
+        # First save for a new project — no history yet.
+        pass
     path.write_text(yaml.safe_dump(payload, sort_keys=True), encoding="utf-8")
     return path
 

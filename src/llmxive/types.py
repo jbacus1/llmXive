@@ -240,6 +240,12 @@ class ReviewRecord(_Strict):
     prompt_version: SemverField | None = None
     model_name: str | None = None
     backend: BackendName | None = None
+    # Set to True ONLY by the OAuth-authenticated submission flow
+    # (web auth → GitHub PR/issue with the user's verified login).
+    # Self-written human reviews dropped into the filesystem MUST NOT
+    # set this; the advancement-evaluator refuses to count points
+    # from human reviews where this is False/missing.
+    github_authenticated: bool = False
 
     @model_validator(mode="after")
     def _score_matches_verdict(self) -> ReviewRecord:

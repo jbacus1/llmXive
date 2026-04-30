@@ -207,8 +207,62 @@
   "hotPaths": [
     {
       "path": "src/llmxive/web_data.py",
+      "accessCount": 5,
+      "lastAccessed": 1777507049595,
+      "type": "file"
+    },
+    {
+      "path": "src/llmxive/agents/advancement.py",
+      "accessCount": 3,
+      "lastAccessed": 1777507347750,
+      "type": "file"
+    },
+    {
+      "path": "web/js/app.js",
       "accessCount": 2,
-      "lastAccessed": 1777506752435,
+      "lastAccessed": 1777507087689,
+      "type": "file"
+    },
+    {
+      "path": "web/js/dialog.js",
+      "accessCount": 2,
+      "lastAccessed": 1777507111525,
+      "type": "file"
+    },
+    {
+      "path": "src/llmxive/state/project.py",
+      "accessCount": 2,
+      "lastAccessed": 1777507147180,
+      "type": "file"
+    },
+    {
+      "path": "src/llmxive/speckit/implement_cmd.py",
+      "accessCount": 2,
+      "lastAccessed": 1777507206408,
+      "type": "file"
+    },
+    {
+      "path": "src/llmxive/speckit/tasks_cmd.py",
+      "accessCount": 2,
+      "lastAccessed": 1777507237416,
+      "type": "file"
+    },
+    {
+      "path": "src/llmxive/pipeline/graph.py",
+      "accessCount": 2,
+      "lastAccessed": 1777507275134,
+      "type": "file"
+    },
+    {
+      "path": "src/llmxive/types.py",
+      "accessCount": 2,
+      "lastAccessed": 1777507337881,
+      "type": "file"
+    },
+    {
+      "path": "projects/PROJ-023-bayesian-nonparametrics-for-anomaly-dete/paper/results.md",
+      "accessCount": 2,
+      "lastAccessed": 1777509378058,
       "type": "file"
     }
   ],

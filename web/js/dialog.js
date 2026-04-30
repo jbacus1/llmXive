@@ -106,6 +106,24 @@
       '</a>';
   }
 
+  function _authorsHTML(authors) {
+    if (!authors || !authors.length) {
+      return '<div style="color:var(--muted); font-size:11px;">No contributors recorded yet.</div>';
+    }
+    return authors.map(a => {
+      const icon = a.kind === "human"
+        ? '<i class="fa-regular fa-user"></i>'
+        : '<i class="fa-solid fa-robot"></i>';
+      const roles = (a.roles || []).slice(0, 4).map(escapeHtml).join(", ");
+      const moreRoles = (a.roles || []).length > 4 ? `, +${a.roles.length - 4} more` : "";
+      return '<div class="ad-row" style="cursor:default;">' +
+        '<span class="ad-row-icon">' + icon + '</span>' +
+        '<span class="ad-row-label">' + escapeHtml(a.name) + ` <span style="color:var(--muted); font-size:10px;">(${a.contributions} contributions)</span></span>` +
+        '<span class="ad-row-meta">' + roles + moreRoles + '</span>' +
+        '</div>';
+    }).join("");
+  }
+
   function _renderListColumn(project) {
     const links = project.artifact_links || {};
     const artifacts = ARTIFACT_ROWS
@@ -114,6 +132,8 @@
     return '' +
       '<h4>Artifacts</h4>' +
       (artifacts || '<div style="color:var(--muted); font-size:11px;">No artifacts produced yet.</div>') +
+      '<h4>Authors</h4>' +
+      _authorsHTML(project.authors) +
       '<h4>Citations</h4>' +
       _citationHTML(project.citation_summary) +
       '<h4>Recent run-log</h4>' +

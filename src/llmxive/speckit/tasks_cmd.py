@@ -142,14 +142,24 @@ class TaskerAgent(SlashCommandAgent):
             if lines and lines[-1].strip() == "```":
                 lines = lines[:-1]
             text = "\n".join(lines).strip()
-        # Sanity check: a tasks.md must contain at least one task checkbox.
-        # Without this, the analyze loop runs against an empty file and the
-        # Implementer has nothing to do (PROJ-007 hit this when the LLM
-        # returned a 180-byte preamble-only response).
-        if "- [ ]" not in text and "- [X]" not in text and "- [x]" not in text:
+        # Stronger validation: tasks.md must:
+        #   1. NOT be a unified diff (`@@ -...` markers indicate the LLM
+        #      returned a patch instead of the full file)
+        #   2. contain at least 5 task checkboxes (a real research project
+        #      needs setup + multiple phases + polish; <5 is a stub)
+        #   3. each checkbox line MUST start with `- [ ] T` followed by
+        #      digits (T001, T012, etc.) per the format contract
+        if text.lstrip().startswith("@@") or "\n@@ -" in text or "\n@@ +" in text:
             raise RuntimeError(
-                f"Tasker produced no checkbox tasks (got {len(text)} chars). "
-                "Re-running the Tasker on next pipeline cycle will retry."
+                "Tasker returned a unified diff instead of full tasks.md "
+                f"(first 200 chars: {text[:200]!r}). Re-running on next cycle."
+            )
+        import re as _re
+        task_id_lines = _re.findall(r"^- \[[ Xx]\] T\d+\b", text, _re.MULTILINE)
+        if len(task_id_lines) < 5:
+            raise RuntimeError(
+                f"Tasker produced only {len(task_id_lines)} task IDs "
+                f"(need >= 5; total chars: {len(text)}). Re-running on next cycle."
             )
         tasks_path.write_text(text + "\n", encoding="utf-8")
         written = [str(tasks_path.relative_to(repo))]

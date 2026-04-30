@@ -180,14 +180,20 @@ def _paper_complete_preconditions_met(
     """
     if not _all_paper_tasks_done(project_dir):
         return False
-    # LaTeX build: only checked if a main.tex exists.
+    # LaTeX build is REQUIRED — a paper-stage project without a
+    # compilable main.tex is by definition not paper_complete.
     paper_source = project_dir / "paper" / "source" / "main.tex"
-    if paper_source.exists():
-        from llmxive.agents.latex_build import build_paper
-
-        build_result = build_paper(project_id, repo_root=repo_root)
-        if not build_result.get("ok"):
-            return False
+    if not paper_source.exists():
+        return False
+    from llmxive.agents.latex_build import build_paper
+    build_result = build_paper(project_id, repo_root=repo_root)
+    if not build_result.get("ok"):
+        return False
+    # And the produced PDF MUST exist on disk (latex_build sometimes
+    # reports ok without producing the artifact).
+    paper_pdf = project_dir / "paper" / "source" / "main.pdf"
+    if not paper_pdf.exists():
+        return False
     # Citation gate.
     from llmxive.agents.reference_validator import has_blocking_citations
 

@@ -281,6 +281,109 @@ def _project_description(repo: Path, project_id: str, *, max_chars: int = 320) -
     return blob
 
 
+def _project_authors(repo: Path, project_id: str) -> list[dict[str, str]]:
+    """All entities (models + humans) that contributed to the project.
+
+    Aggregates from:
+      - idea/<slug>.md frontmatter (submitter)
+      - state/run-log/**/*.jsonl entries with project_id matching
+      - projects/<id>/reviews/research/*.md frontmatter (reviewer_name + kind)
+      - projects/<id>/paper/reviews/*.md frontmatter
+      - projects/<id>/reviews/paper/*.md frontmatter
+
+    Each author entry includes:
+      - name: the model id, github username, or "human:<name>"
+      - kind: "llm" | "human"
+      - role: comma-joined list of roles (brainstorm, flesh_out, specifier,
+              tasker, implementer, research_reviewer_*, paper_reviewer_*, ...)
+      - contributions: count of distinct contributions
+
+    De-duplicated and sorted by contribution count descending.
+    """
+    bucket: dict[tuple[str, str], dict[str, Any]] = {}
+
+    def add(name: str, kind: str, role: str) -> None:
+        if not name:
+            return
+        key = (_normalize_model_name(name), kind)
+        row = bucket.setdefault(
+            key,
+            {"name": _normalize_model_name(name), "kind": kind, "roles": set(), "contributions": 0},
+        )
+        row["roles"].add(role)
+        row["contributions"] += 1
+
+    pdir = _project_dir(repo, project_id)
+
+    # 1. Idea submitter
+    submitter = _project_submitter(repo, project_id)
+    if submitter and not submitter.startswith(("system:", "legacy:", "agent:")):
+        kind = "llm" if (
+            "/" in submitter
+            or any(p in submitter.lower() for p in ("qwen", "gemma", "claude", "tinyllama", "gpt", "mistral", "llama"))
+            or "." in submitter.split("-")[0]
+        ) else "human"
+        add(submitter, kind, "brainstorm_submitter")
+
+    # 2. Run-log: every successful agent invocation contributes its model
+    runlog_root = repo / "state" / "run-log"
+    if runlog_root.is_dir():
+        for month_dir in runlog_root.iterdir():
+            if not month_dir.is_dir() or month_dir.name.startswith("."):
+                continue
+            for jsonl in month_dir.glob("*.jsonl"):
+                for line in jsonl.read_text(encoding="utf-8", errors="ignore").splitlines():
+                    if not line.strip():
+                        continue
+                    try:
+                        e = json.loads(line)
+                    except json.JSONDecodeError:
+                        continue
+                    if e.get("project_id") != project_id:
+                        continue
+                    if e.get("outcome") != "success":
+                        continue
+                    model = (e.get("model_name") or "").strip()
+                    role = (e.get("agent_name") or "").strip()
+                    if model:
+                        add(model, "llm", role or "agent")
+
+    # 3. Review records (both stages)
+    for sub in ("reviews/research", "paper/reviews", "reviews/paper"):
+        rdir = pdir / sub
+        if not rdir.is_dir():
+            continue
+        for md in rdir.rglob("*.md"):
+            try:
+                text = md.read_text(encoding="utf-8", errors="ignore")
+            except OSError:
+                continue
+            if not text.startswith("---"):
+                continue
+            try:
+                end = text.index("---", 3)
+                fm = yaml.safe_load(text[3:end]) or {}
+            except (ValueError, yaml.YAMLError):
+                continue
+            name = str(fm.get("model_name") or fm.get("reviewer_name") or "").strip()
+            kind_raw = str(fm.get("reviewer_kind", "")).strip()
+            if not name:
+                continue
+            kind = "human" if kind_raw == "human" else "llm"
+            role = str(fm.get("reviewer_name") or "reviewer").strip()
+            add(name, kind, role)
+
+    out = []
+    for r in sorted(bucket.values(), key=lambda r: -r["contributions"]):
+        out.append({
+            "name": r["name"],
+            "kind": r["kind"],
+            "roles": sorted(r["roles"]),
+            "contributions": r["contributions"],
+        })
+    return out
+
+
 def _project_to_entry(repo: Path, project: Project) -> dict[str, Any]:
     research_total = float(sum(project.points_research.values()))
     paper_total = float(sum(project.points_paper.values()))
@@ -297,6 +400,7 @@ def _project_to_entry(repo: Path, project: Project) -> dict[str, Any]:
         "keywords": _project_keywords(repo, project.id),
         "description": _project_description(repo, project.id),
         "submitter": _project_submitter(repo, project.id),
+        "authors": _project_authors(repo, project.id),
         "speckit_research_dir": project.speckit_research_dir,
         "speckit_paper_dir": project.speckit_paper_dir,
         "artifact_links": _build_artifact_links(repo, project),

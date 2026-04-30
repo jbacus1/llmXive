@@ -199,6 +199,7 @@ class ImplementerAgent(SlashCommandAgent):
             # capture stdout/stderr. Reviewers later check that the
             # task actually produced expected output, not just code.
             from llmxive import sandbox as _sandbox
+            execute_results: list[tuple[str, _sandbox.ExecutionResult]] = []
             for art in doc.get("artifacts", []) or []:
                 if not art.get("execute"):
                     continue
@@ -233,10 +234,35 @@ class ImplementerAgent(SlashCommandAgent):
                     encoding="utf-8",
                 )
                 written.append(str(log_path.relative_to(repo)))
+                execute_results.append((relpath, result))
 
-            # Check off the task in tasks.md.
+            # Execution-result gating: if any execute:true script exited
+            # non-zero, the task did NOT actually produce its output.
+            # Mark the task as FAILED-IN-EXECUTION with a clear
+            # annotation rather than checking it off as completed.
+            # The downstream reviewer will see the FAILED tag and
+            # request a revision.
+            failed_scripts = [(p, r) for p, r in execute_results if not r.ok]
             tasks_path = Path(mechanical_output["tasks_path"])
             text = tasks_path.read_text(encoding="utf-8")
+            if failed_scripts:
+                fail_summary = "; ".join(
+                    f"{p} exit={r.returncode}{' (TIMEOUT)' if r.timed_out else ''}"
+                    for p, r in failed_scripts
+                )
+                text = re.sub(
+                    rf"^- \[ \] ({re.escape(task_id)}\b)([^\n]*)$",
+                    rf"- [X] \1\2 <!-- FAILED-IN-EXECUTION: {fail_summary} -->",
+                    text,
+                    count=1,
+                    flags=re.MULTILINE,
+                )
+                tasks_path.write_text(text, encoding="utf-8")
+                written.append(str(tasks_path.relative_to(repo)))
+                print(
+                    f"[implementer] task {task_id} marked FAILED-IN-EXECUTION: {fail_summary}"
+                )
+                return written  # do not also run the "completed" check-off below
             text = re.sub(
                 rf"^- \[ \] ({re.escape(task_id)}\b)",
                 r"- [X] \1",

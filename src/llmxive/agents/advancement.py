@@ -102,6 +102,12 @@ def _award_review_points(
         author = _produced_by(project, rec.artifact_path)
         if author and author == rec.reviewer_name:
             continue
+        # Reject un-authenticated human reviews. Anyone could drop a
+        # YAML file into reviews/ claiming reviewer_kind=human; the
+        # github_authenticated flag is set only by the OAuth-backed
+        # submission flow.
+        if rec.reviewer_kind == ReviewerKind.HUMAN and not rec.github_authenticated:
+            continue
         awarded += rec.score
     target = (
         project.points_paper if is_paper_stage else project.points_research
