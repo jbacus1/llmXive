@@ -266,6 +266,24 @@ class ImplementerAgent(SlashCommandAgent):
                         f"content to {relpath!r} (first line: {stripped_first!r})"
                     )
                     continue
+                # Pre-flight syntax check for .py files: refuse to write
+                # source that won't even compile. Catches LLM truncation
+                # mid-dict (output ran out of tokens) and obvious typos
+                # BEFORE the file lands on disk + a subsequent task
+                # tries to import it. Prevents cascading import-failure
+                # chains where one broken sibling kills 5+ downstream
+                # tasks.
+                if relpath.endswith(".py"):
+                    try:
+                        compile(contents, target.name, "exec")
+                    except SyntaxError as exc:
+                        print(
+                            f"[implementer] refusing to write {relpath!r}: "
+                            f"SyntaxError at line {exc.lineno}: {exc.msg}. "
+                            f"Likely truncation (output ran out of tokens) "
+                            f"or unbalanced bracket. Total chars: {len(contents)}"
+                        )
+                        continue
                 target.parent.mkdir(parents=True, exist_ok=True)
                 target.write_text(contents, encoding="utf-8")
                 written.append(str(target.relative_to(repo)))
@@ -405,11 +423,25 @@ _TOP_IMPORT_RE = re.compile(
 )
 
 
-def _summarize_existing_code(project_dir: Path, *, max_chars: int = 8000) -> str:
+def _summarize_existing_code(project_dir: Path, *, max_chars: int = 16000) -> str:
     """Return a compact API-surface listing of every Python file in code/.
 
-    For each file: list top-level class/function names and top-level
-    imports. Capped to `max_chars` so the prompt stays in budget.
+    For each file: list canonical import path, top-level class/function
+    names, and top-level imports. Capped to `max_chars` so the prompt
+    stays in budget.
+
+    Canonical import path is computed assuming `code/` is on
+    PYTHONPATH (this is how sandbox.py invokes scripts: `python <abs
+    path>` resolves siblings via the script's own dir, AND
+    `cwd=project_dir` puts `code/` reachable as e.g. `models.dpgmm`).
+
+    Example output for code/models/dpgmm.py:
+        ### code/models/dpgmm.py
+        import as: `from models.dpgmm import DPGMMModel, DPGMMConfig`
+        public names: DPGMMModel, DPGMMConfig
+        imports:
+          import numpy as np
+          from typing import Optional
     """
     code_dir = project_dir / "code"
     if not code_dir.is_dir():
@@ -417,6 +449,8 @@ def _summarize_existing_code(project_dir: Path, *, max_chars: int = 8000) -> str
     lines: list[str] = []
     for fp in sorted(code_dir.rglob("*.py")):
         if any(p in fp.parts for p in (".venv", "__pycache__", ".tasks")):
+            continue
+        if fp.name == "__init__.py":
             continue
         try:
             text = fp.read_text(encoding="utf-8", errors="replace")
@@ -429,7 +463,16 @@ def _summarize_existing_code(project_dir: Path, *, max_chars: int = 8000) -> str
         imports = list(_TOP_IMPORT_RE.findall(text))[:6]
         if not names and not imports:
             continue
+        # Canonical import path: drop "code/" prefix and ".py" suffix,
+        # convert "/" to ".".  For tests/, drop "code/" and prefix with
+        # "tests." (test runner adds tests/ to path).
+        rel_to_code = fp.relative_to(code_dir).with_suffix("").as_posix().replace("/", ".")
+        import_stmt = (
+            f"from {rel_to_code} import " + ", ".join(names[:8])
+            if names else f"import {rel_to_code}"
+        )
         chunk_lines = [f"### {rel}"]
+        chunk_lines.append(f"import as: `{import_stmt}`")
         if names:
             chunk_lines.append("public names: " + ", ".join(names))
         if imports:

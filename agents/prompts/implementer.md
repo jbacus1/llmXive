@@ -171,3 +171,64 @@ detection:
 If you do not know a real URL, your script MUST generate the data
 synthetically and document the synthesis in `data/README.md`. Do
 NOT invent a URL.
+
+## Output completeness (CRITICAL)
+
+The runtime gives you up to 32K output tokens — generous, but you
+MUST emit the COMPLETE file in one shot.  Truncated output (e.g.
+mid-dict, mid-string, unbalanced brackets) is REJECTED at write
+time by a `compile()` pre-flight check, the task fails, and we
+waste a turn.  Before emitting, mentally check:
+
+- All `{`, `[`, `(` have matching closers.
+- The last line of any function or class returns a complete
+  expression / has `pass` if intentionally empty.
+- Triple-quoted docstrings are terminated.
+- The file ends on a complete line.
+
+If you have to omit anything, emit a `# TODO(implementer):` comment
+in valid syntax rather than letting the file be truncated.
+
+## Common Python library gotchas (avoid these)
+
+These are the most frequent runtime errors we see — write your code
+to avoid them up front rather than discovering them via execution
+failure:
+
+1. **`from typing import List, Optional, Dict, Tuple, Any`** — if
+   you use any of these in type hints, ALL of them must be imported.
+   Modern Python 3.9+ allows `list[int]` instead of `List[int]`, but
+   if you write `List[int]` you must import `List`.  Either style is
+   fine, just be consistent within a file.
+
+2. **`json.dumps(numpy_value)` raises `TypeError: Object of type
+   bool_/int64/ndarray is not JSON serializable`.**  Always convert
+   numpy scalars first:
+   ```python
+   import numpy as np
+   def _np_to_py(o):
+       if isinstance(o, np.ndarray): return o.tolist()
+       if isinstance(o, (np.bool_,)): return bool(o)
+       if isinstance(o, (np.integer,)): return int(o)
+       if isinstance(o, (np.floating,)): return float(o)
+       raise TypeError(f"unhandled: {type(o)}")
+   json.dumps(data, default=_np_to_py)
+   ```
+   Or simpler — convert the whole structure with `pandas.DataFrame.to_json`
+   or `np.asarray(...).tolist()` before json.dumps.
+
+3. **`urllib.request.urlretrieve(url, dest, context=ctx)` is invalid.**
+   `urlretrieve` does NOT take a `context` keyword — only `urlopen`
+   does.  Use `urllib.request.urlopen(url, context=ctx)` and write
+   the response yourself, OR set the SSL context globally via
+   `ssl._create_default_https_context = ssl._create_unverified_context`
+   before calling `urlretrieve`.
+
+4. **Import paths must match the API-surface block exactly.**  If
+   the API surface lists `from models.dpgmm import DPGMMModel`,
+   that's the canonical path — don't write `from src.models.dpgmm`
+   or `from code.models.dpgmm` or `from .dpgmm`.
+
+5. **pandas.DataFrame doesn't have `.to_csv` if it's None.**  Always
+   check that operations returning DataFrames actually produced a
+   DataFrame before calling methods on the result.

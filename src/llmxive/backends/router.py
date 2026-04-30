@@ -74,7 +74,15 @@ def chat_with_fallback(
     import time as _time
 
     if max_tokens is None:
-        max_tokens = 8192
+        # 32K default — tokens cost time but not money on Dartmouth's
+        # community plan, so we use the largest sensible budget.
+        # Implementer artifacts are full files (model classes,
+        # baselines, integration tests) that frequently exceeded 8K
+        # and got truncated mid-dict producing SyntaxError. 32K covers
+        # essentially all single-file outputs (qwen3.5-122b 32K ctx,
+        # gpt-oss-120b and gemma-3-27b-it have 128K ctx so headroom
+        # for the prompt is plenty).
+        max_tokens = 32768
     chain = [default_backend, *fallback_backends]
     errors: list[str] = []
     msg_list = list(messages)

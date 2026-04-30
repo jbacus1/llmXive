@@ -207,8 +207,8 @@
   "hotPaths": [
     {
       "path": "src/llmxive/speckit/implement_cmd.py",
-      "accessCount": 15,
-      "lastAccessed": 1777558201658,
+      "accessCount": 19,
+      "lastAccessed": 1777580763136,
       "type": "file"
     },
     {
@@ -218,15 +218,21 @@
       "type": "file"
     },
     {
+      "path": "agents/prompts/implementer.md",
+      "accessCount": 9,
+      "lastAccessed": 1777580793373,
+      "type": "file"
+    },
+    {
       "path": "src/llmxive/agents/advancement.py",
       "accessCount": 8,
       "lastAccessed": 1777571864814,
       "type": "file"
     },
     {
-      "path": "agents/prompts/implementer.md",
+      "path": "src/llmxive/backends/router.py",
       "accessCount": 7,
-      "lastAccessed": 1777578256636,
+      "lastAccessed": 1777580735131,
       "type": "file"
     },
     {
@@ -257,12 +263,6 @@
       "path": "agents/prompts/tasker.md",
       "accessCount": 4,
       "lastAccessed": 1777553767354,
-      "type": "file"
-    },
-    {
-      "path": "src/llmxive/backends/router.py",
-      "accessCount": 4,
-      "lastAccessed": 1777568708859,
       "type": "file"
     },
     {
