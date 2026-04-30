@@ -125,7 +125,18 @@ class DartmouthBackend(BaseBackend):
             reply = client.invoke(msg_objs, **kwargs)  # type: ignore[arg-type]
         except Exception as exc:
             text = str(exc).lower()
-            if any(s in text for s in ("rate limit", "quota", "429", "timeout", "5xx")):
+            transient_markers = (
+                "rate limit", "quota", "429", "timeout", "5xx",
+                # Dartmouth's vLLM backend transients:
+                "500", "502", "503", "504", "internal server error",
+                "cannot connect to host", "connection reset", "connection refused",
+                "service unavailable", "bad gateway", "gateway timeout",
+                "internalservererror", "operation not permitted",
+                "litellm.internalservererror",
+                # Network-level transients:
+                "temporary failure", "name resolution", "connection error",
+            )
+            if any(s in text for s in transient_markers):
                 raise TransientBackendError(str(exc)) from exc
             raise PermanentBackendError(str(exc)) from exc
 

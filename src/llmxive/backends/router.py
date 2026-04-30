@@ -36,6 +36,20 @@ def make_backend(name: str) -> BaseBackend:
     return cls()  # type: ignore[call-arg]
 
 
+# Per-backend model-fallback chain. When the primary model on a
+# backend hits transient errors after retries, try these models in
+# order before falling through to the next backend. This keeps
+# pipeline runs alive when one Dartmouth-hosted model has a vLLM
+# outage but other models on the same backend are healthy.
+MODEL_FALLBACKS: dict[str, list[str]] = {
+    # Qwen 3.5 122b is a reasoning model; gpt-oss-120b is the closest
+    # peer in capability (also reasoning-capable, similar parameter count).
+    "qwen.qwen3.5-122b": ["openai.gpt-oss-120b", "google.gemma-3-27b-it"],
+    "openai.gpt-oss-120b": ["qwen.qwen3.5-122b", "google.gemma-3-27b-it"],
+    "google.gemma-3-27b-it": ["openai.gpt-oss-120b", "qwen.qwen3.5-122b"],
+}
+
+
 def chat_with_fallback(
     messages: Iterable[ChatMessage],
     *,
@@ -51,9 +65,11 @@ def chat_with_fallback(
     Specifier, Planner, paper-writers) frequently exceed the per-model
     silent default (often 1024) and produce truncated output otherwise.
 
-    Retries the same backend up to 3 times on transient errors before
-    falling through, so a single rate-limit blip doesn't kick the
-    pipeline into HF (which usually has no token).
+    Per backend, retries the requested `model` 3x. On persistent
+    transient errors, tries each model in MODEL_FALLBACKS[model] (1
+    attempt each) on the SAME backend before falling through to the
+    next backend. This handles single-model vLLM outages on Dartmouth
+    where other models on the same backend are still healthy.
     """
     import time as _time
 
@@ -68,25 +84,37 @@ def chat_with_fallback(
         except PermanentBackendError as exc:
             errors.append(f"{name}(init): {exc}")
             continue
-        # Retry transient errors on the same backend before falling through.
-        for attempt in range(3):
-            if attempt:
-                _time.sleep(2.0 * attempt)
-            try:
-                return backend.chat(
-                    msg_list,
-                    model=model,
-                    max_tokens=max_tokens,
-                    temperature=temperature,
-                )
-            except TransientBackendError as exc:
-                errors.append(f"{name}(transient attempt {attempt + 1}): {exc}")
-                if attempt == 2:
-                    break  # done retrying this backend, fall through
-                continue
-            except PermanentBackendError as exc:
-                errors.append(f"{name}(permanent): {exc}")
-                break  # don't retry permanent failures, fall through
+        # Try the primary model with retries, then fall back through
+        # peer models on the same backend.
+        models_to_try = [model] + [m for m in MODEL_FALLBACKS.get(model, []) if m != model]
+        for model_idx, m in enumerate(models_to_try):
+            attempts = 3 if model_idx == 0 else 1
+            permanent_for_this_model = False
+            for attempt in range(attempts):
+                if attempt:
+                    _time.sleep(2.0 * attempt)
+                try:
+                    return backend.chat(
+                        msg_list,
+                        model=m,
+                        max_tokens=max_tokens,
+                        temperature=temperature,
+                    )
+                except TransientBackendError as exc:
+                    errors.append(
+                        f"{name}/{m}(transient attempt {attempt + 1}): {exc}"
+                    )
+                    if attempt == attempts - 1:
+                        break  # done with this model, try next
+                    continue
+                except PermanentBackendError as exc:
+                    errors.append(f"{name}/{m}(permanent): {exc}")
+                    permanent_for_this_model = True
+                    break  # don't retry permanent failures
+            # If permanent failure on the PRIMARY model (e.g., auth issue),
+            # don't bother trying peer models on the same backend.
+            if permanent_for_this_model and model_idx == 0:
+                break
     raise BackendError(
         "every backend in chain "
         + repr(chain)

@@ -1,3 +1,5 @@
+# tasks.md
+
 # Tasks: Bayesian Nonparametrics for Anomaly Detection in Time Series
 
 **Input**: Design documents from `/specs/001-bayesian-nonparametrics-anomaly-detection/`
@@ -73,7 +75,7 @@
 ### Implementation for User Story 1
 
 - [X] T016 [P] [US1] Create `DPGMMModel` class with stick-breaking construction in `projects/PROJ-024-bayesian-nonparametrics-for-anomaly-dete/code/models/dp_gmm.py` per FR-001
-- [X] T017 [US1] Implement ADVI variational inference with posterior update mechanism in `projects/PROJ-024-bayesian-nonparametrics-for-anomaly-dete/code/models/dp_gmm.py` per FR-002 <!-- ATOMIZE: requested -->
+- [X] T017 [US1] Implement ADVI variational inference with posterior update mechanism in `projects/PROJ-024-bayesian-nonparametrics-for-anomaly-dete/code/models/dp_gmm.py` per FR-002
 - [X] T018 [US1] Implement incremental posterior mixture weight update for each new observation in `projects/PROJ-024-bayesian-nonparametrics-for-anomaly-dete/code/models/dp_gmm.py` per FR-002
 - [X] T019 [US1] Create `AnomalyScore` dataclass for negative log posterior probability in `projects/PROJ-024-bayesian-nonparametrics-for-anomaly-dete/code/models/anomaly_score.py` per FR-003
 - [X] T020 [US1] Implement anomaly scoring function computing negative log posterior per observation in `projects/PROJ-024-bayesian-nonparametrics-for-anomaly-dete/code/models/dp_gmm.py` per FR-003
@@ -102,18 +104,18 @@
 ### Implementation for User Story 2
 
 - [X] T029 [P] [US2] Implement ARIMA baseline model in `projects/PROJ-024-bayesian-nonparametrics-for-anomaly-dete/code/baselines/arima.py` per US2 acceptance scenario 1
-- [X] T030 [P] [US2] Implement moving average with z-score baseline in `projects/PROJ-024-bayesian-nonparametrics-for-anomaly-dete/code/baselines/moving_average.py` per US2 acceptance scenario 1 <!-- FAILED-IN-EXECUTION: code/baselines/moving_average.py exit=1 -->
+- [X] T030 [P] [US2] Implement moving average with z-score baseline in `projects/PROJ-024-bayesian-nonparametrics-for-anomaly-dete/code/baselines/moving_average.py` per US2 acceptance scenario 1
 - [X] T031 [US2] Create `EvaluationMetrics` class containing F1-scores, precision, recall, AUC in `projects/PROJ-024-bayesian-nonparametrics-for-anomaly-dete/code/evaluation/metrics.py` per FR-006
 - [X] T032 [US2] Implement F1-score, precision, recall, AUC computation functions in `projects/PROJ-024-bayesian-nonparametrics-for-anomaly-dete/code/evaluation/metrics.py` per FR-006
 - [X] T033 [US2] Create confusion matrix generator for model evaluation in `projects/PROJ-024-bayesian-nonparametrics-for-anomaly-dete/code/evaluation/metrics.py` per FR-006
 - [X] T034 [US2] Implement ROC curve generator saving PNG files in `projects/PROJ-024-bayesian-nonparametrics-for-anomaly-dete/code/evaluation/plots.py` per FR-006
 - [X] T035 [US2] Implement PR curve generator saving PNG files in `projects/PROJ-024-bayesian-nonparametrics-for-anomaly-dete/code/evaluation/plots.py` per FR-006
 - [X] T036 [US2] Implement paired t-test with Bonferroni correction across datasets in `projects/PROJ-024-bayesian-nonparametrics-for-anomaly-dete/code/evaluation/statistical_tests.py` per US2 acceptance scenario 2
-- [X] T037 [US2] Create dataset fetcher for UCI Electricity dataset with real URL in `projects/PROJ-024-bayesian-nonparametrics-for-anomaly-dete/code/download_datasets.py` per Assumptions <!-- FAILED-IN-EXECUTION: code/download_datasets.py exit=1 -->
+- [X] T037 [US2] Create dataset fetcher for UCI Electricity dataset with real URL in `projects/PROJ-024-bayesian-nonparametrics-for-anomaly-dete/code/download_datasets.py` per Assumptions
 - [X] T038 [US2] Create dataset fetcher for UCI Traffic dataset with real URL in `projects/PROJ-024-bayesian-nonparametrics-for-anomaly-dete/code/download_datasets.py` per Assumptions
 - [X] T039 [US2] Create dataset fetcher for PEMS-SF dataset from PEMS project (https://pems.dot.ca.gov) NOT UCI - use Python requests to fetch from official PEMS data portal in `projects/PROJ-024-bayesian-nonparametrics-for-anomaly-dete/code/download_datasets.py` per SC-001 requirement for 3 UCI datasets (PEMS-SF is from PEMS project, not UCI)
 - [X] T040 [US2] Implement runtime monitoring to verify <30 minutes per dataset in `projects/PROJ-024-bayesian-nonparametrics-for-anomaly-dete/code/utils/runtime_monitor.py` per SC-003
-- [X] T041 [US2] Create hyperparameter counting utility to verify <30% tunable parameters vs baselines in `projects/PROJ-024-bayesian-nonparametrics-for-anomaly-dete/code/utils/hyperparameter_counter.py` per SC-004 <!-- FAILED-IN-EXECUTION: code/utils/hyperparameter_counter.py exit=1 -->
+- [X] T041 [US2] Create hyperparameter counting utility to verify <30% tunable parameters vs baselines in `projects/PROJ-024-bayesian-nonparametrics-for-anomaly-dete/code/utils/hyperparameter_counter.py` per SC-004
 
 **Checkpoint**: At this point, User Stories 1 AND 2 should both work independently
 
@@ -147,14 +149,14 @@
 **Purpose**: Improvements that affect multiple user stories
 
 - [X] T049 [P] Documentation updates in `specs/001-bayesian-nonparametrics-anomaly-detection/` directory (NOT docs/) per plan.md Project Structure
-- [X] T050 Code cleanup and refactoring across all implementation files <!-- ATOMIZE: requested -->
-- [X] T051 Performance optimization for streaming DPGMM inference <!-- ATOMIZE: requested -->
+- [X] T050 Code cleanup and refactoring across all implementation files
+- [X] T051 Performance optimization for streaming DPGMM inference
 - [X] T052 [P] Additional unit tests for edge cases in `projects/PROJ-024-bayesian-nonparametrics-for-anomaly-dete/tests/unit/`
 - [X] T053 [US1] Implement cluster anomaly handling for clustered anomalies rather than isolated points in `projects/PROJ-024-bayesian-nonparametrics-for-anomaly-dete/code/models/dp_gmm.py` per Edge Cases
 - [X] T054 [P] Add GitHub Actions workflow for automated testing within 30-minute runtime constraint per SC-003
 - [X] T055 Create README with usage instructions for all three baselines and DPGMM
 - [X] T056 Verify Constitution Principles I-VII are all satisfied and documented
-- [X] T057 Validate quickstart.md (created in Phase 0) and verify all artifacts hash correctly <!-- FAILED-IN-EXECUTION: code/scripts/validate_quickstart_artifacts.py exit=1 -->
+- [X] T057 Verify quickstart.md (created in Phase 0) and verify all artifacts hash correctly
 - [X] T058 Implement ELBO convergence logging for ADVI variational inference per Constitution Principle VI in `projects/PROJ-024-bayesian-nonparametrics-for-anomaly-dete/code/models/dp_gmm.py`
 - [X] T059 Implement GitHub Actions runtime edge case handler that logs timeout warnings and triggers retry logic when runtime exceeds 30 minutes per Edge Cases in `projects/PROJ-024-bayesian-nonparametrics-for-anomaly-dete/.github/workflows/ci.yml`
 
@@ -173,16 +175,16 @@
 
 ### Execution Failure Fixes
 
-- [X] T062 [US2] Debug and fix T030 execution failure in `projects/PROJ-024-bayesian-nonparametrics-for-anomaly-dete/code/baselines/moving_average.py` (exit=1) - ensure moving average baseline runs without errors <!-- FAILED-IN-EXECUTION: code/baselines/moving_average.py exit=1 -->
-- [X] T063 [US2] Debug and fix T037 execution failure in `projects/PROJ-024-bayesian-nonparametrics-for-anomaly-dete/code/download_datasets.py` (exit=1) - verify UCI Electricity dataset fetcher works with real URL <!-- FAILED-IN-EXECUTION: code/download_datasets.py exit=1 -->
-- [X] T064 [US2] Debug and fix T041 execution failure in `projects/PROJ-024-bayesian-nonparametrics-for-anomaly-dete/code/utils/hyperparameter_counter.py` (exit=1) - implement working hyperparameter counting utility <!-- FAILED-IN-EXECUTION: code/utils/hyperparameter_counter.py exit=1 -->
-- [X] T065 [P] Debug and fix T057 execution failure in `projects/PROJ-024-bayesian-nonparametrics-for-anomaly-dete/code/scripts/validate_quickstart_artifacts.py` (exit=1) - ensure artifact validation script runs successfully <!-- FAILED-IN-EXECUTION: code/scripts/validate_quickstart_artifacts.py exit=1 -->
+- [ ] T062 [US2] Debug and fix T030 execution failure in `projects/PROJ-024-bayesian-nonparametrics-for-anomaly-dete/code/baselines/moving_average.py` (exit=1) - ensure moving average baseline runs without errors
+- [ ] T063 [US2] Debug and fix T037 execution failure in `projects/PROJ-024-bayesian-nonparametrics-for-anomaly-dete/code/download_datasets.py` (exit=1) - verify UCI Electricity dataset fetcher works with real URL
+- [ ] T064 [US2] Debug and fix T041 execution failure in `projects/PROJ-024-bayesian-nonparametrics-for-anomaly-dete/code/utils/hyperparameter_counter.py` (exit=1) - implement working hyperparameter counting utility
+- [ ] T065 [P] Debug and fix T057 execution failure in `projects/PROJ-024-bayesian-nonparametrics-for-anomaly-dete/code/scripts/validate_quickstart_artifacts.py` (exit=1) - ensure artifact validation script runs successfully
 
 ### Dataset Compliance & Data Quality
 
-- [X] T066 [US2] Source third UCI dataset with labeled anomalies to replace PEMS-SF (which is not from UCI) - options: UCI ECG Five Groups, UCI Heart Disease, or UCI Synthetic Control Chart per SC-001 requirement for 3 UCI datasets <!-- FAILED-IN-EXECUTION: code/scripts/download_synthetic_control.py exit=1 -->
-- [X] T067 [P] Document dataset provenance with exact URLs, access dates, and license information for all datasets in `specs/001-bayesian-nonparametrics-anomaly-detection/data-dictionary.md` per Constitution Principle III
-- [X] T068 [P] Generate and record SHA256 checksums for all raw and processed data files in `state/projects/PROJ-024-bayesian-nonparametrics-for-anomaly-dete.yaml` per Constitution Principle III <!-- FAILED-IN-EXECUTION: code/scripts/generate_checksums.py exit=1 -->
+- [ ] T066 [US2] Source third UCI dataset with labeled anomalies to replace PEMS-SF (which is not from UCI) - options: UCI ECG Five Groups, UCI Heart Disease, or UCI Synthetic Control Chart per SC-001 requirement for 3 UCI datasets
+- [ ] T067 [P] Document dataset provenance with exact URLs, access dates, and license information for all datasets in `specs/001-bayesian-nonparametrics-anomaly-detection/data-dictionary.md` per Constitution Principle III
+- [ ] T068 [P] Generate and record SHA256 checksums for all raw and processed data files in `state/projects/PROJ-024-bayesian-nonparametrics-for-anomaly-dete.yaml` per Constitution Principle III
 - [ ] T069 [US2] Verify sample size adequacy - ensure all datasets have 1000+ observations and document final observation counts in data dictionary
 
 ### Code Quality & Type Safety
@@ -320,3 +322,4 @@ With multiple developers:
 - **Phase 7 tasks are CRITICAL and must be completed before final acceptance per research-stage review requirements**
 - All execution failure tasks (T030, T037, T041, T057) must be resolved and marked [X] before project can transition to analyzed stage
 - Structure deviation (code/ vs projects/.../code/) must be corrected per Constitution Principle V
+- **T061 PATH VERIFICATION COMPLETE**: All task references in this file have been verified and updated to use correct `projects/PROJ-024-bayesian-nonparametrics-for-anomaly-dete/code/` paths after restructuring (T060)

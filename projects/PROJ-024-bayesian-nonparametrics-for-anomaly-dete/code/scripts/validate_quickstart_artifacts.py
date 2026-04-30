@@ -1,311 +1,410 @@
+#!/usr/bin/env python3
 """
-Validate quickstart.md and verify all artifacts hash correctly.
+Validate Quickstart Artifacts Script (T057/T065)
 
-This script:
-1. Reads quickstart.md from specs/001-bayesian-nonparametrics-anomaly-detection/
-2. Parses artifact references mentioned in the document
-3. Verifies each artifact exists on disk
-4. Computes SHA256 checksums for each artifact
-5. Compares against stored hashes in state/projects/PROJ-024-bayesian-nonparametrics-for-anomaly-dete.yaml
-6. Outputs a validation report with pass/fail status
+Purpose: Verify all artifacts referenced in quickstart.md exist and
+         have correct checksums recorded in state/projects/PROJ-024-*.yaml
 
-Usage:
-    python code/scripts/validate_quickstart_artifacts.py
+Exit Codes:
+  0 - All artifacts validated successfully
+  1 - Validation failed (missing artifacts, checksum mismatch, etc.)
 
-Exit codes:
-    0 - All artifacts validated successfully
-    1 - One or more artifacts failed validation
+Usage: python code/scripts/validate_quickstart_artifacts.py
+       (no arguments required - does full validation on invocation)
 """
+
 import os
 import sys
 import hashlib
 import json
 from pathlib import Path
 from typing import Dict, Any, List, Tuple, Optional
-from dataclasses import dataclass, asdict
+import logging
 import yaml
+from dataclasses import dataclass, field, asdict
+from datetime import datetime
 
-# Add project root to path
-PROJECT_ROOT = Path(__file__).parent.parent.parent
-sys.path.insert(0, str(PROJECT_ROOT / "code"))
+# Configure logging
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(levelname)s - %(message)s'
+)
+logger = logging.getLogger(__name__)
 
-from utils.checksum_manager import ChecksumManager, ChecksumResult, ArtifactEntry
-from utils.streaming import StreamingObservation
+# Project root is 3 levels up from this script
+SCRIPT_DIR = Path(__file__).parent.resolve()
+CODE_DIR = SCRIPT_DIR.parent
+PROJECT_ROOT = CODE_DIR.parent
+
+# Path constants
+STATE_FILE_PATH = PROJECT_ROOT / "state" / "projects" / "PROJ-024-bayesian-nonparametrics-for-anomaly-dete.yaml"
+QUICKSTART_DOC_PATH = PROJECT_ROOT / "specs" / "001-bayesian-nonparametrics-anomaly-detection" / "quickstart.md"
+DATA_DIR = PROJECT_ROOT / "data"
+RESEARCH_DOC_PATH = PROJECT_ROOT / "specs" / "001-bayesian-nonparametrics-anomaly-detection" / "research.md"
+DATA_MODEL_DOC_PATH = PROJECT_ROOT / "specs" / "001-bayesian-nonparametrics-anomaly-detection" / "data-model.md"
 
 @dataclass
 class ValidationReport:
-    """Report structure for artifact validation results."""
-    quickstart_path: str
-    total_artifacts: int
-    passed: int
-    failed: int
-    missing: int
-    results: List[Dict[str, Any]]
-    overall_status: str
-    timestamp: str
+    """Validation report for quickstart artifacts"""
+    timestamp: str = field(default_factory=lambda: datetime.now().isoformat())
+    project_id: str = "PROJ-024-bayesian-nonparametrics-for-anomaly-dete"
+    total_artifacts: int = 0
+    validated_artifacts: int = 0
+    failed_artifacts: int = 0
+    missing_artifacts: List[str] = field(default_factory=list)
+    checksum_mismatches: List[Dict[str, Any]] = field(default_factory=list)
+    validation_errors: List[str] = field(default_factory=list)
+    status: str = "pending"  # pending, success, failure
+    details: List[Dict[str, Any]] = field(default_factory=list)
 
-def compute_file_checksum(filepath: Path) -> Optional[str]:
-    """Compute SHA256 checksum of a file."""
-    if not filepath.exists():
+    def to_dict(self) -> Dict[str, Any]:
+        return asdict(self)
+
+    def to_json(self) -> str:
+        return json.dumps(self.to_dict(), indent=2)
+
+def compute_file_checksum(file_path: Path) -> Optional[str]:
+    """Compute SHA256 checksum of a file"""
+    if not file_path.exists():
         return None
     
     sha256_hash = hashlib.sha256()
     try:
-        with open(filepath, "rb") as f:
-            for chunk in iter(lambda: f.read(8192), b""):
-                sha256_hash.update(chunk)
+        with open(file_path, "rb") as f:
+            for byte_block in iter(lambda: f.read(4096), b""):
+                sha256_hash.update(byte_block)
         return sha256_hash.hexdigest()
     except Exception as e:
-        print(f"Error computing checksum for {filepath}: {e}")
+        logger.error(f"Error computing checksum for {file_path}: {e}")
         return None
 
-def load_state_file(state_path: Path) -> Dict[str, Any]:
-    """Load the project state YAML file containing artifact hashes."""
+def load_state_file(state_path: Path) -> Optional[Dict[str, Any]]:
+    """Load state YAML file with artifact checksums"""
     if not state_path.exists():
-        return {}
+        logger.warning(f"State file not found: {state_path}")
+        return None
     
     try:
-        with open(state_path, "r") as f:
-            return yaml.safe_load(f) or {}
+        with open(state_path, 'r') as f:
+            return yaml.safe_load(f)
     except Exception as e:
-        print(f"Error loading state file {state_path}: {e}")
-        return {}
+        logger.error(f"Error loading state file {state_path}: {e}")
+        return None
 
-def load_quickstart_doc(quickstart_path: Path) -> str:
-    """Load the quickstart.md document."""
+def load_quickstart_doc(quickstart_path: Path) -> Optional[str]:
+    """Load quickstart.md document content"""
     if not quickstart_path.exists():
-        raise FileNotFoundError(f"quickstart.md not found at {quickstart_path}")
+        logger.warning(f"Quickstart document not found: {quickstart_path}")
+        return None
     
-    with open(quickstart_path, "r", encoding="utf-8") as f:
-        return f.read()
+    try:
+        with open(quickstart_path, 'r', encoding='utf-8') as f:
+            return f.read()
+    except Exception as e:
+        logger.error(f"Error loading quickstart document {quickstart_path}: {e}")
+        return None
 
-def parse_artifact_references(quickstart_content: str) -> List[str]:
-    """
-    Parse artifact references from quickstart.md.
-    
-    Looks for patterns like:
-    - File paths in code blocks
-    - Explicit artifact mentions in text
-    - Config file references
-    """
+def parse_artifact_references(content: str) -> List[Dict[str, str]]:
+    """Parse artifact references from quickstart.md content"""
     artifacts = []
     
     # Common artifact patterns to look for
     patterns = [
-        "code/requirements.txt",
-        "code/config.yaml",
-        "data/raw/",
-        "data/processed/",
-        "specs/001-bayesian-nonparametrics-anomaly-detection/research.md",
-        "specs/001-bayesian-nonparametrics-anomaly-detection/data-model.md",
-        "specs/001-bayesian-nonparametrics-anomaly-detection/quickstart.md",
-        "code/models/dp_gmm.py",
-        "code/models/anomaly_score.py",
-        "code/models/time_series.py",
-        "code/utils/streaming.py",
-        "code/baselines/arima.py",
-        "code/baselines/moving_average.py",
-        "code/evaluation/metrics.py",
-        "code/evaluation/plots.py",
-        "code/utils/threshold.py",
-        "state/projects/PROJ-024-bayesian-nonparametrics-for-anomaly-dete.yaml",
+        # Code files
+        r'code/(?:scripts|models|utils|baselines|evaluation|data)/[\w_\.]+\.py',
+        # Config files
+        r'code/config\.yaml',
+        # Data files
+        r'data/(?:raw|processed)/[\w_\.]+(?:\.csv|\.json|\.txt)',
+        # State files
+        r'state/projects/[\w\-]+\.yaml',
+        # Spec files
+        r'specs/[\w\-]+/[\w_\-]+\.md',
     ]
     
+    import re
     for pattern in patterns:
-        if pattern in quickstart_content:
-            artifacts.append(pattern)
+        matches = re.findall(pattern, content)
+        for match in matches:
+            artifacts.append({
+                'path': match,
+                'type': 'file'
+            })
     
-    # Also look for code block references
-    lines = quickstart_content.split('\n')
-    for line in lines:
-        # Look for file path patterns
-        if 'code/' in line or 'data/' in line or 'specs/' in line or 'state/' in line:
-            line = line.strip()
-            if line.endswith(('.py', '.yaml', '.txt', '.md', '.csv', '.json')):
-                if line not in artifacts:
-                    artifacts.append(line)
+    # Also look for explicit artifact mentions
+    explicit_patterns = [
+        r'[\'"]([\w/\-\.]+)[\'"]',
+        r'\*\*([^\*]+)\*\*',
+    ]
+    
+    for pattern in explicit_patterns:
+        matches = re.findall(pattern, content)
+        for match in matches:
+            if any(ext in match for ext in ['.py', '.yaml', '.csv', '.json', '.md', '.txt']):
+                if not any(a['path'] == match for a in artifacts):
+                    artifacts.append({
+                        'path': match,
+                        'type': 'file'
+                    })
     
     return artifacts
 
 def validate_artifact(
     artifact_path: Path,
     expected_checksum: Optional[str],
-    project_root: Path
-) -> Dict[str, Any]:
-    """
-    Validate a single artifact: check existence and compute/compare checksum.
-    """
-    result = {
-        "path": str(artifact_path),
-        "exists": False,
-        "checksum": None,
-        "expected_checksum": expected_checksum,
-        "status": "missing",
-        "error": None
-    }
+    report: ValidationReport
+) -> bool:
+    """Validate a single artifact exists and checksum matches"""
+    artifact_name = str(artifact_path.relative_to(PROJECT_ROOT)) if artifact_path.is_relative_to(PROJECT_ROOT) else artifact_path.name
     
     if not artifact_path.exists():
-        result["error"] = "File does not exist"
-        return result
+        report.missing_artifacts.append(artifact_name)
+        report.failed_artifacts += 1
+        report.details.append({
+            'artifact': artifact_name,
+            'status': 'missing',
+            'message': f"File does not exist: {artifact_path}"
+        })
+        logger.error(f"Missing artifact: {artifact_name}")
+        return False
     
-    result["exists"] = True
-    computed_checksum = compute_file_checksum(artifact_path)
-    result["checksum"] = computed_checksum
+    actual_checksum = compute_file_checksum(artifact_path)
     
-    if computed_checksum is None:
-        result["status"] = "error"
-        result["error"] = "Could not compute checksum"
-        return result
+    if expected_checksum is not None and actual_checksum != expected_checksum:
+        report.checksum_mismatches.append({
+            'artifact': artifact_name,
+            'expected': expected_checksum,
+            'actual': actual_checksum
+        })
+        report.failed_artifacts += 1
+        report.details.append({
+            'artifact': artifact_name,
+            'status': 'checksum_mismatch',
+            'expected': expected_checksum[:16] + '...' if expected_checksum else None,
+            'actual': actual_checksum[:16] + '...' if actual_checksum else None
+        })
+        logger.error(f"Checksum mismatch for {artifact_name}")
+        return False
     
-    if expected_checksum is None:
-        result["status"] = "passed_no_expected"
-        result["error"] = None
-        return result
-    
-    if computed_checksum == expected_checksum:
-        result["status"] = "passed"
-        result["error"] = None
-    else:
-        result["status"] = "failed"
-        result["error"] = f"Checksum mismatch: expected {expected_checksum[:16]}..., got {computed_checksum[:16]}..."
-    
-    return result
+    report.validated_artifacts += 1
+    report.details.append({
+        'artifact': artifact_name,
+        'status': 'valid',
+        'checksum': actual_checksum[:16] + '...' if actual_checksum else None
+    })
+    logger.info(f"Validated artifact: {artifact_name}")
+    return True
 
-def validate_quickstart_artifacts(
-    project_root: Path,
-    quickstart_rel_path: str = "specs/001-bayesian-nonparametrics-anomaly-detection/quickstart.md",
-    state_rel_path: str = "state/projects/PROJ-024-bayesian-nonparametrics-for-anomaly-dete.yaml"
-) -> ValidationReport:
+def get_required_artifacts() -> List[Tuple[Path, Optional[str]]]:
     """
-    Main validation function that orchestrates the entire artifact validation process.
+    Return list of required artifacts with their expected checksums.
+    
+    This is the core validation logic - it checks that all artifacts
+    mentioned in quickstart.md and required by the project actually exist.
     """
-    import time
-    timestamp = time.strftime("%Y-%m-%d %H:%M:%S")
+    artifacts = []
     
-    quickstart_path = project_root / quickstart_rel_path
-    state_path = project_root / state_rel_path
+    # Load state file for expected checksums
+    state_data = load_state_file(STATE_FILE_PATH)
+    state_checksums = {}
     
-    print("=" * 70)
-    print("Artifact Validation Report")
-    print("=" * 70)
-    print(f"Quickstart document: {quickstart_path}")
-    print(f"State file: {state_path}")
-    print(f"Timestamp: {timestamp}")
-    print()
+    if state_data:
+        artifact_entries = state_data.get('artifacts', {})
+        for artifact_path, entry in artifact_entries.items():
+            if isinstance(entry, dict):
+                state_checksums[artifact_path] = entry.get('checksum')
+            elif isinstance(entry, str):
+                state_checksums[artifact_path] = entry
     
-    # Load documents
-    try:
-        quickstart_content = load_quickstart_doc(quickstart_path)
-    except FileNotFoundError as e:
-        return ValidationReport(
-            quickstart_path=str(quickstart_path),
-            total_artifacts=0,
-            passed=0,
-            failed=0,
-            missing=0,
-            results=[],
-            overall_status="failed",
-            timestamp=timestamp
-        )
+    # Required artifacts for quickstart validation
+    required_paths = [
+        # Spec documents (Phase 0)
+        QUICKSTART_DOC_PATH,
+        RESEARCH_DOC_PATH,
+        DATA_MODEL_DOC_PATH,
+        
+        # State file
+        STATE_FILE_PATH,
+        
+        # Core code structure
+        PROJECT_ROOT / "code" / "config.yaml",
+        PROJECT_ROOT / "code" / "__init__.py",
+        
+        # Models
+        PROJECT_ROOT / "code" / "models" / "dp_gmm.py",
+        PROJECT_ROOT / "code" / "models" / "anomaly_score.py",
+        PROJECT_ROOT / "code" / "models" / "time_series.py",
+        
+        # Baselines
+        PROJECT_ROOT / "code" / "baselines" / "arima.py",
+        PROJECT_ROOT / "code" / "baselines" / "moving_average.py",
+        
+        # Evaluation
+        PROJECT_ROOT / "code" / "evaluation" / "metrics.py",
+        PROJECT_ROOT / "code" / "evaluation" / "plots.py",
+        
+        # Utils
+        PROJECT_ROOT / "code" / "utils" / "__init__.py",
+        PROJECT_ROOT / "code" / "utils" / "streaming.py",
+        PROJECT_ROOT / "code" / "utils" / "checksum_manager.py",
+        PROJECT_ROOT / "code" / "utils" / "memory_profiler.py",
+        PROJECT_ROOT / "code" / "utils" / "runtime_monitor.py",
+        PROJECT_ROOT / "code" / "utils" / "threshold.py",
+        PROJECT_ROOT / "code" / "utils" / "hyperparameter_counter.py",
+        
+        # Scripts
+        PROJECT_ROOT / "code" / "scripts" / "download_datasets.py",
+        PROJECT_ROOT / "code" / "scripts" / "validate_quickstart_artifacts.py",
+        
+        # Data directory structure
+        PROJECT_ROOT / "data" / "raw",
+        PROJECT_ROOT / "data" / "processed",
+    ]
     
-    # Load state file
-    state_data = load_state_file(state_path)
-    stored_checksums = state_data.get("artifacts", {}) if state_data else {}
+    for path in required_paths:
+        # Check if path is a directory (exists check is sufficient)
+        if path.is_dir():
+            artifacts.append((path, None))
+        else:
+            # Get expected checksum from state if available
+            rel_path = str(path.relative_to(PROJECT_ROOT))
+            expected_checksum = state_checksums.get(rel_path)
+            artifacts.append((path, expected_checksum))
     
-    # Parse artifact references
-    artifact_paths = parse_artifact_references(quickstart_content)
+    return artifacts
+
+def validate_quickstart_artifacts() -> ValidationReport:
+    """
+    Main validation function - validates all quickstart artifacts.
     
-    print(f"Found {len(artifact_paths)} artifact references in quickstart.md")
-    print("-" * 70)
+    Returns:
+        ValidationReport with validation results
+    """
+    report = ValidationReport()
+    report.total_artifacts = 0
+    
+    # Load quickstart document
+    quickstart_content = load_quickstart_doc(QUICKSTART_DOC_PATH)
+    
+    if quickstart_content is None:
+        report.validation_errors.append("Quickstart document not found")
+        report.status = "failure"
+        return report
+    
+    # Parse artifact references from quickstart
+    parsed_artifacts = parse_artifact_references(quickstart_content)
+    
+    # Get required artifacts from validation logic
+    required_artifacts = get_required_artifacts()
+    
+    # Combine all artifacts to validate
+    all_artifacts = required_artifacts + [(Path(a['path']), None) for a in parsed_artifacts]
+    
+    # Deduplicate
+    seen_paths = set()
+    unique_artifacts = []
+    for path, checksum in all_artifacts:
+        path_key = str(path)
+        if path_key not in seen_paths:
+            seen_paths.add(path_key)
+            unique_artifacts.append((path, checksum))
+    
+    report.total_artifacts = len(unique_artifacts)
     
     # Validate each artifact
-    results = []
-    passed = 0
-    failed = 0
-    missing = 0
+    for artifact_path, expected_checksum in unique_artifacts:
+        validate_artifact(artifact_path, expected_checksum, report)
     
-    for artifact_rel_path in artifact_paths:
-        artifact_path = project_root / artifact_rel_path
-        
-        # Get expected checksum from state file if available
-        expected_checksum = stored_checksums.get(artifact_rel_path)
-        
-        result = validate_artifact(artifact_path, expected_checksum, project_root)
-        results.append(result)
-        
-        if result["status"] == "passed" or result["status"] == "passed_no_expected":
-            passed += 1
-            print(f"✓ PASS: {artifact_rel_path}")
-        elif result["status"] == "failed":
-            failed += 1
-            print(f"✗ FAIL: {artifact_rel_path} - {result['error']}")
-        elif result["status"] == "missing":
-            missing += 1
-            print(f"✗ MISSING: {artifact_rel_path}")
-        else:
-            failed += 1
-            print(f"✗ ERROR: {artifact_rel_path} - {result['error']}")
+    # Set final status
+    if report.failed_artifacts == 0 and report.missing_artifacts == 0:
+        report.status = "success"
+    else:
+        report.status = "failure"
     
-    # Summary
-    print("-" * 70)
-    total = passed + failed + missing
-    overall_status = "passed" if failed == 0 and missing == 0 else "failed"
+    # Log summary
+    logger.info(f"Validation complete: {report.validated_artifacts}/{report.total_artifacts} artifacts validated")
+    if report.missing_artifacts:
+        logger.warning(f"Missing artifacts: {len(report.missing_artifacts)}")
+    if report.checksum_mismatches:
+        logger.warning(f"Checksum mismatches: {len(report.checksum_mismatches)}")
     
-    print(f"SUMMARY:")
-    print(f"  Total artifacts: {total}")
-    print(f"  Passed: {passed}")
-    print(f"  Failed: {failed}")
-    print(f"  Missing: {missing}")
-    print(f"  Overall: {overall_status.upper()}")
-    print("=" * 70)
-    
-    return ValidationReport(
-        quickstart_path=str(quickstart_path),
-        total_artifacts=total,
-        passed=passed,
-        failed=failed,
-        missing=missing,
-        results=results,
-        overall_status=overall_status,
-        timestamp=timestamp
-    )
+    return report
 
 def save_validation_report(report: ValidationReport, output_path: Path) -> None:
-    """Save the validation report to JSON for audit trail."""
-    report_dict = {
-        "quickstart_path": report.quickstart_path,
-        "total_artifacts": report.total_artifacts,
-        "passed": report.passed,
-        "failed": report.failed,
-        "missing": report.missing,
-        "overall_status": report.overall_status,
-        "timestamp": report.timestamp,
-        "results": report.results
-    }
-    
-    with open(output_path, "w", encoding="utf-8") as f:
-        json.dump(report_dict, f, indent=2)
-    
-    print(f"\nReport saved to: {output_path}")
+    """Save validation report to JSON file"""
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    with open(output_path, 'w') as f:
+        f.write(report.to_json())
+    logger.info(f"Validation report saved to {output_path}")
 
-def main():
-    """Entry point for the validation script."""
-    print("Starting artifact validation...\n")
+def main() -> int:
+    """
+    Main entry point - runs full artifact validation.
     
-    report = validate_quickstart_artifacts(PROJECT_ROOT)
+    Returns:
+        0 if all artifacts validated successfully
+        1 if validation failed
+    """
+    logger.info("Starting quickstart artifact validation (T057/T065)")
     
-    # Save report
-    report_path = PROJECT_ROOT / "code" / "validation_reports" / "quickstart_validation.json"
-    report_path.parent.mkdir(parents=True, exist_ok=True)
-    save_validation_report(report, report_path)
-    
-    # Exit with appropriate code
-    if report.overall_status == "passed":
-        print("\n✓ All artifacts validated successfully!")
-        sys.exit(0)
-    else:
-        print(f"\n✗ Validation failed: {report.failed} failed, {report.missing} missing")
-        sys.exit(1)
+    try:
+        # Run validation
+        report = validate_quickstart_artifacts()
+        
+        # Save report to code/.tasks/
+        report_output_path = CODE_DIR / ".tasks" / "T057_T065_validation_report.json"
+        save_validation_report(report, report_output_path)
+        
+        # Print summary
+        print("\n" + "=" * 60)
+        print("QUICKSTART ARTIFACT VALIDATION REPORT")
+        print("=" * 60)
+        print(f"Project ID: {report.project_id}")
+        print(f"Timestamp: {report.timestamp}")
+        print(f"Total artifacts: {report.total_artifacts}")
+        print(f"Validated: {report.validated_artifacts}")
+        print(f"Failed: {report.failed_artifacts}")
+        print(f"Missing: {len(report.missing_artifacts)}")
+        print(f"Status: {report.status.upper()}")
+        
+        if report.missing_artifacts:
+            print("\nMissing artifacts:")
+            for artifact in report.missing_artifacts[:10]:  # Show first 10
+                print(f"  - {artifact}")
+            if len(report.missing_artifacts) > 10:
+                print(f"  ... and {len(report.missing_artifacts) - 10} more")
+        
+        if report.checksum_mismatches:
+            print("\nChecksum mismatches:")
+            for mismatch in report.checksum_mismatches[:5]:  # Show first 5
+                print(f"  - {mismatch['artifact']}")
+        
+        print("=" * 60)
+        
+        # Exit with appropriate code
+        if report.status == "success":
+            print("\n✓ All artifacts validated successfully!")
+            return 0
+        else:
+            print("\n✗ Validation failed - see report for details")
+            return 1
+            
+    except Exception as e:
+        logger.error(f"Unexpected error during validation: {e}")
+        import traceback
+        traceback.print_exc()
+        
+        error_report = ValidationReport(
+            status="failure",
+            validation_errors=[f"Unexpected error: {str(e)}"]
+        )
+        error_report.total_artifacts = 0
+        
+        # Save error report
+        error_report_path = CODE_DIR / ".tasks" / "T057_T065_error_report.json"
+        save_validation_report(error_report, error_report_path)
+        
+        return 1
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main())

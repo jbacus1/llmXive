@@ -4,3 +4,4 @@
 {"at": "2026-04-30T14:43:48.683247+00:00", "from_stage": "in_progress", "last_run_id": "7fa50195-615f-41a0-98b7-66e6c4da91c0", "to_stage": "research_complete"}
 {"at": "2026-04-30T14:47:48.332873+00:00", "from_stage": "research_complete", "last_run_id": "0a83905f-76bd-4f45-b524-0907cf6908ee", "to_stage": "research_minor_revision"}
 {"at": "2026-04-30T14:49:48.633677+00:00", "from_stage": "research_minor_revision", "last_run_id": "0a83905f-76bd-4f45-b524-0907cf6908ee", "to_stage": "tasked"}
+{"at": "2026-04-30T17:06:55.841651+00:00", "from_stage": "analyzed", "last_run_id": "371be4c9-b132-45fc-8ba7-99511177fd77", "to_stage": "in_progress"}

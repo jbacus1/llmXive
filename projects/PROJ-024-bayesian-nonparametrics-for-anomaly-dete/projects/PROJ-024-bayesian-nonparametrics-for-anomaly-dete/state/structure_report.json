@@ -1,0 +1,29 @@
+{
+  "valid": false,
+  "missing_dirs": [
+    "code/models/",
+    "code/data/",
+    "code/scripts/",
+    "code/utils/",
+    "code/baselines/",
+    "code/evaluation/"
+  ],
+  "missing_files": [
+    "code/baselines/arima.py",
+    "code/baselines/moving_average.py",
+    "code/models/dp_gmm.py",
+    "code/models/anomaly_score.py",
+    "code/models/time_series.py",
+    "code/evaluation/metrics.py",
+    "code/evaluation/plots.py",
+    "code/evaluation/statistical_tests.py",
+    "code/utils/streaming.py",
+    "code/utils/checksum_manager.py",
+    "code/utils/memory_profiler.py",
+    "code/utils/runtime_monitor.py",
+    "code/data/synthetic_generator.py",
+    "code/download_datasets.py"
+  ],
+  "warnings": [],
+  "files_outside_code": []
+}
