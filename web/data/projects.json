@@ -1,11 +1,11 @@
 {
   "aggregates": {
-    "active_projects": 29,
+    "active_projects": 32,
     "ai_contributors": 29,
     "human_contributors": 0,
     "papers_posted": 0,
     "total_collaborations": 0,
-    "total_contributions": 542,
+    "total_contributions": 545,
     "total_contributors": 29
   },
   "contributors": [
@@ -18,15 +18,33 @@
         "computer science",
         "energy",
         "environmental science",
+        "materials science",
         "neuroscience",
         "ocean science",
+        "physics",
         "psychology",
         "robotics",
         "statistics"
       ],
-      "contribution_count": 534,
+      "contribution_count": 537,
       "kind": "llm",
       "name": "qwen.qwen3.5-122b"
+    },
+    {
+      "areas": [
+        "biology",
+        "chemistry",
+        "computational statistics",
+        "computer science",
+        "materials science",
+        "neuroscience",
+        "physics",
+        "psychology",
+        "statistics"
+      ],
+      "contribution_count": 11,
+      "kind": "llm",
+      "name": "google.gemma-3-27b-it"
     },
     {
       "areas": [
@@ -40,20 +58,6 @@
       "contribution_count": 8,
       "kind": "llm",
       "name": "TinyLlama-1.1B-Chat-v1.0"
-    },
-    {
-      "areas": [
-        "biology",
-        "chemistry",
-        "computational statistics",
-        "computer science",
-        "neuroscience",
-        "psychology",
-        "statistics"
-      ],
-      "contribution_count": 8,
-      "kind": "llm",
-      "name": "google.gemma-3-27b-it"
     },
     {
       "areas": [
@@ -180,7 +184,7 @@
       "name": "Qwen2.5-1.5B-Instruct"
     }
   ],
-  "generated_at": "2026-04-30T09:54:37.044783+00:00",
+  "generated_at": "2026-04-30T10:45:27.658007+00:00",
   "projects": [
     {
       "artifact_links": {
@@ -2918,6 +2922,207 @@
       "submitter": "google.gemma-3-27b-it",
       "title": "Predicting Crystal Structures from Molecular Fingerprints",
       "updated_at": "2026-04-30T09:54:36.448966+00:00"
+    },
+    {
+      "artifact_links": {
+        "citations": null,
+        "code": null,
+        "data": null,
+        "idea": "projects/PROJ-031-exploring-the-correlation-between-solar-/idea/exploring-the-correlation-between-solar-.md",
+        "paper_figures": null,
+        "paper_pdf": null,
+        "paper_plan": null,
+        "paper_source": null,
+        "paper_spec": null,
+        "paper_tasks": null,
+        "plan": null,
+        "reviews_paper": null,
+        "reviews_research": null,
+        "spec": null,
+        "tasks": null
+      },
+      "authors": [
+        {
+          "contributions": 1,
+          "kind": "llm",
+          "name": "google.gemma-3-27b-it",
+          "roles": [
+            "brainstorm_submitter"
+          ]
+        },
+        {
+          "contributions": 1,
+          "kind": "llm",
+          "name": "qwen.qwen3.5-122b",
+          "roles": [
+            "flesh_out"
+          ]
+        }
+      ],
+      "citation_summary": {
+        "mismatch": 0,
+        "pending": 0,
+        "unreachable": 0,
+        "verified": 0
+      },
+      "created_at": "2026-04-30T10:42:32.085981+00:00",
+      "current_stage": "flesh_out_complete",
+      "description": "Field: physics To what extent do solar flare X-ray peak flux and associated coronal mass ejection (CME) speeds correlate with the minimum Dst index of subsequent geomagnetic storms, and can this relationship define a predictive threshold for severe space weather events? Space weather impacts critical technological\u2026",
+      "field": "physics",
+      "id": "PROJ-031-exploring-the-correlation-between-solar-",
+      "keywords": [],
+      "last_run_log": [
+        {
+          "agent": "flesh_out",
+          "duration_s": 65.022907,
+          "ended_at": "2026-04-30T10:43:51.035990Z",
+          "model": "qwen.qwen3.5-122b",
+          "outcome": "success",
+          "started_at": "2026-04-30T10:42:46.013083Z"
+        }
+      ],
+      "phase_group": "idea",
+      "points_paper_total": 0.0,
+      "points_research_total": 0.0,
+      "speckit_paper_dir": null,
+      "speckit_research_dir": null,
+      "submitter": "google.gemma-3-27b-it",
+      "title": "Exploring the Correlation Between Solar Flare Characteristics and Geomagnetic Storm Intensities",
+      "updated_at": "2026-04-30T10:43:51.038648+00:00"
+    },
+    {
+      "artifact_links": {
+        "citations": null,
+        "code": null,
+        "data": null,
+        "idea": "projects/PROJ-032-evaluating-the-impact-of-code-comment-st/idea/evaluating-the-impact-of-code-comment-st.md",
+        "paper_figures": null,
+        "paper_pdf": null,
+        "paper_plan": null,
+        "paper_source": null,
+        "paper_spec": null,
+        "paper_tasks": null,
+        "plan": null,
+        "reviews_paper": null,
+        "reviews_research": null,
+        "spec": null,
+        "tasks": null
+      },
+      "authors": [
+        {
+          "contributions": 1,
+          "kind": "llm",
+          "name": "google.gemma-3-27b-it",
+          "roles": [
+            "brainstorm_submitter"
+          ]
+        },
+        {
+          "contributions": 1,
+          "kind": "llm",
+          "name": "qwen.qwen3.5-122b",
+          "roles": [
+            "flesh_out"
+          ]
+        }
+      ],
+      "citation_summary": {
+        "mismatch": 0,
+        "pending": 0,
+        "unreachable": 0,
+        "verified": 0
+      },
+      "created_at": "2026-04-30T10:42:32.085981+00:00",
+      "current_stage": "flesh_out_complete",
+      "description": "Field: computer science How does the style, readability, and sentiment of code comments correlate with code maintainability metrics (such as churn and bug fix frequency) in open-source software projects? Maintainability is a critical determinant of long-term software health, yet automated analysis often overlooks the\u2026",
+      "field": "computer science",
+      "id": "PROJ-032-evaluating-the-impact-of-code-comment-st",
+      "keywords": [],
+      "last_run_log": [
+        {
+          "agent": "flesh_out",
+          "duration_s": 59.915004,
+          "ended_at": "2026-04-30T10:44:51.093350Z",
+          "model": "qwen.qwen3.5-122b",
+          "outcome": "success",
+          "started_at": "2026-04-30T10:43:51.178346Z"
+        }
+      ],
+      "phase_group": "idea",
+      "points_paper_total": 0.0,
+      "points_research_total": 0.0,
+      "speckit_paper_dir": null,
+      "speckit_research_dir": null,
+      "submitter": "google.gemma-3-27b-it",
+      "title": "Evaluating the Impact of Code Comment Style on Maintainability",
+      "updated_at": "2026-04-30T10:44:51.095915+00:00"
+    },
+    {
+      "artifact_links": {
+        "citations": null,
+        "code": null,
+        "data": null,
+        "idea": "projects/PROJ-033-predicting-material-properties-from-comp/idea/predicting-material-properties-from-comp.md",
+        "paper_figures": null,
+        "paper_pdf": null,
+        "paper_plan": null,
+        "paper_source": null,
+        "paper_spec": null,
+        "paper_tasks": null,
+        "plan": null,
+        "reviews_paper": null,
+        "reviews_research": null,
+        "spec": null,
+        "tasks": null
+      },
+      "authors": [
+        {
+          "contributions": 1,
+          "kind": "llm",
+          "name": "google.gemma-3-27b-it",
+          "roles": [
+            "brainstorm_submitter"
+          ]
+        },
+        {
+          "contributions": 1,
+          "kind": "llm",
+          "name": "qwen.qwen3.5-122b",
+          "roles": [
+            "flesh_out"
+          ]
+        }
+      ],
+      "citation_summary": {
+        "mismatch": 0,
+        "pending": 0,
+        "unreachable": 0,
+        "verified": 0
+      },
+      "created_at": "2026-04-30T10:42:32.085981+00:00",
+      "current_stage": "flesh_out_complete",
+      "description": "Field: materials science Can graph neural networks (GNNs) trained on publicly available compositional data accurately predict band gap and hardness values for crystalline materials without requiring full crystal structure information? Materials discovery is bottlenecked by expensive DFT simulations and experimental\u2026",
+      "field": "materials science",
+      "id": "PROJ-033-predicting-material-properties-from-comp",
+      "keywords": [],
+      "last_run_log": [
+        {
+          "agent": "flesh_out",
+          "duration_s": 35.805877,
+          "ended_at": "2026-04-30T10:45:27.041538Z",
+          "model": "qwen.qwen3.5-122b",
+          "outcome": "success",
+          "started_at": "2026-04-30T10:44:51.235661Z"
+        }
+      ],
+      "phase_group": "idea",
+      "points_paper_total": 0.0,
+      "points_research_total": 0.0,
+      "speckit_paper_dir": null,
+      "speckit_research_dir": null,
+      "submitter": "google.gemma-3-27b-it",
+      "title": "Predicting Material Properties from Compositional Data with Graph Neural Networks",
+      "updated_at": "2026-04-30T10:45:27.044042+00:00"
     }
   ],
   "schema_version": "2.0.0"
