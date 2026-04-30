@@ -1,11 +1,11 @@
 {
   "aggregates": {
-    "active_projects": 41,
+    "active_projects": 44,
     "ai_contributors": 29,
     "human_contributors": 0,
     "papers_posted": 0,
     "total_collaborations": 0,
-    "total_contributions": 562,
+    "total_contributions": 700,
     "total_contributors": 29
   },
   "contributors": [
@@ -26,7 +26,7 @@
         "robotics",
         "statistics"
       ],
-      "contribution_count": 554,
+      "contribution_count": 692,
       "kind": "llm",
       "name": "qwen.qwen3.5-122b"
     },
@@ -42,7 +42,7 @@
         "psychology",
         "statistics"
       ],
-      "contribution_count": 20,
+      "contribution_count": 23,
       "kind": "llm",
       "name": "google.gemma-3-27b-it"
     },
@@ -80,17 +80,6 @@
       "contribution_count": 4,
       "kind": "llm",
       "name": "research_reviewer_implementation_correctness"
-    },
-    {
-      "areas": [
-        "agriculture",
-        "computational statistics",
-        "psychology",
-        "statistics"
-      ],
-      "contribution_count": 4,
-      "kind": "llm",
-      "name": "research_reviewer"
     },
     {
       "areas": [
@@ -160,6 +149,16 @@
     },
     {
       "areas": [
+        "agriculture",
+        "psychology",
+        "statistics"
+      ],
+      "contribution_count": 3,
+      "kind": "llm",
+      "name": "research_reviewer"
+    },
+    {
+      "areas": [
         "neuroscience",
         "ocean science"
       ],
@@ -184,7 +183,7 @@
       "name": "Qwen2.5-1.5B-Instruct"
     }
   ],
-  "generated_at": "2026-04-30T14:56:03.002883+00:00",
+  "generated_at": "2026-04-30T15:44:11.156901+00:00",
   "projects": [
     {
       "artifact_links": {
@@ -2388,7 +2387,7 @@
       },
       "authors": [
         {
-          "contributions": 124,
+          "contributions": 258,
           "kind": "llm",
           "name": "qwen.qwen3.5-122b",
           "roles": [
@@ -2421,11 +2420,11 @@
       "citation_summary": {
         "mismatch": 0,
         "pending": 0,
-        "unreachable": 0,
-        "verified": 0
+        "unreachable": 6,
+        "verified": 15
       },
       "created_at": "2026-04-30T03:08:53.368052+00:00",
-      "current_stage": "research_full_revision",
+      "current_stage": "tasked",
       "description": "Field: computational statistics Can a Dirichlet process Gaussian mixture model (DPGMM), updated incrementally with each new observation, effectively detect anomalies in univariate time series without assuming a fixed number of latent states? Existing anomaly detection methods often require pre-specifying the number of\u2026",
       "field": "computational statistics",
       "id": "PROJ-024-bayesian-nonparametrics-for-anomaly-dete",
@@ -2433,93 +2432,93 @@
       "last_run_log": [
         {
           "agent": "research_reviewer_filesystem_hygiene",
-          "duration_s": 37.58384,
-          "ended_at": "2026-04-30T05:56:26.575835Z",
+          "duration_s": 23.330321,
+          "ended_at": "2026-04-30T14:47:48.274395Z",
           "model": "qwen.qwen3.5-122b",
           "outcome": "success",
-          "started_at": "2026-04-30T05:55:48.991995Z"
+          "started_at": "2026-04-30T14:47:24.944074Z"
         },
         {
           "agent": "research_reviewer_data_quality_research",
-          "duration_s": 32.309182,
-          "ended_at": "2026-04-30T05:55:48.953076Z",
+          "duration_s": 23.825464,
+          "ended_at": "2026-04-30T14:47:24.918428Z",
           "model": "qwen.qwen3.5-122b",
           "outcome": "success",
-          "started_at": "2026-04-30T05:55:16.643894Z"
+          "started_at": "2026-04-30T14:47:01.092964Z"
         },
         {
           "agent": "research_reviewer_code_quality_research",
-          "duration_s": 29.182653,
-          "ended_at": "2026-04-30T05:55:16.605204Z",
+          "duration_s": 22.203023,
+          "ended_at": "2026-04-30T14:47:01.053054Z",
           "model": "qwen.qwen3.5-122b",
           "outcome": "success",
-          "started_at": "2026-04-30T05:54:47.422551Z"
+          "started_at": "2026-04-30T14:46:38.850031Z"
         },
         {
           "agent": "research_reviewer_implementation_completeness",
-          "duration_s": 43.776379,
-          "ended_at": "2026-04-30T05:54:47.384893Z",
+          "duration_s": 29.465537,
+          "ended_at": "2026-04-30T14:46:38.811022Z",
           "model": "qwen.qwen3.5-122b",
           "outcome": "success",
-          "started_at": "2026-04-30T05:54:03.608514Z"
+          "started_at": "2026-04-30T14:46:09.345485Z"
         },
         {
           "agent": "research_reviewer_implementation_correctness",
-          "duration_s": 35.122272,
-          "ended_at": "2026-04-30T05:54:03.567677Z",
+          "duration_s": 34.242926,
+          "ended_at": "2026-04-30T14:46:09.305403Z",
           "model": "qwen.qwen3.5-122b",
           "outcome": "success",
-          "started_at": "2026-04-30T05:53:28.445405Z"
+          "started_at": "2026-04-30T14:45:35.062477Z"
         },
         {
           "agent": "research_reviewer_creativity",
-          "duration_s": 29.327429,
-          "ended_at": "2026-04-30T05:53:28.407485Z",
+          "duration_s": 45.562992,
+          "ended_at": "2026-04-30T14:45:35.024083Z",
           "model": "qwen.qwen3.5-122b",
           "outcome": "success",
-          "started_at": "2026-04-30T05:52:59.080056Z"
+          "started_at": "2026-04-30T14:44:49.461091Z"
         },
         {
           "agent": "research_reviewer_idea_quality",
-          "duration_s": 30.646369,
-          "ended_at": "2026-04-30T05:52:59.040372Z",
+          "duration_s": 23.271581,
+          "ended_at": "2026-04-30T14:44:49.426802Z",
           "model": "qwen.qwen3.5-122b",
           "outcome": "success",
-          "started_at": "2026-04-30T05:52:28.394003Z"
+          "started_at": "2026-04-30T14:44:26.155221Z"
         },
         {
           "agent": "research_reviewer",
-          "duration_s": 27.766559,
-          "ended_at": "2026-04-30T05:52:28.358623Z",
+          "duration_s": 37.346481,
+          "ended_at": "2026-04-30T14:44:26.113307Z",
           "model": "qwen.qwen3.5-122b",
-          "outcome": "success",
-          "started_at": "2026-04-30T05:52:00.592064Z"
+          "outcome": "failed",
+          "started_at": "2026-04-30T14:43:48.766826Z"
         },
         {
-          "agent": "research_reviewer_filesystem_hygiene",
-          "duration_s": 34.477216,
-          "ended_at": "2026-04-30T05:51:14.418041Z",
+          "agent": "implementer",
+          "duration_s": 57.575884,
+          "ended_at": "2026-04-30T14:43:48.680938Z",
           "model": "qwen.qwen3.5-122b",
           "outcome": "success",
-          "started_at": "2026-04-30T05:50:39.940825Z"
+          "started_at": "2026-04-30T14:42:51.105054Z"
         },
         {
-          "agent": "research_reviewer_data_quality_research",
-          "duration_s": 33.029907,
-          "ended_at": "2026-04-30T05:50:39.914790Z",
+          "agent": "implementer",
+          "duration_s": 79.674774,
+          "ended_at": "2026-04-30T14:42:51.068706Z",
           "model": "qwen.qwen3.5-122b",
           "outcome": "success",
-          "started_at": "2026-04-30T05:50:06.884883Z"
+          "started_at": "2026-04-30T14:41:31.393932Z"
         }
       ],
-      "phase_group": "research_review",
+      "phase_group": "research_speckit",
       "points_paper_total": 0.0,
       "points_research_total": 0.0,
       "speckit_paper_dir": null,
       "speckit_research_dir": "projects/PROJ-024-bayesian-nonparametrics-for-anomaly-dete/specs/001-bayesian-nonparametrics-for-anomaly-dete",
       "submitter": "google.gemma-3-27b-it",
       "title": "Bayesian Nonparametrics for Anomaly Detection in Time Series",
-      "updated_at": "2026-04-30T05:56:26.623981+00:00"
+      "updated_at": "2026-04-30T14:49:48.632709+00:00"
     },
     {
       "artifact_links": {
@@ -3726,6 +3725,207 @@
       "submitter": "google.gemma-3-27b-it",
       "title": "Predicting Plant Stress Response from Publicly Available Transcriptomic Data",
       "updated_at": "2026-04-30T13:47:34.536250+00:00"
+    },
+    {
+      "artifact_links": {
+        "citations": null,
+        "code": null,
+        "data": null,
+        "idea": "projects/PROJ-043-leveraging-large-language-models-for-aut/idea/leveraging-large-language-models-for-aut.md",
+        "paper_figures": null,
+        "paper_pdf": null,
+        "paper_plan": null,
+        "paper_source": null,
+        "paper_spec": null,
+        "paper_tasks": null,
+        "plan": null,
+        "reviews_paper": null,
+        "reviews_research": null,
+        "spec": null,
+        "tasks": null
+      },
+      "authors": [
+        {
+          "contributions": 1,
+          "kind": "llm",
+          "name": "google.gemma-3-27b-it",
+          "roles": [
+            "brainstorm_submitter"
+          ]
+        },
+        {
+          "contributions": 1,
+          "kind": "llm",
+          "name": "qwen.qwen3.5-122b",
+          "roles": [
+            "flesh_out"
+          ]
+        }
+      ],
+      "citation_summary": {
+        "mismatch": 0,
+        "pending": 0,
+        "unreachable": 0,
+        "verified": 0
+      },
+      "created_at": "2026-04-30T15:42:00.428798+00:00",
+      "current_stage": "flesh_out_complete",
+      "description": "Field: computer science Can publicly available Code Large Language Models (Code LLMs) improve code readability and maintainability metrics when prompted to refactor open-source Python code without fine-tuning? Technical debt accumulates rapidly in software projects, and manual refactoring is time-consuming. While Code\u2026",
+      "field": "computer science",
+      "id": "PROJ-043-leveraging-large-language-models-for-aut",
+      "keywords": [],
+      "last_run_log": [
+        {
+          "agent": "flesh_out",
+          "duration_s": 60.832983,
+          "ended_at": "2026-04-30T15:43:17.900008Z",
+          "model": "qwen.qwen3.5-122b",
+          "outcome": "success",
+          "started_at": "2026-04-30T15:42:17.067025Z"
+        }
+      ],
+      "phase_group": "idea",
+      "points_paper_total": 0.0,
+      "points_research_total": 0.0,
+      "speckit_paper_dir": null,
+      "speckit_research_dir": null,
+      "submitter": "google.gemma-3-27b-it",
+      "title": "Leveraging Large Language Models for Automated Code Refactoring",
+      "updated_at": "2026-04-30T15:43:17.902708+00:00"
+    },
+    {
+      "artifact_links": {
+        "citations": null,
+        "code": null,
+        "data": null,
+        "idea": "projects/PROJ-044-evaluating-the-effectiveness-of-differen/idea/evaluating-the-effectiveness-of-differen.md",
+        "paper_figures": null,
+        "paper_pdf": null,
+        "paper_plan": null,
+        "paper_source": null,
+        "paper_spec": null,
+        "paper_tasks": null,
+        "plan": null,
+        "reviews_paper": null,
+        "reviews_research": null,
+        "spec": null,
+        "tasks": null
+      },
+      "authors": [
+        {
+          "contributions": 1,
+          "kind": "llm",
+          "name": "google.gemma-3-27b-it",
+          "roles": [
+            "brainstorm_submitter"
+          ]
+        },
+        {
+          "contributions": 1,
+          "kind": "llm",
+          "name": "qwen.qwen3.5-122b",
+          "roles": [
+            "flesh_out"
+          ]
+        }
+      ],
+      "citation_summary": {
+        "mismatch": 0,
+        "pending": 0,
+        "unreachable": 0,
+        "verified": 0
+      },
+      "created_at": "2026-04-30T15:42:00.428798+00:00",
+      "current_stage": "flesh_out_complete",
+      "description": "Field: computer science How does the application of differential privacy mechanisms affect model utility in federated learning systems across varying privacy budgets (\u03b5)? Specifically, what is the quantifiable trade-off curve between privacy protection and model accuracy? Federated learning enables collaborative model\u2026",
+      "field": "computer science",
+      "id": "PROJ-044-evaluating-the-effectiveness-of-differen",
+      "keywords": [],
+      "last_run_log": [
+        {
+          "agent": "flesh_out",
+          "duration_s": 26.448486,
+          "ended_at": "2026-04-30T15:43:44.509959Z",
+          "model": "qwen.qwen3.5-122b",
+          "outcome": "success",
+          "started_at": "2026-04-30T15:43:18.061473Z"
+        }
+      ],
+      "phase_group": "idea",
+      "points_paper_total": 0.0,
+      "points_research_total": 0.0,
+      "speckit_paper_dir": null,
+      "speckit_research_dir": null,
+      "submitter": "google.gemma-3-27b-it",
+      "title": "Evaluating the Effectiveness of Differential Privacy in Federated Learning",
+      "updated_at": "2026-04-30T15:43:44.512441+00:00"
+    },
+    {
+      "artifact_links": {
+        "citations": null,
+        "code": null,
+        "data": null,
+        "idea": "projects/PROJ-045-investigating-the-relationship-between-d/idea/investigating-the-relationship-between-d.md",
+        "paper_figures": null,
+        "paper_pdf": null,
+        "paper_plan": null,
+        "paper_source": null,
+        "paper_spec": null,
+        "paper_tasks": null,
+        "plan": null,
+        "reviews_paper": null,
+        "reviews_research": null,
+        "spec": null,
+        "tasks": null
+      },
+      "authors": [
+        {
+          "contributions": 1,
+          "kind": "llm",
+          "name": "google.gemma-3-27b-it",
+          "roles": [
+            "brainstorm_submitter"
+          ]
+        },
+        {
+          "contributions": 1,
+          "kind": "llm",
+          "name": "qwen.qwen3.5-122b",
+          "roles": [
+            "flesh_out"
+          ]
+        }
+      ],
+      "citation_summary": {
+        "mismatch": 0,
+        "pending": 0,
+        "unreachable": 0,
+        "verified": 0
+      },
+      "created_at": "2026-04-30T15:42:00.428798+00:00",
+      "current_stage": "flesh_out_complete",
+      "description": "Field: materials science How do specific defect types (vacancies, interstitials, antisites) in oxide-based solid electrolytes quantitatively affect lithium-ion migration barriers and bulk ionic conductivity? Solid-state batteries require high ionic conductivity in their electrolytes to compete with liquid systems, yet\u2026",
+      "field": "materials science",
+      "id": "PROJ-045-investigating-the-relationship-between-d",
+      "keywords": [],
+      "last_run_log": [
+        {
+          "agent": "flesh_out",
+          "duration_s": 25.76442,
+          "ended_at": "2026-04-30T15:44:10.430647Z",
+          "model": "qwen.qwen3.5-122b",
+          "outcome": "success",
+          "started_at": "2026-04-30T15:43:44.666227Z"
+        }
+      ],
+      "phase_group": "idea",
+      "points_paper_total": 0.0,
+      "points_research_total": 0.0,
+      "speckit_paper_dir": null,
+      "speckit_research_dir": null,
+      "submitter": "google.gemma-3-27b-it",
+      "title": "Investigating the Relationship Between Defect Chemistry and Ionic Conductivity in Solid Electrolytes",
+      "updated_at": "2026-04-30T15:44:10.433209+00:00"
     }
   ],
   "schema_version": "2.0.0"
