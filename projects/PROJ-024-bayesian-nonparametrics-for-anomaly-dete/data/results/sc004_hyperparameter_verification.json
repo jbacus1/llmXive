@@ -1,0 +1,36 @@
+{
+  "dpgmm_hyperparameters": 7,
+  "arima_hyperparameters": 10,
+  "moving_average_hyperparameters": 4,
+  "total_baseline_hyperparameters": 14,
+  "reduction_percentage": 50.0,
+  "required_reduction": 30.0,
+  "sc004_passed": true,
+  "dpgmm_params": [
+    "concentration_alpha",
+    "concentration_beta",
+    "likelihood_mu_prior",
+    "likelihood_sigma_prior",
+    "n_components_max",
+    "advi_learning_rate",
+    "advi_n_steps"
+  ],
+  "arima_params": [
+    "p",
+    "d",
+    "q",
+    "seasonal_p",
+    "seasonal_d",
+    "seasonal_q",
+    "seasonal_period",
+    "trend",
+    "initialization_method",
+    "information_criterion"
+  ],
+  "ma_params": [
+    "window_size",
+    "z_threshold",
+    "smoothing_factor",
+    "min_observed"
+  ]
+}

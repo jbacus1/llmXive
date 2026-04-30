@@ -50,34 +50,48 @@ def chat_with_fallback(
     If `max_tokens` is None we default to 8192 — Spec Kit agents (Tasker,
     Specifier, Planner, paper-writers) frequently exceed the per-model
     silent default (often 1024) and produce truncated output otherwise.
+
+    Retries the same backend up to 3 times on transient errors before
+    falling through, so a single rate-limit blip doesn't kick the
+    pipeline into HF (which usually has no token).
     """
+    import time as _time
+
     if max_tokens is None:
         max_tokens = 8192
     chain = [default_backend, *fallback_backends]
-    last_err: BackendError | None = None
+    errors: list[str] = []
     msg_list = list(messages)
     for name in chain:
         try:
             backend = make_backend(name)
         except PermanentBackendError as exc:
-            last_err = exc
+            errors.append(f"{name}(init): {exc}")
             continue
-        try:
-            return backend.chat(
-                msg_list,
-                model=model,
-                max_tokens=max_tokens,
-                temperature=temperature,
-            )
-        except TransientBackendError as exc:
-            last_err = exc
-            continue
-        except PermanentBackendError as exc:
-            # Permanent failure on this backend (auth/config) — try the next.
-            last_err = exc
-            continue
+        # Retry transient errors on the same backend before falling through.
+        for attempt in range(3):
+            if attempt:
+                _time.sleep(2.0 * attempt)
+            try:
+                return backend.chat(
+                    msg_list,
+                    model=model,
+                    max_tokens=max_tokens,
+                    temperature=temperature,
+                )
+            except TransientBackendError as exc:
+                errors.append(f"{name}(transient attempt {attempt + 1}): {exc}")
+                if attempt == 2:
+                    break  # done retrying this backend, fall through
+                continue
+            except PermanentBackendError as exc:
+                errors.append(f"{name}(permanent): {exc}")
+                break  # don't retry permanent failures, fall through
     raise BackendError(
-        f"every backend in chain {chain} failed; last error: {last_err}"
+        "every backend in chain "
+        + repr(chain)
+        + " failed; errors: "
+        + " | ".join(errors)
     )
 
 

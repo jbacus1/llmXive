@@ -98,29 +98,32 @@ class ClarifierAgent(SlashCommandAgent):
     ) -> list[str]:
         repo = ctx.project_dir.parent.parent
         spec_path = Path(mechanical_output["spec_path"])
-        try:
-            report = parse_yaml_lenient(llm_response.text)
-        except yaml.YAMLError as exc:
-            # The Clarifier's `replacement: |` blocks frequently embed
-            # citation titles with colons ("Foo: a practical approach"),
-            # which break PyYAML's mapping parser. Rather than failing
-            # the whole stage, treat as no patches — the backfill below
-            # will replace each [NEEDS CLARIFICATION] marker with a
-            # "Resolved by default" note so the spec advances.
-            print(f"[clarify] YAML parse failed ({exc}); treating as empty patch set")
-            report = {"patches": [], "notes": f"YAML parse failed: {exc!s}"}
+        markers = mechanical_output.get("markers", []) or []
+        report = _parse_clarifier_response(llm_response.text)
         if not isinstance(report, dict):
-            # The LLM returned a list or scalar (often happens when there
-            # are no [NEEDS CLARIFICATION] markers to address). Treat as
-            # an empty patch set so the spec advances without changes.
             report = {"patches": [], "notes": "non-mapping LLM output coerced to empty patches"}
 
         spec_text = mechanical_output["spec_text"]
         patches = report.get("patches", []) or []
         patches_by_index = {p.get("marker_index"): p for p in patches if p.get("marker_index") is not None}
-        # Replace markers in order. Any marker that the LLM didn't patch
-        # gets a defensible default note appended so the spec doesn't
-        # carry [NEEDS CLARIFICATION] all the way through tasking.
+
+        # Quality gate: every [NEEDS CLARIFICATION] marker MUST have a
+        # real replacement. If the LLM produced fewer patches than there
+        # are markers, fail the stage rather than papering over with
+        # stub text — the Tasker and reviewers cannot recover from a
+        # hidden "Resolved by default" lie. The pipeline graph treats
+        # this as a real failure (no advancement to clarified) so the
+        # next scheduler tick will retry the Clarifier.
+        if markers and len(patches_by_index) < len(markers):
+            missing = [
+                m["question"] for i, m in enumerate(markers)
+                if i not in patches_by_index
+            ]
+            raise RuntimeError(
+                f"Clarifier left {len(missing)} of {len(markers)} markers unresolved; "
+                f"will not advance. Unresolved: {missing!r}"
+            )
+
         count_holder = {"n": 0}
 
         def _sub(match: re.Match[str]) -> str:
@@ -129,16 +132,83 @@ class ClarifierAgent(SlashCommandAgent):
             patch = patches_by_index.get(idx)
             if patch and patch.get("replacement"):
                 return patch["replacement"]
-            # Fallback: convert into a 'Resolved by default' note rather
-            # than leaving the marker. This unblocks the pipeline; the
-            # downstream Tasker / Reviewer can flag if the default is
-            # inappropriate.
-            question = (match.group("bq") or match.group("mq") or "").strip()
-            return f"_(Resolved by default; LLM clarifier could not pin a value: {question})_"
+            # Should be unreachable thanks to the gate above, but keep
+            # the marker in place so a later run can try again rather
+            # than silently advancing.
+            return match.group(0)
 
         spec_text = CLARIFY_MARKER_RE.sub(_sub, spec_text)
         spec_path.write_text(spec_text, encoding="utf-8")
         return [str(spec_path.relative_to(repo))]
+
+
+def _parse_clarifier_response(text: str) -> dict | None:
+    """Parse the Clarifier's response, preferring JSON, falling back to YAML.
+
+    Why JSON-first: YAML's `key: value` syntax breaks when an LLM puts
+    a citation title containing a colon inside a quoted string without
+    YAML-escaping. JSON has no such ambiguity. The current prompt asks
+    for JSON, but YAML responses from older sessions still need to
+    parse.
+
+    Handles raw newlines inside JSON string literals (a common LLM
+    failure mode) by escaping them before retry.
+    """
+    import json as _json
+    raw = (text or "").strip()
+    if not raw:
+        return None
+    # Strip code fences ```json ... ``` or ```yaml ... ```.
+    fence = re.search(r"```(?:json|yaml|yml)?\s*\n(.*?)\n```", raw, re.DOTALL | re.IGNORECASE)
+    inner = fence.group(1) if fence else raw
+    # Try JSON first.
+    try:
+        return _json.loads(inner)
+    except _json.JSONDecodeError:
+        pass
+    # Try JSON with raw newlines auto-escaped inside strings.
+    try:
+        return _json.loads(_escape_newlines_in_json_strings(inner))
+    except _json.JSONDecodeError:
+        pass
+    # Fall back to lenient YAML.
+    try:
+        return parse_yaml_lenient(inner)
+    except yaml.YAMLError as exc:
+        print(f"[clarify] both JSON and YAML parse failed: {exc}")
+        return None
+
+
+def _escape_newlines_in_json_strings(text: str) -> str:
+    """Escape unescaped \\n / \\t / \\r inside JSON double-quoted strings."""
+    out = []
+    in_string = False
+    escape_next = False
+    for ch in text:
+        if escape_next:
+            out.append(ch)
+            escape_next = False
+            continue
+        if ch == "\\":
+            out.append(ch)
+            escape_next = True
+            continue
+        if ch == '"':
+            in_string = not in_string
+            out.append(ch)
+            continue
+        if in_string:
+            if ch == "\n":
+                out.append("\\n")
+            elif ch == "\t":
+                out.append("\\t")
+            elif ch == "\r":
+                out.append("\\r")
+            else:
+                out.append(ch)
+        else:
+            out.append(ch)
+    return "".join(out)
 
 
 __all__ = ["ClarifierAgent", "TASKER_MAX_REVISION_ROUNDS"]

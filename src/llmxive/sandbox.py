@@ -50,25 +50,42 @@ class ExecutionResult:
 
 
 def ensure_venv(project_dir: Path) -> Path:
-    """Create or reuse the project's code/.venv. Returns the python path."""
+    """Create or reuse the project's code/.venv. Returns the python path.
+
+    Re-runs `pip install -r requirements.txt` whenever requirements.txt
+    has been modified since the last sync (tracked via a side-car
+    .venv/.requirements_mtime file). This handles the common ordering
+    problem where the venv is created before requirements.txt exists
+    (lazy creation by the first execute:true script), so pip install
+    becomes a no-op and every later script hits ModuleNotFoundError.
+    """
     venv = project_dir / "code" / ".venv"
     py = venv / "bin" / "python"
-    if py.exists():
-        return py
-    venv.parent.mkdir(parents=True, exist_ok=True)
-    subprocess.run(
-        [sys.executable, "-m", "venv", str(venv)],
-        check=True,
-        capture_output=True,
-    )
-    # Install requirements.txt if present.
-    req = project_dir / "code" / "requirements.txt"
-    if req.exists():
+    needs_create = not py.exists()
+    if needs_create:
+        venv.parent.mkdir(parents=True, exist_ok=True)
         subprocess.run(
-            [str(py), "-m", "pip", "install", "-q", "-r", str(req)],
-            check=False,  # tolerate failures so subsequent runs report them via stderr
+            [sys.executable, "-m", "venv", str(venv)],
+            check=True,
             capture_output=True,
         )
+    req = project_dir / "code" / "requirements.txt"
+    if req.exists():
+        mtime_file = venv / ".requirements_mtime"
+        last_synced = (
+            float(mtime_file.read_text().strip()) if mtime_file.exists() else 0.0
+        )
+        cur_mtime = req.stat().st_mtime
+        if cur_mtime > last_synced or needs_create:
+            subprocess.run(
+                [str(py), "-m", "pip", "install", "-q", "-r", str(req)],
+                check=False,  # tolerate failures so subsequent runs surface them via stderr
+                capture_output=True,
+            )
+            try:
+                mtime_file.write_text(f"{cur_mtime}\n", encoding="utf-8")
+            except OSError:
+                pass
     return py
 
 

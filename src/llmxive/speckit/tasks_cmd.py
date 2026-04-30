@@ -164,19 +164,31 @@ class TaskerAgent(SlashCommandAgent):
         tasks_path.write_text(text + "\n", encoding="utf-8")
         written = [str(tasks_path.relative_to(repo))]
 
-        # Now run the analyze-resolve loop.
+        # Now run the analyze-resolve loop. Backend failures here are
+        # NOT fatal — tasks.md is already a quality artifact (we just
+        # validated it has >=5 task IDs and isn't a diff). The analyze
+        # loop is a polish step. If a round fails, log and break out
+        # so the project advances; downstream specialist reviewers
+        # will catch any substantive issues.
+        from llmxive.backends.base import BackendError as _BackendError
+
         spec_path = Path(mechanical_output["spec_path"])
         plan_path = Path(mechanical_output["plan_path"])
         for round_idx in range(TASKER_MAX_REVISION_ROUNDS):
-            report = run_analyze(
-                spec_text=spec_path.read_text(encoding="utf-8"),
-                plan_text=plan_path.read_text(encoding="utf-8"),
-                tasks_text=tasks_path.read_text(encoding="utf-8"),
-                default_backend=ctx.default_backend,
-                fallback_backends=ctx.fallback_backends,
-                default_model=ctx.default_model,
-                repo_root=repo,
-            )
+            try:
+                report = run_analyze(
+                    spec_text=spec_path.read_text(encoding="utf-8"),
+                    plan_text=plan_path.read_text(encoding="utf-8"),
+                    tasks_text=tasks_path.read_text(encoding="utf-8"),
+                    default_backend=ctx.default_backend,
+                    fallback_backends=ctx.fallback_backends,
+                    default_model=ctx.default_model,
+                    repo_root=repo,
+                )
+            except _BackendError as exc:
+                print(f"[tasker] analyze round {round_idx + 1} failed: {exc}; "
+                      "skipping further analyze rounds")
+                break
             if is_clean(report):
                 # Persist the round count alongside tasks.md for SC-012.
                 round_record = (
@@ -203,20 +215,24 @@ class TaskerAgent(SlashCommandAgent):
                 f"# tasks.md\n\n{tasks_path.read_text(encoding='utf-8')}\n\n"
                 "Return the YAML patch document per the contract."
             )
-            patch_response = chat_with_fallback(
-                [
-                    ChatMessage(role="system", content=mode_b_system),
-                    ChatMessage(role="user", content=mode_b_user),
-                ],
-                default_backend=ctx.default_backend.value,
-                fallback_backends=[b.value for b in ctx.fallback_backends],
-                model=ctx.default_model,
-            )
             try:
-                doc = yaml.safe_load(patch_response.text)
-            except yaml.YAMLError:
-                continue
+                patch_response = chat_with_fallback(
+                    [
+                        ChatMessage(role="system", content=mode_b_system),
+                        ChatMessage(role="user", content=mode_b_user),
+                    ],
+                    default_backend=ctx.default_backend.value,
+                    fallback_backends=[b.value for b in ctx.fallback_backends],
+                    model=ctx.default_model,
+                )
+            except _BackendError as exc:
+                print(f"[tasker] Mode-B round {round_idx + 1} backend failed: {exc}; "
+                      "skipping further analyze rounds")
+                break
+            doc = _parse_tasker_response(patch_response.text)
             if not isinstance(doc, dict):
+                # Couldn't parse — let the next round retry rather than
+                # silently dropping the patches.
                 continue
             for issue in doc.get("issues_resolved", []) or []:
                 f = issue.get("file")
@@ -258,6 +274,91 @@ class TaskerAgent(SlashCommandAgent):
             encoding="utf-8",
         )
         return written
+
+
+def _parse_tasker_response(text: str) -> dict | None:
+    """Parse Tasker Mode-B response, preferring JSON, falling back to YAML.
+
+    LLMs often emit raw newlines inside JSON string values (which JSON
+    forbids — newlines must be escaped as \\n). We pre-process the
+    payload to escape unescaped newlines inside string literals, so
+    standard json.loads succeeds on real-world LLM output.
+
+    Also handles colons inside YAML scalars (a separate failure mode)
+    by falling back to lenient YAML parsing if the JSON path fails.
+    """
+    import json as _json
+    import re as _re_local
+    from llmxive.speckit.yaml_extract import parse_yaml_lenient as _parse_yaml
+
+    raw = (text or "").strip()
+    if not raw:
+        return None
+    fence = _re_local.search(
+        r"```(?:json|yaml|yml)?\s*\n(.*?)\n```",
+        raw,
+        _re_local.DOTALL | _re_local.IGNORECASE,
+    )
+    inner = fence.group(1) if fence else raw
+
+    # Try direct JSON.
+    try:
+        return _json.loads(inner)
+    except _json.JSONDecodeError:
+        pass
+
+    # Try JSON with raw newlines inside strings auto-escaped. We walk
+    # the text in/out of double-quoted regions and replace literal
+    # control chars with their JSON-escaped form.
+    try:
+        return _json.loads(_escape_newlines_in_json_strings(inner))
+    except _json.JSONDecodeError:
+        pass
+
+    # Try lenient YAML.
+    try:
+        return _parse_yaml(inner)
+    except yaml.YAMLError as exc:
+        print(f"[tasker] both JSON and YAML parse failed: {exc}")
+        return None
+
+
+def _escape_newlines_in_json_strings(text: str) -> str:
+    """Escape unescaped newlines/tabs inside JSON double-quoted string values.
+
+    Walks the text tracking whether we're inside a string literal. Inside
+    a string, replaces literal `\n` with `\\n` and literal `\t` with
+    `\\t` so json.loads doesn't choke on them. Outside strings, leaves
+    everything alone.
+    """
+    out = []
+    in_string = False
+    escape_next = False
+    for ch in text:
+        if escape_next:
+            out.append(ch)
+            escape_next = False
+            continue
+        if ch == "\\":
+            out.append(ch)
+            escape_next = True
+            continue
+        if ch == '"':
+            in_string = not in_string
+            out.append(ch)
+            continue
+        if in_string:
+            if ch == "\n":
+                out.append("\\n")
+            elif ch == "\t":
+                out.append("\\t")
+            elif ch == "\r":
+                out.append("\\r")
+            else:
+                out.append(ch)
+        else:
+            out.append(ch)
+    return "".join(out)
 
 
 __all__ = ["TaskerAgent"]

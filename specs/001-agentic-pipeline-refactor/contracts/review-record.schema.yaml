@@ -63,6 +63,13 @@ properties:
     type: string
     enum: [dartmouth, huggingface, local]
     description: "Required when reviewer_kind=llm."
+  github_authenticated:
+    type: boolean
+    description: |
+      True ONLY when a human review was submitted via the OAuth-authenticated
+      web flow. Forged review files (committed directly to the repo with no
+      OAuth token) MUST set this to false; the Advancement-Evaluator awards
+      0 points for un-authenticated human reviews.
 
 # Cross-field constraints expressed in the validator (Pydantic):
 #  - if reviewer_kind == 'llm':

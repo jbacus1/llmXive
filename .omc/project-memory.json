@@ -206,15 +206,51 @@
   },
   "hotPaths": [
     {
+      "path": "src/llmxive/speckit/tasks_cmd.py",
+      "accessCount": 13,
+      "lastAccessed": 1777521909566,
+      "type": "file"
+    },
+    {
+      "path": "src/llmxive/speckit/implement_cmd.py",
+      "accessCount": 10,
+      "lastAccessed": 1777522278149,
+      "type": "file"
+    },
+    {
+      "path": "src/llmxive/agents/advancement.py",
+      "accessCount": 7,
+      "lastAccessed": 1777528304992,
+      "type": "file"
+    },
+    {
+      "path": "agents/tools/lit_search.py",
+      "accessCount": 6,
+      "lastAccessed": 1777510536181,
+      "type": "file"
+    },
+    {
       "path": "src/llmxive/web_data.py",
       "accessCount": 5,
       "lastAccessed": 1777507049595,
       "type": "file"
     },
     {
-      "path": "src/llmxive/agents/advancement.py",
+      "path": "src/llmxive/speckit/clarify_cmd.py",
+      "accessCount": 4,
+      "lastAccessed": 1777521873355,
+      "type": "file"
+    },
+    {
+      "path": "src/llmxive/pipeline/graph.py",
       "accessCount": 3,
-      "lastAccessed": 1777507347750,
+      "lastAccessed": 1777509925351,
+      "type": "file"
+    },
+    {
+      "path": "src/llmxive/backends/dartmouth.py",
+      "accessCount": 3,
+      "lastAccessed": 1777510268919,
       "type": "file"
     },
     {
@@ -236,24 +272,6 @@
       "type": "file"
     },
     {
-      "path": "src/llmxive/speckit/implement_cmd.py",
-      "accessCount": 2,
-      "lastAccessed": 1777507206408,
-      "type": "file"
-    },
-    {
-      "path": "src/llmxive/speckit/tasks_cmd.py",
-      "accessCount": 2,
-      "lastAccessed": 1777507237416,
-      "type": "file"
-    },
-    {
-      "path": "src/llmxive/pipeline/graph.py",
-      "accessCount": 2,
-      "lastAccessed": 1777507275134,
-      "type": "file"
-    },
-    {
       "path": "src/llmxive/types.py",
       "accessCount": 2,
       "lastAccessed": 1777507337881,
@@ -263,6 +281,90 @@
       "path": "projects/PROJ-023-bayesian-nonparametrics-for-anomaly-dete/paper/results.md",
       "accessCount": 2,
       "lastAccessed": 1777509378058,
+      "type": "file"
+    },
+    {
+      "path": "state/projects/PROJ-002-evolutionary-pressure-on-alternative-spl.yaml",
+      "accessCount": 2,
+      "lastAccessed": 1777510032866,
+      "type": "file"
+    },
+    {
+      "path": "agents/prompts/clarifier.md",
+      "accessCount": 2,
+      "lastAccessed": 1777519471544,
+      "type": "file"
+    },
+    {
+      "path": "agents/prompts/tasker.md",
+      "accessCount": 2,
+      "lastAccessed": 1777519821246,
+      "type": "file"
+    },
+    {
+      "path": "src/llmxive/backends/router.py",
+      "accessCount": 2,
+      "lastAccessed": 1777520649427,
+      "type": "file"
+    },
+    {
+      "path": "src/llmxive/sandbox.py",
+      "accessCount": 2,
+      "lastAccessed": 1777523626319,
+      "type": "file"
+    },
+    {
+      "path": "specs/001-agentic-pipeline-refactor/contracts/review-record.schema.yaml",
+      "accessCount": 2,
+      "lastAccessed": 1777527576794,
+      "type": "file"
+    },
+    {
+      "path": "src/llmxive/agents/lifecycle.py",
+      "accessCount": 1,
+      "lastAccessed": 1777509922299,
+      "type": "file"
+    },
+    {
+      "path": "src/llmxive/credentials.py",
+      "accessCount": 1,
+      "lastAccessed": 1777510134442,
+      "type": "file"
+    },
+    {
+      "path": "src/llmxive/agents/idea_lifecycle.py",
+      "accessCount": 1,
+      "lastAccessed": 1777510377187,
+      "type": "file"
+    },
+    {
+      "path": "src/llmxive/agents/project_initializer.py",
+      "accessCount": 1,
+      "lastAccessed": 1777518593227,
+      "type": "file"
+    },
+    {
+      "path": "projects/PROJ-024-bayesian-nonparametrics-for-anomaly-dete/specs/001-bayesian-nonparametrics-for-anomaly-dete/plan.md",
+      "accessCount": 1,
+      "lastAccessed": 1777519774430,
+      "type": "file"
+    },
+    {
+      "path": "projects/PROJ-024-bayesian-nonparametrics-for-anomaly-dete/specs/001-bayesian-nonparametrics-for-anomaly-dete/research.md",
+      "accessCount": 1,
+      "lastAccessed": 1777519778260,
+      "type": "file"
+    },
+    {
+      "path": "projects/PROJ-024-bayesian-nonparametrics-for-anomaly-dete/specs/001-bayesian-nonparametrics-for-anomaly-dete/data-model.md",
+      "accessCount": 1,
+      "lastAccessed": 1777520750140,
+      "type": "file"
+    },
+    {
+      "path": "src/llmxive/agents/runner.py",
+      "accessCount": 1,
+      "lastAccessed": 1777520831647,
       "type": "file"
     }
   ],

@@ -31,23 +31,40 @@ attempts.
 
 ## Output contract
 
-A YAML document:
+A JSON document (NOT YAML — JSON parses unambiguously even when
+strings contain colons, brackets, or other YAML-significant chars).
 
-```yaml
-verdict: resolved | escalate | partial
-patches:           # only when verdict ∈ {resolved, partial}
-  - marker_index: 0
-    replacement: |
-      <text that replaces the [NEEDS CLARIFICATION: ...] block>
-    evidence:
-      - source: <url-or-arxiv-id>
-        title: <as fetched>
-        snippet: <quote that grounds the resolution>
-remaining_questions:  # only when verdict ∈ {escalate, partial}
-  - marker_index: 1
-    question: <restated question>
-    reason_unresolved: <one sentence>
+Output ONLY the JSON object — no prose, no code fences, no trailing
+commentary.
+
+```json
+{
+  "verdict": "resolved | escalate | partial",
+  "patches": [
+    {
+      "marker_index": 0,
+      "replacement": "<text that replaces the [NEEDS CLARIFICATION: ...] block>",
+      "evidence": [
+        {
+          "source": "<url-or-arxiv-id>",
+          "title": "<as fetched>",
+          "snippet": "<quote that grounds the resolution>"
+        }
+      ]
+    }
+  ],
+  "remaining_questions": [
+    {
+      "marker_index": 1,
+      "question": "<restated question>",
+      "reason_unresolved": "<one sentence>"
+    }
+  ]
+}
 ```
+
+`patches` is empty when `verdict == "escalate"`.
+`remaining_questions` is empty when `verdict == "resolved"`.
 
 ## Rules
 

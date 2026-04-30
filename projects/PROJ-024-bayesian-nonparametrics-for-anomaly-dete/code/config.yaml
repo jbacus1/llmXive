@@ -1,0 +1,35 @@
+# Configuration for Bayesian Nonparametrics Anomaly Detection
+# T077: Added experiment tracking configuration
+
+random_seed: 42
+
+hyperparameters:
+  # DPGMM parameters
+  concentration: 1.0
+  max_clusters: 10
+  learning_rate: 0.01
+  inference_method: "ADVI"
+  
+  # Threshold calibration
+  percentile_threshold: 0.95
+  min_anomaly_rate: 0.01
+  max_anomaly_rate: 0.10
+  
+  # Runtime constraints
+  max_runtime_minutes: 30
+  max_memory_gb: 7
+  
+dataset_paths:
+  raw: "data/raw/"
+  processed: "data/processed/"
+  state: "state/"
+  
+state_tracking:
+  enabled: true
+  auto_register: true
+  checksum_verification: true
+  
+logging:
+  level: "INFO"
+  file: "code/.tasks/experiment.log"
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"

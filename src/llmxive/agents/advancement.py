@@ -27,6 +27,7 @@ from llmxive.state import project as project_store
 from llmxive.state import reviews as reviews_store
 from llmxive.types import (
     Project,
+    ReviewerKind,
     ReviewRecord,
     Stage,
     VerificationStatus,
@@ -120,9 +121,36 @@ def _award_review_points(
 
 
 def _winning_recommendation(records: list[ReviewRecord]) -> str | None:
-    """Return the highest-weighted verdict, or None if no records."""
+    """Return the verdict to act on, or None if no records.
+
+    Routing rules (in order):
+
+    1. If ANY reviewer voted `reject`, route to `reject` (most severe).
+    2. Else if ANY reviewer voted `full_revision`, route to `full_revision`.
+    3. Else if ANY reviewer voted `minor_revision`, route to `minor_revision`.
+    4. Else (all accept) — caller already handled accept_total path.
+
+    This is a "weakest-link" rule: a single reviewer flagging serious
+    issues outweighs a majority of mild verdicts. Earlier versions
+    weighted by score, but non-accept reviews score 0.0, so all
+    non-accept verdicts tied and the tie-break (alphabetical max)
+    silently picked `minor_revision` even when most reviewers said
+    `full_revision`.
+    """
     if not records:
         return None
+    verdicts = {r.verdict for r in records}
+    for severe in ("reject", "fundamental_flaws"):
+        if severe in verdicts:
+            return severe
+    for severe in ("full_revision", "major_revision_science", "major_revision_writing"):
+        if severe in verdicts:
+            return severe
+    if "minor_revision" in verdicts:
+        return "minor_revision"
+    if "accept" in verdicts:
+        return "accept"
+    # Fall back to highest-weighted verdict if none of the above (defensive).
     sums: dict[str, float] = defaultdict(float)
     for rec in records:
         sums[rec.verdict] += rec.score

@@ -19,11 +19,35 @@ from llmxive.backends.base import (
 )
 
 
+def _ensure_api_key_env() -> None:
+    """Resolve the Dartmouth Chat API key into the environment.
+
+    Resolution order (matches credentials.load_dartmouth_key):
+      1. existing env var (CI / GHA)
+      2. ~/.config/llmxive/credentials.toml (set by `llmxive auth set`)
+
+    Why mutate the env: ChatDartmouth (langchain) reads the key from
+    `DARTMOUTH_CHAT_API_KEY` in os.environ, so we must populate it
+    before instantiating the client.
+    """
+    if os.environ.get("DARTMOUTH_CHAT_API_KEY"):
+        return
+    try:
+        from llmxive.credentials import load_dartmouth_key
+
+        key = load_dartmouth_key(prompt_if_missing=False)
+    except Exception:
+        key = None
+    if key:
+        os.environ["DARTMOUTH_CHAT_API_KEY"] = key
+
+
 class DartmouthBackend(BaseBackend):
     name = "dartmouth"
     is_paid = False
 
     def __init__(self, *, model_name: str | None = None) -> None:
+        _ensure_api_key_env()
         if not os.environ.get("DARTMOUTH_CHAT_API_KEY"):
             raise PermanentBackendError(
                 "DARTMOUTH_CHAT_API_KEY is not set (required by Dartmouth backend)"
@@ -105,8 +129,32 @@ class DartmouthBackend(BaseBackend):
                 raise TransientBackendError(str(exc)) from exc
             raise PermanentBackendError(str(exc)) from exc
 
+        text_out = str(reply.content)
+        # Detect "reasoning ate the budget" failure mode: reasoning models
+        # (Qwen 3.5, gpt-oss) emit internal <think> tokens that count
+        # toward the completion budget but are stripped from .content.
+        # When max_tokens is too small the entire budget is consumed and
+        # we get '' back with finish_reason='length'. Treat that as
+        # transient so the router falls through to a non-reasoning model
+        # rather than silently passing junk downstream.
+        meta = getattr(reply, "response_metadata", {}) or {}
+        finish_reason = meta.get("finish_reason")
+        if not text_out.strip() and finish_reason == "length":
+            usage = meta.get("token_usage", {}) or {}
+            raise TransientBackendError(
+                f"Dartmouth model {model!r} returned empty content "
+                f"(finish_reason=length, completion_tokens={usage.get('completion_tokens')}); "
+                "reasoning budget exhausted — retry with larger max_tokens or fall through to a non-reasoning model"
+            )
+        if not text_out.strip():
+            # Other empty replies (filter, refusal, etc.) — surface loudly.
+            raise PermanentBackendError(
+                f"Dartmouth model {model!r} returned empty content "
+                f"(finish_reason={finish_reason!r}, additional_kwargs={getattr(reply, 'additional_kwargs', {})})"
+            )
+
         return ChatResponse(
-            text=str(reply.content),
+            text=text_out,
             model=model,
             backend=self.name,
             cost_estimate_usd=0.0,  # Dartmouth Chat is free for community members

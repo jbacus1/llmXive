@@ -1,0 +1,100 @@
+# Anomaly Score Contract Schema
+# Defines the structure for anomaly score outputs from the DPGMM model
+# Used for validation and API contract enforcement
+$schema: http://json-schema.org/draft-07/schema#
+title: AnomalyScore
+description: "Output schema for anomaly scores computed by the DPGMM detector"
+type: object
+required:
+  - timestamp
+  - score
+  - cluster_id
+  - uncertainty
+  - model_version
+properties:
+  timestamp:
+    type: string
+    format: date-time
+    description: "ISO 8601 timestamp when the score was computed"
+    examples:
+      - "2024-01-15T10:30:00Z"
+  score:
+    type: number
+    format: float
+    description: "Anomaly score as negative log posterior probability"
+    minimum: -1e10
+    maximum: 1e10
+    examples:
+      - -12.456
+      - -45.789
+  cluster_id:
+    type: integer
+    description: "Assigned cluster ID from the DPGMM (0-indexed)"
+    minimum: 0
+    examples:
+      - 0
+      - 1
+      - 2
+  uncertainty:
+    type: object
+    description: "Probabilistic uncertainty estimates for the score"
+    required:
+      - lower_bound
+      - upper_bound
+      - confidence_level
+    properties:
+      lower_bound:
+        type: number
+        format: float
+        description: "Lower bound of uncertainty interval"
+      upper_bound:
+        type: number
+        format: float
+        description: "Upper bound of uncertainty interval"
+      confidence_level:
+        type: number
+        format: float
+        description: "Confidence level of the interval (e.g., 0.95)"
+        minimum: 0
+        maximum: 1
+        examples:
+          - 0.95
+  model_version:
+    type: string
+    description: "Version identifier for the DPGMM model"
+    pattern: "^\\d+\\.\\d+\\.\\d+$"
+    examples:
+      - "1.0.0"
+  is_anomaly:
+    type: boolean
+    description: "Binary flag indicating if observation exceeds threshold"
+  threshold_used:
+    type: number
+    format: float
+    description: "Adaptive threshold value used for flagging"
+    nullable: true
+  metadata:
+    type: object
+    description: "Additional context about the scoring operation"
+    properties:
+      observation_index:
+        type: integer
+        description: "Index in the original time series"
+      feature_dimensions:
+        type: integer
+        description: "Number of features used for scoring"
+additionalProperties: false
+examples:
+  - timestamp: "2024-01-15T10:30:00Z"
+    score: -12.456
+    cluster_id: 0
+    uncertainty:
+      lower_bound: -15.2
+      upper_bound: -9.8
+      confidence_level: 0.95
+    model_version: "1.0.0"
+    is_anomaly: false
+    threshold_used: -5.0
+    metadata:
+      observation_index: 150
+      feature_dimensions: 1

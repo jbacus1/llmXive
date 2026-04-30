@@ -1,0 +1,67 @@
+# Dataset download configuration
+# Defines URLs and metadata for anomaly detection benchmark datasets
+
+datasets:
+  # NAB (Numenta Anomaly Benchmark) - Artificial datasets
+  nab_artificial:
+    name: "NAB Artificial"
+    url: "https://raw.githubusercontent.com/numenta/NAB/master/data/realArtificial/"
+    files:
+      - "advertising.csv"
+      - "aws_cpu_utilization.csv"
+      - "m4_hourly.csv"
+    description: "Artificial anomaly datasets from NAB benchmark"
+    priority: 1
+  
+  # NAB Real known-cause datasets
+  nab_real:
+    name: "NAB Real Known Cause"
+    url: "https://raw.githubusercontent.com/numenta/NAB/master/data/realKnownCause/"
+    files:
+      - "nyc_taxi.csv"
+      - "shuffled_data.csv"
+      - "wargaming.csv"
+    description: "Real-world anomaly datasets with known causes"
+    priority: 2
+  
+  # SMD (Server Machine Dataset)
+  smd:
+    name: "Server Machine Dataset"
+    url: "https://raw.githubusercontent.com/NetManAIOps/OmniAnomaly/master/ServerMachineDataset/"
+    files:
+      - "machine1.csv"
+      - "machine2.csv"
+      - "machine3.csv"
+    description: "Server machine metrics with anomalies"
+    priority: 3
+  
+  # SWaT (Secure Water Treatment)
+  swat:
+    name: "SWaT Dataset"
+    url: "https://raw.githubusercontent.com/ghoshshibam/SWaT-Dataset/master/data/"
+    files:
+      - "SWaT_Dataset_Normal_v1.csv"
+      - "SWaT_Dataset_Attack_v0.csv"
+    description: "Industrial control system dataset"
+    priority: 4
+    manual: true  # Requires authentication, manual download
+    
+# Download settings
+download:
+  timeout_seconds: 300
+  retry_attempts: 3
+  verify_checksums: true
+  parallel_downloads: false
+  
+# Output paths
+output:
+  raw_dir: "data/raw/"
+  processed_dir: "data/processed/"
+  checksums_file: "data/raw/.checksums.txt"
+
+# Expected dataset sizes for memory profiling
+expected_sizes:
+  nab_artificial_mb: 50
+  nab_real_mb: 100
+  smd_mb: 200
+  swat_mb: 500

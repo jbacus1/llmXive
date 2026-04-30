@@ -43,19 +43,28 @@ with file path` format.
 
 ### Output contract (Mode B)
 
-A YAML document:
+A JSON document (NOT YAML — JSON parses unambiguously even when
+patches embed citation titles or other YAML-significant chars).
+Output ONLY the JSON object — no prose, no code fences, no commentary.
 
-```yaml
-issues_resolved:
-  - issue_id: <as in analyze_report>
-    file: spec.md | plan.md | tasks.md
-    patch: |
-      <unified-diff-style edit OR full rewrite of the affected section>
-    rationale: <one sentence>
-issues_remaining:
-  - issue_id: <unchanged>
-    reason: <why this round can't resolve it>
-verdict: clean | needs-rerun | escalate
+```json
+{
+  "issues_resolved": [
+    {
+      "issue_id": "<as in analyze_report>",
+      "file": "spec.md | plan.md | tasks.md",
+      "patch": "<full rewrite of the affected file (a complete document) — NOT a unified diff>",
+      "rationale": "<one sentence>"
+    }
+  ],
+  "issues_remaining": [
+    {
+      "issue_id": "<unchanged>",
+      "reason": "<why this round can't resolve it>"
+    }
+  ],
+  "verdict": "clean | needs-rerun | escalate"
+}
 ```
 
 `clean` means analyze should run cleanly next time; `needs-rerun`

@@ -1,0 +1,32 @@
+{
+  "version": "1.0.0",
+  "last_updated": "2024-01-15T00:00:00Z",
+  "experiments": [
+    {
+      "id": "PROJ-024-baseline-state-tracking",
+      "file": "experiment_metadata.yaml",
+      "created": "2024-01-15T00:00:00Z",
+      "status": "active"
+    }
+  ],
+  "tasks": {
+    "T077": {
+      "status": "completed",
+      "artifacts": [
+        "code/services/state_tracker.py",
+        "code/scripts/generate_experiment_metadata.py",
+        "state/experiment_metadata.yaml",
+        "state/README.md"
+      ]
+    }
+  },
+  "constitution_check": {
+    "reproducibility": true,
+    "accuracy": true,
+    "data_hygiene": true,
+    "versioning": true,
+    "stability": true,
+    "prior_sensitivity": true,
+    "single_source_truth": true
+  }
+}

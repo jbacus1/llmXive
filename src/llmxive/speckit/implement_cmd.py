@@ -41,6 +41,15 @@ class ImplementerAgent(SlashCommandAgent):
         candidates = sorted(ctx.project_dir.glob("specs/*/"))
         if not candidates:
             raise FileNotFoundError(f"no specs/ feature dir in {ctx.project_dir}")
+        # Prefer the dir that actually has tasks.md (or spec.md) — when
+        # the LLM wrote artifacts to a ghost slug-mismatched directory,
+        # the alphabetically-first candidate may be empty/incomplete.
+        for c in candidates:
+            if (c / "tasks.md").exists():
+                return c
+        for c in candidates:
+            if (c / "spec.md").exists():
+                return c
         return candidates[0]
 
     def _next_incomplete(self, tasks_text: str) -> tuple[str, str] | None:
@@ -163,6 +172,15 @@ class ImplementerAgent(SlashCommandAgent):
 
         if verdict == "completed":
             project_root = ctx.project_dir
+            # Identify the canonical feature_dir (e.g., "001-foo-bar")
+            # so we can rewrite the LLM's wrong slug. The LLM tends to
+            # use spec.md's branch_name (which it invents differently
+            # from the project_id slug create-new-feature.sh actually
+            # used), creating ghost specs/<wrong-slug>/ directories.
+            existing_specs = sorted((project_root / "specs").glob("[0-9]*"))
+            canonical_spec_dirname = (
+                existing_specs[0].name if existing_specs else None
+            )
             for art in doc.get("artifacts", []) or []:
                 relpath = art.get("path")
                 contents = art.get("contents", "")
@@ -176,6 +194,20 @@ class ImplementerAgent(SlashCommandAgent):
                 proj_prefix = f"projects/{project_root.name}/"
                 if rel.startswith(proj_prefix):
                     rel = rel[len(proj_prefix):]
+                # Canonicalize specs/<wrong-slug>/... → specs/<canonical>/...
+                # so the LLM's invented branch slug doesn't fragment artifacts
+                # across two parallel feature directories.
+                if canonical_spec_dirname and rel.startswith("specs/"):
+                    parts = rel.split("/", 2)
+                    if len(parts) >= 2 and parts[1] != canonical_spec_dirname:
+                        print(
+                            f"[implementer] canonicalizing path slug "
+                            f"{parts[1]!r} -> {canonical_spec_dirname!r}"
+                        )
+                        rel = (
+                            "specs/" + canonical_spec_dirname
+                            + ("/" + parts[2] if len(parts) > 2 else "")
+                        )
                 target = project_root / rel
                 # Reject paths that escape the project directory.
                 try:

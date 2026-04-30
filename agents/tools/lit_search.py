@@ -56,6 +56,15 @@ class Paper:
 def _semantic_scholar(
     query: str, max_results: int, timeout: float, client: httpx.Client | None = None
 ) -> list[Paper]:
+    """Query Semantic Scholar with simple retry-and-backoff for 429s.
+
+    Unauthenticated S2 rate-limits very aggressively: a single search
+    burst yields 429 even at 1 RPS. Two retries with 2s+4s backoff
+    typically clear the rate-limit window so biology queries (where
+    S2 has best coverage) actually return results.
+    """
+    import time
+
     url = "https://api.semanticscholar.org/graph/v1/paper/search"
     params: dict[str, str | int] = {
         "query": query,
@@ -63,16 +72,31 @@ def _semantic_scholar(
         "fields": "title,authors,year,externalIds,abstract,url",
     }
     headers = {"User-Agent": DEFAULT_USER_AGENT}
-    try:
-        if client is None:
-            with httpx.Client(timeout=timeout, headers=headers) as inner:
-                resp = inner.get(url, params=params)
-        else:
-            resp = client.get(url, params=params, headers=headers)
-        resp.raise_for_status()
-        data = resp.json().get("data", [])
-    except httpx.HTTPError as exc:
-        LOGGER.warning("semantic_scholar query failed: %s", exc)
+    data: list[dict] | None = None
+    backoffs = (0.0, 2.0, 4.0)
+    last_exc: Exception | None = None
+    for delay in backoffs:
+        if delay:
+            time.sleep(delay)
+        try:
+            if client is None:
+                with httpx.Client(timeout=timeout, headers=headers) as inner:
+                    resp = inner.get(url, params=params)
+            else:
+                resp = client.get(url, params=params, headers=headers)
+            if resp.status_code == 429:
+                last_exc = httpx.HTTPStatusError(
+                    "429 too many requests", request=resp.request, response=resp
+                )
+                continue
+            resp.raise_for_status()
+            data = resp.json().get("data", [])
+            break
+        except httpx.HTTPError as exc:
+            last_exc = exc
+            continue
+    if data is None:
+        LOGGER.warning("semantic_scholar query failed: %s", last_exc)
         return []
 
     papers: list[Paper] = []
@@ -194,6 +218,39 @@ def _dedupe(papers: list[Paper]) -> list[Paper]:
     return out
 
 
+_LITSEARCH_STOPWORDS: set[str] = {
+    "the", "and", "for", "with", "from", "this", "that", "these", "those",
+    "into", "using", "based", "study", "studies", "between", "across",
+    "research", "analysis", "approach", "biology", "general", "novel", "modern",
+    "framework",
+    # task-related verbs that show up in titles but don't carry topic
+    "exploring", "investigating", "developing", "evaluating", "improving",
+    "understanding", "assessing", "characterizing",
+}
+
+
+def _relevance_score(paper: Paper, query: str) -> float:
+    """Lexical overlap between paper title/abstract and informative query terms.
+
+    Rationale: arXiv broad-keyword search will happily return any paper
+    that matches ONE word of the query (e.g., "evolutionary"). We need
+    multiple specific topic words to match before counting a hit. Words
+    in the stoplist are excluded so generic stems don't inflate the
+    score.
+    """
+    if not query.strip():
+        return 0.0
+    qtoks = {
+        t for t in (query.lower().replace("/", " ").split())
+        if len(t) > 3 and t not in _LITSEARCH_STOPWORDS
+    }
+    if not qtoks:
+        return 0.0
+    text = (paper.title + " " + paper.abstract).lower()
+    hits = sum(1 for t in qtoks if t in text)
+    return hits / len(qtoks)
+
+
 def lit_search(
     query: str,
     *,
@@ -201,10 +258,13 @@ def lit_search(
     timeout: float = DEFAULT_TIMEOUT_S,
     providers: list[str] | None = None,
 ) -> list[Paper]:
-    """Search the configured providers in parallel order, dedupe, and trim.
+    """Search ALL configured providers, dedupe, rank by topical relevance, trim.
 
-    Default order: semantic_scholar → arxiv → openalex (most coverage
-    first; later providers fill in gaps).
+    Default providers: semantic_scholar, arxiv, openalex. We always
+    query all three (each has different coverage gaps; arXiv has weak
+    bio coverage, OpenAlex covers it; semantic_scholar rate-limits
+    aggressively) and rank the merged set by lexical overlap with the
+    query so off-topic filler doesn't crowd out real hits.
     """
     if not query.strip():
         return []
@@ -220,10 +280,28 @@ def lit_search(
             collected.extend(_openalex(query, max_results, timeout))
         else:
             LOGGER.warning("unknown provider: %s", prov)
-        if len(_dedupe(collected)) >= max_results:
-            break
 
-    return _dedupe(collected)[:max_results]
+    deduped = _dedupe(collected)
+    # Rank by topical relevance (ties broken by year recency).
+    deduped.sort(
+        key=lambda p: (-_relevance_score(p, query), -(p.year or 0)),
+    )
+    # Drop hits that share fewer than 3 informative tokens with the query
+    # — they are off-topic filler. (Two-token coincidences are common
+    # because words like "evolutionary" + "pressure" or "alternative" +
+    # "biology" occur in unrelated CS/physics papers.)
+    n_tokens = len({
+        t for t in (query.lower().split())
+        if len(t) > 3 and t not in _LITSEARCH_STOPWORDS
+    })
+    if n_tokens >= 5:
+        threshold = 3.0 / n_tokens
+    elif n_tokens >= 3:
+        threshold = 2.0 / n_tokens
+    else:
+        threshold = 0.0  # too few informative tokens to filter sensibly
+    relevant = [p for p in deduped if _relevance_score(p, query) >= threshold]
+    return relevant[:max_results]
 
 
 __all__ = ["Paper", "lit_search"]
