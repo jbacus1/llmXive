@@ -1,71 +1,46 @@
 ---
-artifact_hash: d5d2140c241d58e02c43bddf2fcfb903db9904cac7c5e430ef5ef18ecc7d9229
+artifact_hash: c4fa8be9f9580ade64e45ae14d6efd4260be61c864b405e423aa8a911c537bb2
 artifact_path: projects/PROJ-024-bayesian-nonparametrics-for-anomaly-dete/specs/001-bayesian-nonparametrics-for-anomaly-dete/tasks.md
 backend: dartmouth
 feedback: ''
 github_authenticated: false
 model_name: qwen.qwen3.5-122b
 prompt_version: 1.0.0
-reviewed_at: '2026-04-30T05:55:16.601689Z'
+reviewed_at: '2026-04-30T14:47:01.049634Z'
 reviewer_kind: llm
 reviewer_name: research_reviewer_code_quality_research
 score: 0.0
-verdict: full_revision
+verdict: minor_revision
 ---
 
-## Code Quality Review — Critical Issues Require Full Revision
+## Code Quality Review
 
-### 1. Failed Verification Scripts (Critical)
-Per tasks.md, **14 verification scripts failed** (T040-T043, T057, T060, T069, T072-T078). This indicates fundamental code quality issues that prevent reproducibility:
+### Structure Deviation from Plan
+The plan.md specifies `projects/PROJ-024-bayesian-nonparametrics-for-anomaly-dete/code/` as the source root, but the code summary shows files at the repository root level (e.g., `baselines/`, `models/`, `evaluation/`). This creates ambiguity for reproducibility from a clean checkout. **Fix**: Either move all code under `code/` as specified, or update plan.md to reflect actual structure.
 
-- `code/scripts/verify_fr001_stick_breaking.py` exit=1
-- `code/scripts/verify_memory_usage.py` exit=1  
-- `code/scripts/verify_runtime_performance.py` exit=1
-- `code/scripts/validate_final.py` exit=1
+### Test Coverage Concerns
+Tasks T013-T015, T027-T028, T042-T043 are marked complete for contract and integration tests, but no test files appear in the code summary (only `__pycache__` entries). Without visible test implementations, independent verification of User Stories 1-3 cannot occur per spec.md requirements. **Fix**: Ensure `tests/contract/`, `tests/integration/`, and `tests/unit/` contain actual `.py` test files.
 
-These scripts are mandatory per FR-007 (config.yaml documentation) and SC-003 (30-minute runtime). Code must be fixed to pass all verification before acceptance.
+### Execution Failures Block Reproducibility
+Four tasks failed execution:
+- T030 (`code/baselines/moving_average.py`)
+- T037 (`code/download_datasets.py`)
+- T041 (`code/utils/hyperparameter_counter.py`)
+- T057 (`code/scripts/validate_quickstart_artifacts.py`)
 
-### 2. Missing Type Hints and Documentation
-Code files exist but type hints are not evident from the summary. Per Python 3.11 requirements in plan.md:
+These prevent clean checkout reproducibility and violate Constitution Principle III (Data Hygiene). **Fix**: Resolve all FAILED-IN-EXECUTION tasks before accepting.
 
-- `code/models/dpgmm.py` (16KB) - No visible type annotations for DPGMMModel class methods
-- `code/services/anomaly_detector.py` - Missing return type hints for streaming update methods
-- `code/utils/memory_profiler.py` - Missing type hints for memory measurement functions
+### Type Hints Not Verifiable
+The code summary shows file sizes but no content. Per Python research library standards, all public APIs in `models/dp_gmm.py`, `evaluation/metrics.py`, and `baselines/` should include type hints. **Fix**: Add `mypy` checks to CI and ensure all functions have proper type annotations.
 
-Add `typing` module annotations throughout to ensure static analysis compatibility.
+### Config Bloat
+`config.yaml` is 11KB—unusually large for hyperparameter configuration. This suggests potential inclusion of derived data or verbose logging. **Fix**: Keep config.yaml under 2KB with only hyperparameters, seeds, and paths; move any derived statistics to state files.
 
-### 3. Test Coverage Incomplete
-Per plan.md, tests are MANDATORY. Current state shows:
+### Dependency Hygiene
+Verify `requirements.txt` exists at `projects/PROJ-024-bayesian-nonparametrics-for-anomaly-dete/code/requirements.txt` with pinned versions. The plan requires `pymc>=5.0.0` and other dependencies; ensure all are present and compatible with Python 3.11.
 
-- 9 unit tests for US1 (T021-T029) marked complete but verification scripts failing
-- Integration tests failing (T045 `test_baseline_comparison.py` exit=1)
-- Contract tests need validation against schema files in `specs/.../contracts/`
+### State Tracking Incomplete
+`state/projects/PROJ-024-bayesian-nonparametrics-for-anomaly-dete.yaml` should contain artifact hashes per plan.md, but evidence is insufficient in the summary. **Fix**: Verify checksums for all downloaded datasets and generated outputs are recorded.
 
-Tests must pass before implementation is considered complete.
-
-### 4. Dependency Hygiene
-`code/requirements.txt` should pin exact versions per plan.md Constitution Check (Principle I - Reproducibility). Verify all dependencies:
-
-```
-pymc>=5.0.0
-numpy>=1.24.0
-pandas>=2.0.0
-scikit-learn>=1.3.0
-statsmodels>=0.14.0
-```
-
-Add `pyproject.toml` with proper dependency specification for clean checkout reproducibility.
-
-### 5. Reproducibility Gaps
-Per FR-007, `config.yaml` must document all hyperparameters and random seeds. The `state/` directory referenced in plan.md is missing (filesystem hygiene review noted this). Add:
-
-- `state/projects/PROJ-024-...yaml` for experiment tracking
-- Pin random seeds in config.yaml (already exists but needs verification)
-- Ensure GitHub Actions workflow can reproduce from clean checkout
-
-### Required Actions
-1. Fix all 14 failing verification scripts
-2. Add comprehensive type hints to all public APIs
-3. Ensure all tests pass before marking tasks complete
-4. Pin exact dependency versions
-5. Complete state directory structure for reproducibility
+### Recommendation
+Address the execution failures and structure deviation before full acceptance. These are blocking issues for clean checkout reproducibility.

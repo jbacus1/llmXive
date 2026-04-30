@@ -206,15 +206,15 @@
   },
   "hotPaths": [
     {
-      "path": "src/llmxive/speckit/tasks_cmd.py",
-      "accessCount": 13,
-      "lastAccessed": 1777521909566,
+      "path": "src/llmxive/speckit/implement_cmd.py",
+      "accessCount": 15,
+      "lastAccessed": 1777558201658,
       "type": "file"
     },
     {
-      "path": "src/llmxive/speckit/implement_cmd.py",
-      "accessCount": 10,
-      "lastAccessed": 1777522278149,
+      "path": "src/llmxive/speckit/tasks_cmd.py",
+      "accessCount": 13,
+      "lastAccessed": 1777521909566,
       "type": "file"
     },
     {
@@ -230,6 +230,12 @@
       "type": "file"
     },
     {
+      "path": "agents/prompts/implementer.md",
+      "accessCount": 6,
+      "lastAccessed": 1777558177636,
+      "type": "file"
+    },
+    {
       "path": "src/llmxive/web_data.py",
       "accessCount": 5,
       "lastAccessed": 1777507049595,
@@ -242,6 +248,12 @@
       "type": "file"
     },
     {
+      "path": "agents/prompts/tasker.md",
+      "accessCount": 4,
+      "lastAccessed": 1777553767354,
+      "type": "file"
+    },
+    {
       "path": "src/llmxive/pipeline/graph.py",
       "accessCount": 3,
       "lastAccessed": 1777509925351,
@@ -251,6 +263,12 @@
       "path": "src/llmxive/backends/dartmouth.py",
       "accessCount": 3,
       "lastAccessed": 1777510268919,
+      "type": "file"
+    },
+    {
+      "path": "src/llmxive/sandbox.py",
+      "accessCount": 3,
+      "lastAccessed": 1777558190339,
       "type": "file"
     },
     {
@@ -296,27 +314,21 @@
       "type": "file"
     },
     {
-      "path": "agents/prompts/tasker.md",
-      "accessCount": 2,
-      "lastAccessed": 1777519821246,
-      "type": "file"
-    },
-    {
       "path": "src/llmxive/backends/router.py",
       "accessCount": 2,
       "lastAccessed": 1777520649427,
       "type": "file"
     },
     {
-      "path": "src/llmxive/sandbox.py",
-      "accessCount": 2,
-      "lastAccessed": 1777523626319,
-      "type": "file"
-    },
-    {
       "path": "specs/001-agentic-pipeline-refactor/contracts/review-record.schema.yaml",
       "accessCount": 2,
       "lastAccessed": 1777527576794,
+      "type": "file"
+    },
+    {
+      "path": "agents/prompts/planner.md",
+      "accessCount": 2,
+      "lastAccessed": 1777553748860,
       "type": "file"
     },
     {

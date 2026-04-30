@@ -1,48 +1,54 @@
 ---
-artifact_hash: d5d2140c241d58e02c43bddf2fcfb903db9904cac7c5e430ef5ef18ecc7d9229
+artifact_hash: c4fa8be9f9580ade64e45ae14d6efd4260be61c864b405e423aa8a911c537bb2
 artifact_path: projects/PROJ-024-bayesian-nonparametrics-for-anomaly-dete/specs/001-bayesian-nonparametrics-for-anomaly-dete/tasks.md
 backend: dartmouth
 feedback: ''
 github_authenticated: false
 model_name: qwen.qwen3.5-122b
 prompt_version: 1.0.0
-reviewed_at: '2026-04-30T05:52:59.036788Z'
+reviewed_at: '2026-04-30T14:44:49.416373Z'
 reviewer_kind: llm
 reviewer_name: research_reviewer_idea_quality
 score: 0.0
 verdict: minor_revision
 ---
 
-## Idea Quality Assessment — Minor Revision Required
+## Idea Quality Assessment
 
-### Research Question Quality (⚠️ Needs Sharpening)
+The research question is **partially well-posed** but requires clarification on key conceptual and methodological dimensions before execution.
 
-The core research question in spec.md ("Can a DPGMM, updated incrementally... effectively detect anomalies... without assuming a fixed number of latent states?") is **answerable but under-specified**:
+### Strengths
 
-1. **"Effectively" is ambiguous** — Success Criteria SC-001 defines it as "F1-score within 5% of baseline methods" but doesn't specify whether this is acceptable performance OR the target. A research contribution should demonstrate *superiority* or *novel advantage*, not merely parity. Consider reframing to: "Does incremental DPGMM achieve *comparable or superior* F1-scores while reducing hyperparameter tuning burden?"
+1. **Falsifiability**: The success criteria (SC-001: F1-score within 5% of baselines on 3+ UCI datasets) provide measurable outcomes that can confirm or refute the hypothesis.
 
-2. **The "why" gap is under-justified** — Spec states incremental DPGMM is the "core innovation distinguishing this approach from batch methods" but doesn't cite literature showing batch DPGMM fails on streaming time series. What specific limitation of batch DPGMM does streaming address? (e.g., latency, memory, concept drift?)
+2. **Clear Target Domain**: Univariate time series anomaly detection is well-bounded, and the streaming constraint is explicitly stated.
 
-### Falsifiability (⚠️ Partially Addressed)
+3. **Baseline Comparison**: ARIMA and moving average z-score are appropriate, established baselines for this domain.
 
-The hypothesis is testable via F1-scores, but:
-- **SC-001's "within 5%" threshold** is arbitrary without statistical justification. Why 5% and not 10%?
-- **SC-004's "30% reduction in hyperparameters"** needs explicit counting methodology. How are hyperparameters counted across DPGMM vs ARIMA vs moving average? Are concentration parameters, priors, and convergence thresholds all counted?
+### Concerns Requiring Clarification
 
-### Gap Identification (⚠️ Needs Literature Grounding)
+1. **Conflated Contributions**: The question combines two distinct innovations—(a) nonparametric (DPGMM) and (b) incremental/streaming updates. These should be separated for clearer evaluation. The F1-score success criteria primarily test detection accuracy, not the value of the nonparametric aspect itself.
 
-The spec assumes DPGMM novelty without:
-- Citing existing streaming anomaly detection methods that already handle unknown cluster counts
-- Explaining why DPGMM's nonparametric nature provides advantage over, e.g., online k-means or Gaussian mixture models with dynamic component addition
+2. **Hyperparameter Claim Contradiction**: SC-004 claims "30% fewer hyperparameters than baselines," but DPGMM with ADVI requires tuning concentration parameter, learning rate, convergence criteria, and component priors—potentially *more* than simple moving average z-score. This claim should be re-examined or removed.
 
-### Recommended Revisions
+3. **Temporal Data Leakage Risk**: The spec mentions "same test split" for baselines but doesn't explicitly require **temporal** train/test splitting for time series. Random splitting would invalidate streaming evaluation and introduce leakage.
 
-1. **Spec.md, User Scenarios section**: Add 1-2 sentences citing why incremental DPGMM is needed over batch alternatives (e.g., "Batch DPGMM requires O(n²) memory on n observations, making it infeasible for streaming...")
+4. **Memory Constraint Reasonableness**: 7GB for 1000 observations (FR-005) is unusually high for streaming anomaly detection. This should reflect realistic streaming constraints or be justified.
 
-2. **Spec.md, Success Criteria**: Replace SC-001 with "DPGMM achieves *statistically significant* F1-score improvement (p<0.05) OR matches baseline while reducing hyperparameters by ≥30%"
+5. **Threshold Calibration Assumption**: The 95th percentile threshold (Assumptions section) assumes a specific anomaly rate distribution that may not generalize across datasets. This needs sensitivity analysis or justification.
 
-3. **Plan.md, Constitution Check**: Add "Prior Sensitivity Analysis" verification showing concentration parameter α variations don't invalidate conclusions
+6. **Dataset Source Inconsistency**: The spec assumes "UCI Electricity, Traffic, and PEMS-SF" but PEMS-SF is from the PEMS project, not UCI. This affects reproducibility claims and SC-001's "3 UCI datasets" requirement.
 
-4. **Tasks.md**: Add research task to survey existing streaming nonparametric anomaly detection methods and document DPGMM's differentiating advantage
+### Recommendations
 
-These revisions strengthen the research contribution's claim without requiring implementation changes.
+1. **Separate hypotheses**: Distinguish between (a) nonparametric flexibility benefits and (b) streaming update efficiency benefits.
+
+2. **Add temporal split requirement**: Explicitly mandate time-ordered train/test splits to prevent leakage.
+
+3. **Revise or remove SC-004**: Either justify the hyperparameter count claim or replace with a more appropriate metric (e.g., automatic component selection).
+
+4. **Document threshold sensitivity**: Add a requirement to test threshold robustness across multiple percentile values.
+
+5. **Correct dataset assumptions**: Either find 3 UCI datasets with labeled anomalies, or revise SC-001 to allow mixed sources with proper documentation.
+
+These revisions will strengthen the research design and ensure the evaluation properly isolates the claimed contributions.

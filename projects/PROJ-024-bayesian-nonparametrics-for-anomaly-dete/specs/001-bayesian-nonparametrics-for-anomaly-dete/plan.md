@@ -1,23 +1,23 @@
 # Implementation Plan: Bayesian Nonparametrics for Anomaly Detection in Time Series
 
-**Branch**: `001-bayesian-nonparametrics-anomaly-detection` | **Date**: 2024-01-15 | **Spec**: [spec.md](./spec.md)
-**Input**: Feature specification from `/specs/001-bayesian-nonparametrics-anomaly-detection/spec.md`
+**Branch**: `001-bayesian-nonparametrics-anomaly-detection` | **Date**: 2024-01-15 | **Spec**: `specs/001-bayesian-nonparametrics-anomaly-detection/spec.md`
+**Input**: Feature specification from `specs/001-bayesian-nonparametrics-anomaly-detection/spec.md`
 
 ## Summary
 
-Implement an incremental Dirichlet process Gaussian mixture model (DPGMM) that processes time series observations one at a time to detect anomalies without assuming a fixed number of latent states. The model uses stick-breaking construction for the Dirichlet process and ADVI variational inference for memory-efficient posterior updates. Performance will be validated against ARIMA and moving average baselines on UCI time series datasets.
+Implement an incremental Dirichlet Process Gaussian Mixture Model (DPGMM) for streaming anomaly detection in univariate time series. The model uses stick-breaking construction with ADVI variational inference to maintain memory under 7GB while processing observations sequentially. Performance will be validated against ARIMA and moving average baselines on UCI Machine Learning Repository datasets, with F1-scores, ROC curves, and PR curves generated for evaluation.
 
 ## Technical Context
 
 **Language/Version**: Python 3.11  
-**Primary Dependencies**: pymc>=5.0.0, numpy>=1.24.0, pandas>=2.0.0, scikit-learn>=1.3.0, statsmodels>=0.14.0, matplotlib>=3.7.0, pyyaml>=6.0.0  
-**Storage**: Local files for datasets and results  
+**Primary Dependencies**: pymc>=5.0.0, numpy>=1.24.0, pandas>=2.0.0, scikit-learn>=1.3.0, statsmodels>=0.14.0, matplotlib>=3.7.0, pyyaml>=6.0  
+**Storage**: Local filesystem (`data/` for datasets, `code/` for scripts)  
 **Testing**: pytest>=7.4.0 with contract tests against YAML schemas  
-**Target Platform**: Linux server (GitHub Actions runners)  
-**Project Type**: research library/cli  
-**Performance Goals**: <7GB RAM during 1000 observation processing, <30 minutes runtime per dataset  
-**Constraints**: Univariate time series only, no PII in data, reproducible with pinned seeds  
-**Scale/Scope**: 3-5 UCI datasets, synthetic anomaly dataset for validation
+**Target Platform**: Linux server (GitHub Actions runner)  
+**Project Type**: computational research library  
+**Performance Goals**: <30 minutes runtime per dataset, <7GB memory during processing  
+**Constraints**: Streaming update without batch retraining, no labeled data required for threshold calibration  
+**Scale/Scope**: 3-5 univariate time series datasets, 1000+ observations per dataset
 
 ## Constitution Check
 
@@ -25,70 +25,69 @@ Implement an incremental Dirichlet process Gaussian mixture model (DPGMM) that p
 
 | Principle | Status | Notes |
 |-----------|--------|-------|
-| I. Reproducibility | PASS | Random seeds pinned in config.yaml; UCI datasets fetched via scripts; requirements.txt pins all dependencies |
-| II. Verified Accuracy | PASS | No external URLs cited in spec; Reference-Validator will check any future citations |
-| III. Data Hygiene | PASS | Datasets checksummed under data/; raw data preserved; transformations produce new files |
-| IV. Single Source of Truth | PASS | All figures/statistics trace to code/ and data/ rows; no hand-typed numbers in paper |
-| V. Versioning Discipline | PASS | Content hashes tracked; artifact changes update state YAML timestamps |
-| VI. Numerical Stability & Convergence | PASS | ADVI ELBO convergence diagnostics reported; models failing criteria invalidated |
-| VII. Prior Sensitivity Analysis | PASS | Dirichlet concentration parameter varied; sensitivity analysis documented in paper/ |
+| I. Reproducibility | PASS | Seeds pinned in `config.yaml`; datasets fetched from UCI via wget/curl scripts; `requirements.txt` pins all dependencies |
+| II. Verified Accuracy | PASS | All citations from spec.md copied verbatim; no fabricated URLs; Reference-Validator will verify at artifact write time |
+| III. Data Hygiene | PASS | Checksums recorded in `state/projects/PROJ-024-bayesian-nonparametrics-for-anomaly-dete.yaml`; raw data preserved unchanged |
+| IV. Single Source of Truth | PASS | Figures/statistics trace to `data/` rows and `code/` blocks; no hand-typed numbers in paper |
+| V. Versioning Discipline | PASS | Content hashes for artifacts; `updated_at` timestamp updates on changes |
+| VI. Numerical Stability & Convergence | PASS | ADVI convergence diagnostics (ELBO) will be logged; models failing criteria marked invalid |
+| VII. Prior Sensitivity Analysis | PASS | Concentration parameter will be varied across [0.1, 1.0, 10.0]; results documented in paper |
 
 ## Project Structure
 
 ### Documentation (this feature)
 
-```
+```text
 specs/001-bayesian-nonparametrics-anomaly-detection/
 ├── plan.md              # This file (/speckit-plan command output)
 ├── research.md          # Phase 0 output (/speckit-plan command)
 ├── data-model.md        # Phase 1 output (/speckit-plan command)
 ├── quickstart.md        # Phase 1 output (/speckit-plan command)
 ├── contracts/           # Phase 1 output (/speckit-plan command)
-│   ├── anomaly_score.schema.yaml
-│   ├── config.schema.yaml
-│   └── evaluation_metrics.schema.yaml
 └── tasks.md             # Phase 2 output (/speckit-tasks command - NOT created by /speckit-plan)
 ```
 
 ### Source Code (repository root)
 
-```
-projects/PROJ-024-bayesian-nonparametrics-for-anomaly-detection/
-├── code/
-│   ├── requirements.txt
-│   ├── config.yaml
-│   ├── models/
-│   │   ├── dpgmm.py
-│   │   ├── baselines.py
-│   │   ├── timeseries.py
-│   │   ├── anomaly_score.py
-│   │   └── evaluation_metrics.py
-│   ├── services/
-│   │   ├── anomaly_detector.py
-│   │   └── threshold_calibrator.py
-│   ├── utils/
-│   │   ├── memory_profiler.py
-│   │   ├── runtime_profiler.py
-│   │   └── logger.py
-│   ├── data/
-│   │   ├── download_datasets.py
-│   │   └── checksums.txt
-│   ├── evaluation/
-│   │   ├── metrics.py
-│   │   └── plots.py
-│   └── tests/
-│       ├── contract/
-│       ├── integration/
-│       └── unit/
+```text
+projects/PROJ-024-bayesian-nonparametrics-for-anomaly-dete/
 ├── data/
-│   ├── raw/
-│   └── processed/
+│   ├── raw/                    # Downloaded UCI datasets (checksummed)
+│   └── processed/              # Transformed data (derived files)
+├── code/
+│   ├── requirements.txt        # Pinned dependencies
+│   ├── config.yaml             # Hyperparameters and seeds
+│   ├── download_datasets.py    # UCI dataset fetcher
+│   ├── models/
+│   │   └── dp_gmm.py           # DPGMM implementation
+│   ├── baselines/
+│   │   ├── arima.py            # ARIMA baseline
+│   │   └── moving_average.py   # Moving average z-score baseline
+│   ├── evaluation/
+│   │   ├── metrics.py          # F1, precision, recall, AUC
+│   │   └── plots.py            # ROC/PR curve generators
+│   └── utils/
+│       ├── streaming.py        # Streaming update utilities
+│       └── threshold.py        # Adaptive threshold calibration
+├── tests/
+│   ├── contract/               # Schema validation tests
+│   ├── integration/            # End-to-end pipeline tests
+│   └── unit/                   # Model component tests
 └── state/
-    └── projects/PROJ-024-bayesian-nonparametrics-for-anomaly-detection.yaml
+    └── projects/
+        └── PROJ-024-bayesian-nonparametrics-for-anomaly-dete.yaml  # Artifact hashes
 ```
 
-**Structure Decision**: Single project structure (Option 1) chosen as this is a research library with CLI entry points. All code lives under `code/` to match the constitution's reproducibility requirements for GitHub Actions execution.
+**Structure Decision**: Single computational research project structure. All code lives under `code/` with clear separation between models, baselines, evaluation, and utilities. Contract tests validate output schemas before evaluation results are accepted.
 
 ## Complexity Tracking
 
-No violations detected. All 7 constitution principles are satisfied without requiring justification for complexity additions.
+> No violations requiring justification. All complexity is necessary for streaming DPGMM implementation and baseline comparison requirements.
+
+## Computational Task Ordering
+
+1. **Phase 0 - Data Acquisition**: Download UCI datasets via `download_datasets.py` (before any modeling)
+2. **Phase 1 - Model Training**: Fit DPGMM and baselines on training splits (before evaluation)
+3. **Phase 2 - Evaluation**: Compute anomaly scores, F1-scores, ROC/PR metrics (before figure generation)
+4. **Phase 3 - Figure Generation**: Save PNG files for ROC/PR curves (before paper inclusion)
+5. **Phase 4 - Sensitivity Analysis**: Vary concentration parameter across specified ranges

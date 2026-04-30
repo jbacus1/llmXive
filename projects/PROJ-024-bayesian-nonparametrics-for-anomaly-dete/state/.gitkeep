@@ -1,3 +1,0 @@
-# This file ensures the state/ directory is tracked by git
-# The directory is empty until experiment metadata is generated
-state/

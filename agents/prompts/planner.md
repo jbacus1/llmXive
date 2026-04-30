@@ -62,4 +62,16 @@ $schema: ...
   `(verified YYYY-MM-DD)` annotations. The Reference-Validator
   fetches every cited URL — fabricated URLs flip the verdict to
   mismatch.
+- For DATASETS specifically: `research.md`'s "Dataset Strategy"
+  table MUST name only real, programmatically-fetchable sources.
+  If the spec calls for "UCI Electricity" but the canonical UCI
+  endpoint requires browser navigation, plan for the `ucimlrepo`
+  Python package OR substitute a comparable open dataset that has
+  a known-stable raw URL (e.g., NAB benchmark CSVs at
+  `https://raw.githubusercontent.com/numenta/NAB/master/data/realKnownCause/`,
+  or HuggingFace `datasets.load_dataset(...)`).
+- For COMPUTATIONAL TASK ORDERING: the plan MUST order phases so
+  data is downloaded BEFORE any task that consumes it, models are
+  fitted BEFORE any task that evaluates them, and figures are
+  generated BEFORE any task that includes them in the paper.
 - Output ONLY the markers + content; no preamble.

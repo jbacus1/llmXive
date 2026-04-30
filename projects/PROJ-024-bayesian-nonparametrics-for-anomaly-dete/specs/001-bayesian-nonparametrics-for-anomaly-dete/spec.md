@@ -101,6 +101,6 @@ As a computational statistics researcher, I want to calibrate the posterior prob
 - Time series datasets are univariate; multivariate extensions are out of scope for this feature
 - Labeled anomaly data is available for at least 3 of the selected UCI datasets for F1-score calculation
 - Network connectivity is available for downloading datasets via wget/curl
-- Prioritize UCI Electricity and Traffic datasets for real-world benchmarks, plus one Synthetic Anomaly dataset for controlled validation with known ground truth.
+- **Prioritize UCI Electricity, Traffic, and PEMS-SF datasets for real-world benchmarks, all three being from UCI Machine Learning Repository to satisfy SC-001 requirement for at least 3 UCI datasets.**
 - Comparable performance is defined as F1-score within 5% of baseline methods, as specified in Success Criterion SC-001.
 - Adaptive threshold shall be computed using the 95th percentile of the anomaly score distribution on a validation split, a common practice for unsupervised anomaly scoring.

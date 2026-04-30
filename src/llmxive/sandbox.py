@@ -109,6 +109,27 @@ def run_python_script(
             stderr=f"script not found: {script}",
             duration_s=0.0,
         )
+    # Pre-execution sanity check: refuse to run anything whose first
+    # non-blank line looks like a unified-diff hunk header. The
+    # implementer occasionally returns `--- a/foo.py\n+++ b/foo.py\n
+    # @@ ...` as the file contents, which produces a SyntaxError that
+    # wastes a sandbox run. Catching it here gives the caller a
+    # clearer failure message.
+    try:
+        head = script.read_text(encoding="utf-8", errors="replace")[:200]
+    except OSError:
+        head = ""
+    if head.lstrip().startswith(("--- a/", "+++ b/", "@@ ")):
+        return ExecutionResult(
+            ok=False,
+            returncode=-1,
+            stdout="",
+            stderr=(
+                f"script appears to be a unified diff fragment, not "
+                f"valid source. First 200 chars: {head!r}"
+            ),
+            duration_s=0.0,
+        )
     py = ensure_venv(project_dir)
     env = os.environ.copy()
     env["PYTHONUNBUFFERED"] = "1"

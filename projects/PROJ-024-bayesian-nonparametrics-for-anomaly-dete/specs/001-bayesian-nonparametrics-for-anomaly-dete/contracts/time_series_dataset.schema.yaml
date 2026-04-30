@@ -1,0 +1,81 @@
+$schema: http://json-schema.org/draft-07/schema#
+title: Time Series Dataset Schema
+description: Schema for validating time series dataset files used in anomaly detection evaluation
+version: 1.0.0
+
+type: object
+required:
+  - id
+  - name
+  - observations
+  - source
+  - checksum
+
+properties:
+  id:
+    type: string
+    description: Unique identifier for the time series
+    pattern: "^[a-zA-Z0-9_-]+$"
+    minLength: 1
+    maxLength: 64
+
+  name:
+    type: string
+    description: Human-readable dataset name
+    minLength: 1
+    maxLength: 256
+
+  observations:
+    type: array
+    description: Time series values
+    items:
+      type: number
+    minItems: 10
+    maxItems: 100000
+
+  timestamps:
+    type: array
+    description: Optional timestamps for each observation
+    items:
+      type: string
+      format: date-time
+    minItems: 0
+
+  anomaly_labels:
+    type: array
+    description: Ground truth anomaly flags (0=normal, 1=anomaly)
+    items:
+      type: integer
+      enum: [0, 1]
+    minItems: 0
+    maxItems: 100000
+
+  source:
+    type: string
+    description: Dataset source
+    enum:
+      - UCI
+      - NAB
+      - HuggingFace
+      - synthetic
+
+  checksum:
+    type: string
+    description: SHA-256 hash of raw data file
+    pattern: "^[a-f0-9]{64}$"
+
+  metadata:
+    type: object
+    description: Optional additional metadata
+    properties:
+      download_url:
+        type: string
+        format: uri
+      download_date:
+        type: string
+        format: date
+      original_size_bytes:
+        type: integer
+        minimum: 0
+
+additionalProperties: false

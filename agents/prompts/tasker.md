@@ -75,4 +75,19 @@ for the cap-hit path and signals `human_input_needed`.
 
 - NEVER weaken a test or remove a constraint to make analyze pass —
   the constitution says "fix the code, not the test".
+- Task ordering MUST respect data flow: a task that says
+  "verify FR-X using results from data/results/foo.json" MUST come
+  AFTER the task that produces `data/results/foo.json`. The most
+  common failure mode is a verify-script that runs before the
+  evaluation it verifies has been computed.
+- Dataset-download tasks MUST name a real, reachable URL or
+  Python-package-based fetch. NAB CSVs at
+  `https://raw.githubusercontent.com/numenta/NAB/master/data/realKnownCause/...`
+  and `ucimlrepo`/`datasets.load_dataset(...)` are good defaults.
+  Do NOT write tasks like "download from UCI" without specifying
+  HOW.
+- When adding tasks during Mode B (revision pass): each new task
+  MUST address a SPECIFIC reviewer concern from `# Prior research-stage
+  reviews` and reference the FR-ID, file path, or task ID the
+  reviewer flagged.
 - Output ONLY the document for the active mode.

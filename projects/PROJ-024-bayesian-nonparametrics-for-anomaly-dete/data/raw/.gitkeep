@@ -1,3 +1,2 @@
-# This directory stores raw downloaded datasets
-# Datasets downloaded by download_uci_datasets.py will be placed here
-# Files are large and tracked in .gitignore, not in git
+# This file ensures the data/raw directory is tracked by git
+# Raw dataset files will be downloaded here by download_datasets.py

@@ -1,0 +1,2 @@
+# This file ensures the data/results directory is tracked by git
+# Model evaluation results, statistics, and metrics will be stored here

@@ -1,0 +1,23 @@
+{
+  "threshold": 0.31564131710551496,
+  "percentile_used": 95.0,
+  "anomaly_rate_estimate": 0.088,
+  "score_statistics": {
+    "mean": 0.12846000114546519,
+    "std": 0.18165413634464575,
+    "median": 0.07391662135281413,
+    "min": 0.0004642784066342885,
+    "max": 1.8002453265613814,
+    "skewness": 4.0683551187026925,
+    "kurtosis": 23.968137807748096,
+    "iqr": 0.13072624201627744,
+    "mad": 0.05434702454082936
+  },
+  "calibration_method": "mad (skewed)",
+  "confidence_interval": [
+    0.2753538678133981,
+    0.35592876639763177
+  ],
+  "recommended": true,
+  "notes": ""
+}

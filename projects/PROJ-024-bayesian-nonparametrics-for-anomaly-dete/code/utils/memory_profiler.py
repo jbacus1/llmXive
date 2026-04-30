@@ -1,471 +1,590 @@
 """
-Memory profiling utilities for verifying <7GB RAM constraint.
+Memory Profiler for DPGMM Streaming Anomaly Detection
+======================================================
+Provides memory usage tracking and profiling capabilities for streaming
+observation processing. Used to verify FR-005 memory constraints (<7GB RAM).
 
-This module provides tools to track and profile memory usage during
-DPGMM model training and inference, ensuring compliance with the
-7GB RAM constraint specified in the project requirements.
+This module supports:
+- Memory snapshot capture at any point during execution
+- Memory profiling during 1000+ observation processing
+- Memory growth analysis and anomaly detection
+- Export of profiling results to JSON/CSV for analysis
 
-Usage:
-    with MemoryProfiler() as profiler:
-        # Run memory-intensive operations
-        model.fit(data)
-      
-      memory_report = profiler.get_report()
-      assert memory_report.max_memory_gb < 7.0
-
-For edge case handling:
-    - Low variance time series (minimal memory overhead)
-    - Missing values recovery (streaming, no full data loading)
-    - Large datasets (chunked processing)
+Constitution Principle III: All artifacts must be hashable and verifiable.
 """
 
-import tracemalloc
-import psutil
 import os
+import sys
+import gc
 import time
-from typing import Optional, Dict, List, Any
-from dataclasses import dataclass, field
-from contextlib import contextmanager
+import json
+import csv
 import logging
+from dataclasses import dataclass, field, asdict
+from pathlib import Path
+from typing import Optional, List, Dict, Any, Callable, Tuple, Generator, Union
+from datetime import datetime
+import traceback
 
-# Configure logger for memory profiling
+# Try to import psutil for detailed memory info, fall back to os if unavailable
+try:
+    import psutil
+    PSUTIL_AVAILABLE = True
+except ImportError:
+    PSUTIL_AVAILABLE = False
+    logging.warning("psutil not available, using os-based memory estimation")
+
+# Configure logging for memory profiling
 logger = logging.getLogger(__name__)
-
-# Memory constraint constants (from FR-007)
-MEMORY_LIMIT_GB = 7.0
-MEMORY_LIMIT_BYTES = MEMORY_LIMIT_GB * 1024**3
-WARNING_THRESHOLD_GB = 6.0  # Warn at 85% of limit
-CRITICAL_THRESHOLD_GB = 6.5  # Critical at 93% of limit
 
 
 @dataclass
 class MemorySnapshot:
-    """A single memory usage snapshot with timestamp."""
-    timestamp: float
-    current_bytes: int
-    peak_bytes: int
-    process_memory_bytes: int
-    system_available_gb: float
+    """
+    Captures memory usage at a single point in time.
 
-    @property
-    def current_gb(self) -> float:
-        return self.current_bytes / (1024**3)
+    Attributes:
+        timestamp: ISO format timestamp when snapshot was taken
+        process_memory_mb: Current process memory usage in MB
+        process_memory_percent: Percentage of system memory used by process
+        gc_counts: Garbage collection counts for each generation
+        gc_objects: Number of objects tracked by GC
+        timestamp_epoch: Unix timestamp for easier analysis
+    """
+    timestamp: str
+    timestamp_epoch: float
+    process_memory_mb: float
+    process_memory_percent: float
+    gc_counts: Tuple[int, int, int]
+    gc_objects: int
+    snapshot_id: int = 0
+    operation: str = "unknown"
 
-    @property
-    def peak_gb(self) -> float:
-        return self.peak_bytes / (1024**3)
+    def to_dict(self) -> Dict[str, Any]:
+        """Convert snapshot to dictionary for serialization."""
+        return {
+            'timestamp': self.timestamp,
+            'timestamp_epoch': self.timestamp_epoch,
+            'process_memory_mb': self.process_memory_mb,
+            'process_memory_percent': self.process_memory_percent,
+            'gc_counts': list(self.gc_counts),
+            'gc_objects': self.gc_objects,
+            'snapshot_id': self.snapshot_id,
+            'operation': self.operation
+        }
 
-    @property
-    def process_memory_gb(self) -> float:
-        return self.process_memory_bytes / (1024**3)
+    @classmethod
+    def from_dict(cls, data: Dict[str, Any]) -> 'MemorySnapshot':
+        """Create snapshot from dictionary."""
+        return cls(
+            timestamp=data['timestamp'],
+            timestamp_epoch=data['timestamp_epoch'],
+            process_memory_mb=data['process_memory_mb'],
+            process_memory_percent=data['process_memory_percent'],
+            gc_counts=tuple(data['gc_counts']),
+            gc_objects=data['gc_objects'],
+            snapshot_id=data.get('snapshot_id', 0),
+            operation=data.get('operation', 'unknown')
+        )
 
 
 @dataclass
-class MemoryReport:
-    """Summary report of memory profiling session."""
+class MemoryProfileResult:
+    """
+    Aggregated results from a memory profiling session.
+
+    Attributes:
+        start_memory_mb: Memory at profiling start
+        end_memory_mb: Memory at profiling end
+        peak_memory_mb: Maximum memory observed
+        avg_memory_mb: Average memory over all snapshots
+        memory_growth_mb: Total memory growth during profiling
+        memory_growth_rate_mb_per_obs: Memory growth per observation
+        total_snapshots: Number of snapshots taken
+        profiling_duration_seconds: Total time profiling ran
+        snapshot_count_per_100_obs: Snapshots taken per 100 observations
+        snapshots: List of all MemorySnapshot objects
+        memory_anomalies: List of observations where memory spiked unexpectedly
+        profiling_config: Configuration used for this profiling run
+    """
+    start_memory_mb: float
+    end_memory_mb: float
+    peak_memory_mb: float
+    avg_memory_mb: float
+    memory_growth_mb: float
+    memory_growth_rate_mb_per_obs: float
+    total_snapshots: int
+    profiling_duration_seconds: float
+    snapshot_count_per_100_obs: int
     snapshots: List[MemorySnapshot] = field(default_factory=list)
-    max_memory_bytes: int = 0
-    max_memory_gb: float = 0.0
-    avg_memory_gb: float = 0.0
-    duration_seconds: float = 0.0
-    start_timestamp: float = 0.0
-    end_timestamp: float = 0.0
-    violations: List[str] = field(default_factory=list)
+    memory_anomalies: List[Dict[str, Any]] = field(default_factory=list)
+    profiling_config: Dict[str, Any] = field(default_factory=dict)
 
-    def validate_constraint(self, limit_gb: float = MEMORY_LIMIT_GB) -> bool:
-        """
-        Validate that memory usage stayed within constraint.
+    def to_dict(self) -> Dict[str, Any]:
+        """Convert results to dictionary for serialization."""
+        return {
+            'start_memory_mb': self.start_memory_mb,
+            'end_memory_mb': self.end_memory_mb,
+            'peak_memory_mb': self.peak_memory_mb,
+            'avg_memory_mb': self.avg_memory_mb,
+            'memory_growth_mb': self.memory_growth_mb,
+            'memory_growth_rate_mb_per_obs': self.memory_growth_rate_mb_per_obs,
+            'total_snapshots': self.total_snapshots,
+            'profiling_duration_seconds': self.profiling_duration_seconds,
+            'snapshot_count_per_100_obs': self.snapshot_count_per_100_obs,
+            'snapshots': [s.to_dict() for s in self.snapshots],
+            'memory_anomalies': self.memory_anomalies,
+            'profiling_config': self.profiling_config,
+            'timestamp': datetime.now().isoformat()
+        }
 
-        Args:
-            limit_gb: Memory limit in GB (default 7.0)
+    def save_to_json(self, output_path: Union[str, Path]) -> None:
+        """Save profiling results to JSON file."""
+        output_path = Path(output_path)
+        output_path.parent.mkdir(parents=True, exist_ok=True)
+        with open(output_path, 'w') as f:
+            json.dump(self.to_dict(), f, indent=2)
+        logger.info(f"Memory profile saved to {output_path}")
 
-        Returns:
-            True if within constraint, False otherwise
-        """
-        self.violations.clear()
-        if self.max_memory_gb > limit_gb:
-            self.violations.append(
-                f"Memory limit exceeded: {self.max_memory_gb:.2f}GB > {limit_gb}GB"
-            )
-            return False
-        return True
-
-    def get_warning_status(self) -> str:
-        """
-        Get warning status based on memory usage.
-
-        Returns:
-            'ok', 'warning', or 'critical'
-        """
-        if self.max_memory_gb >= CRITICAL_THRESHOLD_GB:
-            return "critical"
-        elif self.max_memory_gb >= WARNING_THRESHOLD_GB:
-            return "warning"
-        return "ok"
+    def save_to_csv(self, output_path: Union[str, Path]) -> None:
+        """Save snapshot data to CSV file."""
+        output_path = Path(output_path)
+        output_path.parent.mkdir(parents=True, exist_ok=True)
+        with open(output_path, 'w', newline='') as f:
+            writer = csv.writer(f)
+            writer.writerow([
+                'snapshot_id', 'timestamp', 'timestamp_epoch', 'operation',
+                'process_memory_mb', 'process_memory_percent',
+                'gc_counts_0', 'gc_counts_1', 'gc_counts_2', 'gc_objects'
+            ])
+            for snap in self.snapshots:
+                writer.writerow([
+                    snap.snapshot_id, snap.timestamp, snap.timestamp_epoch,
+                    snap.operation, snap.process_memory_mb,
+                    snap.process_memory_percent, snap.gc_counts[0],
+                    snap.gc_counts[1], snap.gc_counts[2], snap.gc_objects
+                ])
+        logger.info(f"Memory profile CSV saved to {output_path}")
 
 
 class MemoryProfiler:
     """
-    Context manager and utility class for memory profiling.
+    Memory profiler for tracking memory usage during streaming operations.
 
-    Tracks memory usage using tracemalloc (Python allocations) and
-    psutil (process memory) to provide comprehensive memory monitoring.
+    This profiler is designed to work with the DPGMM streaming anomaly
+    detection pipeline, tracking memory at observation boundaries and
+    detecting potential memory leaks or excessive growth.
 
-    Example:
+    Usage:
         profiler = MemoryProfiler()
-        profiler.start()
+        profiler.start_profiling()
+        for obs in observations:
+            process(obs)
+            if profiler.should_snapshot(obs_index):
+                profiler.capture_snapshot(f"obs_{obs_index}")
+        results = profiler.stop_profiling()
+        results.save_to_json("memory_profile.json")
 
-        # Run operations to profile
-        model.fit(data)
-
-        profiler.stop()
-        report = profiler.get_report()
-
-        if not report.validate_constraint():
-            raise MemoryError(f"Memory constraint violated: {report.violations}")
+    FR-005 Compliance:
+        - Tracks memory during 1000 observation processing
+        - Reports memory growth rate per observation
+        - Detects memory anomalies (spikes > 2x expected growth)
+        - Ensures <7GB RAM limit is monitored
     """
 
-    def __init__(self, sample_interval_seconds: float = 0.1):
+    def __init__(
+        self,
+        snapshot_interval: int = 10,
+        max_memory_mb: float = 7000.0,
+        anomaly_threshold_multiplier: float = 2.0,
+        gc_before_snapshot: bool = True,
+        output_dir: Union[str, Path] = "projects/PROJ-024-bayesian-nonparametrics-for-anomaly-dete/data/memory_profiles"
+    ):
         """
         Initialize memory profiler.
 
         Args:
-            sample_interval_seconds: Interval for sampling memory (default 0.1s)
+            snapshot_interval: Take a snapshot every N observations
+            max_memory_mb: Maximum allowed memory (FR-005: 7GB)
+            anomaly_threshold_multiplier: Multiplier for anomaly detection
+            gc_before_snapshot: Run garbage collection before each snapshot
+            output_dir: Directory to save profiling results
         """
-        self.sample_interval = sample_interval_seconds
+        self.snapshot_interval = snapshot_interval
+        self.max_memory_mb = max_memory_mb
+        self.anomaly_threshold_multiplier = anomaly_threshold_multiplier
+        self.gc_before_snapshot = gc_before_snapshot
+        self.output_dir = Path(output_dir)
+        self.output_dir.mkdir(parents=True, exist_ok=True)
+
         self._snapshots: List[MemorySnapshot] = []
-        self._start_time: Optional[float] = None
-        self._end_time: Optional[float] = None
-        self._tracemalloc_started = False
-        self._sampling_thread: Optional[Any] = None
-        self._stop_sampling = False
+        self._snapshot_counter = 0
+        self._profiling_start_time: Optional[float] = None
+        self._profiling_start_memory: Optional[float] = None
+        self._is_profiling = False
+        self._expected_growth_per_obs: Optional[float] = None
 
-    def _get_process_memory(self) -> int:
-        """Get current process memory usage in bytes."""
-        process = psutil.Process(os.getpid())
-        return process.memory_info().rss
-
-    def _get_system_available_gb(self) -> float:
-        """Get available system memory in GB."""
-        mem = psutil.virtual_memory()
-        return mem.available / (1024**3)
-
-    def _take_snapshot(self) -> MemorySnapshot:
-        """Take a single memory snapshot."""
-        tracemalloc.take_snapshot()
-        current, peak = tracemalloc.get_traced_memory()
-        process_mem = self._get_process_memory()
-        system_avail = self._get_system_available_gb()
-
-        return MemorySnapshot(
-            timestamp=time.time(),
-            current_bytes=current,
-            peak_bytes=peak,
-            process_memory_bytes=process_mem,
-            system_available_gb=system_avail
+        # Configure logging
+        logging.basicConfig(
+            level=logging.INFO,
+            format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
         )
 
-    def _sampling_loop(self):
-        """Background thread for continuous sampling."""
-        while not self._stop_sampling:
+    def _get_process_memory_mb(self) -> float:
+        """Get current process memory usage in MB."""
+        if PSUTIL_AVAILABLE:
+            process = psutil.Process(os.getpid())
+            memory_info = process.memory_info()
+            return memory_info.rss / (1024 * 1024)
+        else:
+            # Fallback: try to estimate from /proc on Linux
             try:
-                snapshot = self._take_snapshot()
-                self._snapshots.append(snapshot)
-                time.sleep(self.sample_interval)
-            except Exception as e:
-                logger.warning(f"Memory sampling error: {e}")
-                time.sleep(self.sample_interval)
+                with open('/proc/self/status', 'r') as f:
+                    for line in f:
+                        if line.startswith('VmRSS:'):
+                            parts = line.split()
+                            return float(parts[1]) / 1024  # Convert KB to MB
+            except:
+                pass
+            # Ultimate fallback: 0
+            logger.warning("Could not determine memory usage, returning 0")
+            return 0.0
 
-    def start(self, continuous: bool = False):
+    def _get_process_memory_percent(self) -> float:
+        """Get current process memory percentage of system."""
+        if PSUTIL_AVAILABLE:
+            process = psutil.Process(os.getpid())
+            return process.memory_percent()
+        else:
+            return 0.0
+
+    def _get_gc_stats(self) -> Tuple[Tuple[int, int, int], int]:
+        """Get garbage collection statistics."""
+        gc_counts = gc.get_count()
+        gc_objects = len(gc.get_objects())
+        return gc_counts, gc_objects
+
+    def _run_gc_if_needed(self) -> None:
+        """Run garbage collection if configured."""
+        if self.gc_before_snapshot:
+            gc.collect()
+
+    def start_profiling(self) -> None:
+        """Start memory profiling session."""
+        self._run_gc_if_needed()
+        self._profiling_start_time = time.time()
+        self._profiling_start_memory = self._get_process_memory_mb()
+        self._snapshots = []
+        self._snapshot_counter = 0
+        self._is_profiling = True
+        logger.info(f"Memory profiling started. Initial memory: {self._profiling_start_memory:.2f} MB")
+
+    def capture_snapshot(
+        self,
+        operation: str = "unknown",
+        observation_index: Optional[int] = None
+    ) -> MemorySnapshot:
         """
-        Start memory profiling.
+        Capture a memory snapshot at the current point.
 
         Args:
-            continuous: If True, sample continuously in background thread
+            operation: Name of operation being profiled
+            observation_index: Current observation index (for tracking)
+
+        Returns:
+            MemorySnapshot object with current memory state
         """
-        if self._start_time is not None:
-            logger.warning("MemoryProfiler already started, stopping previous session")
-            self.stop()
+        if not self._is_profiling:
+            raise RuntimeError("Profiling not started. Call start_profiling() first.")
 
-        tracemalloc.start()
-        self._tracemalloc_started = True
-        self._start_time = time.time()
-        self._snapshots.clear()
+        self._run_gc_if_needed()
 
-        # Take initial snapshot
-        self._snapshots.append(self._take_snapshot())
+        self._snapshot_counter += 1
+        snapshot = MemorySnapshot(
+            timestamp=datetime.now().isoformat(),
+            timestamp_epoch=time.time(),
+            process_memory_mb=self._get_process_memory_mb(),
+            process_memory_percent=self._get_process_memory_percent(),
+            gc_counts=self._get_gc_stats()[0],
+            gc_objects=self._get_gc_stats()[1],
+            snapshot_id=self._snapshot_counter,
+            operation=operation
+        )
 
-        if continuous:
-            self._stop_sampling = False
-            import threading
-            self._sampling_thread = threading.Thread(
-                target=self._sampling_loop,
-                daemon=True
+        self._snapshots.append(snapshot)
+
+        # Check for memory anomalies
+        if observation_index is not None and len(self._snapshots) > 1:
+            self._check_memory_anomaly(snapshot, observation_index)
+
+        # Check against max memory limit
+        if snapshot.process_memory_mb > self.max_memory_mb:
+            logger.warning(
+                f"Memory limit exceeded! {snapshot.process_memory_mb:.2f} MB > {self.max_memory_mb} MB"
             )
-            self._sampling_thread.start()
-            logger.info("Memory profiling started (continuous mode)")
-        else:
-            logger.info("Memory profiling started")
 
-    def stop(self) -> MemoryReport:
+        return snapshot
+
+    def _check_memory_anomaly(
+        self,
+        current: MemorySnapshot,
+        observation_index: int
+    ) -> None:
+        """Check if memory growth is anomalous compared to expected growth."""
+        if len(self._snapshots) < 2:
+            return
+
+        prev = self._snapshots[-2]
+        actual_growth = current.process_memory_mb - prev.process_memory_mb
+
+        # If we have enough data, estimate expected growth
+        if len(self._snapshots) >= 10:
+            if self._expected_growth_per_obs is None:
+                # Calculate from first 10 snapshots
+                  total_growth = self._snapshots[-1].process_memory_mb - self._snapshots[0].process_memory_mb
+                  total_obs = observation_index - self._snapshots[0].snapshot_id * self.snapshot_interval
+                  self._expected_growth_per_obs = total_growth / max(total_obs, 1)
+
+          if self._expected_growth_per_obs is not None and self._expected_growth_per_obs > 0:
+              expected_growth = self._expected_growth_per_obs * self.snapshot_interval
+              if actual_growth > expected_growth * self.anomaly_threshold_multiplier:
+                  self._memory_anomalies.append({
+                      'snapshot_id': current.snapshot_id,
+                      'observation_index': observation_index,
+                      'timestamp': current.timestamp,
+                      'actual_growth_mb': actual_growth,
+                      'expected_growth_mb': expected_growth,
+                      'multiplier': actual_growth / expected_growth
+                  })
+                  logger.warning(
+                      f"Memory anomaly detected at obs {observation_index}: "
+                      f"growth {actual_growth:.2f} MB vs expected {expected_growth:.2f} MB"
+                  )
+
+    def should_snapshot(self, observation_index: int) -> bool:
+        """Check if we should take a snapshot at this observation index."""
+        return (observation_index % self.snapshot_interval) == 0
+
+    def stop_profiling(
+        self,
+        total_observations: int,
+        output_basename: Optional[str] = None
+    ) -> MemoryProfileResult:
         """
-        Stop memory profiling and return report.
+        Stop profiling and generate results.
+
+        Args:
+            total_observations: Total number of observations processed
+            output_basename: Optional base name for output files
 
         Returns:
-            MemoryReport with profiling summary
+            MemoryProfileResult with aggregated statistics
         """
-        self._end_time = time.time()
+        if not self._is_profiling:
+            raise RuntimeError("Profiling not started. Call start_profiling() first.")
 
-        if self._tracemalloc_started:
-            tracemalloc.stop()
-            self._tracemalloc_started = False
-
-        if self._sampling_thread:
-            self._stop_sampling = True
-            self._sampling_thread.join(timeout=1.0)
-            self._sampling_thread = None
-
-        return self.get_report()
-
-    def get_snapshot(self) -> MemorySnapshot:
-        """
-        Get current memory snapshot.
-
-        Returns:
-            Current MemorySnapshot
-        """
-        return self._take_snapshot()
-
-    def get_report(self) -> MemoryReport:
-        """
-        Generate memory profiling report.
-
-        Returns:
-            MemoryReport with summary statistics
-        """
-        if not self._snapshots:
-            return MemoryReport()
+        self._is_profiling = False
+        profiling_duration = time.time() - self._profiling_start_time
 
         # Calculate statistics
-        max_bytes = max(s.peak_bytes for s in self._snapshots)
-        max_gb = max_bytes / (1024**3)
-        avg_gb = sum(s.current_bytes for s in self._snapshots) / len(self._snapshots) / (1024**3)
+        memory_values = [s.process_memory_mb for s in self._snapshots]
+        start_memory = memory_values[0] if memory_values else 0.0
+        end_memory = memory_values[-1] if memory_values else 0.0
+        peak_memory = max(memory_values) if memory_values else 0.0
+        avg_memory = sum(memory_values) / len(memory_values) if memory_values else 0.0
+        memory_growth = end_memory - start_memory
 
-        duration = (self._end_time or time.time()) - (self._start_time or time.time())
+        # Calculate growth rate per observation
+        memory_growth_rate = memory_growth / max(total_observations, 1)
 
-        report = MemoryReport(
+        # Calculate snapshots per 100 observations
+        snapshot_count_per_100 = int((len(self._snapshots) / total_observations) * 100)
+
+        results = MemoryProfileResult(
+            start_memory_mb=start_memory,
+            end_memory_mb=end_memory,
+            peak_memory_mb=peak_memory,
+            avg_memory_mb=avg_memory,
+            memory_growth_mb=memory_growth,
+            memory_growth_rate_mb_per_obs=memory_growth_rate,
+            total_snapshots=len(self._snapshots),
+            profiling_duration_seconds=profiling_duration,
+            snapshot_count_per_100_obs=snapshot_count_per_100,
             snapshots=self._snapshots,
-            max_memory_bytes=max_bytes,
-            max_memory_gb=max_gb,
-            avg_memory_gb=avg_gb,
-            duration_seconds=duration,
-            start_timestamp=self._start_time or 0,
-            end_timestamp=self._end_time or time.time()
+            memory_anomalies=self._memory_anomalies,
+            profiling_config={
+                'snapshot_interval': self.snapshot_interval,
+                'max_memory_mb': self.max_memory_mb,
+                'anomaly_threshold_multiplier': self.anomaly_threshold_multiplier,
+                'gc_before_snapshot': self.gc_before_snapshot,
+                'total_observations': total_observations
+            }
         )
 
-        # Log summary
-        status = report.get_warning_status()
-        logger.info(
-            f"Memory profile complete: max={max_gb:.2f}GB, "
-            f"avg={avg_gb:.2f}GB, duration={duration:.1f}s, status={status}"
-        )
+        # Save results if output specified
+        if output_basename:
+          results.save_to_json(self.output_dir / f"{output_basename}.json")
+          results.save_to_csv(self.output_dir / f"{output_basename}.csv")
 
-        if status == "critical":
-            logger.critical(f"Memory usage critical: {max_gb:.2f}GB")
-        elif status == "warning":
-            logger.warning(f"Memory usage warning: {max_gb:.2f}GB")
+        logger.info(f"Memory profiling complete. Duration: {profiling_duration:.2f}s")
+        logger.info(f"Memory growth: {memory_growth:.2f} MB ({memory_growth_rate:.4f} MB/obs)")
 
-        return report
+        return results
 
-    def check_constraint(self, limit_gb: float = MEMORY_LIMIT_GB) -> bool:
-        """
-        Check if current memory usage is within constraint.
-
-        Args:
-            limit_gb: Memory limit in GB
-
-        Returns:
-            True if within constraint
-        """
-        snapshot = self.get_snapshot()
-        within = snapshot.process_memory_gb < limit_gb
-
-        if not within:
-            logger.error(
-                f"Memory constraint violated: "
-                f"{snapshot.process_memory_gb:.2f}GB > {limit_gb}GB"
-            )
-
-        return within
+    def reset(self) -> None:
+        """Reset profiler state for a new profiling session."""
+        self._snapshots = []
+        self._snapshot_counter = 0
+        self._profiling_start_time = None
+        self._profiling_start_memory = None
+        self._is_profiling = False
+        self._expected_growth_per_obs = None
+        self._memory_anomalies = []
 
 
-@contextmanager
-def profile_memory(
-    name: str = "operation",
-    limit_gb: float = MEMORY_LIMIT_GB,
-    log_level: int = logging.INFO
-):
+def profile_memory_usage(
+    observations: Generator[Any, None, None],
+    process_func: Callable[[Any, int], Any],
+    snapshot_interval: int = 10,
+    max_memory_mb: float = 7000.0,
+    output_dir: Union[str, Path] = "projects/PROJ-024-bayesian-nonparametrics-for-anomaly-dete/data/memory_profiles",
+    output_basename: Optional[str] = None,
+    gc_before_snapshot: bool = True
+) -> MemoryProfileResult:
     """
-    Context manager for profiling memory of a code block.
+    Convenience function to profile memory during observation processing.
+
+    This is the primary entry point for FR-005 memory profiling. It creates
+    a MemoryProfiler, processes observations with the provided function,
+    and returns aggregated results.
 
     Args:
-        name: Name for the profiled operation
-        limit_gb: Memory limit in GB
-        log_level: Logging level for output
+        observations: Generator yielding observations to process
+        process_func: Function to call for each observation (obs, index) -> result
+        snapshot_interval: Take snapshot every N observations
+        max_memory_mb: Maximum allowed memory (FR-005: 7GB)
+        output_dir: Directory to save profiling results
+        output_basename: Optional base name for output files
+        gc_before_snapshot: Run GC before each snapshot
 
-    Yields:
-        MemoryProfiler instance
-
-    Raises:
-        MemoryError: If memory limit exceeded
+    Returns:
+        MemoryProfileResult with all profiling statistics
 
     Example:
-        with profile_memory("model_training", limit_gb=7.0) as profiler:
-            model.fit(data)
+        def process_obs(obs, idx):
+            model.update(obs)
+            score = model.score(obs)
+            return score
 
-        if not profiler.get_report().validate_constraint():
-            raise MemoryError("Memory constraint violated")
+        results = profile_memory_usage(
+            observations=my_observations,
+            process_func=process_obs,
+            snapshot_interval=50,
+            output_basename="1000_obs_profile"
+        )
+        print(f"Peak memory: {results.peak_memory_mb:.2f} MB")
     """
-    profiler = MemoryProfiler()
-    profiler.start()
+    profiler = MemoryProfiler(
+        snapshot_interval=snapshot_interval,
+        max_memory_mb=max_memory_mb,
+        gc_before_snapshot=gc_before_snapshot,
+        output_dir=output_dir
+    )
+
+    profiler.start_profiling()
+    observation_count = 0
 
     try:
-        yield profiler
+        for obs in observations:
+            process_func(obs, observation_count)
+            observation_count += 1
+
+            if profiler.should_snapshot(observation_count):
+                profiler.capture_snapshot(
+                    operation=f"obs_{observation_count}",
+                    observation_index=observation_count
+                )
+
+    except Exception as e:
+        logger.error(f"Error during memory profiling: {e}")
+        raise
     finally:
-        report = profiler.stop()
-        logger.log(
-            log_level,
-            f"Memory profile '{name}': max={report.max_memory_gb:.2f}GB, "
-            f"duration={report.duration_seconds:.1f}s"
+        results = profiler.stop_profiling(
+            total_observations=observation_count,
+            output_basename=output_basename
         )
 
-        if not report.validate_constraint(limit_gb):
-            raise MemoryError(
-                f"Memory constraint violated for '{name}': "
-                f"{report.max_memory_gb:.2f}GB > {limit_gb}GB"
-            )
+    return results
 
 
-def get_current_memory_gb() -> float:
+def main() -> None:
     """
-    Get current process memory usage in GB.
+    CLI entry point for memory profiling.
 
-    Returns:
-        Current memory usage in GB
+    Usage:
+        python -m code.utils.memory_profiler --observations 1000 --interval 50
     """
-    process = psutil.Process(os.getpid())
-    return process.memory_info().rss / (1024**3)
+    import argparse
+
+    parser = argparse.ArgumentParser(description='Memory profiler for DPGMM streaming')
+    parser.add_argument('--observations', type=int, default=1000,
+                        help='Number of observations to process')
+    parser.add_argument('--interval', type=int, default=50,
+                        help='Snapshot interval')
+    parser.add_argument('--max-memory', type=float, default=7000.0,
+                        help='Maximum memory in MB')
+    parser.add_argument('--output', type=str, default='memory_profile',
+                        help='Output filename base')
+    parser.add_argument('--no-gc', action='store_true',
+                        help='Skip garbage collection before snapshots')
+
+    args = parser.parse_args()
+
+    # Generate synthetic observations for testing
+    logger.info(f"Starting memory profile: {args.observations} observations")
+
+    def generate_observations(n: int) -> Generator[Dict[str, Any], None, None]:
+        """Generate synthetic observations for profiling."""
+        import numpy as np
+        np.random.seed(42)
+        for i in range(n):
+            yield {
+                'timestamp': datetime.now().isoformat(),
+                'value': np.random.normal(0, 1),
+                'index': i
+            }
+
+    def process_observation(obs: Dict[str, Any], idx: int) -> None:
+        """Simulate observation processing (no actual model for this demo)."""
+        # Simulate some memory allocation
+        _ = [0] * 1000
+
+    results = profile_memory_usage(
+        observations=generate_observations(args.observations),
+        process_func=process_observation,
+        snapshot_interval=args.interval,
+        max_memory_mb=args.max_memory,
+        output_dir="data/memory_profiles",
+        output_basename=args.output,
+        gc_before_snapshot=not args.no_gc
+    )
+
+    # Print summary
+    print("\n" + "=" * 60)
+    print("MEMORY PROFILING SUMMARY")
+    print("=" * 60)
+    print(f"Total observations: {results.total_snapshots * args.interval}")
+    print(f"Profiling duration: {results.profiling_duration_seconds:.2f}s")
+    print(f"Start memory: {results.start_memory_mb:.2f} MB")
+    print(f"End memory: {results.end_memory_mb:.2f} MB")
+    print(f"Peak memory: {results.peak_memory_mb:.2f} MB")
+    print(f"Memory growth: {results.memory_growth_mb:.2f} MB")
+    print(f"Growth rate: {results.memory_growth_rate_mb_per_obs:.4f} MB/observation")
+    print(f"Snapshots taken: {results.total_snapshots}")
+    print(f"Memory anomalies: {len(results.memory_anomalies)}")
+    print(f"Results saved to: data/memory_profiles/{args.output}.json")
+    print("=" * 60)
 
 
-def get_available_memory_gb() -> float:
-    """
-    Get available system memory in GB.
-
-    Returns:
-        Available memory in GB
-    """
-    mem = psutil.virtual_memory()
-    return mem.available / (1024**3)
-
-
-def check_memory_constraint(
-    limit_gb: float = MEMORY_LIMIT_GB,
-    raise_on_violation: bool = False
-) -> bool:
-    """
-    Check if current memory usage is within constraint.
-
-    Args:
-        limit_gb: Memory limit in GB
-        raise_on_violation: If True, raise MemoryError on violation
-
-    Returns:
-        True if within constraint
-
-    Raises:
-        MemoryError: If raise_on_violation=True and constraint violated
-    """
-    current_gb = get_current_memory_gb()
-    within = current_gb < limit_gb
-
-    if not within:
-        logger.error(
-            f"Memory constraint check failed: "
-            f"{current_gb:.2f}GB > {limit_gb}GB"
-        )
-        if raise_on_violation:
-            raise MemoryError(
-                f"Memory constraint violated: "
-                f"{current_gb:.2f}GB > {limit_gb}GB"
-            )
-
-    return within
-
-
-def estimate_memory_for_dataset(
-    n_samples: int,
-    n_features: int,
-    dtype_bytes: int = 8,
-    safety_factor: float = 2.0
-) -> float:
-    """
-    Estimate memory usage for dataset in GB.
-
-    Args:
-        n_samples: Number of samples
-        n_features: Number of features
-        dtype_bytes: Bytes per element (8 for float64)
-        safety_factor: Safety multiplier for overhead
-
-    Returns:
-        Estimated memory in GB
-    """
-    raw_bytes = n_samples * n_features * dtype_bytes
-    estimated_bytes = raw_bytes * safety_factor
-    return estimated_bytes / (1024**3)
-
-
-# Unit test helper functions
-def run_memory_test(
-    test_function,
-    max_memory_gb: float = MEMORY_LIMIT_GB,
-    n_iterations: int = 3
-) -> Dict[str, Any]:
-    """
-    Run a function multiple times and profile memory.
-
-    Args:
-        test_function: Function to profile
-        max_memory_gb: Maximum allowed memory
-        n_iterations: Number of iterations
-
-    Returns:
-        Dict with test results and memory statistics
-    """
-    results = []
-
-    for i in range(n_iterations):
-        profiler = MemoryProfiler()
-        profiler.start()
-
-        try:
-            test_function()
-            report = profiler.stop()
-            results.append({
-                "iteration": i + 1,
-                "max_memory_gb": report.max_memory_gb,
-                "within_constraint": report.validate_constraint(max_memory_gb)
-            })
-        finally:
-            profiler.stop()
-
-    avg_max = sum(r["max_memory_gb"] for r in results) / len(results)
-    all_within = all(r["within_constraint"] for r in results)
-
-    return {
-        "iterations": n_iterations,
-        "max_memory_gb": max(r["max_memory_gb"] for r in results),
-        "avg_memory_gb": avg_max,
-        "all_within_constraint": all_within,
-        "results": results
-    }
+if __name__ == "__main__":
+    main()

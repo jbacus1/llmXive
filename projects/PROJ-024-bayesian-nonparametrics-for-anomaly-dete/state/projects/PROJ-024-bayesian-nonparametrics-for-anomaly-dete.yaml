@@ -1,0 +1,83 @@
+# Project State Artifact Registry
+# Constitution Principle III: All artifacts must have checksums recorded for verification
+# This file tracks all generated artifacts with their SHA256 hashes
+# Auto-generated and updated by checksum_manager.py
+#
+# Do NOT edit manually - use the checksum_manager utility
+#
+project_id: PROJ-024-bayesian-nonparametrics-for-anomaly-dete
+version: 1.0.0
+created_at: 2024-01-01T00:00:00Z
+updated_at: 2024-01-01T00:00:00Z
+
+artifacts:
+  # Code artifacts
+  - path: code/config.yaml
+    type: config
+    sha256: null
+    size_bytes: null
+    recorded_at: null
+    
+  - path: code/download_datasets.py
+    type: script
+    sha256: null
+    size_bytes: null
+    recorded_at: null
+    
+  - path: code/utils/streaming.py
+    type: module
+    sha256: null
+    size_bytes: null
+    recorded_at: null
+    
+  - path: code/models/time_series.py
+    type: module
+    sha256: null
+    size_bytes: null
+    recorded_at: null
+    
+  # Data artifacts
+  - path: data/raw/
+    type: directory
+    sha256: null
+    size_bytes: null
+    recorded_at: null
+    
+  - path: data/processed/
+    type: directory
+    sha256: null
+    size_bytes: null
+    recorded_at: null
+    
+  # State artifacts
+  - path: state/projects/PROJ-024-bayesian-nonparametrics-for-anomaly-dete.yaml
+    type: state
+    sha256: null
+    size_bytes: null
+    recorded_at: null
+    
+  # Test artifacts
+  - path: tests/contract/
+    type: directory
+    sha256: null
+    size_bytes: null
+    recorded_at: null
+    
+  - path: tests/integration/
+    type: directory
+    sha256: null
+    size_bytes: null
+    recorded_at: null
+    
+  - path: tests/unit/
+    type: directory
+    sha256: null
+    size_bytes: null
+    recorded_at: null
+
+# Validation status
+validation:
+  last_check: null
+  all_checksums_valid: null
+  missing_checksums: []
+  invalid_checksums: []

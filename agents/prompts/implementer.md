@@ -33,7 +33,11 @@ verdict: completed | failed | atomize
 artifacts:           # only when verdict=completed
   - path: <repo-relative path>
     contents: |
-      <full file contents OR a unified diff if the file pre-exists>
+      <FULL file contents from first line to last — NEVER a unified
+      diff, NEVER a partial patch. The runtime writes this verbatim
+      to disk and (if execute:true) runs it as Python; a diff fragment
+      will produce a SyntaxError. If the file already exists, output
+      the entire merged file with your additions integrated.>
     execute: true     # OPTIONAL: when true and path ends in .py, the
                       # runtime runs the script in the project's venv
                       # and writes a stdout/stderr log next to it.
@@ -89,3 +93,66 @@ exist on disk, not just the source code. Reviewers check this.
 For tasks that legitimately produce only source code (model
 classes, contract schemas, unit tests, configs) you do NOT need
 `execute: true`; the test harness runs separately.
+
+## Script-must-do-work-by-default (CRITICAL)
+
+When you set `execute: true`, the runtime invokes the script as
+`python <script>` with NO arguments. Your script MUST do its full
+intended work in that exact invocation.
+
+- ❌ argparse defaults like `--all` that REQUIRE an explicit flag
+  to do anything will silently no-op (exit 0, produce no
+  artifacts → reviewer sees "the script ran but no output").
+- ✅ The script's `main()` (called without args) must download/
+  compute/render the full intended output.
+- ✅ If you want optional flags for debugging, fine — but set
+  defaults so `python script.py` does the real work.
+
+## API consistency (CRITICAL — MOST COMMON FAILURE)
+
+You will be given a `# Existing project API surface` block listing
+the public names exported by every Python file already written in
+this project, plus a `# Full contents of files this task references`
+block with full source for any file the task line names.
+
+**Every name you import or call from a sibling module MUST appear in
+that API surface block.** Examples of the bug this avoids:
+
+- ❌ Test imports `from models.baselines import ARIMABaseline`,
+  but the existing `code/models/baselines.py` has only
+  `MovingAverageZScore`. Either change the import to the existing
+  name, OR add `ARIMABaseline` to baselines.py in this task's
+  `artifacts` list (alongside the test).
+- ❌ Verify-script calls `model.initialize(...)`, but the existing
+  `code/models/dpgmm.py` has only `_initialize_model` (private).
+  Either call `_initialize_model`, OR rename to `initialize` in
+  dpgmm.py in this task's `artifacts` list.
+
+If the task line references a file that already exists, that file's
+full contents will appear in the second block — extend it rather
+than rewrite it. Preserve all existing public names.
+
+## Real, reachable dataset URLs (CRITICAL)
+
+When a task asks you to download data, the URL MUST be one that
+actually serves the dataset right now. Fabricated URLs waste a
+sandbox run and get the task marked FAILED-IN-EXECUTION.
+
+Verified-working public dataset endpoints for time-series anomaly
+detection:
+
+- NAB benchmark, e.g.,
+  `https://raw.githubusercontent.com/numenta/NAB/master/data/realKnownCause/nyc_taxi.csv`,
+  `.../ec2_request_latency_system_failure.csv`,
+  `.../machine_temperature_system_failure.csv`,
+  `.../cpu_utilization_asg_misconfiguration.csv`
+- Synthetic signals: generate locally with numpy (`np.sin`,
+  `np.random.normal`) with a fixed seed — always reachable.
+- UCI ML Repository: prefer the `ucimlrepo` Python package
+  (`pip install ucimlrepo`) over guessing URLs.
+- HuggingFace Datasets: `datasets.load_dataset(...)` from the
+  `datasets` package — never raw HF URLs.
+
+If you do not know a real URL, your script MUST generate the data
+synthetically and document the synthesis in `data/README.md`. Do
+NOT invent a URL.

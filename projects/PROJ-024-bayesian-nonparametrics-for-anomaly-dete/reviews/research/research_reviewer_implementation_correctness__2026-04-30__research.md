@@ -1,62 +1,65 @@
 ---
-artifact_hash: d5d2140c241d58e02c43bddf2fcfb903db9904cac7c5e430ef5ef18ecc7d9229
+artifact_hash: c4fa8be9f9580ade64e45ae14d6efd4260be61c864b405e423aa8a911c537bb2
 artifact_path: projects/PROJ-024-bayesian-nonparametrics-for-anomaly-dete/specs/001-bayesian-nonparametrics-for-anomaly-dete/tasks.md
 backend: dartmouth
 feedback: ''
 github_authenticated: false
 model_name: qwen.qwen3.5-122b
 prompt_version: 1.0.0
-reviewed_at: '2026-04-30T05:54:03.565056Z'
+reviewed_at: '2026-04-30T14:46:09.302144Z'
 reviewer_kind: llm
 reviewer_name: research_reviewer_implementation_correctness
 score: 0.0
-verdict: full_revision
+verdict: minor_revision
 ---
 
-## Implementation Correctness Review — Critical Deviations from Design
+## Implementation Correctness Review
 
-### 1. Verification Scripts Failing (FR-001, FR-002, FR-003, FR-004)
+### Structure Deviations (plan.md vs Actual)
 
-Per tasks.md, multiple FR verification scripts failed with exit=1:
+The plan.md specifies `projects/PROJ-024-bayesian-nonparametrics-for-anomaly-dete/code/` as the source root, but the code summary shows files at repository root level (`models/dp_gmm.py` vs `code/models/dp_gmm.py`). This violates FR-007 (config.yaml documentation requirements) and the Constitution Principle IV (Single Source of Truth).
 
-- **T040** (FR-001 stick-breaking): `code/scripts/verify_fr001_stick_breaking.py exit=1`
-- **T041** (FR-002 incremental update): `code/scripts/verify_fr002_incremental_update.py exit=1`
-- **T042** (FR-003 anomaly scores): `code/scripts/verify_fr003_anomaly_scores.py exit=1`
-- **T069** (FR-004 threshold flagging): `code/scripts/verify_fr004_threshold_flagging.py exit=1`
+### Missing Required Files
 
-These failures indicate the core DPGMM implementation does not correctly realize the spec requirements. Without passing verification, I cannot confirm the implementation matches the design.
+Per tasks.md, these files should exist but are not visible in the code summary:
+- `utils/streaming.py` (T009) - Required for FR-002 incremental updates
+- `utils/threshold.py` (T044-T048) - Required for FR-004 adaptive threshold
+- `utils/memory_profiler.py` (T022) - Required for FR-005 memory constraint verification
+- `utils/hyperparameter_counter.py` (T041) - Marked FAILED-IN-EXECUTION
+- `state/projects/PROJ-024-bayesian-nonparametrics-for-anomaly-dete.yaml` (T012) - Required for Constitution Principle III
 
-### 2. Data Pipeline Not Functional (FR-008 Violation)
+### Test Infrastructure Incomplete
 
-- **T016**: `code/data/download_datasets.py exit=1` — Dataset download script fails
-- **T057**: `code/scripts/download_uci_datasets.py exit=1` — UCI dataset download fails
+The plan requires `tests/contract/`, `tests/integration/`, `tests/unit/` directories (T011, T013-T015, T027-T028, T042-T043), but none appear in the code summary. Per spec.md, Independent Tests are **REQUIRED** for all user stories. Without tests, the implementation cannot be verified against FR-001 through FR-008.
 
-Per spec.md FR-008, the system MUST download 3-5 UCI datasets. Only `data/raw/nyc_taxi.csv` exists in data summary, insufficient for the 3-5 dataset requirement.
+### Dataset Sourcing Issues
 
-### 3. Evaluation Pipeline Broken (FR-006, SC-005 Violations)
+Per spec.md Assumptions, three UCI datasets are required (Electricity, Traffic, PEMS-SF). However:
+- T039 explicitly notes PEMS-SF is **NOT** from UCI (from PEMS project)
+- Data summary shows `pems_sf_synthetic.csv` suggesting synthetic data instead of real PEMS data
+- This violates SC-001 requirement for "at least 3 UCI datasets"
 
-- **T045**: `code/tests/integration/test_baseline_comparison.py exit=1`
-- **T060**: `code/scripts/verify_sc005_pr_curves.py exit=1`
+### Execution Failures
 
-Per spec.md FR-006, confusion matrices, ROC curves, and PR curves MUST be generated. The verification scripts failing indicates these are not correctly implemented.
+Four tasks show FAILED-IN-EXECUTION status:
+- T030: `code/baselines/moving_average.py` exit=1
+- T037: `code/download_datasets.py` exit=1  
+- T041: `code/utils/hyperparameter_counter.py` exit=1
+- T057: `code/scripts/validate_quickstart_artifacts.py` exit=1
 
-### 4. Performance Constraints Unverified (SC-002, SC-003 Violations)
+These failures prevent verification of FR-008 (dataset download) and SC-001 (baseline comparison).
 
-- **T043**: Memory usage verification script failed
-- **T072, T073**: Runtime performance verification scripts failed (exit=1, exit=2)
+### Positive Findings
 
-Per spec.md SC-002 and SC-003, memory <7GB and runtime <30 minutes MUST be verified. These cannot be confirmed.
-
-### 5. State Directory Missing (Plan.md Structure Violation)
-
-Per plan.md Project Structure, `state/` directory MUST exist at project root. Filesystem_hygiene review flagged this. The code summary shows no state directory, violating the documented structure.
+- `models/dp_gmm.py` (5458 bytes) exists for FR-001
+- `models/anomaly_score.py` (3126 bytes) exists for FR-003
+- `config.yaml` (11449 bytes) exists for FR-007
+- `logs/elbo/elbo_convergence_20260430_104249.log` exists for Constitution Principle VI
 
 ### Required Actions
 
-1. Fix all verification scripts (T040-T043, T069, T072-T078) to exit=0
-2. Resolve dataset download failures (T016, T057)
-3. Implement missing evaluation outputs (T045, T060)
-4. Create `state/` directory with proper structure per plan.md
-5. Re-run all verification scripts and confirm exit=0 before proceeding
-
-Without these fixes, the implementation cannot be confirmed to correctly realize the design specifications.
+1. Restructure code to match plan.md paths (add `code/` prefix to all source files)
+2. Implement missing utility files (streaming.py, threshold.py, memory_profiler.py)
+3. Create test infrastructure with contract/integration/unit tests
+4. Replace synthetic PEMS data with real dataset or document deviation
+5. Resolve FAILED-IN-EXECUTION tasks before proceeding to evaluation phase

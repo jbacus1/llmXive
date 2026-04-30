@@ -98,13 +98,47 @@ class ImplementerAgent(SlashCommandAgent):
             },
             repo_root=repo,
         )
-        user = (
-            f"# tasks.md\n\n{mechanical_output['tasks_text']}\n\n"
-            f"# next task line\n\n{mechanical_output['next_task_line']}\n\n"
-            f"# completed task ids\n{mechanical_output['completed_task_ids']}\n\n"
-            f"# wall_clock_budget_seconds\n{LEAF_TASK_BUDGET_SECONDS}\n\n"
-            "# Task\n\nReturn the YAML implementation report."
+
+        # Build sibling-code context so the LLM sees the actual API
+        # surface of files already written. Without this, every task
+        # the LLM writes invents fresh names that mismatch what other
+        # tasks already wrote (e.g. test imports
+        # `from models.baselines import ARIMABaseline` but the actual
+        # baselines.py has `MovingAverageZScore`).
+        existing_api = _summarize_existing_code(ctx.project_dir)
+
+        # Resolve any explicit file paths in the task description and
+        # inline their full contents (capped) so the LLM can extend
+        # rather than re-author them.
+        task_line = mechanical_output["next_task_line"] or ""
+        referenced = _inline_referenced_files(ctx.project_dir, task_line)
+
+        user_parts = [
+            f"# tasks.md\n\n{mechanical_output['tasks_text']}",
+            f"# next task line\n\n{task_line}",
+            f"# completed task ids\n{mechanical_output['completed_task_ids']}",
+            f"# wall_clock_budget_seconds\n{LEAF_TASK_BUDGET_SECONDS}",
+        ]
+        if existing_api:
+            user_parts.append(
+                "# Existing project API surface (READ THIS — every name "
+                "you import or call MUST come from this list, not invented)\n\n"
+                + existing_api
+            )
+        if referenced:
+            user_parts.append(
+                "# Full contents of files this task references "
+                "(extend / modify these EXACTLY — do not invent new APIs)\n\n"
+                + referenced
+            )
+        user_parts.append(
+            "# Task\n\nReturn the YAML implementation report. "
+            "If your script imports from sibling modules, the imported "
+            "names MUST match the API surface above. If a name does not "
+            "exist there, either add it to the appropriate file in this "
+            "task's `artifacts` list or use a different name that does."
         )
+        user = "\n\n".join(user_parts)
         return [
             ChatMessage(role="system", content=system),
             ChatMessage(role="user", content=user),
@@ -220,6 +254,17 @@ class ImplementerAgent(SlashCommandAgent):
                     print(f"[implementer] skipping directory path: {relpath!r}")
                     continue
                 if not contents:
+                    continue
+                # Refuse to write content that's a unified-diff fragment.
+                # The implementer prompt forbids diffs, but Qwen
+                # occasionally returns one anyway and the script later
+                # explodes with SyntaxError. Better to skip and surface.
+                stripped_first = contents.lstrip().splitlines()[0] if contents.lstrip() else ""
+                if stripped_first.startswith(("--- a/", "+++ b/", "@@ ")):
+                    print(
+                        f"[implementer] refusing to write diff-fragment "
+                        f"content to {relpath!r} (first line: {stripped_first!r})"
+                    )
                     continue
                 target.parent.mkdir(parents=True, exist_ok=True)
                 target.write_text(contents, encoding="utf-8")
@@ -348,6 +393,95 @@ class ImplementerAgent(SlashCommandAgent):
             )
 
         return written
+
+
+_PUBLIC_DEF_RE = re.compile(
+    r"^(?:class|def|async def)\s+(?P<name>[A-Za-z_][A-Za-z0-9_]*)\b",
+    re.MULTILINE,
+)
+_TOP_IMPORT_RE = re.compile(
+    r"^(?:from\s+\S+\s+import\s+[^\n]+|import\s+[^\n]+)$",
+    re.MULTILINE,
+)
+
+
+def _summarize_existing_code(project_dir: Path, *, max_chars: int = 8000) -> str:
+    """Return a compact API-surface listing of every Python file in code/.
+
+    For each file: list top-level class/function names and top-level
+    imports. Capped to `max_chars` so the prompt stays in budget.
+    """
+    code_dir = project_dir / "code"
+    if not code_dir.is_dir():
+        return ""
+    lines: list[str] = []
+    for fp in sorted(code_dir.rglob("*.py")):
+        if any(p in fp.parts for p in (".venv", "__pycache__", ".tasks")):
+            continue
+        try:
+            text = fp.read_text(encoding="utf-8", errors="replace")
+        except OSError:
+            continue
+        rel = fp.relative_to(project_dir).as_posix()
+        names = [m.group("name") for m in _PUBLIC_DEF_RE.finditer(text)
+                 if not m.group("name").startswith("_")]
+        # Imports help the LLM understand cross-file dependency direction.
+        imports = list(_TOP_IMPORT_RE.findall(text))[:6]
+        if not names and not imports:
+            continue
+        chunk_lines = [f"### {rel}"]
+        if names:
+            chunk_lines.append("public names: " + ", ".join(names))
+        if imports:
+            chunk_lines.append("imports:")
+            chunk_lines.extend("  " + i for i in imports)
+        lines.append("\n".join(chunk_lines))
+    body = "\n\n".join(lines)
+    if len(body) > max_chars:
+        body = body[:max_chars] + "\n\n... (truncated; see code/ on disk for the rest)"
+    return body
+
+
+_PATH_RE = re.compile(
+    r"\b(?:code|specs|paper|data|tests)/[A-Za-z0-9_./\-]+\.(?:py|md|yaml|yml|json|toml|txt)\b"
+)
+
+
+def _inline_referenced_files(
+    project_dir: Path, task_line: str, *, max_files: int = 5, max_chars: int = 6000
+) -> str:
+    """Inline the full contents of any file path mentioned in the task line.
+
+    The Implementer's task line typically names exactly the file it
+    needs to write or extend (e.g., "Implement DPGMMModel in
+    code/models/dpgmm.py"). If that file already exists, the LLM
+    should EXTEND it rather than re-author it from scratch.
+    """
+    paths = _PATH_RE.findall(task_line)
+    seen: set[str] = set()
+    chunks: list[str] = []
+    used = 0
+    for p in paths:
+        if p in seen:
+            continue
+        seen.add(p)
+        target = project_dir / p
+        if not target.exists() or not target.is_file():
+            continue
+        try:
+            text = target.read_text(encoding="utf-8", errors="replace")
+        except OSError:
+            continue
+        chunk = f"### {p}\n\n```\n{text}\n```"
+        if used + len(chunk) > max_chars:
+            chunks.append(f"### {p}\n\n(file exists, {len(text)} chars; "
+                          "omitted for prompt budget — extend it on disk)")
+        else:
+            chunks.append(chunk)
+            used += len(chunk)
+        if len(chunks) >= max_files:
+            break
+    return "\n\n".join(chunks)
 
 
 def _regex_parse_implementer(text: str) -> dict[str, Any] | None:
