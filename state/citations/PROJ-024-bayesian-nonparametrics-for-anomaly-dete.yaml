@@ -277,7 +277,40 @@
   verification_status: verified
   verified_against_url: https://www.apache.org/licenses/LICENSE-2.0
   verified_at: '2026-04-30T20:34:35.296334Z'
-- artifact_hash: 68c19c03fb73fb3b453bd2e1155894de904af0bc8f518bb5f2422e25a8f5dc5c
+- artifact_hash: 4e10a346abfed7b24b4ac2236f3a92908d95982ced77de5ebe152fa54d53ac3e
+  artifact_path: projects/PROJ-024-bayesian-nonparametrics-for-anomaly-dete/specs/001-bayesian-nonparametrics-anomaly-detection/data-model.md
+  cite_id: c-001
+  cited_authors: []
+  cited_title: null
+  fetched_title: null
+  kind: url
+  value: https://archive.ics.uci.edu/ml/datasets/ElectricityLoadDiagrams20112014`
+  verification_status: mismatch
+  verified_against_url: https://archive.ics.uci.edu/ml/datasets/ElectricityLoadDiagrams20112014%60
+  verified_at: '2026-04-30T20:50:04.526699Z'
+- artifact_hash: 4e10a346abfed7b24b4ac2236f3a92908d95982ced77de5ebe152fa54d53ac3e
+  artifact_path: projects/PROJ-024-bayesian-nonparametrics-for-anomaly-dete/specs/001-bayesian-nonparametrics-anomaly-detection/data-model.md
+  cite_id: c-002
+  cited_authors: []
+  cited_title: null
+  fetched_title: null
+  kind: url
+  value: https://archive.ics.uci.edu/ml/datasets/PEMS-SF`
+  verification_status: mismatch
+  verified_against_url: https://archive.ics.uci.edu/ml/datasets/PEMS-SF%60
+  verified_at: '2026-04-30T20:50:04.526699Z'
+- artifact_hash: 4e10a346abfed7b24b4ac2236f3a92908d95982ced77de5ebe152fa54d53ac3e
+  artifact_path: projects/PROJ-024-bayesian-nonparametrics-for-anomaly-dete/specs/001-bayesian-nonparametrics-anomaly-detection/data-model.md
+  cite_id: c-003
+  cited_authors: []
+  cited_title: null
+  fetched_title: null
+  kind: url
+  value: https://archive.ics.uci.edu/ml/datasets/Synthetic+Control+Chart+Time+Series`
+  verification_status: mismatch
+  verified_against_url: https://archive.ics.uci.edu/ml/datasets/Synthetic+Control+Chart+Time+Series%60
+  verified_at: '2026-04-30T20:50:04.526699Z'
+- artifact_hash: 19a421b69a04e3bada74c6b787fe2d99bddf41ceed8e93cea0139cd797d2fc2f
   artifact_path: projects/PROJ-024-bayesian-nonparametrics-for-anomaly-dete/specs/001-bayesian-nonparametrics-for-anomaly-dete/tasks.md
   cite_id: c-001
   cited_authors: []
@@ -287,4 +320,4 @@
   value: https://raw.githubusercontent.com/numenta/NAB/master/data/realKnownCause/
   verification_status: unreachable
   verified_against_url: https://raw.githubusercontent.com/numenta/NAB/master/data/realKnownCause/
-  verified_at: '2026-04-30T20:43:12.239278Z'
+  verified_at: '2026-04-30T20:51:18.632549Z'

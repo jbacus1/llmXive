@@ -1,0 +1,35 @@
+{
+  "timestamp": "2026-04-30T16:44:35.838887",
+  "project_root": "/Users/jmanning/llmXive/projects/PROJ-024-bayesian-nonparametrics-for-anomaly-dete",
+  "total_files": 3,
+  "files_exist": 3,
+  "syntax_valid": 3,
+  "tests_pass": 0,
+  "all_passed": false,
+  "test_files": [
+    {
+      "path": "/Users/jmanning/llmXive/projects/PROJ-024-bayesian-nonparametrics-for-anomaly-dete/tests/contract/test_dp_gmm_schema.py",
+      "exists": true,
+      "syntax_valid": true,
+      "pytest_pass": false,
+      "error_message": "Exit code: 4\n",
+      "pytest_output": null
+    },
+    {
+      "path": "/Users/jmanning/llmXive/projects/PROJ-024-bayesian-nonparametrics-for-anomaly-dete/tests/integration/test_streaming_update.py",
+      "exists": true,
+      "syntax_valid": true,
+      "pytest_pass": false,
+      "error_message": "Exit code: 4\n",
+      "pytest_output": null
+    },
+    {
+      "path": "/Users/jmanning/llmXive/projects/PROJ-024-bayesian-nonparametrics-for-anomaly-dete/tests/unit/test_memory_profile.py",
+      "exists": true,
+      "syntax_valid": true,
+      "pytest_pass": false,
+      "error_message": "Exit code: 4\n",
+      "pytest_output": null
+    }
+  ]
+}

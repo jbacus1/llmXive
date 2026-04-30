@@ -1,21 +1,21 @@
 """
-Verify all test files exist and are functional (T073).
+Verification script for test files in Phase 7 Review-Driven Revisions.
 
-This script verifies:
-1. All required test files exist at expected paths
-2. Test files can be discovered by pytest
-3. Test files can be imported without syntax errors
+T075: Verify all test files exist and are functional:
+- tests/contract/test_metrics_schema.py
+- tests/integration/test_baseline_comparison.py
 
-Per Phase 7: Review-Driven Revisions - verify test infrastructure before
-final acceptance.
+This script checks file existence, imports validity, and runs pytest
+to verify the tests are functional.
 """
-import sys
 import os
-from pathlib import Path
+import sys
 import subprocess
-import json
-from typing import Dict, Any, List, Tuple, Optional
+from pathlib import Path
+from dataclasses import dataclass, field
+from typing import List, Dict, Any, Optional
 import logging
+from datetime import datetime
 
 # Configure logging
 logging.basicConfig(
@@ -24,192 +24,276 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-# Project root - adjust based on actual project structure
-PROJECT_ROOT = Path(__file__).parent.parent.parent
-TESTS_DIR = PROJECT_ROOT / "tests"
+@dataclass
+class TestFileStatus:
+    """Status of a single test file."""
+    path: str
+    exists: bool
+    importable: bool
+    test_count: int
+    pytest_passed: bool
+    pytest_output: str = ""
+    error_message: str = ""
 
-# Required test files per T073 specification
-REQUIRED_TESTS: List[Path] = [
-    TESTS_DIR / "contract" / "test_dp_gmm_schema.py",
-    TESTS_DIR / "integration" / "test_streaming_update.py",
-    TESTS_DIR / "unit" / "test_memory_profile.py",
-]
+@dataclass
+class VerificationReport:
+    """Complete verification report for test files."""
+    timestamp: str
+    project_root: str
+    test_files: List[TestFileStatus] = field(default_factory=list)
+    overall_passed: bool = True
+    summary: str = ""
 
-class TestFileReport:
-    """Report structure for test file verification."""
-    def __init__(self):
-        self.files_checked: List[Dict[str, Any]] = []
-        self.total_files: int = 0
-        self.files_exist: int = 0
-        self.files_importable: int = 0
-        self.files_discoverable: int = 0
-        self.errors: List[str] = []
+def get_project_root() -> Path:
+    """Get the project root directory."""
+    # Assume script is in code/scripts/, project root is two levels up
+    return Path(__file__).parent.parent.parent
 
-    def to_dict(self) -> Dict[str, Any]:
-        return {
-            "files_checked": self.files_checked,
-            "total_files": self.total_files,
-            "files_exist": self.files_exist,
-            "files_importable": self.files_importable,
-            "files_discoverable": self.files_discoverable,
-            "errors": self.errors,
-            "all_passed": (
-                self.files_exist == self.total_files and
-                self.files_importable == self.total_files and
-                self.files_discoverable == self.total_files
-            )
-        }
-
-def check_file_exists(file_path: Path) -> Tuple[bool, Optional[str]]:
+def check_file_exists(path: Path) -> bool:
     """Check if a file exists at the given path."""
-    if not file_path.exists():
-        return False, f"File does not exist: {file_path}"
-    if not file_path.is_file():
-        return False, f"Path is not a file: {file_path}"
-    if file_path.stat().st_size == 0:
-        return False, f"File is empty: {file_path}"
-    return True, None
+    return path.exists() and path.is_file()
 
-def check_file_importable(file_path: Path) -> Tuple[bool, Optional[str]]:
-    """Check if a file can be imported without syntax errors."""
+def check_import_validity(project_root: Path, relative_path: str) -> tuple:
+    """
+    Check if the test file can be imported without errors.
+    
+    Returns:
+        tuple: (importable: bool, error_message: str)
+    """
+    test_file = project_root / relative_path
+    if not test_file.exists():
+        return False, "File does not exist"
+
+    # Add project root to Python path for imports
+    env = os.environ.copy()
+    python_path = env.get('PYTHONPATH', '')
+    new_python_path = f"{project_root}:{python_path}" if python_path else str(project_root)
+    env['PYTHONPATH'] = new_python_path
+
     try:
         # Try to compile the file to check for syntax errors
-        with open(file_path, 'r', encoding='utf-8') as f:
+        with open(test_file, 'r') as f:
             source = f.read()
-        compile(source, str(file_path), 'exec')
-        return True, None
+        compile(source, str(test_file), 'exec')
+        return True, ""
     except SyntaxError as e:
-        return False, f"Syntax error in {file_path}: {e}"
+        return False, f"Syntax error: {e}"
     except Exception as e:
-        return False, f"Error reading {file_path}: {e}"
+        return False, f"Import error: {e}"
 
-def check_pytest_discovery(test_file: Path) -> Tuple[bool, Optional[str]]:
-    """Check if pytest can discover tests in the file."""
+def count_tests_in_file(test_file: Path) -> int:
+    """Count the number of test functions in a file using grep."""
+    if not test_file.exists():
+        return 0
+
     try:
-        # Run pytest with --collect-only to discover tests without running
         result = subprocess.run(
-            [sys.executable, '-m', 'pytest', str(test_file), '--collect-only', '-q'],
-            cwd=PROJECT_ROOT,
+            ['grep', '-c', 'def test_', str(test_file)],
+            capture_output=True,
+            text=True
+        )
+        count = int(result.stdout.strip()) if result.stdout.strip() else 0
+        return count
+    except (subprocess.SubprocessError, ValueError):
+        return 0
+
+def run_pytest_tests(project_root: Path, relative_path: str, timeout: int = 600) -> tuple:
+    """
+    Run pytest on a single test file.
+    
+    Returns:
+        tuple: (passed: bool, output: str)
+    """
+    test_file = project_root / relative_path
+    if not test_file.exists():
+        return False, "File does not exist"
+
+    # Set up environment
+    env = os.environ.copy()
+    python_path = env.get('PYTHONPATH', '')
+    new_python_path = f"{project_root}:{python_path}" if python_path else str(project_root)
+    env['PYTHONPATH'] = new_python_path
+
+    # Run pytest with verbose output and timeout
+    cmd = [
+        sys.executable, '-m', 'pytest',
+        str(test_file),
+        '-v',
+        '--tb=short',
+        '--timeout=300'  # Per-test timeout
+    ]
+
+    try:
+        result = subprocess.run(
+            cmd,
+            cwd=str(project_root),
             capture_output=True,
             text=True,
-            timeout=30
+            timeout=timeout,
+            env=env
         )
-        # Check for discovery errors (exit code 0 or 5 is OK - 5 means no tests collected)
-        if result.returncode in [0, 5]:
-            # Check if there are any collection errors in stderr
-            if "ERROR" in result.stderr.upper():
-                # Some errors are expected if tests use pytest.skip
-                pass
-            return True, None
-        else:
-            return False, f"pytest discovery failed for {test_file}: {result.stderr[:500]}"
+        passed = result.returncode == 0
+        output = result.stdout + result.stderr
+        return passed, output
     except subprocess.TimeoutExpired:
-        return False, f"pytest discovery timed out for {test_file}"
+        return False, "Test execution timed out"
     except Exception as e:
-        return False, f"Error running pytest discovery for {test_file}: {e}"
+        return False, f"Pytest execution error: {e}"
 
-def verify_test_files() -> TestFileReport:
-    """Main verification function for test files."""
-    report = TestFileReport()
-    report.total_files = len(REQUIRED_TESTS)
+def verify_test_file(
+    project_root: Path,
+    relative_path: str,
+    expected_min_tests: int = 1
+) -> TestFileStatus:
+    """
+    Verify a single test file for existence, importability, and functionality.
+    
+    Args:
+        project_root: Path to project root directory
+        relative_path: Relative path from project root to test file
+        expected_min_tests: Minimum number of test functions expected
+    
+    Returns:
+        TestFileStatus with verification results
+    """
+    status = TestFileStatus(
+        path=relative_path,
+        exists=False,
+        importable=False,
+        test_count=0,
+        pytest_passed=False
+    )
 
-    logger.info(f"Verifying {report.total_files} test files...")
-    logger.info(f"Project root: {PROJECT_ROOT}")
+    test_file = project_root / relative_path
 
-    for test_file in REQUIRED_TESTS:
-        file_report = {
-            "path": str(test_file.relative_to(PROJECT_ROOT)) if test_file.is_relative_to(PROJECT_ROOT) else str(test_file),
-            "exists": False,
-            "importable": False,
-            "discoverable": False,
-            "errors": []
-        }
+    # Check existence
+    status.exists = check_file_exists(test_file)
+    if not status.exists:
+        status.error_message = f"File not found: {relative_path}"
+        return status
 
-        # Check existence
-        exists, error = check_file_exists(test_file)
-        file_report["exists"] = exists
-        if error:
-            file_report["errors"].append(error)
-            report.errors.append(error)
-        else:
-            report.files_exist += 1
+    # Check import validity
+    status.importable, import_error = check_import_validity(project_root, relative_path)
+    if not status.importable:
+        status.error_message = import_error
+        return status
 
-        # Check importability (only if file exists)
-        if exists:
-            importable, error = check_file_importable(test_file)
-            file_report["importable"] = importable
-            if error:
-                file_report["errors"].append(error)
-                report.errors.append(error)
-            else:
-                report.files_importable += 1
+    # Count test functions
+    status.test_count = count_tests_in_file(test_file)
+    if status.test_count < expected_min_tests:
+        status.error_message = f"Expected at least {expected_min_tests} test functions, found {status.test_count}"
+        # Continue to run pytest anyway
 
-            # Check pytest discovery (only if importable)
-            if importable:
-                discoverable, error = check_pytest_discovery(test_file)
-                file_report["discoverable"] = discoverable
-                if error:
-                    file_report["errors"].append(error)
-                    report.errors.append(error)
-                else:
-                    report.files_discoverable += 1
+    # Run pytest
+    status.pytest_passed, status.pytest_output = run_pytest_tests(project_root, relative_path)
 
-        report.files_checked.append(file_report)
-        logger.info(f"  {test_file.name}: exist={exists}, importable={file_report['importable']}, discoverable={file_report['discoverable']}")
+    return status
+
+def generate_verification_report(
+    project_root: Path,
+    test_files: List[str],
+    expected_min_tests_per_file: int = 1
+) -> VerificationReport:
+    """
+    Generate a complete verification report for all test files.
+    
+    Args:
+        project_root: Path to project root directory
+        test_files: List of relative paths to test files
+        expected_min_tests_per_file: Minimum expected test functions per file
+    
+    Returns:
+        VerificationReport with all results
+    """
+    report = VerificationReport(
+        timestamp=datetime.now().isoformat(),
+        project_root=str(project_root),
+        overall_passed=True
+    )
+
+    for relative_path in test_files:
+        status = verify_test_file(
+            project_root,
+            relative_path,
+            expected_min_tests_per_file
+        )
+        report.test_files.append(status)
+        if not status.pytest_passed:
+            report.overall_passed = False
+
+    # Generate summary
+    total_files = len(report.test_files)
+    passed_files = sum(1 for s in report.test_files if s.pytest_passed)
+    total_tests = sum(s.test_count for s in report.test_files)
+
+    report.summary = (
+        f"Verification completed at {report.timestamp}\n"
+        f"Project root: {report.project_root}\n"
+        f"Total test files: {total_files}\n"
+        f"Files passed: {passed_files}/{total_files}\n"
+        f"Total test functions: {total_tests}\n"
+        f"Overall status: {'PASSED' if report.overall_passed else 'FAILED'}\n\n"
+    )
+
+    # Add per-file details
+    for status in report.test_files:
+        file_status = "PASSED" if status.pytest_passed else "FAILED"
+        report.summary += (
+            f"  {status.path}: {file_status}\n"
+            f"    Exists: {status.exists}\n"
+            f"    Importable: {status.importable}\n"
+            f"    Test count: {status.test_count}\n"
+        )
+        if status.error_message:
+            report.summary += f"    Error: {status.error_message}\n"
+        report.summary += "\n"
 
     return report
 
-def print_report(report: TestFileReport) -> None:
-    """Print a formatted verification report."""
-    print("\n" + "=" * 60)
-    print("TEST FILE VERIFICATION REPORT (T073)")
-    print("=" * 60)
-    print(f"\nTotal files checked: {report.total_files}")
-    print(f"Files exist: {report.files_exist}/{report.total_files}")
-    print(f"Files importable: {report.files_importable}/{report.total_files}")
-    print(f"Files discoverable: {report.files_discoverable}/{report.total_files}")
-    print(f"\nAll checks passed: {report.to_dict()['all_passed']}")
+def save_report(report: VerificationReport, output_dir: Path) -> Path:
+    """Save the verification report to a file."""
+    output_dir.mkdir(parents=True, exist_ok=True)
+    output_file = output_dir / f"test_verification_{report.timestamp.replace(':', '-')}.txt"
 
-    if report.errors:
-        print(f"\nErrors ({len(report.errors)}):")
-        for error in report.errors:
-            print(f"  - {error}")
+    with open(output_file, 'w') as f:
+        f.write(report.summary)
 
-    print("\n" + "=" * 60)
+    return output_file
 
-def main() -> int:
-    """Main entry point."""
-    print(f"Verifying test files for T073...")
-    print(f"Working directory: {Path.cwd()}")
-    print(f"Project root: {PROJECT_ROOT}")
-    print(f"Tests directory: {TESTS_DIR}")
+def main():
+    """Main entry point for test file verification."""
+    logger.info("Starting test file verification (T075)")
 
-    # Ensure tests directory exists
-    if not TESTS_DIR.exists():
-        logger.error(f"Tests directory does not exist: {TESTS_DIR}")
-        print(f"ERROR: Tests directory does not exist at {TESTS_DIR}")
-        return 1
+    # Get project root
+    project_root = get_project_root()
+    logger.info(f"Project root: {project_root}")
 
-    # Run verification
-    report = verify_test_files()
+    # Test files to verify (from T075 task description)
+    test_files = [
+        "tests/contract/test_metrics_schema.py",
+        "tests/integration/test_baseline_comparison.py"
+    ]
 
-    # Print report
-    print_report(report)
+    # Generate verification report
+    report = generate_verification_report(project_root, test_files)
 
-    # Save detailed report as JSON
-    report_path = PROJECT_ROOT / "code" / "scripts" / "test_verification_report.json"
-    report_path.parent.mkdir(parents=True, exist_ok=True)
-    with open(report_path, 'w', encoding='utf-8') as f:
-        json.dump(report.to_dict(), f, indent=2)
-    print(f"\nDetailed report saved to: {report_path}")
+    # Log summary
+    logger.info("=" * 60)
+    logger.info(report.summary)
+    logger.info("=" * 60)
 
-    # Return exit code based on success
-    if report.to_dict()['all_passed']:
-        print("\n✓ All test files verified successfully!")
-        return 0
+    # Save report to code/.tasks/
+    tasks_dir = project_root / ".tasks"
+    report_path = save_report(report, tasks_dir)
+    logger.info(f"Report saved to: {report_path}")
+
+    # Exit with appropriate code
+    if report.overall_passed:
+        logger.info("T075 VERIFICATION: PASSED")
+        sys.exit(0)
     else:
-        print("\n✗ Some test files failed verification!")
-        return 1
+        logger.error("T075 VERIFICATION: FAILED - See report for details")
+        sys.exit(1)
 
 if __name__ == "__main__":
-    sys.exit(main())
+    main()

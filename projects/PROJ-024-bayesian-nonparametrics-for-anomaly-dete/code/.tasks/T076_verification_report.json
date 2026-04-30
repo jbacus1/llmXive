@@ -1,0 +1,26 @@
+{
+  "project_root": "/Users/jmanning/llmXive/projects/PROJ-024-bayesian-nonparametrics-for-anomaly-dete",
+  "all_passed": false,
+  "summary": "Verification failed. Issues found: /Users/jmanning/llmXive/projects/PROJ-024-bayesian-nonparametrics-for-anomaly-dete/tests/integration/test_threshold_calibration.py: Cannot import",
+  "test_files": [
+    {
+      "path": "/Users/jmanning/llmXive/projects/PROJ-024-bayesian-nonparametrics-for-anomaly-dete/tests/contract/test_threshold_schema.py",
+      "exists": true,
+      "syntax_valid": true,
+      "importable": true,
+      "has_tests": true,
+      "test_count": 27,
+      "error_message": ""
+    },
+    {
+      "path": "/Users/jmanning/llmXive/projects/PROJ-024-bayesian-nonparametrics-for-anomaly-dete/tests/integration/test_threshold_calibration.py",
+      "exists": true,
+      "syntax_valid": true,
+      "importable": false,
+      "has_tests": false,
+      "test_count": 0,
+      "error_message": "Import error: cannot import name 'process_streaming_observation' from 'utils.streaming' (/Users/jmanning/llmXive/projects/PROJ-024-bayesian-nonparametrics-for-anomaly-dete/code/src/utils/streaming.py)"
+    }
+  ],
+  "pytest_results": {}
+}

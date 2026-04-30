@@ -207,8 +207,8 @@
   "hotPaths": [
     {
       "path": "src/llmxive/speckit/implement_cmd.py",
-      "accessCount": 22,
-      "lastAccessed": 1777581784348,
+      "accessCount": 24,
+      "lastAccessed": 1777582258897,
       "type": "file"
     },
     {

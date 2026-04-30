@@ -1,0 +1,17 @@
+Verification completed at 2026-04-30T16:45:20.735011
+Project root: /Users/jmanning/llmXive/projects/PROJ-024-bayesian-nonparametrics-for-anomaly-dete
+Total test files: 2
+Files passed: 0/2
+Total test functions: 51
+Overall status: FAILED
+
+  tests/contract/test_metrics_schema.py: FAILED
+    Exists: True
+    Importable: True
+    Test count: 37
+
+  tests/integration/test_baseline_comparison.py: FAILED
+    Exists: True
+    Importable: True
+    Test count: 14
+

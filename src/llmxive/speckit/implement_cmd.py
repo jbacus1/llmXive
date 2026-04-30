@@ -299,6 +299,28 @@ class ImplementerAgent(SlashCommandAgent):
                             f"or `from ... import ...` statements."
                         )
                         continue
+                    # Cross-file import check: when this file does
+                    # `from sibling import X`, verify X actually exists
+                    # in the sibling file. The LLM repeatedly imports
+                    # names it imagined exist (e.g.
+                    # `from utils.streaming import process_streaming_observation`
+                    # when streaming.py has no such name).
+                    bad_imports = _find_bad_sibling_imports(
+                        contents, ctx.project_dir / "code", target
+                    )
+                    if bad_imports:
+                        details = "; ".join(
+                            f"`from {mod} import {names}` (available: {avail})"
+                            for mod, names, avail in bad_imports
+                        )
+                        print(
+                            f"[implementer] refusing to write {relpath!r}: "
+                            f"imports nonexistent names from sibling files: "
+                            f"{details}. Either change the import to use names "
+                            f"that exist, or include the missing definitions in "
+                            f"this task's `artifacts` list."
+                        )
+                        continue
                 target.parent.mkdir(parents=True, exist_ok=True)
                 target.write_text(contents, encoding="utf-8")
                 written.append(str(target.relative_to(repo)))
@@ -426,6 +448,98 @@ class ImplementerAgent(SlashCommandAgent):
             )
 
         return written
+
+
+def _find_bad_sibling_imports(
+    source: str, code_dir: Path, target: Path
+) -> list[tuple[str, str, str]]:
+    """For each `from <local module> import <names>`, verify the names exist.
+
+    Returns a list of (module_path, comma-joined-bad-names, comma-joined-
+    available-names) tuples for any imports the LLM imagined that don't
+    actually exist in the imported sibling file.
+
+    Conservative: only flags imports of LOCAL modules (modules whose
+    source file is reachable under code_dir). Third-party imports
+    (numpy, pandas, etc.) are skipped — we don't know their API surface
+    statically.
+    """
+    import ast
+
+    try:
+        tree = ast.parse(source)
+    except SyntaxError:
+        return []
+
+    bad: list[tuple[str, str, str]] = []
+    for node in ast.walk(tree):
+        if not isinstance(node, ast.ImportFrom):
+            continue
+        if node.module is None or node.level != 0:
+            continue  # relative imports / no module name — skip
+        # Try to resolve module to a sibling file under code_dir.
+        # E.g. `from utils.streaming import X` -> code_dir/utils/streaming.py
+        rel_path = node.module.replace(".", "/")
+        candidate_file = code_dir / f"{rel_path}.py"
+        candidate_pkg = code_dir / rel_path / "__init__.py"
+        sibling = (
+            candidate_file
+            if candidate_file.is_file()
+            else (candidate_pkg if candidate_pkg.is_file() else None)
+        )
+        if sibling is None:
+            continue  # not a local module; assume third-party / stdlib
+        try:
+            sibling_src = sibling.read_text(encoding="utf-8", errors="replace")
+            sibling_tree = ast.parse(sibling_src)
+        except (OSError, SyntaxError):
+            continue  # can't analyze; don't block
+        # Names exposed by sibling: top-level def / class / assignments / imports.
+        exposed: set[str] = set()
+        for s in sibling_tree.body:
+            if isinstance(s, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)):
+                exposed.add(s.name)
+            elif isinstance(s, ast.Assign):
+                for t in s.targets:
+                    for nn in ast.walk(t):
+                        if isinstance(nn, ast.Name):
+                            exposed.add(nn.id)
+            elif isinstance(s, (ast.AugAssign, ast.AnnAssign)):
+                if isinstance(s.target, ast.Name):
+                    exposed.add(s.target.id)
+            elif isinstance(s, ast.Import):
+                for alias in s.names:
+                    exposed.add((alias.asname or alias.name).split(".")[0])
+            elif isinstance(s, ast.ImportFrom):
+                for alias in s.names:
+                    if alias.name == "*":
+                        # star import — sibling re-exports who knows what; bail.
+                        return []
+                    exposed.add(alias.asname or alias.name)
+        # If the sibling has __all__, restrict to that.
+        for s in sibling_tree.body:
+            if (
+                isinstance(s, ast.Assign)
+                and len(s.targets) == 1
+                and isinstance(s.targets[0], ast.Name)
+                and s.targets[0].id == "__all__"
+                and isinstance(s.value, (ast.List, ast.Tuple))
+            ):
+                all_names = {
+                    e.value for e in s.value.elts
+                    if isinstance(e, ast.Constant) and isinstance(e.value, str)
+                }
+                if all_names:
+                    exposed = all_names
+        wanted = {alias.name for alias in node.names if alias.name != "*"}
+        missing = wanted - exposed
+        if missing:
+            bad.append((
+                node.module,
+                ", ".join(sorted(missing)),
+                ", ".join(sorted(exposed)[:8]) + ("..." if len(exposed) > 8 else ""),
+            ))
+    return bad
 
 
 def _find_unresolved_names(source: str) -> set[str]:
