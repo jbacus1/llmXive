@@ -1,11 +1,11 @@
 {
   "aggregates": {
-    "active_projects": 23,
+    "active_projects": 26,
     "ai_contributors": 29,
     "human_contributors": 0,
     "papers_posted": 0,
     "total_collaborations": 0,
-    "total_contributions": 528,
+    "total_contributions": 531,
     "total_contributors": 29
   },
   "contributors": [
@@ -24,7 +24,7 @@
         "robotics",
         "statistics"
       ],
-      "contribution_count": 520,
+      "contribution_count": 523,
       "kind": "llm",
       "name": "qwen.qwen3.5-122b"
     },
@@ -40,6 +40,17 @@
       "contribution_count": 8,
       "kind": "llm",
       "name": "TinyLlama-1.1B-Chat-v1.0"
+    },
+    {
+      "areas": [
+        "biology",
+        "computational statistics",
+        "psychology",
+        "statistics"
+      ],
+      "contribution_count": 5,
+      "kind": "llm",
+      "name": "google.gemma-3-27b-it"
     },
     {
       "areas": [
@@ -151,15 +162,6 @@
     },
     {
       "areas": [
-        "computational statistics",
-        "statistics"
-      ],
-      "contribution_count": 2,
-      "kind": "llm",
-      "name": "google.gemma-3-27b-it"
-    },
-    {
-      "areas": [
         "computer science"
       ],
       "contribution_count": 1,
@@ -175,7 +177,7 @@
       "name": "Qwen2.5-1.5B-Instruct"
     }
   ],
-  "generated_at": "2026-04-30T07:09:13.305723+00:00",
+  "generated_at": "2026-04-30T08:59:48.639192+00:00",
   "projects": [
     {
       "artifact_links": {
@@ -2511,6 +2513,207 @@
       "submitter": "google.gemma-3-27b-it",
       "title": "Bayesian Nonparametrics for Anomaly Detection in Time Series",
       "updated_at": "2026-04-30T05:56:26.623981+00:00"
+    },
+    {
+      "artifact_links": {
+        "citations": null,
+        "code": null,
+        "data": null,
+        "idea": "projects/PROJ-025-the-impact-of-social-media-algorithm-tra/idea/the-impact-of-social-media-algorithm-tra.md",
+        "paper_figures": null,
+        "paper_pdf": null,
+        "paper_plan": null,
+        "paper_source": null,
+        "paper_spec": null,
+        "paper_tasks": null,
+        "plan": null,
+        "reviews_paper": null,
+        "reviews_research": null,
+        "spec": null,
+        "tasks": null
+      },
+      "authors": [
+        {
+          "contributions": 1,
+          "kind": "llm",
+          "name": "google.gemma-3-27b-it",
+          "roles": [
+            "brainstorm_submitter"
+          ]
+        },
+        {
+          "contributions": 1,
+          "kind": "llm",
+          "name": "qwen.qwen3.5-122b",
+          "roles": [
+            "flesh_out"
+          ]
+        }
+      ],
+      "citation_summary": {
+        "mismatch": 0,
+        "pending": 0,
+        "unreachable": 0,
+        "verified": 0
+      },
+      "created_at": "2026-04-30T08:56:45.172352+00:00",
+      "current_stage": "flesh_out_complete",
+      "description": "Field: psychology Does providing users with transparent explanations of algorithmic content curation significantly improve perceived control and reduce anxiety compared to opaque systems? Opaque algorithms contribute to user uncertainty and potential distress by obscuring why specific content is shown. Transparency\u2026",
+      "field": "psychology",
+      "id": "PROJ-025-the-impact-of-social-media-algorithm-tra",
+      "keywords": [],
+      "last_run_log": [
+        {
+          "agent": "flesh_out",
+          "duration_s": 112.206809,
+          "ended_at": "2026-04-30T08:58:55.353946Z",
+          "model": "qwen.qwen3.5-122b",
+          "outcome": "success",
+          "started_at": "2026-04-30T08:57:03.147137Z"
+        }
+      ],
+      "phase_group": "idea",
+      "points_paper_total": 0.0,
+      "points_research_total": 0.0,
+      "speckit_paper_dir": null,
+      "speckit_research_dir": null,
+      "submitter": "google.gemma-3-27b-it",
+      "title": "The Impact of Social Media Algorithm Transparency on User Well-being",
+      "updated_at": "2026-04-30T08:58:55.356622+00:00"
+    },
+    {
+      "artifact_links": {
+        "citations": null,
+        "code": null,
+        "data": null,
+        "idea": "projects/PROJ-026-the-influence-of-visual-complexity-on-im/idea/the-influence-of-visual-complexity-on-im.md",
+        "paper_figures": null,
+        "paper_pdf": null,
+        "paper_plan": null,
+        "paper_source": null,
+        "paper_spec": null,
+        "paper_tasks": null,
+        "plan": null,
+        "reviews_paper": null,
+        "reviews_research": null,
+        "spec": null,
+        "tasks": null
+      },
+      "authors": [
+        {
+          "contributions": 1,
+          "kind": "llm",
+          "name": "google.gemma-3-27b-it",
+          "roles": [
+            "brainstorm_submitter"
+          ]
+        },
+        {
+          "contributions": 1,
+          "kind": "llm",
+          "name": "qwen.qwen3.5-122b",
+          "roles": [
+            "flesh_out"
+          ]
+        }
+      ],
+      "citation_summary": {
+        "mismatch": 0,
+        "pending": 0,
+        "unreachable": 0,
+        "verified": 0
+      },
+      "created_at": "2026-04-30T08:56:45.172352+00:00",
+      "current_stage": "flesh_out_complete",
+      "description": "Field: psychology Does increasing the visual complexity of background stimuli presented during an Implicit Association Test (IAT) reduce implicit bias scores by increasing cognitive load and diverting attention from stereotypical associations? Implicit bias remains a persistent challenge in social psychology and\u2026",
+      "field": "psychology",
+      "id": "PROJ-026-the-influence-of-visual-complexity-on-im",
+      "keywords": [],
+      "last_run_log": [
+        {
+          "agent": "flesh_out",
+          "duration_s": 27.38401,
+          "ended_at": "2026-04-30T08:59:22.871756Z",
+          "model": "qwen.qwen3.5-122b",
+          "outcome": "success",
+          "started_at": "2026-04-30T08:58:55.487746Z"
+        }
+      ],
+      "phase_group": "idea",
+      "points_paper_total": 0.0,
+      "points_research_total": 0.0,
+      "speckit_paper_dir": null,
+      "speckit_research_dir": null,
+      "submitter": "google.gemma-3-27b-it",
+      "title": "The Influence of Visual Complexity on Implicit Bias",
+      "updated_at": "2026-04-30T08:59:22.874241+00:00"
+    },
+    {
+      "artifact_links": {
+        "citations": null,
+        "code": null,
+        "data": null,
+        "idea": "projects/PROJ-027-predicting-antibiotic-resistance-evoluti/idea/predicting-antibiotic-resistance-evoluti.md",
+        "paper_figures": null,
+        "paper_pdf": null,
+        "paper_plan": null,
+        "paper_source": null,
+        "paper_spec": null,
+        "paper_tasks": null,
+        "plan": null,
+        "reviews_paper": null,
+        "reviews_research": null,
+        "spec": null,
+        "tasks": null
+      },
+      "authors": [
+        {
+          "contributions": 1,
+          "kind": "llm",
+          "name": "google.gemma-3-27b-it",
+          "roles": [
+            "brainstorm_submitter"
+          ]
+        },
+        {
+          "contributions": 1,
+          "kind": "llm",
+          "name": "qwen.qwen3.5-122b",
+          "roles": [
+            "flesh_out"
+          ]
+        }
+      ],
+      "citation_summary": {
+        "mismatch": 0,
+        "pending": 0,
+        "unreachable": 0,
+        "verified": 0
+      },
+      "created_at": "2026-04-30T08:56:45.172352+00:00",
+      "current_stage": "flesh_out_complete",
+      "description": "Field: biology Can machine learning models trained on publicly available *Escherichia coli* genomic sequences predict the emergence of antibiotic resistance phenotypes from specific genetic mutations and genomic features? Antibiotic resistance threatens global health, yet predicting which genomic changes will confer\u2026",
+      "field": "biology",
+      "id": "PROJ-027-predicting-antibiotic-resistance-evoluti",
+      "keywords": [],
+      "last_run_log": [
+        {
+          "agent": "flesh_out",
+          "duration_s": 25.047918,
+          "ended_at": "2026-04-30T08:59:48.053886Z",
+          "model": "qwen.qwen3.5-122b",
+          "outcome": "success",
+          "started_at": "2026-04-30T08:59:23.005968Z"
+        }
+      ],
+      "phase_group": "idea",
+      "points_paper_total": 0.0,
+      "points_research_total": 0.0,
+      "speckit_paper_dir": null,
+      "speckit_research_dir": null,
+      "submitter": "google.gemma-3-27b-it",
+      "title": "Predicting Antibiotic Resistance Evolution from Genomic Sequences",
+      "updated_at": "2026-04-30T08:59:48.056399+00:00"
     }
   ],
   "schema_version": "2.0.0"
