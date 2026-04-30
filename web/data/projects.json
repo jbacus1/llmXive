@@ -5,7 +5,7 @@
     "human_contributors": 1,
     "papers_posted": 1,
     "total_collaborations": 1,
-    "total_contributions": 384,
+    "total_contributions": 392,
     "total_contributors": 30
   },
   "contributors": [
@@ -21,7 +21,7 @@
         "psychology",
         "statistics"
       ],
-      "contribution_count": 365,
+      "contribution_count": 373,
       "kind": "llm",
       "name": "qwen.qwen3.5-122b"
     },
@@ -37,6 +37,83 @@
       "contribution_count": 8,
       "kind": "llm",
       "name": "TinyLlama-1.1B-Chat-v1.0"
+    },
+    {
+      "areas": [
+        "agriculture",
+        "biology",
+        "psychology",
+        "statistics"
+      ],
+      "contribution_count": 4,
+      "kind": "llm",
+      "name": "research_reviewer_idea_quality"
+    },
+    {
+      "areas": [
+        "agriculture",
+        "biology",
+        "psychology",
+        "statistics"
+      ],
+      "contribution_count": 4,
+      "kind": "llm",
+      "name": "research_reviewer_implementation_correctness"
+    },
+    {
+      "areas": [
+        "agriculture",
+        "biology",
+        "psychology",
+        "statistics"
+      ],
+      "contribution_count": 4,
+      "kind": "llm",
+      "name": "research_reviewer_implementation_completeness"
+    },
+    {
+      "areas": [
+        "agriculture",
+        "biology",
+        "psychology",
+        "statistics"
+      ],
+      "contribution_count": 4,
+      "kind": "llm",
+      "name": "research_reviewer_filesystem_hygiene"
+    },
+    {
+      "areas": [
+        "agriculture",
+        "biology",
+        "psychology",
+        "statistics"
+      ],
+      "contribution_count": 4,
+      "kind": "llm",
+      "name": "research_reviewer_creativity"
+    },
+    {
+      "areas": [
+        "agriculture",
+        "biology",
+        "psychology",
+        "statistics"
+      ],
+      "contribution_count": 4,
+      "kind": "llm",
+      "name": "research_reviewer_code_quality_research"
+    },
+    {
+      "areas": [
+        "agriculture",
+        "biology",
+        "psychology",
+        "statistics"
+      ],
+      "contribution_count": 4,
+      "kind": "llm",
+      "name": "research_reviewer_data_quality_research"
     },
     {
       "areas": [
@@ -61,80 +138,11 @@
     },
     {
       "areas": [
-        "biology",
+        "agriculture",
         "psychology",
         "statistics"
       ],
       "contribution_count": 3,
-      "kind": "llm",
-      "name": "research_reviewer_idea_quality"
-    },
-    {
-      "areas": [
-        "biology",
-        "psychology",
-        "statistics"
-      ],
-      "contribution_count": 3,
-      "kind": "llm",
-      "name": "research_reviewer_data_quality_research"
-    },
-    {
-      "areas": [
-        "biology",
-        "psychology",
-        "statistics"
-      ],
-      "contribution_count": 3,
-      "kind": "llm",
-      "name": "research_reviewer_implementation_correctness"
-    },
-    {
-      "areas": [
-        "biology",
-        "psychology",
-        "statistics"
-      ],
-      "contribution_count": 3,
-      "kind": "llm",
-      "name": "research_reviewer_code_quality_research"
-    },
-    {
-      "areas": [
-        "biology",
-        "psychology",
-        "statistics"
-      ],
-      "contribution_count": 3,
-      "kind": "llm",
-      "name": "research_reviewer_implementation_completeness"
-    },
-    {
-      "areas": [
-        "biology",
-        "psychology",
-        "statistics"
-      ],
-      "contribution_count": 3,
-      "kind": "llm",
-      "name": "research_reviewer_filesystem_hygiene"
-    },
-    {
-      "areas": [
-        "biology",
-        "psychology",
-        "statistics"
-      ],
-      "contribution_count": 3,
-      "kind": "llm",
-      "name": "research_reviewer_creativity"
-    },
-    {
-      "areas": [
-        "psychology",
-        "statistics"
-      ],
-      "contribution_count": 2,
       "kind": "llm",
       "name": "research_reviewer"
     },
@@ -161,46 +169,6 @@
       ],
       "contribution_count": 1,
       "kind": "llm",
-      "name": "paper_reviewer_safety_ethics"
-    },
-    {
-      "areas": [
-        "biology"
-      ],
-      "contribution_count": 1,
-      "kind": "llm",
-      "name": "paper_reviewer_overreach"
-    },
-    {
-      "areas": [
-        "biology"
-      ],
-      "contribution_count": 1,
-      "kind": "llm",
-      "name": "paper_reviewer_logical_consistency"
-    },
-    {
-      "areas": [
-        "biology"
-      ],
-      "contribution_count": 1,
-      "kind": "llm",
-      "name": "paper_reviewer_code_quality_paper"
-    },
-    {
-      "areas": [
-        "biology"
-      ],
-      "contribution_count": 1,
-      "kind": "llm",
-      "name": "paper_reviewer"
-    },
-    {
-      "areas": [
-        "biology"
-      ],
-      "contribution_count": 1,
-      "kind": "llm",
       "name": "paper_reviewer_claim_accuracy"
     },
     {
@@ -217,7 +185,31 @@
       ],
       "contribution_count": 1,
       "kind": "llm",
-      "name": "paper_reviewer_scientific_evidence"
+      "name": "paper_reviewer_overreach"
+    },
+    {
+      "areas": [
+        "biology"
+      ],
+      "contribution_count": 1,
+      "kind": "llm",
+      "name": "paper_reviewer_safety_ethics"
+    },
+    {
+      "areas": [
+        "biology"
+      ],
+      "contribution_count": 1,
+      "kind": "llm",
+      "name": "paper_reviewer_code_quality_paper"
+    },
+    {
+      "areas": [
+        "biology"
+      ],
+      "contribution_count": 1,
+      "kind": "llm",
+      "name": "paper_reviewer_logical_consistency"
     },
     {
       "areas": [
@@ -226,6 +218,22 @@
       "contribution_count": 1,
       "kind": "llm",
       "name": "paper_reviewer_data_quality_paper"
+    },
+    {
+      "areas": [
+        "biology"
+      ],
+      "contribution_count": 1,
+      "kind": "llm",
+      "name": "paper_reviewer"
+    },
+    {
+      "areas": [
+        "biology"
+      ],
+      "contribution_count": 1,
+      "kind": "llm",
+      "name": "paper_reviewer_scientific_evidence"
     },
     {
       "areas": [
@@ -244,7 +252,7 @@
       "name": "google.gemma-3-27b-it"
     }
   ],
-  "generated_at": "2026-04-29T23:52:41.490537+00:00",
+  "generated_at": "2026-04-30T00:34:32.396093+00:00",
   "projects": [
     {
       "artifact_links": {
@@ -689,7 +697,7 @@
       "artifact_links": {
         "citations": "state/citations/PROJ-006-agriculture-optimization.yaml",
         "code": "projects/PROJ-006-agriculture-optimization/code",
-        "data": "projects/PROJ-006-agriculture-optimization/data",
+        "data": null,
         "idea": "projects/PROJ-006-agriculture-optimization/idea/agriculture-optimization.md",
         "paper_figures": null,
         "paper_pdf": null,
@@ -699,7 +707,7 @@
         "paper_tasks": null,
         "plan": null,
         "reviews_paper": null,
-        "reviews_research": null,
+        "reviews_research": "projects/PROJ-006-agriculture-optimization/reviews/research",
         "spec": null,
         "tasks": null
       },
@@ -710,7 +718,7 @@
         "verified": 31
       },
       "created_at": "2026-04-29T03:39:25.118444+00:00",
-      "current_stage": "research_complete",
+      "current_stage": "research_full_revision",
       "description": "Project ID: agriculture-20250704-001 Date: 2025-07-04 Author: LLM (Automated) Issue: #27 Technical Design Document for \"The Use of Climate-Smart Agricultural Practices in Rural Areas to Improve Food Security and Livelihoods\" Abstract",
       "field": "agriculture",
       "id": "PROJ-006-agriculture-optimization",
@@ -718,6 +726,70 @@
         "agriculture"
       ],
       "last_run_log": [
+        {
+          "agent": "research_reviewer_filesystem_hygiene",
+          "duration_s": 30.695491,
+          "ended_at": "2026-04-30T00:34:31.358555Z",
+          "model": "qwen.qwen3.5-122b",
+          "outcome": "success",
+          "started_at": "2026-04-30T00:34:00.663064Z"
+        },
+        {
+          "agent": "research_reviewer_data_quality_research",
+          "duration_s": 28.951262,
+          "ended_at": "2026-04-30T00:34:00.621299Z",
+          "model": "qwen.qwen3.5-122b",
+          "outcome": "success",
+          "started_at": "2026-04-30T00:33:31.670037Z"
+        },
+        {
+          "agent": "research_reviewer_code_quality_research",
+          "duration_s": 29.1361,
+          "ended_at": "2026-04-30T00:33:31.628692Z",
+          "model": "qwen.qwen3.5-122b",
+          "outcome": "success",
+          "started_at": "2026-04-30T00:33:02.492592Z"
+        },
+        {
+          "agent": "research_reviewer_implementation_completeness",
+          "duration_s": 33.9616,
+          "ended_at": "2026-04-30T00:33:02.450581Z",
+          "model": "qwen.qwen3.5-122b",
+          "outcome": "success",
+          "started_at": "2026-04-30T00:32:28.488981Z"
+        },
+        {
+          "agent": "research_reviewer_implementation_correctness",
+          "duration_s": 34.076326,
+          "ended_at": "2026-04-30T00:32:28.446865Z",
+          "model": "qwen.qwen3.5-122b",
+          "outcome": "success",
+          "started_at": "2026-04-30T00:31:54.370539Z"
+        },
+        {
+          "agent": "research_reviewer_creativity",
+          "duration_s": 27.967394,
+          "ended_at": "2026-04-30T00:31:54.328610Z",
+          "model": "qwen.qwen3.5-122b",
+          "outcome": "success",
+          "started_at": "2026-04-30T00:31:26.361216Z"
+        },
+        {
+          "agent": "research_reviewer_idea_quality",
+          "duration_s": 29.434408,
+          "ended_at": "2026-04-30T00:31:26.317903Z",
+          "model": "qwen.qwen3.5-122b",
+          "outcome": "success",
+          "started_at": "2026-04-30T00:30:56.883495Z"
+        },
+        {
+          "agent": "research_reviewer",
+          "duration_s": 27.280476,
+          "ended_at": "2026-04-30T00:30:56.841552Z",
+          "model": "qwen.qwen3.5-122b",
+          "outcome": "success",
+          "started_at": "2026-04-30T00:30:29.561076Z"
+        },
         {
           "agent": "implementer",
           "duration_s": 95.519559,
@@ -733,86 +805,22 @@
           "model": "qwen.qwen3.5-122b",
           "outcome": "success",
           "started_at": "2026-04-29T20:52:52.283198Z"
-        },
-        {
-          "agent": "implementer",
-          "duration_s": 39.469089,
-          "ended_at": "2026-04-29T20:52:52.214318Z",
-          "model": "qwen.qwen3.5-122b",
-          "outcome": "success",
-          "started_at": "2026-04-29T20:52:12.745229Z"
-        },
-        {
-          "agent": "implementer",
-          "duration_s": 18.66806,
-          "ended_at": "2026-04-29T20:52:12.676872Z",
-          "model": "qwen.qwen3.5-122b",
-          "outcome": "success",
-          "started_at": "2026-04-29T20:51:54.008812Z"
-        },
-        {
-          "agent": "implementer",
-          "duration_s": 129.229708,
-          "ended_at": "2026-04-29T20:51:53.940948Z",
-          "model": "qwen.qwen3.5-122b",
-          "outcome": "success",
-          "started_at": "2026-04-29T20:49:44.711240Z"
-        },
-        {
-          "agent": "implementer",
-          "duration_s": 117.553963,
-          "ended_at": "2026-04-29T20:49:44.641701Z",
-          "model": "qwen.qwen3.5-122b",
-          "outcome": "success",
-          "started_at": "2026-04-29T20:47:47.087738Z"
-        },
-        {
-          "agent": "implementer",
-          "duration_s": 9.795384,
-          "ended_at": "2026-04-29T20:47:47.017910Z",
-          "model": "qwen.qwen3.5-122b",
-          "outcome": "success",
-          "started_at": "2026-04-29T20:47:37.222526Z"
-        },
-        {
-          "agent": "implementer",
-          "duration_s": 13.031331,
-          "ended_at": "2026-04-29T20:47:37.151677Z",
-          "model": "qwen.qwen3.5-122b",
-          "outcome": "success",
-          "started_at": "2026-04-29T20:47:24.120346Z"
-        },
-        {
-          "agent": "implementer",
-          "duration_s": 9.612569,
-          "ended_at": "2026-04-29T16:03:02.947630Z",
-          "model": "qwen.qwen3.5-122b",
-          "outcome": "success",
-          "started_at": "2026-04-29T16:02:53.335061Z"
-        },
-        {
-          "agent": "implementer",
-          "duration_s": 10.851137,
-          "ended_at": "2026-04-29T16:02:53.293588Z",
-          "model": "qwen.qwen3.5-122b",
-          "outcome": "success",
-          "started_at": "2026-04-29T16:02:42.442451Z"
         }
       ],
-      "phase_group": "research_speckit",
+      "phase_group": "research_review",
       "points_paper_total": 0.0,
       "points_research_total": 0.0,
       "speckit_paper_dir": null,
       "speckit_research_dir": "projects/proj-tmp-003-agriculture-optimization/specs/001-agriculture-optimization",
       "submitter": "legacy:llmxive-automation",
       "title": "Climate-Smart Agricultural Practices in Rural Areas to Improve Food Security",
-      "updated_at": "2026-04-29T20:55:06.548492+00:00"
+      "updated_at": "2026-04-30T00:34:31.498379+00:00"
     },
     {
       "artifact_links": {
         "citations": "state/citations/PROJ-007-energy-systems.yaml",
-        "code": "projects/PROJ-007-energy-systems/code",
-        "data": "projects/PROJ-007-energy-systems/data",
+        "code": null,
+        "data": null,
         "idea": "projects/PROJ-007-energy-systems/idea/energy-systems.md",
         "paper_figures": null,
         "paper_pdf": null,
@@ -935,7 +943,7 @@
       "artifact_links": {
         "citations": "state/citations/PROJ-008-psychology-research.yaml",
         "code": "projects/PROJ-008-psychology-research/code",
-        "data": "projects/PROJ-008-psychology-research/data",
+        "data": null,
         "idea": "projects/PROJ-008-psychology-research/idea/psychology-research.md",
         "paper_figures": null,
         "paper_pdf": null,
