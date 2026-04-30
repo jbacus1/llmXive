@@ -1,12 +1,12 @@
 {
   "aggregates": {
-    "active_projects": 22,
+    "active_projects": 23,
     "ai_contributors": 29,
-    "human_contributors": 1,
+    "human_contributors": 0,
     "papers_posted": 0,
-    "total_collaborations": 1,
-    "total_contributions": 422,
-    "total_contributors": 30
+    "total_collaborations": 0,
+    "total_contributions": 528,
+    "total_contributors": 29
   },
   "contributors": [
     {
@@ -14,6 +14,7 @@
         "agriculture",
         "biology",
         "chemistry",
+        "computational statistics",
         "computer science",
         "energy",
         "environmental science",
@@ -23,7 +24,7 @@
         "robotics",
         "statistics"
       ],
-      "contribution_count": 403,
+      "contribution_count": 520,
       "kind": "llm",
       "name": "qwen.qwen3.5-122b"
     },
@@ -43,7 +44,7 @@
     {
       "areas": [
         "agriculture",
-        "biology",
+        "computational statistics",
         "psychology",
         "statistics"
       ],
@@ -54,7 +55,7 @@
     {
       "areas": [
         "agriculture",
-        "biology",
+        "computational statistics",
         "psychology",
         "statistics"
       ],
@@ -65,7 +66,18 @@
     {
       "areas": [
         "agriculture",
-        "biology",
+        "computational statistics",
+        "psychology",
+        "statistics"
+      ],
+      "contribution_count": 4,
+      "kind": "llm",
+      "name": "research_reviewer"
+    },
+    {
+      "areas": [
+        "agriculture",
+        "computational statistics",
         "psychology",
         "statistics"
       ],
@@ -76,7 +88,7 @@
     {
       "areas": [
         "agriculture",
-        "biology",
+        "computational statistics",
         "psychology",
         "statistics"
       ],
@@ -87,7 +99,7 @@
     {
       "areas": [
         "agriculture",
-        "biology",
+        "computational statistics",
         "psychology",
         "statistics"
       ],
@@ -98,7 +110,7 @@
     {
       "areas": [
         "agriculture",
-        "biology",
+        "computational statistics",
         "psychology",
         "statistics"
       ],
@@ -109,7 +121,7 @@
     {
       "areas": [
         "agriculture",
-        "biology",
+        "computational statistics",
         "psychology",
         "statistics"
       ],
@@ -130,25 +142,6 @@
     },
     {
       "areas": [
-        "agriculture",
-        "psychology",
-        "statistics"
-      ],
-      "contribution_count": 3,
-      "kind": "llm",
-      "name": "research_reviewer"
-    },
-    {
-      "areas": [
-        "biology",
-        "computer science"
-      ],
-      "contribution_count": 2,
-      "kind": "human",
-      "name": "jeremymanning"
-    },
-    {
-      "areas": [
         "neuroscience",
         "ocean science"
       ],
@@ -158,83 +151,20 @@
     },
     {
       "areas": [
-        "biology"
+        "computational statistics",
+        "statistics"
       ],
-      "contribution_count": 1,
+      "contribution_count": 2,
       "kind": "llm",
-      "name": "paper_reviewer_statistical_analysis"
+      "name": "google.gemma-3-27b-it"
     },
     {
       "areas": [
-        "biology"
+        "computer science"
       ],
       "contribution_count": 1,
-      "kind": "llm",
-      "name": "paper_reviewer_claim_accuracy"
-    },
-    {
-      "areas": [
-        "biology"
-      ],
-      "contribution_count": 1,
-      "kind": "llm",
-      "name": "paper_reviewer_writing_quality"
-    },
-    {
-      "areas": [
-        "biology"
-      ],
-      "contribution_count": 1,
-      "kind": "llm",
-      "name": "paper_reviewer_overreach"
-    },
-    {
-      "areas": [
-        "biology"
-      ],
-      "contribution_count": 1,
-      "kind": "llm",
-      "name": "paper_reviewer_safety_ethics"
-    },
-    {
-      "areas": [
-        "biology"
-      ],
-      "contribution_count": 1,
-      "kind": "llm",
-      "name": "paper_reviewer_code_quality_paper"
-    },
-    {
-      "areas": [
-        "biology"
-      ],
-      "contribution_count": 1,
-      "kind": "llm",
-      "name": "paper_reviewer_logical_consistency"
-    },
-    {
-      "areas": [
-        "biology"
-      ],
-      "contribution_count": 1,
-      "kind": "llm",
-      "name": "paper_reviewer_data_quality_paper"
-    },
-    {
-      "areas": [
-        "biology"
-      ],
-      "contribution_count": 1,
-      "kind": "llm",
-      "name": "paper_reviewer"
-    },
-    {
-      "areas": [
-        "biology"
-      ],
-      "contribution_count": 1,
-      "kind": "llm",
-      "name": "paper_reviewer_scientific_evidence"
+      "kind": "human",
+      "name": "jeremymanning"
     },
     {
       "areas": [
@@ -243,17 +173,9 @@
       "contribution_count": 1,
       "kind": "llm",
       "name": "Qwen2.5-1.5B-Instruct"
-    },
-    {
-      "areas": [
-        "statistics"
-      ],
-      "contribution_count": 1,
-      "kind": "llm",
-      "name": "google.gemma-3-27b-it"
     }
   ],
-  "generated_at": "2026-04-30T05:44:32.930689+00:00",
+  "generated_at": "2026-04-30T07:09:13.305723+00:00",
   "projects": [
     {
       "artifact_links": {
@@ -397,24 +319,24 @@
     {
       "artifact_links": {
         "citations": "state/citations/PROJ-002-evolutionary-pressure-on-alternative-spl.yaml",
-        "code": "projects/PROJ-002-evolutionary-pressure-on-alternative-spl/code",
-        "data": "projects/PROJ-002-evolutionary-pressure-on-alternative-spl/data",
+        "code": null,
+        "data": null,
         "idea": "projects/PROJ-002-evolutionary-pressure-on-alternative-spl/idea/evolutionary-pressure-on-alternative-spl.md",
-        "paper_figures": "projects/PROJ-002-evolutionary-pressure-on-alternative-spl/paper/figures",
-        "paper_pdf": "projects/PROJ-002-evolutionary-pressure-on-alternative-spl/paper/source/main.pdf",
-        "paper_plan": "projects/PROJ-002-evolutionary-pressure-on-alternative-spl/paper/specs/001-paper/plan.md",
-        "paper_source": "projects/PROJ-002-evolutionary-pressure-on-alternative-spl/paper/source/main.tex",
-        "paper_spec": "projects/PROJ-002-evolutionary-pressure-on-alternative-spl/paper/specs/001-paper/spec.md",
-        "paper_tasks": "projects/PROJ-002-evolutionary-pressure-on-alternative-spl/paper/specs/001-paper/tasks.md",
-        "plan": "projects/PROJ-002-evolutionary-pressure-on-alternative-spl/specs/001-evolutionary-pressure-on-alternative-spl/plan.md",
-        "reviews_paper": "projects/PROJ-002-evolutionary-pressure-on-alternative-spl/paper/reviews",
-        "reviews_research": "projects/PROJ-002-evolutionary-pressure-on-alternative-spl/reviews/research",
-        "spec": "projects/PROJ-002-evolutionary-pressure-on-alternative-spl/specs/001-evolutionary-pressure-on-alternative-spl/spec.md",
-        "tasks": "projects/PROJ-002-evolutionary-pressure-on-alternative-spl/specs/001-evolutionary-pressure-on-alternative-spl/tasks.md"
+        "paper_figures": null,
+        "paper_pdf": null,
+        "paper_plan": null,
+        "paper_source": null,
+        "paper_spec": null,
+        "paper_tasks": null,
+        "plan": null,
+        "reviews_paper": null,
+        "reviews_research": null,
+        "spec": null,
+        "tasks": null
       },
       "authors": [
         {
-          "contributions": 176,
+          "contributions": 160,
           "kind": "llm",
           "name": "qwen.qwen3.5-122b",
           "roles": [
@@ -448,14 +370,6 @@
             "specifier",
             "tasker"
           ]
-        },
-        {
-          "contributions": 1,
-          "kind": "human",
-          "name": "human",
-          "roles": [
-            "jeremymanning"
-          ]
         }
       ],
       "citation_summary": {
@@ -480,6 +394,22 @@
           "model": "qwen.qwen3.5-122b",
           "outcome": "success",
           "started_at": "2026-04-30T05:17:43.564214Z"
+        },
+        {
+          "agent": "flesh_out",
+          "duration_s": 24.963938,
+          "ended_at": "2026-04-30T00:52:16.903997Z",
+          "model": "qwen.qwen3.5-122b",
+          "outcome": "success",
+          "started_at": "2026-04-30T00:51:51.940059Z"
+        },
+        {
+          "agent": "flesh_out",
+          "duration_s": 4.859171,
+          "ended_at": "2026-04-30T00:48:11.839183Z",
+          "model": "qwen.qwen3.5-122b",
+          "outcome": "failed",
+          "started_at": "2026-04-30T00:48:06.980012Z"
         },
         {
           "agent": "paper_reviewer_statistical_analysis",
@@ -536,22 +466,6 @@
           "model": "qwen.qwen3.5-122b",
           "outcome": "success",
           "started_at": "2026-04-29T17:41:05.763714Z"
-        },
-        {
-          "agent": "paper_reviewer",
-          "duration_s": 34.593929,
-          "ended_at": "2026-04-29T17:41:05.741157Z",
-          "model": "qwen.qwen3.5-122b",
-          "outcome": "success",
-          "started_at": "2026-04-29T17:40:31.147228Z"
-        },
-        {
-          "agent": "paper_reviewer_jargon_police",
-          "duration_s": 28.545413,
-          "ended_at": "2026-04-29T17:39:31.117278Z",
-          "model": "qwen.qwen3.5-122b",
-          "outcome": "failed",
-          "started_at": "2026-04-29T17:39:02.571865Z"
         }
       ],
       "phase_group": "idea",
@@ -2444,6 +2358,159 @@
       "submitter": "google.gemma-3-27b-it",
       "title": "Bayesian Nonparametrics for Anomaly Detection in Time Series",
       "updated_at": "2026-04-29T18:38:40.708874+00:00"
+    },
+    {
+      "artifact_links": {
+        "citations": "state/citations/PROJ-024-bayesian-nonparametrics-for-anomaly-dete.yaml",
+        "code": "projects/PROJ-024-bayesian-nonparametrics-for-anomaly-dete/code",
+        "data": "projects/PROJ-024-bayesian-nonparametrics-for-anomaly-dete/data",
+        "idea": "projects/PROJ-024-bayesian-nonparametrics-for-anomaly-dete/idea/bayesian-nonparametrics-for-anomaly-dete.md",
+        "paper_figures": "projects/PROJ-024-bayesian-nonparametrics-for-anomaly-dete/paper/figures",
+        "paper_pdf": null,
+        "paper_plan": null,
+        "paper_source": null,
+        "paper_spec": null,
+        "paper_tasks": null,
+        "plan": "projects/PROJ-024-bayesian-nonparametrics-for-anomaly-dete/specs/001-bayesian-nonparametrics-for-anomaly-dete/plan.md",
+        "reviews_paper": null,
+        "reviews_research": "projects/PROJ-024-bayesian-nonparametrics-for-anomaly-dete/reviews/research",
+        "spec": "projects/PROJ-024-bayesian-nonparametrics-for-anomaly-dete/specs/001-bayesian-nonparametrics-for-anomaly-dete/spec.md",
+        "tasks": "projects/PROJ-024-bayesian-nonparametrics-for-anomaly-dete/specs/001-bayesian-nonparametrics-for-anomaly-dete/tasks.md"
+      },
+      "authors": [
+        {
+          "contributions": 124,
+          "kind": "llm",
+          "name": "qwen.qwen3.5-122b",
+          "roles": [
+            "clarifier",
+            "flesh_out",
+            "implementer",
+            "planner",
+            "project_initializer",
+            "research_reviewer",
+            "research_reviewer_code_quality_research",
+            "research_reviewer_creativity",
+            "research_reviewer_data_quality_research",
+            "research_reviewer_filesystem_hygiene",
+            "research_reviewer_idea_quality",
+            "research_reviewer_implementation_completeness",
+            "research_reviewer_implementation_correctness",
+            "specifier",
+            "tasker"
+          ]
+        },
+        {
+          "contributions": 1,
+          "kind": "llm",
+          "name": "google.gemma-3-27b-it",
+          "roles": [
+            "brainstorm_submitter"
+          ]
+        }
+      ],
+      "citation_summary": {
+        "mismatch": 0,
+        "pending": 0,
+        "unreachable": 0,
+        "verified": 0
+      },
+      "created_at": "2026-04-30T03:08:53.368052+00:00",
+      "current_stage": "research_full_revision",
+      "description": "Field: computational statistics Can a Dirichlet process Gaussian mixture model (DPGMM), updated incrementally with each new observation, effectively detect anomalies in univariate time series without assuming a fixed number of latent states? Existing anomaly detection methods often require pre-specifying the number of\u2026",
+      "field": "computational statistics",
+      "id": "PROJ-024-bayesian-nonparametrics-for-anomaly-dete",
+      "keywords": [],
+      "last_run_log": [
+        {
+          "agent": "research_reviewer_filesystem_hygiene",
+          "duration_s": 37.58384,
+          "ended_at": "2026-04-30T05:56:26.575835Z",
+          "model": "qwen.qwen3.5-122b",
+          "outcome": "success",
+          "started_at": "2026-04-30T05:55:48.991995Z"
+        },
+        {
+          "agent": "research_reviewer_data_quality_research",
+          "duration_s": 32.309182,
+          "ended_at": "2026-04-30T05:55:48.953076Z",
+          "model": "qwen.qwen3.5-122b",
+          "outcome": "success",
+          "started_at": "2026-04-30T05:55:16.643894Z"
+        },
+        {
+          "agent": "research_reviewer_code_quality_research",
+          "duration_s": 29.182653,
+          "ended_at": "2026-04-30T05:55:16.605204Z",
+          "model": "qwen.qwen3.5-122b",
+          "outcome": "success",
+          "started_at": "2026-04-30T05:54:47.422551Z"
+        },
+        {
+          "agent": "research_reviewer_implementation_completeness",
+          "duration_s": 43.776379,
+          "ended_at": "2026-04-30T05:54:47.384893Z",
+          "model": "qwen.qwen3.5-122b",
+          "outcome": "success",
+          "started_at": "2026-04-30T05:54:03.608514Z"
+        },
+        {
+          "agent": "research_reviewer_implementation_correctness",
+          "duration_s": 35.122272,
+          "ended_at": "2026-04-30T05:54:03.567677Z",
+          "model": "qwen.qwen3.5-122b",
+          "outcome": "success",
+          "started_at": "2026-04-30T05:53:28.445405Z"
+        },
+        {
+          "agent": "research_reviewer_creativity",
+          "duration_s": 29.327429,
+          "ended_at": "2026-04-30T05:53:28.407485Z",
+          "model": "qwen.qwen3.5-122b",
+          "outcome": "success",
+          "started_at": "2026-04-30T05:52:59.080056Z"
+        },
+        {
+          "agent": "research_reviewer_idea_quality",
+          "duration_s": 30.646369,
+          "ended_at": "2026-04-30T05:52:59.040372Z",
+          "model": "qwen.qwen3.5-122b",
+          "outcome": "success",
+          "started_at": "2026-04-30T05:52:28.394003Z"
+        },
+        {
+          "agent": "research_reviewer",
+          "duration_s": 27.766559,
+          "ended_at": "2026-04-30T05:52:28.358623Z",
+          "model": "qwen.qwen3.5-122b",
+          "outcome": "success",
+          "started_at": "2026-04-30T05:52:00.592064Z"
+        },
+        {
+          "agent": "research_reviewer_filesystem_hygiene",
+          "duration_s": 34.477216,
+          "ended_at": "2026-04-30T05:51:14.418041Z",
+          "model": "qwen.qwen3.5-122b",
+          "outcome": "success",
+          "started_at": "2026-04-30T05:50:39.940825Z"
+        },
+        {
+          "agent": "research_reviewer_data_quality_research",
+          "duration_s": 33.029907,
+          "ended_at": "2026-04-30T05:50:39.914790Z",
+          "model": "qwen.qwen3.5-122b",
+          "outcome": "success",
+          "started_at": "2026-04-30T05:50:06.884883Z"
+        }
+      ],
+      "phase_group": "research_review",
+      "points_paper_total": 0.0,
+      "points_research_total": 0.0,
+      "speckit_paper_dir": null,
+      "speckit_research_dir": "projects/PROJ-024-bayesian-nonparametrics-for-anomaly-dete/specs/001-bayesian-nonparametrics-for-anomaly-dete",
+      "submitter": "google.gemma-3-27b-it",
+      "title": "Bayesian Nonparametrics for Anomaly Detection in Time Series",
+      "updated_at": "2026-04-30T05:56:26.623981+00:00"
     }
   ],
   "schema_version": "2.0.0"
