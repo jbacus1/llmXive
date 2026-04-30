@@ -1,83 +1,77 @@
 ---
-artifact_hash: c4fa8be9f9580ade64e45ae14d6efd4260be61c864b405e423aa8a911c537bb2
+artifact_hash: bce6e5aeb10b03c90dc630149075c9976cf4c010ed6426f962e73b36bf7bbc69
 artifact_path: projects/PROJ-024-bayesian-nonparametrics-for-anomaly-dete/specs/001-bayesian-nonparametrics-for-anomaly-dete/tasks.md
 backend: dartmouth
 feedback: ''
 github_authenticated: false
 model_name: qwen.qwen3.5-122b
 prompt_version: 1.0.0
-reviewed_at: '2026-04-30T14:47:48.271204Z'
+reviewed_at: '2026-04-30T18:02:03.440767Z'
 reviewer_kind: llm
 reviewer_name: research_reviewer_filesystem_hygiene
 score: 0.0
 verdict: minor_revision
 ---
 
-## Filesystem Hygiene Review
+## Filesystem Hygiene Review — Critical Path Deviations Detected
 
-### Critical Path Inconsistencies (Constitution Principle V)
+### 1. Directory Structure Violation (Constitution Principle V)
 
-**1. Directory Structure Deviation from plan.md**
+**Severity: HIGH** | **Task: T060**
 
-The plan.md specifies:
-```
-projects/PROJ-024-bayesian-nonparametrics-for-anomaly-dete/
-├── code/
-├── data/
-├── tests/
-├── state/
-```
+Per plan.md Project Structure, all source code MUST reside under `projects/PROJ-024-bayesian-nonparametrics-for-anomaly-dete/code/src/`. Current state shows files at root level:
 
-However, the code summary shows files at repository root:
-```
-code/
-├── baselines/
-├── models/
-├── evaluation/
-data/
-├── raw/
-```
+- `baselines/arima.py` → Should be `code/src/baselines/arima.py`
+- `models/__init__.py` → Should be `code/src/models/__init__.py`
+- `evaluation/metrics.py` → Should be `code/src/evaluation/metrics.py`
+- `data/synthetic_generator.py` → Should be `code/src/data/synthetic_generator.py`
 
-This violates Constitution Principle V (Versioning Discipline) which requires consistent artifact locations. All tasks in tasks.md reference `projects/PROJ-024-bayesian-nonparametrics-for-anomaly-dete/code/` but actual files are at `code/`.
+This violates Constitution Principle V (Versioning Discipline) which requires every artifact to carry content hash in predictable locations. Tasks.md references `code/` paths but actual files are at repository root.
 
-**2. Missing State Artifact**
+### 2. Config File Size Violation (Task T073)
 
-plan.md requires:
-- `state/projects/PROJ-024-bayesian-nonparametrics-for-anomaly-dete.yaml` (T012)
+**Severity: MEDIUM** | **Task: T073**
 
-This file is not visible in the code summary. Constitution Principle III (Data Hygiene) requires checksums recorded in state files.
+`config.yaml` is 11,449 bytes. Per T073 requirement, it MUST be under 2KB. Current size exceeds limit by 5.7x. This indicates:
+- Derived statistics are stored in config instead of state files
+- Hyperparameters not properly separated from runtime artifacts
 
-**3. README Absence**
+Action: Move non-hyperparameter data to `state/projects/PROJ-024-bayesian-nonparametrics-for-anomaly-dete.yaml`
 
-Task T055 specifies: "Create README with usage instructions for all three baselines and DPGMM"
+### 3. README Absence (Task T055)
 
-No README.md appears in code summary. This violates plan.md Project Structure documentation requirements.
+**Severity: MEDIUM** | **Task: T055**
 
-**4. Documentation Path Verification**
+No README.md visible in code summary. Per T055, README with usage instructions for all three baselines and DPGMM is required. This impacts filesystem hygiene as README should document file locations and usage patterns.
 
-Plan requires specs at:
+### 4. Documentation Path Inconsistency
+
+**Severity: LOW**
+
+Specs directory structure per plan.md should be:
 ```
 specs/001-bayesian-nonparametrics-anomaly-detection/
-├── plan.md
 ├── research.md
 ├── data-model.md
 ├── quickstart.md
+└── contracts/
 ```
 
-Only plan.md is visible in the review inputs. research.md, data-model.md, and quickstart.md (Phase 0/1 outputs per plan.md) are not confirmed present.
+Verify all three design documents exist with correct content hashes in state file per Constitution Principle III.
 
-**5. Data Checksum Records**
+### 5. Log File Placement
 
-Plan.md Constitution Check (Principle III) states: "Checksums recorded in state/projects/PROJ-024-bayesian-nonparametrics-for-anomaly-dete.yaml"
+**Severity: LOW**
 
-Data summary shows raw files (electricity.csv, traffic.csv, pems_sf_synthetic.csv) but no visible checksum manifest.
+`logs/elbo/elbo_convergence_20260430_104249.log` exists but plan.md does not specify `logs/` directory. Per Constitution Principle III (Data Hygiene), all derived outputs should be under `data/processed/` or `state/`. Consider moving to `data/processed/logs/` or documenting `logs/` as acceptable output location.
 
-### Required Corrections
+---
 
-1. Move all code/data/tests/state to `projects/PROJ-024-bayesian-nonparametrics-for-anomaly-dete/` OR update plan.md to reflect actual structure
-2. Create missing state artifact with SHA256 checksums for all raw data files
-3. Create README.md with usage instructions as per T055
-4. Verify presence of research.md, data-model.md, quickstart.md in specs/ directory
-5. Update all task references in tasks.md to match actual file paths
+**Required Actions Before Acceptance:**
+1. Execute T060: Restructure all code files under `code/src/` per plan.md
+2. Execute T061: Update all task references to correct paths
+3. Execute T073: Reduce config.yaml to under 2KB
+4. Execute T055: Create README.md with usage documentation
+5. Verify all file paths in tasks.md match actual filesystem state
 
-**Note**: Multiple prior reviewers (code_quality, implementation_completeness, implementation_correctness) flagged similar structure deviations. Filesystem hygiene is consistently non-compliant with Constitution Principle V.
+Current filesystem state does NOT match plan.md specification. Resolution of Phase 7 tasks T060-T061 is blocking final acceptance.

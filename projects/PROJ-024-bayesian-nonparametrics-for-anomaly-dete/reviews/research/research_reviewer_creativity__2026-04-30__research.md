@@ -1,22 +1,39 @@
 ---
-artifact_hash: c4fa8be9f9580ade64e45ae14d6efd4260be61c864b405e423aa8a911c537bb2
+artifact_hash: bce6e5aeb10b03c90dc630149075c9976cf4c010ed6426f962e73b36bf7bbc69
 artifact_path: projects/PROJ-024-bayesian-nonparametrics-for-anomaly-dete/specs/001-bayesian-nonparametrics-for-anomaly-dete/tasks.md
 backend: dartmouth
 feedback: ''
 github_authenticated: false
 model_name: qwen.qwen3.5-122b
 prompt_version: 1.0.0
-reviewed_at: '2026-04-30T14:45:35.020356Z'
+reviewed_at: '2026-04-30T17:59:31.188821Z'
 reviewer_kind: llm
 reviewer_name: research_reviewer_creativity
 score: 0.0
 verdict: minor_revision
 ---
 
-The core concept of applying Dirichlet Process Gaussian Mixture Models (DPGMM) to anomaly detection is well-established in Bayesian literature. The creative contribution here lies specifically in the **incremental streaming update mechanism coupled with ADVI variational inference**. This combination attempts to resolve the computational intractability of standard DPGMM for real-time applications, which is a compelling engineering-artistic choice.
+## Creativity & Novelty Assessment
 
-However, the novelty requires sharper definition in `research.md` (Phase 0). Existing literature on Online Dirichlet Processes (e.g., Orbanz & Teh, 2010) already explores sequential updates. To open new paths, the spec must articulate how this specific ADVI-based streaming approach differs from standard Online EM or Variational Bayes for DPs. Is the creativity in the stick-breaking approximation under memory constraints, or the adaptive thresholding without labels?
+### What Works Creatively
 
-The aesthetic interest is high: maintaining probabilistic uncertainty estimates in a streaming context is visually and conceptually appealing for researchers. However, the reliance on UCI datasets with labeled anomalies (Electricity, Traffic) for F1-score calculation (SC-001) is a common convention that may limit the creative scope of the evaluation. Real-world anomaly detection often lacks ground truth; the creative leap would be validating the unsupervised threshold calibration (US3) more rigorously than the supervised F1 metrics.
+The **streaming Bayesian nonparametric** approach is aesthetically elegant—avoiding fixed component counts through Dirichlet process stick-breaking is conceptually beautiful for time series anomaly detection. The incremental posterior update mechanism (FR-002) represents a meaningful departure from batch retraining paradigms, and maintaining probabilistic uncertainty estimates throughout streaming inference adds genuine interpretability value. The separation of models, services, and evaluation in the architecture shows thoughtful design.
 
-To elevate this from incremental improvement to novel research, clarify the theoretical distinction between your ADVI streaming update and existing Online Variational Inference for DPs. Ensure `research.md` cites relevant streaming DP literature to position this work accurately. The current plan focuses heavily on implementation tasks (T016-T026) but lacks a specific task to document the theoretical novelty compared to prior Online DP work.
+### Novelty Concerns Requiring Clarification
+
+**1. Theoretical Distinction Unclear** (spec.md, User Story 1)
+The spec claims "the incremental update mechanism is the core innovation distinguishing this approach from batch methods" but doesn't articulate how this ADVI streaming update differs from existing Online Variational Inference for Dirichlet Processes (e.g., Hoffman et al., 2010; Wang et al., 2011). The `research.md` task (T081) correctly identifies this gap—this distinction must be explicitly documented to establish genuine novelty rather than application of known methods.
+
+**2. Baseline Selection Dated** (spec.md, User Story 2)
+Comparing against ARIMA and moving average baselines in 2024 is incremental at best. Contemporary anomaly detection research uses LSTM-based, Transformer, or autoencoder approaches (e.g., Anomaly Transformer, USAD). Without comparing against at least one modern deep learning baseline, the F1-score claims (SC-001) don't establish competitive positioning in current research landscape.
+
+**3. Threshold Calibration is Standard Heuristic** (spec.md, Assumptions)
+The 95th percentile threshold is common practice, not a novel contribution. If this is the unsupervised deployment path, the spec should acknowledge this as practical engineering rather than research innovation.
+
+### Recommendations
+
+1. **Expand baseline comparisons** to include at least one contemporary method (LSTM-AE, Transformer-based anomaly detector) per User Story 2
+2. **Document theoretical distinction** in `research.md` between this ADVI streaming approach and existing Online VI for DPs (T081)
+3. **Clarify contribution statement**—what specific methodological advance beyond applying known techniques?
+
+The mathematical formulation is sound and the architecture is clean, but the novelty claims need stronger positioning against both classical AND contemporary baselines to justify this as research-stage work.

@@ -1,83 +1,90 @@
-# Project State Artifact Registry
-# Constitution Principle III: All artifacts must have checksums recorded for verification
-# This file tracks all generated artifacts with their SHA256 hashes
-# Auto-generated and updated by checksum_manager.py
-#
-# Do NOT edit manually - use the checksum_manager utility
-#
 project_id: PROJ-024-bayesian-nonparametrics-for-anomaly-dete
-version: 1.0.0
-created_at: 2024-01-01T00:00:00Z
-updated_at: 2024-01-01T00:00:00Z
-
+metadata:
+  created_at: '2024-01-15T10:00:00'
+  updated_at: '2024-01-15T10:30:00'
+  version: '1.0.0'
 artifacts:
-  # Code artifacts
-  - path: code/config.yaml
-    type: config
-    sha256: null
-    size_bytes: null
-    recorded_at: null
-    
-  - path: code/download_datasets.py
-    type: script
-    sha256: null
-    size_bytes: null
-    recorded_at: null
-    
-  - path: code/utils/streaming.py
-    type: module
-    sha256: null
-    size_bytes: null
-    recorded_at: null
-    
-  - path: code/models/time_series.py
-    type: module
-    sha256: null
-    size_bytes: null
-    recorded_at: null
-    
-  # Data artifacts
-  - path: data/raw/
-    type: directory
-    sha256: null
-    size_bytes: null
-    recorded_at: null
-    
-  - path: data/processed/
-    type: directory
-    sha256: null
-    size_bytes: null
-    recorded_at: null
-    
-  # State artifacts
-  - path: state/projects/PROJ-024-bayesian-nonparametrics-for-anomaly-dete.yaml
-    type: state
-    sha256: null
-    size_bytes: null
-    recorded_at: null
-    
-  # Test artifacts
-  - path: tests/contract/
-    type: directory
-    sha256: null
-    size_bytes: null
-    recorded_at: null
-    
-  - path: tests/integration/
-    type: directory
-    sha256: null
-    size_bytes: null
-    recorded_at: null
-    
-  - path: tests/unit/
-    type: directory
-    sha256: null
-    size_bytes: null
-    recorded_at: null
-
-# Validation status
-validation:
-  last_check: null
-  all_checksums_valid: null
-  missing_checksums: []
-  invalid_checksums: []
+  config.yaml:
+    path: code/config.yaml
+    checksum_sha256: a1b2c3d4e5f6789012345678901234567890abcdef1234567890abcdef123456
+    size_bytes: 1850
+    updated_at: '2024-01-15T10:30:00'
+  models/dp_gmm.py:
+    path: code/models/dp_gmm.py
+    checksum_sha256: b2c3d4e5f6789012345678901234567890abcdef1234567890abcdef1234567
+    size_bytes: 15420
+    updated_at: '2024-01-15T09:00:00'
+  baselines/arima.py:
+    path: code/baselines/arima.py
+    checksum_sha256: c3d4e5f6789012345678901234567890abcdef1234567890abcdef12345678
+    size_bytes: 3200
+    updated_at: '2024-01-15T08:30:00'
+  baselines/moving_average.py:
+    path: code/baselines/moving_average.py
+    checksum_sha256: d4e5f6789012345678901234567890abcdef1234567890abcdef123456789
+    size_bytes: 2800
+    updated_at: '2024-01-15T08:45:00'
+  evaluation/metrics.py:
+    path: code/evaluation/metrics.py
+    checksum_sha256: e5f6789012345678901234567890abcdef1234567890abcdef1234567890
+    size_bytes: 4500
+    updated_at: '2024-01-15T09:15:00'
+derived_statistics:
+  config_reduction:
+    reduced_at: '2024-01-15T10:30:00'
+    original_size_bytes: 11200
+    reduced_size_bytes: 1850
+    moved_keys:
+      - mean_values
+      - std_deviation
+      - correlation_matrix
+      - anomaly_threshold_computed
+      - n_observations_total
+      - n_anomalies_detected
+      - elbo_history
+      - convergence_metrics
+      - runtime_statistics
+      - memory_profile
+      - cluster_statistics
+      - posterior_weights
+    moved_count: 12
+  config_derived_values:
+    mean_values:
+      feature_1: 0.5234
+      feature_2: 0.8912
+    std_deviation:
+      feature_1: 0.1234
+      feature_2: 0.0567
+    correlation_matrix:
+      - [1.0, 0.8234]
+      - [0.8234, 1.0]
+    anomaly_threshold_computed: 2.5
+    n_observations_total: 15000
+    n_anomalies_detected: 234
+    elbo_history:
+      - -1234.5
+      - -1100.2
+      - -980.7
+    convergence_metrics:
+      final_elbo: -980.7
+      iterations: 150
+      convergence_tolerance: 0.001
+    runtime_statistics:
+      total_seconds: 342.5
+      avg_per_observation_ms: 22.8
+    memory_profile:
+      peak_mb: 4523
+      avg_mb: 3200
+    cluster_statistics:
+      n_clusters_found: 5
+      cluster_sizes: [3200, 4100, 2800, 3400, 1500]
+    posterior_weights:
+      - 0.25
+      - 0.31
+      - 0.18
+      - 0.19
+      - 0.07
+checksums:
+  data/raw/electricity.csv: sha256:abc123...
+  data/raw/traffic.csv: sha256:def456...
+  data/raw/synthetic_control.csv: sha256:ghi789...

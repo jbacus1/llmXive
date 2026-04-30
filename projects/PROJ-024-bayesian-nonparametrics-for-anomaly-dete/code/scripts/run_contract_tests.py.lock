@@ -1,0 +1,49 @@
+# T076 Contract Test Runner - Lock File
+# This file documents the contract test execution for T076
+
+task_id: T076
+task_description: Run all contract tests and document pass/fail status in test report
+phase: Phase 7 - Review Driven Revisions
+status: completed
+
+# Contract Tests Executed
+# (Corresponding to T013, T027, T042)
+contract_tests:
+  - file: tests/contract/test_dp_gmm_schema.py
+    story: US1 - Core DPGMM Implementation
+    description: Contract test for DPGMM model output schema
+  - file: tests/contract/test_metrics_schema.py
+    story: US2 - Baseline Comparison and Performance Evaluation
+    description: Contract test for evaluation metrics output schema
+  - file: tests/contract/test_threshold_schema.py
+    story: US3 - Anomaly Score Threshold Calibration
+    description: Contract test for threshold calibration output schema
+
+# Execution Notes
+execution_notes: |
+  - Script uses pytest with JSON report output for parsing
+  - Sets PYTHONPATH to include code/ directory for proper imports
+  - 300 second timeout for all tests combined
+  - Generates timestamped markdown report in code/reports/
+  - Creates 'latest' symlink for easy access to most recent report
+
+# Report Location
+report_path: code/reports/contract_test_report_latest.md
+
+# Constitution Principle Compliance
+constitution_principles:
+  - Principle I: Does not modify tasks.md (only reads)
+  - Principle III: Reports artifacts to state file if checksums change
+  - Principle V: All outputs in canonical project layout (code/scripts/, code/reports/)
+  - Principle VI: ELBO/logging consistent with project standards
+  - Principle VII: Test infrastructure maintains independence
+
+# Next Steps After T076
+next_tasks:
+  - T077: Implement explicit time-ordered train/test split
+  - T078: Document temporal split methodology
+  - T079: Verify presence of research.md, data-model.md, quickstart.md
+  - T080: Create README.md if not present
+  - T081: Update research.md for ADVI streaming distinction
+  - T082: Add LICENSE file
+  - T083: Document data licenses

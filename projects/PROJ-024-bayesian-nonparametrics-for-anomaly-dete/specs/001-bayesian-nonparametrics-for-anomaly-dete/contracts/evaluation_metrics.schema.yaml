@@ -1,95 +1,92 @@
 $schema: http://json-schema.org/draft-07/schema#
 title: Evaluation Metrics Schema
-description: Schema for validating evaluation metrics output files
-version: 1.0.0
-
+description: Schema for model evaluation metrics
 type: object
 required:
-  - dataset_id
-  - model_type
-  - precision
-  - recall
-  - f1_score
-  - threshold
-  - random_seed
-
+  - metrics
 properties:
-  dataset_id:
-    type: string
-    description: Reference to TimeSeries entity
-    pattern: "^[a-zA-Z0-9_-]+$"
-
-  model_type:
-    type: string
-    description: Type of model evaluated
-    enum:
-      - DPGMM
-      - ARIMA
-      - moving_average
-
-  precision:
-    type: number
-    description: Precision score (0-1)
-    minimum: 0.0
-    maximum: 1.0
-
-  recall:
-    type: number
-    description: Recall score (0-1)
-    minimum: 0.0
-    maximum: 1.0
-
-  f1_score:
-    type: number
-    description: F1-score (harmonic mean of precision and recall)
-    minimum: 0.0
-    maximum: 1.0
-
-  auc_roc:
-    type: number
-    description: Area under ROC curve
-    minimum: 0.0
-    maximum: 1.0
-
-  auc_pr:
-    type: number
-    description: Area under precision-recall curve
-    minimum: 0.0
-    maximum: 1.0
-
-  threshold:
-    type: number
-    description: Anomaly threshold used for flagging
-    minimum: 0.0
-
+  metrics:
+    type: array
+    description: Evaluation metrics per dataset and method
+    items:
+      type: object
+      required:
+        - dataset_name
+        - method
+        - f1_score
+        - precision
+        - recall
+      properties:
+        dataset_name:
+          type: string
+          description: Dataset identifier
+        method:
+          type: string
+          enum:
+            - DPGMM
+            - ARIMA
+            - MOVING_AVERAGE
+        precision:
+          type: number
+          minimum: 0
+          maximum: 1
+        recall:
+          type: number
+          minimum: 0
+          maximum: 1
+        f1_score:
+          type: number
+          minimum: 0
+          maximum: 1
+        auc_roc:
+          type: number
+          minimum: 0
+          maximum: 1
+        auc_pr:
+          type: number
+          minimum: 0
+          maximum: 1
+        threshold:
+          type: number
+        n_anomalies_detected:
+          type: integer
+        n_true_anomalies:
+          type: integer
+        runtime_seconds:
+          type: number
+          minimum: 0
+        memory_peak_gb:
+          type: number
+          minimum: 0
+          maximum: 7
+      additionalProperties: false
+  summary:
+    type: object
+    properties:
+      total_datasets:
+        type: integer
+      total_comparisons:
+        type: integer
+      dpgmm_f1_mean:
+        type: number
+      dpgmm_f1_std:
+        type: number
+      baseline_f1_mean:
+        type: number
+      baseline_f1_std:
+        type: number
+      meets_sc001:
+        type: boolean
+        description: Whether F1 within 5% of baselines
+    required:
+      - total_datasets
+      - total_comparisons
+      - meets_sc001
   random_seed:
     type: integer
-    description: Random seed for reproducibility
-    minimum: 0
-
-  convergence_diagnostics:
-    type: object
-    description: Optional convergence information for Bayesian models
-    properties:
-      elbo_final:
-        type: number
-      elbo_initial:
-        type: number
-      iterations:
-        type: integer
-        minimum: 1
-      converged:
-        type: boolean
-
-  comparison:
-    type: object
-    description: Optional statistical comparison information
-    properties:
-      paired_t_test_p_value:
-        type: number
-        minimum: 0.0
-        maximum: 1.0
-      bonferroni_adjusted:
-        type: boolean
-
-additionalProperties: false
+  created_at:
+    type: string
+    format: date-time
+  config_hash:
+    type: string
+    description: SHA256 hash of config.yaml for reproducibility

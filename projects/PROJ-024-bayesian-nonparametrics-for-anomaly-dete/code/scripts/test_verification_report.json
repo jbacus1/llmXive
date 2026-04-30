@@ -1,0 +1,38 @@
+{
+  "files_checked": [
+    {
+      "path": "tests/contract/test_dp_gmm_schema.py",
+      "exists": true,
+      "importable": true,
+      "discoverable": true,
+      "errors": []
+    },
+    {
+      "path": "tests/integration/test_streaming_update.py",
+      "exists": true,
+      "importable": true,
+      "discoverable": false,
+      "errors": [
+        "pytest discovery failed for /Users/jmanning/llmXive/projects/PROJ-024-bayesian-nonparametrics-for-anomaly-dete/tests/integration/test_streaming_update.py: "
+      ]
+    },
+    {
+      "path": "tests/unit/test_memory_profile.py",
+      "exists": true,
+      "importable": true,
+      "discoverable": false,
+      "errors": [
+        "pytest discovery failed for /Users/jmanning/llmXive/projects/PROJ-024-bayesian-nonparametrics-for-anomaly-dete/tests/unit/test_memory_profile.py: "
+      ]
+    }
+  ],
+  "total_files": 3,
+  "files_exist": 3,
+  "files_importable": 3,
+  "files_discoverable": 1,
+  "errors": [
+    "pytest discovery failed for /Users/jmanning/llmXive/projects/PROJ-024-bayesian-nonparametrics-for-anomaly-dete/tests/integration/test_streaming_update.py: ",
+    "pytest discovery failed for /Users/jmanning/llmXive/projects/PROJ-024-bayesian-nonparametrics-for-anomaly-dete/tests/unit/test_memory_profile.py: "
+  ],
+  "all_passed": false
+}

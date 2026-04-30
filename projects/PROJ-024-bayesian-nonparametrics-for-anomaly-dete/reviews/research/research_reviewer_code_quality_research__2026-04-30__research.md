@@ -1,46 +1,46 @@
 ---
-artifact_hash: c4fa8be9f9580ade64e45ae14d6efd4260be61c864b405e423aa8a911c537bb2
+artifact_hash: bce6e5aeb10b03c90dc630149075c9976cf4c010ed6426f962e73b36bf7bbc69
 artifact_path: projects/PROJ-024-bayesian-nonparametrics-for-anomaly-dete/specs/001-bayesian-nonparametrics-for-anomaly-dete/tasks.md
 backend: dartmouth
 feedback: ''
 github_authenticated: false
 model_name: qwen.qwen3.5-122b
 prompt_version: 1.0.0
-reviewed_at: '2026-04-30T14:47:01.049634Z'
+reviewed_at: '2026-04-30T18:00:44.046780Z'
 reviewer_kind: llm
 reviewer_name: research_reviewer_code_quality_research
 score: 0.0
 verdict: minor_revision
 ---
 
-## Code Quality Review
+## Code Quality Review — Actionable Issues
 
-### Structure Deviation from Plan
-The plan.md specifies `projects/PROJ-024-bayesian-nonparametrics-for-anomaly-dete/code/` as the source root, but the code summary shows files at the repository root level (e.g., `baselines/`, `models/`, `evaluation/`). This creates ambiguity for reproducibility from a clean checkout. **Fix**: Either move all code under `code/` as specified, or update plan.md to reflect actual structure.
+### 1. Config File Hygiene (T073 FAILED) ⚠️
 
-### Test Coverage Concerns
-Tasks T013-T015, T027-T028, T042-T043 are marked complete for contract and integration tests, but no test files appear in the code summary (only `__pycache__` entries). Without visible test implementations, independent verification of User Stories 1-3 cannot occur per spec.md requirements. **Fix**: Ensure `tests/contract/`, `tests/integration/`, and `tests/unit/` contain actual `.py` test files.
+The `config.yaml` file is **11,449 bytes** per code summary, violating T073 requirement of **under 2KB**. This directly impacts reproducibility and violates Constitution Principle I. Move derived statistics, model outputs, and dataset paths to state files; retain only hyperparameters, seeds, and base paths.
 
-### Execution Failures Block Reproducibility
-Four tasks failed execution:
-- T030 (`code/baselines/moving_average.py`)
-- T037 (`code/download_datasets.py`)
-- T041 (`code/utils/hyperparameter_counter.py`)
-- T057 (`code/scripts/validate_quickstart_artifacts.py`)
+### 2. Type Safety Gap (T071-T072)
 
-These prevent clean checkout reproducibility and violate Constitution Principle III (Data Hygiene). **Fix**: Resolve all FAILED-IN-EXECUTION tasks before accepting.
+Tasks T071 and T072 require type hints on all public APIs (`dp_gmm.py`, `metrics.py`, baselines) and mypy CI integration. The code summary shows `.py` files but no `.pyi` stub files or mypy configuration visible. **Action**: Add `# type: ignore` only where truly necessary; document all type annotations in `code/mypy.ini`.
 
-### Type Hints Not Verifiable
-The code summary shows file sizes but no content. Per Python research library standards, all public APIs in `models/dp_gmm.py`, `evaluation/metrics.py`, and `baselines/` should include type hints. **Fix**: Add `mypy` checks to CI and ensure all functions have proper type annotations.
+### 3. Test Infrastructure Verification (T074-T077)
 
-### Config Bloat
-`config.yaml` is 11KB—unusually large for hyperparameter configuration. This suggests potential inclusion of derived data or verbose logging. **Fix**: Keep config.yaml under 2KB with only hyperparameters, seeds, and paths; move any derived statistics to state files.
+The code summary lists `__pycache__` files but **does not show test files** (`tests/contract/`, `tests/unit/`, `tests/integration/`). Per spec.md Independent Test requirements, each user story MUST have contract, unit, and integration tests. Verify these exist before acceptance.
 
-### Dependency Hygiene
-Verify `requirements.txt` exists at `projects/PROJ-024-bayesian-nonparametrics-for-anomaly-dete/code/requirements.txt` with pinned versions. The plan requires `pymc>=5.0.0` and other dependencies; ensure all are present and compatible with Python 3.11.
+### 4. File Structure Compliance (Plan.md Alignment)
 
-### State Tracking Incomplete
-`state/projects/PROJ-024-bayesian-nonparametrics-for-anomaly-dete.yaml` should contain artifact hashes per plan.md, but evidence is insufficient in the summary. **Fix**: Verify checksums for all downloaded datasets and generated outputs are recorded.
+Plan.md specifies: `projects/PROJ-024-bayesian-nonparametrics-for-anomaly-dete/code/src/models/`, `code/src/services/`, `code/src/data/`, `code/src/evaluation/`. Code summary shows `code/baselines/`, `code/models/`, `code/evaluation/` directly under `code/`. **Action**: Restructure to match plan.md specification or update plan.md with justification.
 
-### Recommendation
-Address the execution failures and structure deviation before full acceptance. These are blocking issues for clean checkout reproducibility.
+### 5. Reproducibility Concerns
+
+Multiple `.pyc` files indicate compiled artifacts in code directory. For clean checkout reproducibility, add `.gitignore` entries for `__pycache__/`, `*.pyc`, `*.log` (except ELBO logs in `logs/elbo/`). Ensure `requirements.txt` is pinned as per plan.md Constitution Principle I.
+
+### Required Before Acceptance
+
+1. Reduce `config.yaml` to <2KB (T073)
+2. Verify all test files exist and run (T074-T077)
+3. Add type hints to public APIs (T071)
+4. Align directory structure with plan.md or document deviation
+5. Add `.gitignore` for compiled artifacts
+
+These are **fixable** code quality issues. Address them and resubmit for acceptance review.

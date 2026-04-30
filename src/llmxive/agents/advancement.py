@@ -123,40 +123,58 @@ def _award_review_points(
 def _winning_recommendation(records: list[ReviewRecord]) -> str | None:
     """Return the verdict to act on, or None if no records.
 
-    Routing rules (in order):
+    Strategy: **majority-vote with severity tie-break**.
 
-    1. If ANY reviewer voted `reject`, route to `reject` (most severe).
-    2. Else if ANY reviewer voted `full_revision`, route to `full_revision`.
-    3. Else if ANY reviewer voted `minor_revision`, route to `minor_revision`.
-    4. Else (all accept) — caller already handled accept_total path.
+    1. Count each verdict's frequency.
+    2. Hard severity floor: if ≥50% of reviewers voted `reject` or
+       `fundamental_flaws`, route there immediately (those are
+       project-killers and a true majority is needed to terminate).
+    3. Otherwise, take the verdict with the most votes. If two are
+       tied, pick the more severe one (severity ladder: reject >
+       fundamental_flaws > full_revision > major_revision_science >
+       major_revision_writing > minor_revision > accept).
 
-    This is a "weakest-link" rule: a single reviewer flagging serious
-    issues outweighs a majority of mild verdicts. Earlier versions
-    weighted by score, but non-accept reviews score 0.0, so all
-    non-accept verdicts tied and the tie-break (alphabetical max)
-    silently picked `minor_revision` even when most reviewers said
-    `full_revision`.
+    Why not "weakest link" (any one severe verdict wins)? With 7-8
+    reviewers, that rule guaranteed at least one full_revision per
+    round even when 5+ reviewers said the work only needed minor
+    tweaks — the pipeline would throw away the entire revision and
+    restart from `clarified`, wasting hours. Majority-vote lets the
+    pipeline make incremental progress when most reviewers agree the
+    work is close.
     """
     if not records:
         return None
-    verdicts = {r.verdict for r in records}
-    for severe in ("reject", "fundamental_flaws"):
-        if severe in verdicts:
-            return severe
-    for severe in ("full_revision", "major_revision_science", "major_revision_writing"):
-        if severe in verdicts:
-            return severe
-    if "minor_revision" in verdicts:
-        return "minor_revision"
-    if "accept" in verdicts:
-        return "accept"
-    # Fall back to highest-weighted verdict if none of the above (defensive).
-    sums: dict[str, float] = defaultdict(float)
+
+    counts: dict[str, int] = defaultdict(int)
     for rec in records:
-        sums[rec.verdict] += rec.score
-    if not sums:
+        counts[rec.verdict] += 1
+    if not counts:
         return None
-    return max(sums.items(), key=lambda kv: (kv[1], kv[0]))[0]
+
+    # Hard severity floor — kill the project only on true majority.
+    n = len(records)
+    half = (n + 1) // 2  # ceiling: 4 of 7, 5 of 8
+    for kill_verdict in ("reject", "fundamental_flaws"):
+        if counts.get(kill_verdict, 0) >= half:
+            return kill_verdict
+
+    # Severity ladder for tie-breaking (lower index = more severe).
+    severity_order = [
+        "reject",
+        "fundamental_flaws",
+        "full_revision",
+        "major_revision_science",
+        "major_revision_writing",
+        "minor_revision",
+        "accept",
+    ]
+    severity_index = {v: i for i, v in enumerate(severity_order)}
+
+    # Pick by (highest count, then most-severe verdict for tie-break).
+    return max(
+        counts.items(),
+        key=lambda kv: (kv[1], -severity_index.get(kv[0], 99)),
+    )[0]
 
 
 def evaluate(project: Project, *, repo_root: Path | None = None) -> Project:
