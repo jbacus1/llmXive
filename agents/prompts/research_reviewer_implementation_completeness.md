@@ -39,3 +39,27 @@ the review to be rejected and the project to fail review.
 - Self-review forbidden.
 - If your lens cannot evaluate the current state, return `minor_revision` and explain
   what is needed.
+
+
+## Truncation guidance for revision recommendations
+
+The implementer is capped at 32K output tokens per task. If your
+review identifies that a file is truncated, contains a `# TODO(implementer):`
+comment, or has an unclosed bracket / dataclass / function, the
+correct revision recommendation is NOT "retry the same task" — it
+is "split this file into smaller modules". Concretely:
+
+- A 600-line `dpgmm.py` mixing model class + ADVI training + ELBO
+  logging + checkpoint I/O should be split into
+  `models/dpgmm.py` (the class), `training/advi.py` (training loop),
+  `training/elbo.py` (logging), `io/checkpoints.py` (save/load).
+  Each <200 lines and well within the output budget.
+
+- A 1000-line test file should be split by feature area into
+  `test_streaming.py`, `test_anomaly_score.py`, `test_thresholds.py`,
+  etc.
+
+When you see truncation, your `feedback` must explicitly suggest the
+file-decomposition rather than just "rewrite this file" — otherwise
+the next implementer pass will hit the same 32K limit and fail
+again.
