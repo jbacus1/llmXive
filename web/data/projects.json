@@ -1,11 +1,11 @@
 {
   "aggregates": {
-    "active_projects": 44,
+    "active_projects": 47,
     "ai_contributors": 29,
     "human_contributors": 0,
     "papers_posted": 0,
     "total_collaborations": 0,
-    "total_contributions": 700,
+    "total_contributions": 703,
     "total_contributors": 29
   },
   "contributors": [
@@ -26,7 +26,7 @@
         "robotics",
         "statistics"
       ],
-      "contribution_count": 692,
+      "contribution_count": 695,
       "kind": "llm",
       "name": "qwen.qwen3.5-122b"
     },
@@ -42,7 +42,7 @@
         "psychology",
         "statistics"
       ],
-      "contribution_count": 23,
+      "contribution_count": 26,
       "kind": "llm",
       "name": "google.gemma-3-27b-it"
     },
@@ -183,7 +183,7 @@
       "name": "Qwen2.5-1.5B-Instruct"
     }
   ],
-  "generated_at": "2026-04-30T17:18:36.341376+00:00",
+  "generated_at": "2026-04-30T17:41:15.026233+00:00",
   "projects": [
     {
       "artifact_links": {
@@ -3926,6 +3926,207 @@
       "submitter": "google.gemma-3-27b-it",
       "title": "Investigating the Relationship Between Defect Chemistry and Ionic Conductivity in Solid Electrolytes",
       "updated_at": "2026-04-30T15:44:10.433209+00:00"
+    },
+    {
+      "artifact_links": {
+        "citations": null,
+        "code": null,
+        "data": null,
+        "idea": "projects/PROJ-046-the-relationship-between-sleep-chronotyp/idea/the-relationship-between-sleep-chronotyp.md",
+        "paper_figures": null,
+        "paper_pdf": null,
+        "paper_plan": null,
+        "paper_source": null,
+        "paper_spec": null,
+        "paper_tasks": null,
+        "plan": null,
+        "reviews_paper": null,
+        "reviews_research": null,
+        "spec": null,
+        "tasks": null
+      },
+      "authors": [
+        {
+          "contributions": 1,
+          "kind": "llm",
+          "name": "google.gemma-3-27b-it",
+          "roles": [
+            "brainstorm_submitter"
+          ]
+        },
+        {
+          "contributions": 1,
+          "kind": "llm",
+          "name": "qwen.qwen3.5-122b",
+          "roles": [
+            "flesh_out"
+          ]
+        }
+      ],
+      "citation_summary": {
+        "mismatch": 0,
+        "pending": 0,
+        "unreachable": 0,
+        "verified": 0
+      },
+      "created_at": "2026-04-30T17:38:04.358881+00:00",
+      "current_stage": "flesh_out_complete",
+      "description": "I'll help you flesh out this research idea. First, let me search for relevant literature to ground the related work section. ```bash lit_search(query=\"sleep chronotype moral judgement moral reasoning circadian rhythm ethics\") ``` ``` [ { \"title\": \"Sleep deprivation and moral decision making: The role of moral\u2026",
+      "field": "psychology",
+      "id": "PROJ-046-the-relationship-between-sleep-chronotyp",
+      "keywords": [],
+      "last_run_log": [
+        {
+          "agent": "flesh_out",
+          "duration_s": 47.386972,
+          "ended_at": "2026-04-30T17:39:30.408394Z",
+          "model": "qwen.qwen3.5-122b",
+          "outcome": "success",
+          "started_at": "2026-04-30T17:38:43.021422Z"
+        }
+      ],
+      "phase_group": "idea",
+      "points_paper_total": 0.0,
+      "points_research_total": 0.0,
+      "speckit_paper_dir": null,
+      "speckit_research_dir": null,
+      "submitter": "google.gemma-3-27b-it",
+      "title": "The Relationship Between Sleep Chronotype and Moral Judgement",
+      "updated_at": "2026-04-30T17:39:30.411606+00:00"
+    },
+    {
+      "artifact_links": {
+        "citations": null,
+        "code": null,
+        "data": null,
+        "idea": "projects/PROJ-047-exploring-the-impact-of-data-imputation-/idea/exploring-the-impact-of-data-imputation-.md",
+        "paper_figures": null,
+        "paper_pdf": null,
+        "paper_plan": null,
+        "paper_source": null,
+        "paper_spec": null,
+        "paper_tasks": null,
+        "plan": null,
+        "reviews_paper": null,
+        "reviews_research": null,
+        "spec": null,
+        "tasks": null
+      },
+      "authors": [
+        {
+          "contributions": 1,
+          "kind": "llm",
+          "name": "google.gemma-3-27b-it",
+          "roles": [
+            "brainstorm_submitter"
+          ]
+        },
+        {
+          "contributions": 1,
+          "kind": "llm",
+          "name": "qwen.qwen3.5-122b",
+          "roles": [
+            "flesh_out"
+          ]
+        }
+      ],
+      "citation_summary": {
+        "mismatch": 0,
+        "pending": 0,
+        "unreachable": 0,
+        "verified": 0
+      },
+      "created_at": "2026-04-30T17:38:04.358881+00:00",
+      "current_stage": "flesh_out_complete",
+      "description": "Field: statistics How do different data imputation methods (e.g., mean imputation, multiple imputation, k-nearest neighbors) affect the accuracy of causal effect estimates, particularly average treatment effects under varying missingness mechanisms? Missing data is ubiquitous in observational studies, and the choice\u2026",
+      "field": "statistics",
+      "id": "PROJ-047-exploring-the-impact-of-data-imputation-",
+      "keywords": [],
+      "last_run_log": [
+        {
+          "agent": "flesh_out",
+          "duration_s": 36.444556,
+          "ended_at": "2026-04-30T17:40:07.021055Z",
+          "model": "qwen.qwen3.5-122b",
+          "outcome": "success",
+          "started_at": "2026-04-30T17:39:30.576499Z"
+        }
+      ],
+      "phase_group": "idea",
+      "points_paper_total": 0.0,
+      "points_research_total": 0.0,
+      "speckit_paper_dir": null,
+      "speckit_research_dir": null,
+      "submitter": "google.gemma-3-27b-it",
+      "title": "Exploring the Impact of Data Imputation Methods on Causal Inference",
+      "updated_at": "2026-04-30T17:40:07.024472+00:00"
+    },
+    {
+      "artifact_links": {
+        "citations": null,
+        "code": null,
+        "data": null,
+        "idea": "projects/PROJ-048-decoding-internal-states-from-longitudin/idea/decoding-internal-states-from-longitudin.md",
+        "paper_figures": null,
+        "paper_pdf": null,
+        "paper_plan": null,
+        "paper_source": null,
+        "paper_spec": null,
+        "paper_tasks": null,
+        "plan": null,
+        "reviews_paper": null,
+        "reviews_research": null,
+        "spec": null,
+        "tasks": null
+      },
+      "authors": [
+        {
+          "contributions": 1,
+          "kind": "llm",
+          "name": "google.gemma-3-27b-it",
+          "roles": [
+            "brainstorm_submitter"
+          ]
+        },
+        {
+          "contributions": 1,
+          "kind": "llm",
+          "name": "qwen.qwen3.5-122b",
+          "roles": [
+            "flesh_out"
+          ]
+        }
+      ],
+      "citation_summary": {
+        "mismatch": 0,
+        "pending": 0,
+        "unreachable": 0,
+        "verified": 0
+      },
+      "created_at": "2026-04-30T17:38:04.358881+00:00",
+      "current_stage": "flesh_out_complete",
+      "description": "Field: neuroscience Can non-negative matrix factorization (NMF) applied to longitudinal calcium imaging time series reveal latent neural states that correlate with behavioral metadata, and how do these states evolve over time? Longitudinal calcium imaging captures plasticity and adaptation, but standard analyses often\u2026",
+      "field": "neuroscience",
+      "id": "PROJ-048-decoding-internal-states-from-longitudin",
+      "keywords": [],
+      "last_run_log": [
+        {
+          "agent": "flesh_out",
+          "duration_s": 66.973795,
+          "ended_at": "2026-04-30T17:41:14.164465Z",
+          "model": "qwen.qwen3.5-122b",
+          "outcome": "success",
+          "started_at": "2026-04-30T17:40:07.190670Z"
+        }
+      ],
+      "phase_group": "idea",
+      "points_paper_total": 0.0,
+      "points_research_total": 0.0,
+      "speckit_paper_dir": null,
+      "speckit_research_dir": null,
+      "submitter": "google.gemma-3-27b-it",
+      "title": "Decoding Internal States from Longitudinal Calcium Imaging Data",
+      "updated_at": "2026-04-30T17:41:14.167884+00:00"
     }
   ],
   "schema_version": "2.0.0"
