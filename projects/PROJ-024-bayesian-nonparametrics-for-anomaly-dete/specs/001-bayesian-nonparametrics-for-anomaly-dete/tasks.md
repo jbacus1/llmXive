@@ -160,6 +160,62 @@
 
 ---
 
+## Phase 7: Review-Driven Revisions (Addressing Research-Stage Feedback)
+
+**Purpose**: Resolve execution failures, structure deviations, and data quality concerns raised by research reviewers
+
+**⚠️ CRITICAL**: These tasks address blocking issues from prior reviews before final acceptance
+
+### Structure & Path Corrections
+
+- [ ] T060 [P] Restructure all code files under `projects/PROJ-024-bayesian-nonparametrics-for-anomaly-dete/code/` to match plan.md specification (move baselines/, models/, evaluation/, utils/ under code/) per Constitution Principle V and filesystem hygiene review
+- [ ] T061 [P] Verify and update all task references in tasks.md to use correct `projects/.../code/` paths after restructuring
+
+### Execution Failure Fixes
+
+- [ ] T062 [US2] Debug and fix T030 execution failure in `projects/PROJ-024-bayesian-nonparametrics-for-anomaly-dete/code/baselines/moving_average.py` (exit=1) - ensure moving average baseline runs without errors
+- [ ] T063 [US2] Debug and fix T037 execution failure in `projects/PROJ-024-bayesian-nonparametrics-for-anomaly-dete/code/download_datasets.py` (exit=1) - verify UCI Electricity dataset fetcher works with real URL
+- [ ] T064 [US2] Debug and fix T041 execution failure in `projects/PROJ-024-bayesian-nonparametrics-for-anomaly-dete/code/utils/hyperparameter_counter.py` (exit=1) - implement working hyperparameter counting utility
+- [ ] T065 [P] Debug and fix T057 execution failure in `projects/PROJ-024-bayesian-nonparametrics-for-anomaly-dete/code/scripts/validate_quickstart_artifacts.py` (exit=1) - ensure artifact validation script runs successfully
+
+### Dataset Compliance & Data Quality
+
+- [ ] T066 [US2] Source third UCI dataset with labeled anomalies to replace PEMS-SF (which is not from UCI) - options: UCI ECG Five Groups, UCI Heart Disease, or UCI Synthetic Control Chart per SC-001 requirement for 3 UCI datasets
+- [ ] T067 [P] Document dataset provenance with exact URLs, access dates, and license information for all datasets in `specs/001-bayesian-nonparametrics-anomaly-detection/data-dictionary.md` per Constitution Principle III
+- [ ] T068 [P] Generate and record SHA256 checksums for all raw and processed data files in `state/projects/PROJ-024-bayesian-nonparametrics-for-anomaly-dete.yaml` per Constitution Principle III
+- [ ] T069 [US2] Verify sample size adequacy - ensure all datasets have 1000+ observations and document final observation counts in data dictionary
+
+### Code Quality & Type Safety
+
+- [ ] T070 [P] Add type hints to all public APIs in `dp_gmm.py`, `metrics.py`, and baseline files per Python research library standards
+- [ ] T071 [P] Configure mypy in CI pipeline and ensure all functions pass type checking with no errors
+- [ ] T072 [P] Reduce config.yaml size from 11KB to under 2KB - move derived statistics to state files, keep only hyperparameters, seeds, and paths per code quality review
+
+### Test Infrastructure Verification
+
+- [ ] T073 [P] Verify all test files exist and are functional: `tests/contract/test_dp_gmm_schema.py`, `tests/integration/test_streaming_update.py`, `tests/unit/test_memory_profile.py`
+- [ ] T074 [P] Verify all test files exist and are functional: `tests/contract/test_metrics_schema.py`, `tests/integration/test_baseline_comparison.py`
+- [ ] T075 [P] Verify all test files exist and are functional: `tests/contract/test_threshold_schema.py`, `tests/integration/test_threshold_calibration.py`
+- [ ] T076 [P] Run all contract tests and document pass/fail status in test report
+
+### Temporal Data Handling
+
+- [ ] T077 [US2] Implement explicit time-ordered train/test split to prevent temporal data leakage per implementation correctness review
+- [ ] T078 [US2] Document temporal split methodology in `data-model.md` with train/test timestamps for all datasets
+
+### Documentation Completeness
+
+- [ ] T079 [P] Verify presence of research.md, data-model.md, quickstart.md in `specs/001-bayesian-nonparametrics-anomaly-detection/` directory per plan.md
+- [ ] T080 [P] Create README.md with usage instructions for all three baselines and DPGMM if not already present (T055)
+- [ ] T081 [P] Update research.md to articulate theoretical distinction between ADVI streaming update and existing Online Variational Inference for DPs per creativity review
+
+### License & Legal Compliance
+
+- [ ] T082 [P] Add LICENSE file to project root with appropriate open-source license
+- [ ] T083 [P] Document data licenses for UCI datasets and PEMS-SF in data-dictionary.md per data quality review
+
+---
+
 ## Dependencies & Execution Order
 
 ### Phase Dependencies
@@ -170,7 +226,8 @@
 - **User Stories (Phase 3+)**: All depend on Foundational phase completion
   - User stories can then proceed in parallel (if staffed)
   - Or sequentially in priority order (P1 → P2 → P3)
-- **Polish (Final Phase)**: Depends on all desired user stories being complete
+- **Polish (Phase 6)**: Depends on all desired user stories being complete
+- **Review Revisions (Phase 7)**: Depends on Phase 6 completion - BLOCKS final acceptance
 
 ### User Story Dependencies
 
@@ -194,6 +251,7 @@
 - All tests for a user story marked [P] can run in parallel
 - Models within a story marked [P] can run in parallel
 - Different user stories can be worked on in parallel by different team members
+- Phase 7 revision tasks can be executed in parallel where file conflicts do not exist
 
 ---
 
@@ -241,6 +299,7 @@ With multiple developers:
    - Developer B: User Story 2
    - Developer C: User Story 3
 3. Stories complete and integrate independently
+4. Developer D (or team rotation): Phase 7 review-driven revisions
 
 ---
 
@@ -258,3 +317,6 @@ With multiple developers:
 - Task ordering MUST respect data flow: download datasets (T008, T037-T039) BEFORE model training (T016-T026), model training BEFORE evaluation (T031-T041)
 - Note: `contracts/` under `specs/` contains schema definitions; `tests/contract/` contains pytest validation tests against those schemas
 - PEMS-SF is from PEMS project NOT UCI Machine Learning Repository - use correct data source
+- **Phase 7 tasks are CRITICAL and must be completed before final acceptance per research-stage review requirements**
+- All execution failure tasks (T030, T037, T041, T057) must be resolved and marked [X] before project can transition to analyzed stage
+- Structure deviation (code/ vs projects/.../code/) must be corrected per Constitution Principle V
