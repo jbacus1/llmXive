@@ -5,7 +5,7 @@
     "human_contributors": 1,
     "papers_posted": 0,
     "total_collaborations": 1,
-    "total_contributions": 411,
+    "total_contributions": 414,
     "total_contributors": 30
   },
   "contributors": [
@@ -23,7 +23,7 @@
         "robotics",
         "statistics"
       ],
-      "contribution_count": 392,
+      "contribution_count": 395,
       "kind": "llm",
       "name": "qwen.qwen3.5-122b"
     },
@@ -253,7 +253,7 @@
       "name": "google.gemma-3-27b-it"
     }
   ],
-  "generated_at": "2026-04-30T03:23:45.562600+00:00",
+  "generated_at": "2026-04-30T05:19:29.306247+00:00",
   "projects": [
     {
       "artifact_links": {
@@ -414,7 +414,7 @@
       },
       "authors": [
         {
-          "contributions": 175,
+          "contributions": 176,
           "kind": "llm",
           "name": "qwen.qwen3.5-122b",
           "roles": [
@@ -465,7 +465,7 @@
         "verified": 0
       },
       "created_at": "2026-04-29T02:44:28.710016+00:00",
-      "current_stage": "brainstormed",
+      "current_stage": "flesh_out_complete",
       "description": "Field: biology To what extent does alternative splicing divergence in primate cortex correlate with positive selection on splicing regulatory elements? Alternative splicing significantly increases proteomic complexity, yet the evolutionary drivers of splicing divergence across primates remain poorly understood. This\u2026",
       "field": "biology",
       "id": "PROJ-002-evolutionary-pressure-on-alternative-spl",
@@ -473,6 +473,14 @@
         "biology"
       ],
       "last_run_log": [
+        {
+          "agent": "flesh_out",
+          "duration_s": 105.092287,
+          "ended_at": "2026-04-30T05:19:28.656501Z",
+          "model": "qwen.qwen3.5-122b",
+          "outcome": "success",
+          "started_at": "2026-04-30T05:17:43.564214Z"
+        },
         {
           "agent": "paper_reviewer_statistical_analysis",
           "duration_s": 23.340481,
@@ -544,14 +552,6 @@
           "model": "qwen.qwen3.5-122b",
           "outcome": "failed",
           "started_at": "2026-04-29T17:39:02.571865Z"
-        },
-        {
-          "agent": "paper_reviewer_figure_critic",
-          "duration_s": 22.482632,
-          "ended_at": "2026-04-29T17:39:02.530826Z",
-          "model": "qwen.qwen3.5-122b",
-          "outcome": "failed",
-          "started_at": "2026-04-29T17:38:40.048194Z"
         }
       ],
       "phase_group": "idea",
@@ -561,7 +561,7 @@
       "speckit_research_dir": "projects/PROJ-002-evolutionary-pressure-on-alternative-spl/specs/001-evolutionary-pressure-on-alternative-spl",
       "submitter": "system:brainstorm-seed",
       "title": "Evolutionary Pressure on Alternative Splicing in Primates",
-      "updated_at": "2026-04-29T17:39:31.170569+00:00"
+      "updated_at": "2026-04-30T05:19:28.659164+00:00"
     },
     {
       "artifact_links": {
@@ -581,7 +581,16 @@
         "spec": null,
         "tasks": null
       },
-      "authors": [],
+      "authors": [
+        {
+          "contributions": 1,
+          "kind": "llm",
+          "name": "qwen.qwen3.5-122b",
+          "roles": [
+            "flesh_out"
+          ]
+        }
+      ],
       "citation_summary": {
         "mismatch": 0,
         "pending": 0,
@@ -589,14 +598,22 @@
         "verified": 0
       },
       "created_at": "2026-04-29T02:44:28.710016+00:00",
-      "current_stage": "brainstormed",
-      "description": "T-cell exhaustion in chronic infection and tumors follows multiple mutually-exclusive trajectories in single-cell RNA-seq atlases, but the order of regulatory events is unclear. We propose to apply scVelo + a Markov-chain pseudotime aligner to public PD-1+ T-cell datasets to recover the canonical exhaustion trajectory\u2026",
+      "current_stage": "flesh_out_complete",
+      "description": "Field: biology What are the distinct transcriptional trajectories of T-cell exhaustion in chronic infection and tumor microenvironments, and which regulatory events occur earliest at the fork-points that determine checkpoint therapy responsiveness? T-cell exhaustion is a central mechanism of immune dysfunction in\u2026",
       "field": "biology",
       "id": "PROJ-003-single-cell-trajectories-of-t-cell-exhau",
       "keywords": [
         "biology"
       ],
       "last_run_log": [
+        {
+          "agent": "flesh_out",
+          "duration_s": 80.096551,
+          "ended_at": "2026-04-30T05:17:43.436152Z",
+          "model": "qwen.qwen3.5-122b",
+          "outcome": "success",
+          "started_at": "2026-04-30T05:16:23.339601Z"
+        },
         {
           "agent": "flesh_out",
           "duration_s": 2.256633,
@@ -613,7 +630,7 @@
       "speckit_research_dir": null,
       "submitter": "system:brainstorm-seed",
       "title": "Single-Cell Trajectories of T-Cell Exhaustion",
-      "updated_at": "2026-04-29T15:23:06.430265+00:00"
+      "updated_at": "2026-04-30T05:17:43.438672+00:00"
     },
     {
       "artifact_links": {
@@ -2211,7 +2228,7 @@
       },
       "authors": [
         {
-          "contributions": 2,
+          "contributions": 3,
           "kind": "llm",
           "name": "qwen.qwen3.5-122b",
           "roles": [
@@ -2234,14 +2251,22 @@
         "verified": 0
       },
       "created_at": "2026-04-29T03:39:55.508035+00:00",
-      "current_stage": "brainstormed",
-      "description": "Field: chemistry How can sustainable feedstocks be chemically engineered to produce membrane materials with permeability and selectivity comparable to conventional petrochemical-based polymers? Conventional membrane production relies on non-renewable resources and generates significant waste during fabrication. A\u2026",
+      "current_stage": "flesh_out_complete",
+      "description": "Field: chemistry Can machine learning models trained on existing membrane performance data predict sustainable material candidates with permeability and selectivity comparable to conventional petrochemical-based polymers? Conventional membrane production relies on non-renewable resources and generates significant\u2026",
       "field": "chemistry",
       "id": "PROJ-022-developing-new-methods-to-synthesize-hig",
       "keywords": [
         "chemistry"
       ],
       "last_run_log": [
+        {
+          "agent": "flesh_out",
+          "duration_s": 38.938776,
+          "ended_at": "2026-04-30T05:16:23.210414Z",
+          "model": "qwen.qwen3.5-122b",
+          "outcome": "success",
+          "started_at": "2026-04-30T05:15:44.271638Z"
+        },
         {
           "agent": "flesh_out",
           "duration_s": 65.925285,
@@ -2266,7 +2291,7 @@
       "speckit_research_dir": null,
       "submitter": "Claude 3 Sonnet",
       "title": "Developing New Methods to Synthesize High-Performance Membranes using Sustainable Materials",
-      "updated_at": "2026-04-29T03:54:32.993821+00:00"
+      "updated_at": "2026-04-30T05:16:23.213134+00:00"
     },
     {
       "artifact_links": {
