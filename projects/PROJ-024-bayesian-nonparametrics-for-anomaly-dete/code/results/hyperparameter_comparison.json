@@ -1,0 +1,69 @@
+{
+  "dp_gmm": {
+    "model_name": "DPGMM",
+    "tunable_count": 11,
+    "config_params": {
+      "concentration_alpha": 1.0,
+      "gaussian_wishart": {
+        "mu_0": 0.0,
+        "kappa_0": 0.01,
+        "lambda_0": 2,
+        "psi_0": 1.0
+      },
+      "advi": {
+        "n_iter": 100,
+        "learning_rate": 0.01,
+        "elbo_tol": "1e-4",
+        "random_seed": 42
+      },
+      "anomaly": {
+        "scoring_method": "negative_log_posterior",
+        "warmup_period": 50
+      }
+    },
+    "source_file": "/Users/jmanning/llmXive/projects/PROJ-024-bayesian-nonparametrics-for-anomaly-dete/code/config.yaml"
+  },
+  "baselines": {
+    "ARIMA": {
+      "model_name": "ARIMA",
+      "tunable_count": 5,
+      "config_params": {
+        "order_p": 1,
+        "order_d": 1,
+        "order_q": 1,
+        "seasonal_period": 24,
+        "trend": "c"
+      },
+      "source_file": "/Users/jmanning/llmXive/projects/PROJ-024-bayesian-nonparametrics-for-anomaly-dete/code/config.yaml"
+    },
+    "MovingAverage": {
+      "model_name": "MovingAverage",
+      "tunable_count": 3,
+      "config_params": {
+        "window_size": 20,
+        "z_threshold": 3.0,
+        "min_samples": 50
+      },
+      "source_file": "/Users/jmanning/llmXive/projects/PROJ-024-bayesian-nonparametrics-for-anomaly-dete/code/config.yaml"
+    },
+    "LSTM_AE": {
+      "model_name": "LSTM_AE",
+      "tunable_count": 7,
+      "config_params": {
+        "input_length": 100,
+        "encoder_units": 64,
+        "decoder_units": 64,
+        "latent_dim": 32,
+        "learning_rate": 0.001,
+        "batch_size": 32,
+        "epochs": 100
+      },
+      "source_file": "/Users/jmanning/llmXive/projects/PROJ-024-bayesian-nonparametrics-for-anomaly-dete/code/config.yaml"
+    }
+  },
+  "comparison": {
+    "dp_gmm_ratio": 2.2,
+    "threshold": 0.3,
+    "meets_requirement": false
+  }
+}

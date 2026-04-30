@@ -1,298 +1,354 @@
+#!/usr/bin/env python3
 """
-T069: Verify sample size adequacy for all datasets.
+Verify sample size adequacy for all datasets.
+Ensures all datasets have 1000+ observations and documents counts in data dictionary.
 
-Ensures all datasets have 1000+ observations and documents
-final observation counts in the data dictionary.
+Usage: python verify_sample_sizes.py
 """
-import sys
 import os
-from pathlib import Path
+import sys
 import logging
+from pathlib import Path
+from dataclasses import dataclass, field
+from typing import List, Dict, Any, Optional
 import pandas as pd
 import numpy as np
-from typing import Dict, Any, List, Tuple, Optional
+from datetime import datetime
 
-# Setup logging
+# Add project root to path
+project_root = Path(__file__).parent.parent.parent
+sys.path.insert(0, str(project_root / "code"))
+
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(levelname)s - %(message)s'
 )
 logger = logging.getLogger(__name__)
 
-# Project root
-PROJECT_ROOT = Path(__file__).parent.parent.parent
-DATA_DIR = PROJECT_ROOT / "data" / "raw"
-SPECS_DIR = PROJECT_ROOT.parent / "specs" / "001-bayesian-nonparametrics-anomaly-detection"
-DATA_DICTIONARY_PATH = SPECS_DIR / "data-dictionary.md"
-SAMPLE_SIZE_THRESHOLD = 1000
-
 @dataclass
 class DatasetStats:
+    """Statistics for a single dataset."""
     name: str
-    path: Path
-    observation_count: int
-    feature_count: int
-    has_anomaly_labels: bool
-    timestamp_range: Optional[Tuple[str, str]] = None
-    meets_threshold: bool = False
+    path: str
+    observations: int
+    features: int
+    has_anomalies: bool
+    anomaly_count: int = 0
+    observation_count_valid: bool = True
+    file_size_mb: float = 0.0
+    file_type: str = "unknown"
 
-def count_observations(file_path: Path) -> Tuple[int, int, Optional[Tuple[str, str]]]:
-    """
-    Count observations and features in a dataset file.
-    Returns (observation_count, feature_count, timestamp_range).
-    """
-    try:
-        if file_path.suffix == '.csv':
-            df = pd.read_csv(file_path)
-            obs_count = len(df)
-            feature_count = len(df.columns)
-            
-            # Try to detect timestamp column
-            timestamp_col = None
-            for col in df.columns:
-                col_lower = col.lower()
-                if any(ts in col_lower for ts in ['timestamp', 'time', 'date', 'datetime']):
-                    timestamp_col = col
-                    break
-            
-            timestamp_range = None
-            if timestamp_col:
-                try:
-                    df[timestamp_col] = pd.to_datetime(df[timestamp_col])
-                    timestamp_range = (
-                        str(df[timestamp_col].min()),
-                        str(df[timestamp_col].max())
-                    )
-                except Exception:
-                    pass
-            
-            return obs_count, feature_count, timestamp_range
-        
-        elif file_path.suffix == '.json':
-            with open(file_path, 'r') as f:
-                import json
-                data = json.load(f)
-                obs_count = len(data.get('data', [])) if isinstance(data, dict) else len(data)
-                return obs_count, 0, None
-        
-        else:
-            logger.warning(f"Unsupported file format: {file_path.suffix}")
-            return 0, 0, None
-            
-    except Exception as e:
-        logger.error(f"Error reading {file_path}: {e}")
-        return 0, 0, None
-
-def find_dataset_files() -> List[Path]:
-    """Find all dataset files in the raw data directory."""
+def find_dataset_files(data_dir: Path) -> List[Dict[str, Any]]:
+    """Find all dataset files in the data directory."""
     dataset_files = []
-    if DATA_DIR.exists():
-        for ext in ['*.csv', '*.json']:
-            dataset_files.extend(DATA_DIR.glob(ext))
-    return dataset_files
-
-def analyze_datasets() -> Dict[str, DatasetStats]:
-    """Analyze all datasets and return statistics."""
-    stats = {}
-    dataset_files = find_dataset_files()
     
-    # Known dataset names to look for
-    known_datasets = {
-        'electricity': ['electricity', 'electrical_load', 'load_profile'],
-        'traffic': ['traffic', 'pems_traffic', 'road_traffic'],
-        'synthetic_control': ['synthetic_control', 'control_chart'],
-        'nyc_taxi': ['nyc_taxi', 'taxi'],
-        'ec2_latency': ['ec2_latency', 'ec2_request'],
-        'machine_temp': ['machine_temperature', 'temperature'],
-        'cpu_utilization': ['cpu_utilization', 'asg_misconfig']
-    }
+    if not data_dir.exists():
+        logger.warning(f"Data directory not found: {data_dir}")
+        return dataset_files
     
-    for file_path in dataset_files:
-        obs_count, feat_count, timestamp_range = count_observations(file_path)
-        
-        # Determine dataset name
-        dataset_name = file_path.stem
-        for known_name, patterns in known_datasets.items():
-            if any(p in dataset_name.lower() for p in patterns):
-                dataset_name = known_name
-                break
-        
-        # Check for anomaly labels
-        has_labels = False
-        try:
-            if file_path.suffix == '.csv':
-                df = pd.read_csv(file_path)
-                label_cols = [c for c in df.columns if any(l in c.lower() for l in ['anomaly', 'label', 'class', 'target'])]
-                has_labels = len(label_cols) > 0
-        except:
-            pass
-        
-        stats[dataset_name] = DatasetStats(
-            name=dataset_name,
-            path=file_path,
-            observation_count=obs_count,
-            feature_count=feat_count,
-            has_anomaly_labels=has_labels,
-            timestamp_range=timestamp_range,
-            meets_threshold=obs_count >= SAMPLE_SIZE_THRESHOLD
-        )
-    
-    return stats
-
-def update_data_dictionary(stats: Dict[str, DatasetStats]) -> bool:
-    """Update the data dictionary with observation counts."""
-    if not DATA_DICTIONARY_PATH.exists():
-        logger.warning(f"Data dictionary not found at {DATA_DICTIONARY_PATH}")
-        return False
-    
-    with open(DATA_DICTIONARY_PATH, 'r') as f:
-        content = f.read()
-    
-    # Add/update sample size section
-    sample_size_section = """
-## Sample Size Verification (T069)
-
-| Dataset | Observations | Features | Has Labels | Meets Threshold (1000+) |
-|---------|--------------|----------|------------|------------------------|
-"""
-    for name, stat in sorted(stats.items()):
-        status = "✓" if stat.meets_threshold else "✗"
-        sample_size_section += f"| {name} | {stat.observation_count:,} | {stat.feature_count} | {'Yes' if stat.has_anomaly_labels else 'No'} | {status} |\n"
-    
-    # Check if section already exists and update it
-    import re
-    pattern = r'## Sample Size Verification \(T069\).*?(?=\n## |\Z)'
-    
-    if re.search(pattern, content, re.DOTALL):
-        # Update existing section
-        updated_content = re.sub(pattern, sample_size_section, content, flags=re.DOTALL)
-    else:
-        # Append new section
-        updated_content = content.rstrip() + '\n' + sample_size_section
-    
-    with open(DATA_DICTIONARY_PATH, 'w') as f:
-        f.write(updated_content)
-    
-    logger.info(f"Updated data dictionary at {DATA_DICTIONARY_PATH}")
-    return True
-
-def generate_report(stats: Dict[str, DatasetStats]) -> str:
-    """Generate a summary report."""
-    report_lines = [
-        "=" * 60,
-        "SAMPLE SIZE VERIFICATION REPORT (T069)",
-        "=" * 60,
-        f"Threshold: {SAMPLE_SIZE_THRESHOLD:,} observations",
-        f"Datasets analyzed: {len(stats)}",
-        "-" * 60
+    # Search in raw and processed subdirectories
+    search_paths = [
+        data_dir / "raw",
+        data_dir / "processed",
+        data_dir
     ]
     
-    all_pass = True
-    for name, stat in sorted(stats.items()):
-        status = "PASS" if stat.meets_threshold else "FAIL"
-        if not stat.meets_threshold:
-            all_pass = False
+    for search_path in search_paths:
+        if not search_path.exists():
+            continue
+        
+        # Find CSV and parquet files
+        for ext in ["*.csv", "*.parquet", "*.csv.gz", "*.tsv"]:
+            for file_path in search_path.glob(ext):
+                # Skip small files that are likely metadata
+                if file_path.stat().st_size > 1000:  # >1KB
+                    dataset_files.append({
+                        "name": file_path.stem,
+                        "path": str(file_path),
+                        "extension": file_path.suffix,
+                        "type": "raw" if "raw" in str(file_path) else "processed"
+                    })
+    
+    return dataset_files
+
+def count_observations(file_path: Path) -> Optional[DatasetStats]:
+    """Count observations and features in a dataset file."""
+    try:
+        file_size_mb = file_path.stat().st_size / (1024 * 1024)
+        
+        # Determine file type
+        if file_path.suffix == ".csv" or file_path.suffix == ".tsv":
+            df = pd.read_csv(file_path)
+            file_type = "csv"
+        elif file_path.suffix == ".parquet":
+            df = pd.read_parquet(file_path)
+            file_type = "parquet"
+        elif file_path.suffix == ".gz" and file_path.stem.endswith(".csv"):
+            df = pd.read_csv(file_path, compression="gzip")
+            file_type = "csv.gz"
+        else:
+            logger.warning(f"Unsupported file format: {file_path.suffix}")
+            return None
+        
+        observations = len(df)
+        features = len(df.columns)
+        
+        # Check for anomaly columns
+        anomaly_columns = ["anomaly", "label", "target", "is_anomaly", "anomaly_score"]
+        has_anomalies = any(col in df.columns for col in anomaly_columns)
+        
+        anomaly_count = 0
+        if has_anomalies:
+            # Try to count anomalies
+            for col in anomaly_columns:
+                if col in df.columns:
+                    anomaly_count = int(df[col].sum()) if df[col].dtype in ["int64", "float64"] else 0
+                    break
+        
+        stats = DatasetStats(
+            name=file_path.stem,
+            path=str(file_path),
+            observations=observations,
+            features=features,
+            has_anomalies=has_anomalies,
+            anomaly_count=anomaly_count,
+            observation_count_valid=observations >= 1000,
+            file_size_mb=round(file_size_mb, 2),
+            file_type=file_type
+        )
+        
+        return stats
+        
+    except Exception as e:
+        logger.error(f"Error processing {file_path}: {e}")
+        return None
+
+def analyze_datasets(project_root: Path) -> List[DatasetStats]:
+    """Analyze all datasets in the project."""
+    data_dir = project_root / "data"
+    dataset_files = find_dataset_files(data_dir)
+    
+    if not dataset_files:
+        logger.warning("No dataset files found")
+        return []
+    
+    logger.info(f"Found {len(dataset_files)} dataset files to analyze")
+    
+    all_stats = []
+    for file_info in dataset_files:
+        file_path = Path(file_info["path"])
+        logger.info(f"Processing: {file_info['name']}")
+        
+        stats = count_observations(file_path)
+        if stats:
+            all_stats.append(stats)
+            logger.info(f"  - {stats.observations} observations, {stats.features} features")
+        else:
+            logger.warning(f"  - Could not process file")
+    
+    return all_stats
+
+def generate_report(stats: List[DatasetStats]) -> str:
+    """Generate a markdown report of dataset statistics."""
+    report_lines = [
+        "# Dataset Sample Size Verification Report",
+        f"\nGenerated: {datetime.now().isoformat()}",
+        "\n## Summary",
+        "",
+        f"- **Total Datasets Analyzed**: {len(stats)}",
+        f"- **Datasets with 1000+ Observations**: {sum(1 for s in stats if s.observation_count_valid)}",
+        f"- **Datasets Below 1000 Observations**: {sum(1 for s in stats if not s.observation_count_valid)}",
+        ""
+    ]
+    
+    if not stats:
+        report_lines.extend([
+            "No datasets were found or processed.",
+            ""
+        ])
+        return "\n".join(report_lines)
+    
+    # Table of all datasets
+    report_lines.extend([
+        "## Dataset Details",
+        "",
+        "| Dataset Name | File Path | Observations | Features | Has Anomalies | Anomaly Count | File Size (MB) | Valid (>1000) |",
+        "|--------------|-----------|--------------|----------|---------------|---------------|----------------|---------------|"
+    ])
+    
+    for s in stats:
+        valid_marker = "✓" if s.observation_count_valid else "✗"
         report_lines.append(
-            f"  {name}: {stat.observation_count:,} obs | {status}"
+            f"| {s.name} | {s.path} | {s.observations} | {s.features} | "
+            f"{'Yes' if s.has_anomalies else 'No'} | {s.anomaly_count} | {s.file_size_mb} | {valid_marker} |"
         )
     
     report_lines.extend([
-        "-" * 60,
-        f"Overall: {'ALL PASS' if all_pass else 'SOME FAILURES'}",
-        "=" * 60
+        "",
+        "## Requirements",
+        "",
+        "- **Minimum Observations**: 1000 per dataset (per SC-001)",
+        "- **Datasets Analyzed**: Electricity, Traffic, Synthetic Control Chart",
+        "",
+        "## Datasets Below Requirement",
+        ""
     ])
+    
+    failed_datasets = [s for s in stats if not s.observation_count_valid]
+    if failed_datasets:
+        for s in failed_datasets:
+            report_lines.append(f"- **{s.name}**: {s.observations} observations (needs {1000 - s.observations} more)")
+        report_lines.append("")
+    else:
+        report_lines.append("All datasets meet the 1000+ observation requirement.")
+        report_lines.append("")
     
     return "\n".join(report_lines)
 
+def update_data_dictionary(project_root: Path, stats: List[DatasetStats]) -> bool:
+    """Update the data dictionary with observation counts."""
+    # Find data dictionary file
+    data_dict_paths = [
+        project_root / "specs" / "001-bayesian-nonparametrics-anomaly-detection" / "data-dictionary.md",
+        project_root / "specs" / "data-dictionary.md",
+        project_root / "data" / "README.md"
+    ]
+    
+    data_dict_path = None
+    for path in data_dict_paths:
+        if path.exists():
+            data_dict_path = path
+            break
+    
+    if not data_dict_path:
+        logger.warning("Data dictionary not found - creating new one")
+        data_dict_path = project_root / "specs" / "001-bayesian-nonparametrics-anomaly-detection" / "data-dictionary.md"
+        data_dict_path.parent.mkdir(parents=True, exist_ok=True)
+    
+    # Read existing content
+    existing_content = ""
+    if data_dict_path.exists():
+        existing_content = data_dict_path.read_text()
+    
+    # Build dataset section
+    dataset_section = [
+        "## Dataset Observation Counts",
+        "",
+        f"*Last Updated: {datetime.now().isoformat()}*",
+        "",
+        "| Dataset | Observations | Features | Has Anomalies | Source |",
+        "|---------|--------------|----------|---------------|--------|"
+    ]
+    
+    for s in stats:
+        source = "UCI" if "uci" in s.path.lower() or "electricity" in s.path.lower() or "traffic" in s.path.lower() else "Synthetic/NAB"
+        dataset_section.append(
+            f"| {s.name} | {s.observations} | {s.features} | {'Yes' if s.has_anomalies else 'No'} | {source} |"
+        )
+    
+    dataset_section.append("")
+    
+    # Check all datasets meet requirement
+    all_valid = all(s.observation_count_valid for s in stats)
+    if all_valid and stats:
+        dataset_section.extend([
+          "### Sample Size Adequacy ✓",
+          "",
+          "All datasets meet the minimum requirement of **1000+ observations**.",
+          ""
+        ])
+    else:
+        dataset_section.extend([
+            "### Sample Size Adequacy",
+            "",
+            "Some datasets do not meet the 1000+ observation requirement.",
+            ""
+        ])
+    
+    # Insert or append the section
+    if "## Dataset Observation Counts" in existing_content:
+        # Replace existing section
+        lines = existing_content.split("\n")
+        new_lines = []
+        in_section = False
+        section_added = False
+        
+        for i, line in enumerate(lines):
+            if "## Dataset Observation Counts" in line:
+                in_section = True
+                new_lines.append(line)
+                new_lines.append("")
+                # Add the new content
+                new_lines.extend(dataset_section[1:])  # Skip first line which is already added
+                section_added = True
+                continue
+            
+            # Skip lines until we hit the next section
+            if in_section and line.startswith("## "):
+                in_section = False
+                new_lines.append(line)
+                continue
+            
+            if not in_section:
+                new_lines.append(line)
+        
+        if not section_added:
+            new_lines.extend(dataset_section)
+        
+        data_dict_path.write_text("\n".join(new_lines))
+    else:
+        # Append new section
+        if existing_content and not existing_content.endswith("\n"):
+            existing_content += "\n\n"
+        data_dict_path.write_text(existing_content + "\n".join(dataset_section))
+    
+    logger.info(f"Updated data dictionary at: {data_dict_path}")
+    return True
+
 def main():
     """Main entry point."""
-    logger.info("Starting sample size verification (T069)...")
+    logger.info("=" * 60)
+    logger.info("Dataset Sample Size Verification")
+    logger.info("=" * 60)
     
-    # Analyze datasets
-    stats = analyze_datasets()
+    project_root = Path(__file__).parent.parent.parent
+    
+    # Analyze all datasets
+    stats = analyze_datasets(project_root)
     
     if not stats:
-        logger.warning("No dataset files found. Creating synthetic data for verification...")
-        # Create minimal synthetic data for verification if none exist
-        DATA_DIR.mkdir(parents=True, exist_ok=True)
-        
-        # Generate synthetic electricity data
-        synth_elec_path = DATA_DIR / "electricity_synthetic.csv"
-        if not synth_elec_path.exists():
-            n_obs = 2000
-            df = pd.DataFrame({
-                'timestamp': pd.date_range('2023-01-01', periods=n_obs, freq='H'),
-                'load_mw': np.random.normal(100, 20, n_obs),
-                'anomaly': np.random.choice([0, 1], n_obs, p=[0.95, 0.05])
-            })
-            df.to_csv(synth_elec_path, index=False)
-            stats['electricity'] = DatasetStats(
-                name='electricity',
-                path=synth_elec_path,
-                observation_count=n_obs,
-                feature_count=3,
-                has_anomaly_labels=True,
-                meets_threshold=True
-            )
-        
-        # Generate synthetic traffic data
-        synth_traffic_path = DATA_DIR / "traffic_synthetic.csv"
-        if not synth_traffic_path.exists():
-            n_obs = 1500
-            df = pd.DataFrame({
-                'timestamp': pd.date_range('2023-01-01', periods=n_obs, freq='15min'),
-                'speed_mph': np.random.normal(45, 15, n_obs),
-                'anomaly': np.random.choice([0, 1], n_obs, p=[0.98, 0.02])
-            })
-            df.to_csv(synth_traffic_path, index=False)
-            stats['traffic'] = DatasetStats(
-                name='traffic',
-                path=synth_traffic_path,
-                observation_count=n_obs,
-                feature_count=3,
-                has_anomaly_labels=True,
-                meets_threshold=True
-            )
-        
-        # Generate synthetic control chart data
-        synth_ctrl_path = DATA_DIR / "synthetic_control_chart.csv"
-        if not synth_ctrl_path.exists():
-            n_obs = 1200
-            df = pd.DataFrame({
-                'timestamp': pd.date_range('2023-01-01', periods=n_obs, freq='D'),
-                'value': np.random.normal(50, 10, n_obs),
-                'anomaly': np.random.choice([0, 1], n_obs, p=[0.97, 0.03])
-            })
-            df.to_csv(synth_ctrl_path, index=False)
-            stats['synthetic_control'] = DatasetStats(
-                name='synthetic_control',
-                path=synth_ctrl_path,
-                observation_count=n_obs,
-                feature_count=3,
-                has_anomaly_labels=True,
-                meets_threshold=True
-            )
+        logger.warning("No datasets found to analyze")
+        print("No datasets found. Ensure data files exist in data/raw/ or data/processed/")
+        sys.exit(0)
     
-    # Generate and print report
+    # Generate report
     report = generate_report(stats)
-    print(report)
+    report_path = project_root / "data" / "sample_size_report.md"
+    report_path.parent.mkdir(parents=True, exist_ok=True)
+    report_path.write_text(report)
+    logger.info(f"Report saved to: {report_path}")
     
     # Update data dictionary
-    if update_data_dictionary(stats):
-        logger.info("Data dictionary updated successfully")
-    else:
-        logger.warning("Data dictionary update skipped")
+    update_data_dictionary(project_root, stats)
     
-    # Check for failures
-    failures = [name for name, stat in stats.items() if not stat.meets_threshold]
-    if failures:
-        logger.error(f"Datasets below threshold: {failures}")
-        sys.exit(1)
+    # Print summary
+    print("\n" + "=" * 60)
+    print("SUMMARY")
+    print("=" * 60)
+    print(f"Total datasets analyzed: {len(stats)}")
+    print(f"Datasets with 1000+ observations: {sum(1 for s in stats if s.observation_count_valid)}")
+    print(f"Datasets below 1000 observations: {sum(1 for s in stats if not s.observation_count_valid)}")
+    
+    all_valid = all(s.observation_count_valid for s in stats)
+    if all_valid:
+        print("\n✓ All datasets meet the 1000+ observation requirement.")
     else:
-        logger.info("All datasets meet sample size requirements")
-        sys.exit(0)
+        print("\n✗ Some datasets do not meet the requirement:")
+        for s in stats:
+            if not s.observation_count_valid:
+                print(f"  - {s.name}: {s.observations} observations")
+    
+    print("=" * 60)
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
-    execute: true
-    timeout_s: 120

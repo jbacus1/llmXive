@@ -1,0 +1,61 @@
+============================================================
+HYPERPARAMETER COMPARISON REPORT
+============================================================
+
+SC-004 Requirement: DPGMM tunable params < 30% of baseline average
+Threshold: 30.0%
+
+------------------------------------------------------------
+DPGMM Configuration:
+------------------------------------------------------------
+  Model: DPGMM
+  Tunable parameters: 11
+  Source: /Users/jmanning/llmXive/projects/PROJ-024-bayesian-nonparametrics-for-anomaly-dete/code/config.yaml
+
+  Parameters:
+    - concentration_alpha: 1.0
+    - gaussian_wishart: {'mu_0': 0.0, 'kappa_0': 0.01, 'lambda_0': 2, 'psi_0': 1.0}
+    - advi: {'n_iter': 100, 'learning_rate': 0.01, 'elbo_tol': '1e-4', 'random_seed': 42}
+    - anomaly: {'scoring_method': 'negative_log_posterior', 'warmup_period': 50}
+
+------------------------------------------------------------
+Baseline Configurations:
+------------------------------------------------------------
+  ARIMA:
+    Tunable parameters: 5
+    Parameters:
+      - order_p: 1
+      - order_d: 1
+      - order_q: 1
+      - seasonal_period: 24
+      - trend: c
+
+  MovingAverage:
+    Tunable parameters: 3
+    Parameters:
+      - window_size: 20
+      - z_threshold: 3.0
+      - min_samples: 50
+
+  LSTM_AE:
+    Tunable parameters: 7
+    Parameters:
+      - input_length: 100
+      - encoder_units: 64
+      - decoder_units: 64
+      - latent_dim: 32
+      - learning_rate: 0.001
+      - batch_size: 32
+      - epochs: 100
+
+------------------------------------------------------------
+COMPARISON SUMMARY:
+------------------------------------------------------------
+  DPGMM tunable count: 11
+  Baseline average: 5.0
+  Ratio: 220.0%
+  Threshold: 30.0%
+
+  ✗ FAILS REQUIREMENT
+
+============================================================

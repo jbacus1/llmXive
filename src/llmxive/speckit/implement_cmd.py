@@ -284,6 +284,21 @@ class ImplementerAgent(SlashCommandAgent):
                             f"or unbalanced bracket. Total chars: {len(contents)}"
                         )
                         continue
+                    # Unresolved-name check: catch missing imports
+                    # (e.g. uses `sys` or `datetime` without `import sys`/
+                    # `from datetime import datetime`). compile() does
+                    # NOT catch these because Python only resolves
+                    # names at runtime, but we can detect them statically
+                    # via AST.
+                    unresolved = _find_unresolved_names(contents)
+                    if unresolved:
+                        print(
+                            f"[implementer] refusing to write {relpath!r}: "
+                            f"unresolved names {sorted(unresolved)} — likely "
+                            f"missing imports. Add the necessary `import` "
+                            f"or `from ... import ...` statements."
+                        )
+                        continue
                 target.parent.mkdir(parents=True, exist_ok=True)
                 target.write_text(contents, encoding="utf-8")
                 written.append(str(target.relative_to(repo)))
@@ -411,6 +426,110 @@ class ImplementerAgent(SlashCommandAgent):
             )
 
         return written
+
+
+def _find_unresolved_names(source: str) -> set[str]:
+    """Return names referenced at module-execution time that aren't bound.
+
+    Walks the AST: collects names BOUND by imports, top-level
+    assignments, function/class defs, and `for x in ...` / `with ... as x`
+    bindings; collects names USED at module level (i.e. NOT inside
+    function or class bodies — those resolve at call time and the
+    file may legitimately reference globals defined later, builtins,
+    or names imported in a TYPE_CHECKING block).
+
+    A free name is unresolved if it's NOT in the bound set AND not in
+    Python builtins. The check is conservative: any false positive
+    would block a legitimate write, so we only flag names referenced
+    OUTSIDE function/class bodies (the `if __name__ == "__main__":`
+    block in particular — that's where `sys.exit(main())` lives).
+    """
+    import ast
+    import builtins as _builtins
+
+    try:
+        tree = ast.parse(source)
+    except SyntaxError:
+        # compile() already caught it; don't double-flag.
+        return set()
+
+    bound: set[str] = set(dir(_builtins))
+    bound.add("__name__")
+    bound.add("__file__")
+    bound.add("__doc__")
+
+    def _collect_bindings_in_module(node: ast.AST) -> None:
+        for child in ast.walk(node):
+            if isinstance(child, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)):
+                bound.add(child.name)
+            elif isinstance(child, ast.Import):
+                for alias in child.names:
+                    bound.add((alias.asname or alias.name).split(".")[0])
+            elif isinstance(child, ast.ImportFrom):
+                for alias in child.names:
+                    if alias.name == "*":
+                        # `from x import *` — can't statically resolve.
+                        # Mark a sentinel so we skip the unresolved check.
+                        bound.add("__star_import__")
+                        continue
+                    bound.add(alias.asname or alias.name)
+            elif isinstance(child, ast.Assign):
+                for target in child.targets:
+                    for n in ast.walk(target):
+                        if isinstance(n, ast.Name):
+                            bound.add(n.id)
+            elif isinstance(child, (ast.AugAssign, ast.AnnAssign)):
+                if isinstance(child.target, ast.Name):
+                    bound.add(child.target.id)
+
+    _collect_bindings_in_module(tree)
+
+    # If there's any `from x import *`, give up — we can't know what
+    # was imported.
+    if "__star_import__" in bound:
+        return set()
+
+    used: set[str] = set()
+
+    class _ModuleLevelNameCollector(ast.NodeVisitor):
+        """Collect Name nodes that execute at module load time.
+
+        Skips function and class BODIES (their names resolve at call
+        time, not module-load time, so missing imports can be legit
+        if imported lazily). DOES descend into decorators, default
+        values, and base classes — those execute at module load.
+        """
+
+        def visit_FunctionDef(self, node: ast.FunctionDef) -> None:
+            for d in node.decorator_list:
+                self.visit(d)
+            for d in (node.args.defaults + node.args.kw_defaults):
+                if d is not None:
+                    self.visit(d)
+            # Don't descend into body.
+
+        visit_AsyncFunctionDef = visit_FunctionDef  # type: ignore[assignment]
+
+        def visit_ClassDef(self, node: ast.ClassDef) -> None:
+            for d in node.decorator_list:
+                self.visit(d)
+            for b in node.bases:
+                self.visit(b)
+            for kw in node.keywords:
+                self.visit(kw.value)
+            # Walk the class body but skip method bodies.
+            for stmt in node.body:
+                if isinstance(stmt, (ast.FunctionDef, ast.AsyncFunctionDef)):
+                    self.visit_FunctionDef(stmt)
+                else:
+                    self.visit(stmt)
+
+        def visit_Name(self, node: ast.Name) -> None:
+            if isinstance(node.ctx, ast.Load):
+                used.add(node.id)
+
+    _ModuleLevelNameCollector().visit(tree)
+    return used - bound
 
 
 _PUBLIC_DEF_RE = re.compile(

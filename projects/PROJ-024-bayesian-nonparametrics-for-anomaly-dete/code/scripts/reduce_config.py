@@ -1,9 +1,9 @@
+#!/usr/bin/env python3
 """
 Reduce config.yaml size from 11KB to under 2KB by moving derived statistics
-to state files. Keeps only hyperparameters, seeds, and paths.
+to state files, keeping only hyperparameters, seeds, and paths.
 
-Per code quality review: config.yaml should contain only configuration
-parameters, not computed/derived values.
+Per Constitution Principle I and T073 requirement.
 """
 import os
 import sys
@@ -11,153 +11,137 @@ import yaml
 import hashlib
 from pathlib import Path
 from datetime import datetime
-from typing import Dict, Any, List, Tuple
+from typing import Dict, Any, Tuple, List
 
-# Add code directory to path for imports
-code_dir = Path(__file__).parent
-project_root = code_dir.parent
-state_dir = project_root / "state" / "projects"
+# Project root
+PROJECT_ROOT = Path(__file__).parent.parent.parent
+CONFIG_PATH = PROJECT_ROOT / "code" / "config.yaml"
+STATE_PATH = PROJECT_ROOT / "state" / "projects" / "PROJ-024-bayesian-nonparametrics-for-anomaly-dete.yaml"
 
-def compute_file_checksum(filepath: Path) -> str:
+# Categories for config items
+CONFIG_CATEGORIES = {
+    "hyperparameters": ["alpha", "beta", "gamma", "concentration", "max_components", 
+                      "min_components", "variance_prior", "mean_prior", "learning_rate",
+                      "convergence_threshold", "max_iterations", "batch_size"],
+    "seeds": ["random_seed", "numpy_seed", "torch_seed", "experiment_seed"],
+    "paths": ["data_raw_dir", "data_processed_dir", "model_output_dir", "log_dir",
+             "state_dir", "artifact_dir", "checkpoint_dir"],
+    "dataset": ["dataset_name", "dataset_url", "dataset_checksum", "target_column",
+               "timestamp_column", "anomaly_column", "train_split", "test_split"],
+    "evaluation": ["f1_threshold", "precision_threshold", "recall_threshold",
+                  "auc_threshold", "statistical_significance_level"],
+    "monitoring": ["memory_limit_gb", "runtime_limit_minutes", "elbo_log_interval"],
+    "derived_statistics": ["total_observations", "anomaly_count", "normal_count",
+                         "anomaly_rate", "component_count", "final_elbo",
+                         "training_duration_seconds", "model_checksum",
+                         "dataset_hash", "observation_stats", "component_stats",
+                         "baseline_f1_scores", "baseline_precision", "baseline_recall",
+                         "baseline_auc", "comparison_results", "hyperparameter_sweep_results"]
+}
+
+def compute_file_checksum(file_path: Path) -> str:
     """Compute SHA256 checksum of a file."""
-    sha256_hash = hashlib.sha256()
-    with open(filepath, "rb") as f:
-        for byte_block in iter(lambda: f.read(4096), b""):
-            sha256_hash.update(byte_block)
-    return sha256_hash.hexdigest()
+    sha256 = hashlib.sha256()
+    with open(file_path, 'rb') as f:
+        for chunk in iter(lambda: f.read(8192), b''):
+            sha256.update(chunk)
+    return sha256.hexdigest()
 
-def load_state_file(filepath: Path) -> Dict[str, Any]:
-    """Load state YAML file, creating if it doesn't exist."""
-    if filepath.exists():
-        with open(filepath, "r") as f:
+def load_state_file(path: Path) -> Dict[str, Any]:
+    """Load existing state file or return empty dict."""
+    if path.exists():
+        with open(path, 'r') as f:
             return yaml.safe_load(f) or {}
     return {
         "project_id": "PROJ-024-bayesian-nonparametrics-for-anomaly-dete",
-        "artifacts": {},
-        "metadata": {
-            "created_at": datetime.now().isoformat(),
-            "updated_at": datetime.now().isoformat()
-        }
+        "created_at": datetime.utcnow().isoformat(),
+        "updated_at": datetime.utcnow().isoformat(),
+        "derived_statistics": {}
     }
 
-def save_state_file(filepath: Path, data: Dict[str, Any]) -> None:
-    """Save state YAML file with proper formatting."""
-    filepath.parent.mkdir(parents=True, exist_ok=True)
-    with open(filepath, "w") as f:
-        yaml.dump(data, f, default_flow_style=False, sort_keys=False, allow_unicode=True)
+def save_state_file(path: Path, state: Dict[str, Any]) -> None:
+    """Save state file with checksum."""
+    # Update timestamp
+    state["updated_at"] = datetime.utcnow().isoformat()
+    
+    # Write to temp first, then rename for atomicity
+    temp_path = path.with_suffix('.tmp')
+    with open(temp_path, 'w') as f:
+        yaml.dump(state, f, default_flow_style=False, sort_keys=False)
+    
+    # Compute and add checksum
+    checksum = compute_file_checksum(temp_path)
+    state["state_checksum"] = checksum
+    
+    with open(temp_path, 'w') as f:
+        yaml.dump(state, f, default_flow_style=False, sort_keys=False)
+    
+    temp_path.rename(path)
 
 def is_derived_statistic(key: str, value: Any) -> bool:
-    """
-    Determine if a config value is a derived statistic that should be moved
-    to state file rather than kept in config.
-    """
-    derived_patterns = [
-        # Statistics and metrics
-        "mean", "std", "variance", "skewness", "kurtosis",
-        "min", "max", "median", "percentile", "quartile",
-        "correlation", "covariance", "r_squared", "rmse", "mae",
-        "f1_score", "precision", "recall", "auc", "accuracy",
-        "loss", "elbo", "convergence", "epoch", "iteration",
-        # Computed counts
-        "count", "total", "sum", "average", "rate",
-        # Dataset statistics
-        "n_observations", "n_samples", "n_features", "n_clusters",
-        "n_components", "n_anomalies", "observation_count",
-        # Runtime metrics
-        "runtime_seconds", "memory_mb", "cpu_usage", "gpu_memory",
-        "training_time", "inference_time", "processing_time",
-        # Derived bounds
-        "threshold", "boundary", "cutoff", "limit",
-        # Computed weights/probabilities
-        "weight", "probability", "score", "confidence",
-        # Version tracking (computed)
-        "last_updated", "last_run", "current_epoch",
-        # Model state (derived from training)
-        "means", "covariances", "weights", "concentration",
-        "posterior", "parameters", "state", "history",
-    ]
-    
+    """Check if a config key represents derived statistics."""
     key_lower = key.lower()
     
-    # Check if key contains derived patterns
+    # Check against known derived statistics patterns
+    derived_patterns = [
+        'total_observations', 'observation_count', 'anomaly_count', 'normal_count',
+        'anomaly_rate', 'component_count', 'final_elbo', 'training_duration',
+        'model_checksum', 'dataset_hash', 'observation_stats', 'component_stats',
+        'baseline_f1', 'baseline_precision', 'baseline_recall', 'baseline_auc',
+        'comparison_results', 'sweep_results', 'hyperparameter_results',
+        'convergence_history', 'elbo_history', 'training_metrics', 'validation_metrics'
+    ]
+    
     for pattern in derived_patterns:
         if pattern in key_lower:
             return True
     
-    # Check if value is a list/dict (likely computed data structures)
-    if isinstance(value, (list, dict)) and len(str(value)) > 100:
+    # Check if value is a computed statistic (not a simple config value)
+    if isinstance(value, (list, dict)):
+        # Complex structures are often derived
         return True
     
-    # Check if value looks like computed statistics
-    if isinstance(value, (float, int)) and key_lower.endswith(("_mean", "_std", "_var", "_sum", "_count")):
+    if isinstance(value, float):
+        # Floats might be computed statistics
         return True
     
     return False
 
 def is_config_parameter(key: str, value: Any) -> bool:
-    """
-    Determine if a config value is a true configuration parameter
-    (hyperparameters, seeds, paths) that should stay in config.yaml.
-    """
-    config_patterns = [
-        # Hyperparameters
-        "alpha", "beta", "gamma", "lambda", "eta", "theta",
-        "learning_rate", "lr", "step_size", "concentration",
-        "max_components", "min_components", "n_clusters",
-        "tolerance", "tol", "max_iter", "max_iterations",
-        "window_size", "n_jobs", "n_threads",
-        # Seeds
-        "seed", "random_seed", "np_seed", "torch_seed",
-        # Paths
-        "path", "dir", "directory", "file", "folder",
-        "data_path", "output_path", "model_path", "log_path",
-        "cache_dir", "temp_dir", "work_dir",
-        # Flags and booleans
-        "verbose", "debug", "enabled", "active", "use_",
-        "save_", "load_", "train_", "eval_",
-        # Thresholds (configuration, not computed)
-        "anomaly_threshold", "score_threshold", "p_value",
-        # Dataset config
-        "dataset", "source", "url", "format", "type",
-    ]
-    
+    """Check if a config key is a valid configuration parameter."""
     key_lower = key.lower()
     
-    # Check if key contains config patterns
-    for pattern in config_patterns:
-        if pattern in key_lower:
-            return True
+    # Check against known config categories
+    for category, keys in CONFIG_CATEGORIES.items():
+        if category != "derived_statistics":
+            for config_key in keys:
+                if config_key in key_lower or key_lower in config_key:
+                    return True
     
-    # Check if it's a nested config section
-    if isinstance(value, dict):
+    # Simple scalar values are typically config parameters
+    if isinstance(value, (int, float, str, bool)) and not is_derived_statistic(key, value):
         return True
     
     return False
 
 def categorize_config(config: Dict[str, Any]) -> Tuple[Dict[str, Any], Dict[str, Any]]:
-    """
-    Separate config into keep (config.yaml) and move (state file) categories.
-    Returns (keep_dict, move_dict).
-    """
-    keep = {}
-    move = {}
+    """Separate config into parameters and derived statistics."""
+    parameters = {}
+    derived = {}
     
     for key, value in config.items():
         if is_derived_statistic(key, value):
-            move[key] = value
+            derived[key] = value
         elif is_config_parameter(key, value):
-            keep[key] = value
+            parameters[key] = value
         else:
-            # Default: keep if it's a nested dict (section), otherwise move
-            if isinstance(value, dict):
-                keep[key] = value
-            else:
-                move[key] = value
+            # Default: treat as parameter if not clearly derived
+            parameters[key] = value
     
-    return keep, move
+    return parameters, derived
 
 def flatten_dict(d: Dict[str, Any], parent_key: str = '', sep: str = '.') -> Dict[str, Any]:
-    """Flatten nested dictionary for state file."""
+    """Flatten nested dictionary."""
     items = []
     for k, v in d.items():
         new_key = f"{parent_key}{sep}{k}" if parent_key else k
@@ -167,122 +151,110 @@ def flatten_dict(d: Dict[str, Any], parent_key: str = '', sep: str = '.') -> Dic
             items.append((new_key, v))
     return dict(items)
 
-def main():
+def reduce_config() -> Dict[str, Any]:
     """Main function to reduce config.yaml size."""
-    print("Starting config.yaml reduction process...")
+    print(f"Loading config from {CONFIG_PATH}")
     
-    # Paths
-    config_path = code_dir / "config.yaml"
-    state_path = state_dir / "PROJ-024-bayesian-nonparametrics-for-anomaly-dete.yaml"
-    reduced_config_path = code_dir / "config_reduced.yaml"
-    
-    # Check if config.yaml exists
-    if not config_path.exists():
-        print(f"ERROR: {config_path} does not exist")
+    if not CONFIG_PATH.exists():
+        print(f"ERROR: Config file not found at {CONFIG_PATH}")
         sys.exit(1)
     
-    # Load current config
-    with open(config_path, "r") as f:
-        original_config = yaml.safe_load(f) or {}
+    with open(CONFIG_PATH, 'r') as f:
+        original_config = yaml.safe_load(f)
     
-    original_size = os.path.getsize(config_path)
-    print(f"Original config.yaml size: {original_size} bytes")
+    original_size = CONFIG_PATH.stat().st_size
+    print(f"Original config size: {original_size} bytes")
     
-    # Categorize config values
-    keep_config, move_stats = categorize_config(original_config)
+    # Separate parameters from derived statistics
+    parameters, derived = categorize_config(original_config)
     
-    # Add metadata to reduced config
-    keep_config["_metadata"] = {
-        "reduced_at": datetime.now().isoformat(),
-        "original_size_bytes": original_size,
-        "note": "Derived statistics moved to state file. See state/projects/PROJ-024-bayesian-nonparametrics-for-anomaly-dete.yaml"
+    print(f"Identified {len(parameters)} config parameters")
+    print(f"Identified {len(derived)} derived statistics to move to state")
+    
+    # Load or create state file
+    state = load_state_file(STATE_PATH)
+    
+    # Merge derived statistics into state
+    if "derived_statistics" not in state:
+        state["derived_statistics"] = {}
+    
+    state["derived_statistics"].update(derived)
+    state["derived_statistics"]["last_updated"] = datetime.utcnow().isoformat()
+    state["derived_statistics"]["original_config_path"] = str(CONFIG_PATH)
+    
+    # Save reduced state file
+    save_state_file(STATE_PATH, state)
+    print(f"Saved derived statistics to {STATE_PATH}")
+    
+    # Create minimal config with only essential parameters
+    minimal_config = {
+        "project_id": "PROJ-024-bayesian-nonparametrics-for-anomaly-dete",
+        "version": "1.0.0",
+        "hyperparameters": parameters.get("hyperparameters", {}),
+        "seeds": parameters.get("seeds", {}),
+        "paths": parameters.get("paths", {}),
+        "dataset": parameters.get("dataset", {}),
+        "evaluation": parameters.get("evaluation", {}),
+        "monitoring": parameters.get("monitoring", {}),
+        "state_reference": {
+            "path": str(STATE_PATH.relative_to(PROJECT_ROOT)),
+            "note": "Derived statistics moved here per T073"
+        }
     }
     
-    # Write reduced config.yaml
-    with open(config_path, "w") as f:
-        yaml.dump(keep_config, f, default_flow_style=False, sort_keys=False, allow_unicode=True)
+    # Save reduced config
+    temp_config_path = CONFIG_PATH.with_suffix('.yaml.tmp')
+    with open(temp_config_path, 'w') as f:
+        yaml.dump(minimal_config, f, default_flow_style=False, sort_keys=False)
     
-    reduced_size = os.path.getsize(config_path)
-    print(f"Reduced config.yaml size: {reduced_size} bytes")
-    print(f"Size reduction: {original_size - reduced_size} bytes ({(1 - reduced_size/original_size)*100:.1f}%)")
+    reduced_size = temp_config_path.stat().st_size
+    print(f"Reduced config size: {reduced_size} bytes")
     
-    # Check if under 2KB target
+    # Verify size reduction
     if reduced_size > 2048:
-        print(f"WARNING: Reduced config still over 2KB target ({reduced_size} bytes)")
-        # Additional aggressive reduction
-        print("Applying additional aggressive reduction...")
-        
-        # Remove any remaining large values
-        aggressive_keep = {}
-        for key, value in keep_config.items():
-            if key == "_metadata":
-                aggressive_keep[key] = value
-            elif isinstance(value, dict):
-                # Only keep top-level keys, move nested
-                aggressive_keep[key] = {
-                    k: v for k, v in value.items() 
-                    if not isinstance(v, (list, dict)) or k in ["path", "dir", "url", "dataset"]
-                }
-                if not aggressive_keep[key]:
-                    del aggressive_keep[key]
-            else:
-                # Only keep scalar config values
-                if key in ["seed", "random_seed", "max_iter", "tolerance", 
-                           "learning_rate", "alpha", "beta", "anomaly_threshold"]:
-                    aggressive_keep[key] = value
-        
-        aggressive_keep["_metadata"] = keep_config["_metadata"]
-        
-        with open(config_path, "w") as f:
-            yaml.dump(aggressive_keep, f, default_flow_style=False, sort_keys=False, allow_unicode=True)
-        
-        reduced_size = os.path.getsize(config_path)
-        print(f"Aggressively reduced config.yaml size: {reduced_size} bytes")
+        print(f"WARNING: Reduced config still exceeds 2KB ({reduced_size} bytes)")
+        print("Additional manual review may be needed")
     
-    # Update state file with moved statistics
-    state_data = load_state_file(state_path)
+    # Atomic rename
+    temp_config_path.rename(CONFIG_PATH)
     
-    # Add derived statistics to state
-    if "derived_statistics" not in state_data:
-        state_data["derived_statistics"] = {}
+    # Compute and log final checksum
+    final_checksum = compute_file_checksum(CONFIG_PATH)
+    print(f"Final config checksum: {final_checksum}")
     
-    state_data["derived_statistics"]["config_reduction"] = {
-        "reduced_at": datetime.now().isoformat(),
-        "original_size_bytes": original_size,
-        "reduced_size_bytes": reduced_size,
-        "moved_keys": list(move_stats.keys()),
-        "moved_count": len(move_stats)
+    return {
+        "original_size": original_size,
+        "reduced_size": reduced_size,
+        "reduction_percent": ((original_size - reduced_size) / original_size) * 100,
+        "parameters_kept": len(parameters),
+        "derived_moved": len(derived),
+        "config_checksum": final_checksum
     }
+
+def main():
+    """Entry point."""
+    print("=" * 60)
+    print("Config Reduction Script (T073)")
+    print("=" * 60)
     
-    # Add the moved statistics
-    state_data["derived_statistics"]["config_derived_values"] = move_stats
+    result = reduce_config()
     
-    # Update metadata
-    state_data["metadata"]["updated_at"] = datetime.now().isoformat()
+    print("\n" + "=" * 60)
+    print("Summary")
+    print("=" * 60)
+    print(f"Original size: {result['original_size']} bytes")
+    print(f"Reduced size: {result['reduced_size']} bytes")
+    print(f"Reduction: {result['reduction_percent']:.1f}%")
+    print(f"Parameters kept: {result['parameters_kept']}")
+    print(f"Derived moved to state: {result['derived_moved']}")
+    print(f"Config checksum: {result['config_checksum']}")
     
-    # Add artifact checksum for reduced config
-    if "artifacts" not in state_data:
-        state_data["artifacts"] = {}
-    
-    state_data["artifacts"]["config.yaml"] = {
-        "path": "code/config.yaml",
-        "checksum_sha256": compute_file_checksum(config_path),
-        "size_bytes": reduced_size,
-        "updated_at": datetime.now().isoformat()
-    }
-    
-    # Save updated state file
-    save_state_file(state_path, state_data)
-    print(f"Updated state file: {state_path}")
-    
-    # Verify final size
-    final_size = os.path.getsize(config_path)
-    if final_size <= 2048:
-        print(f"SUCCESS: config.yaml reduced to {final_size} bytes (under 2KB target)")
-        sys.exit(0)
+    if result['reduced_size'] <= 2048:
+        print("\n✓ SUCCESS: Config is under 2KB")
     else:
-        print(f"PARTIAL SUCCESS: config.yaml reduced to {final_size} bytes (target was 2KB)")
-        sys.exit(0)  # Still complete the task even if slightly over target
+        print("\n⚠ WARNING: Config still exceeds 2KB")
+    
+    return 0 if result['reduced_size'] <= 2048 else 1
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main())

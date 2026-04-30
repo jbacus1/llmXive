@@ -1,56 +1,112 @@
-# Project State File
-# Generated: 2024-01-15T12:00:00Z
-# This file tracks artifact checksums for reproducibility (Constitution Principle III)
-
-project_id: PROJ-024-bayesian-nonparametrics-for-anomaly-detection
-version: "1.0.0"
-last_updated: "2024-01-15T12:00:00Z"
-
-# Dataset checksums (SHA256)
+project_id: PROJ-024-bayesian-nonparametrics-for-anomaly-dete
+last_updated: '2024-01-15T00:00:00'
 datasets:
   electricity:
-    path: data/raw/electricity/LD2011_2014.txt.zip
-    checksum: "pending_download"
-    source_url: "https://archive.ics.uci.edu/ml/machine-learning-databases/00321/LD2011_2014.txt.zip"
-    status: "pending"
+    filepath: data/raw/electricity_raw.csv
+    checksum: pending_download
+    download_date: null
+    url: https://archive.ics.uci.edu/ml/machine-learning-databases/00494/ElectricityLoadDiagrams20112014.csv
   traffic:
-    path: data/raw/traffic/traffic.csv
-    checksum: "pending_download"
-    source_url: "https://archive.ics.uci.edu/ml/machine-learning-databases/00321/traffic.csv"
-    status: "pending"
+    filepath: data/raw/traffic_raw.csv
+    checksum: pending_download
+    download_date: null
+    url: https://archive.ics.uci.edu/ml/machine-learning-databases/00522/PEMS/SF.csv
   synthetic_control:
-    path: data/raw/synthetic_control/synthetic_control_data.mat
-    checksum: "pending_download"
-    source_url: "https://archive.ics.uci.edu/ml/machine-learning-databases/00258/synthetic_control_data.mat"
-    status: "pending"
-
-# Artifact checksums
+    filepath: data/raw/synthetic_control_raw.csv
+    checksum: pending_download
+    download_date: null
+    url: https://archive.ics.uci.edu/ml/machine-learning-databases/00271/SYNTHETIC_CONTROL_DATA.zip
+    labeled_filepath: data/raw/synthetic_control_labeled.csv
+    labeled_checksum: pending_download
 artifacts:
-  research.md:
-    path: specs/001-bayesian-nonparametrics-anomaly-detection/research.md
-    checksum: "pending"
-  data-model.md:
-    path: specs/001-bayesian-nonparametrics-anomaly-detection/data-model.md
-    checksum: "pending"
-  quickstart.md:
-    path: specs/001-bayesian-nonparametrics-anomaly-detection/quickstart.md
-    checksum: "pending"
-  config.yaml:
-    path: code/config.yaml
-    checksum: "pending"
+  research_md:
+    filepath: specs/001-bayesian-nonparametrics-anomaly-detection/research.md
+    checksum: pending
+  data_model_md:
+    filepath: specs/001-bayesian-nonparametrics-anomaly-detection/data-model.md
+    checksum: pending
+  quickstart_md:
+    filepath: specs/001-bayesian-nonparametrics-anomaly-detection/quickstart.md
+    checksum: pending
+  config_yaml:
+    filepath: code/config.yaml
+    checksum: pending
+execution_logs: null
+notes: 'This state file tracks all artifacts per Constitution Principle III.
 
-# Execution history
-execution_log:
-  - task_id: T000
-    status: completed
-    timestamp: "2024-01-15T10:00:00Z"
-  - task_id: T001
-    status: completed
-    timestamp: "2024-01-15T10:15:00Z"
-  - task_id: T002
-    status: completed
-    timestamp: "2024-01-15T10:30:00Z"
-  - task_id: T039
-    status: completed
-    timestamp: "2024-01-15T12:00:00Z"
-    notes: "Added UCI Synthetic Control Chart dataset fetcher"
+  Checksums should be updated after each download/processing operation.
+
+  Use code/scripts/update_state_checksums.py to regenerate checksums.
+
+  '
+derived_statistics:
+  dpgmm:
+    concentration_alpha: 1.0
+    gaussian_wishart:
+      mu_0: 0.0
+      kappa_0: 0.01
+      lambda_0: 2
+      psi_0: 1.0
+    advi:
+      n_iter: 100
+      learning_rate: 0.01
+      elbo_tol: 1e-4
+      random_seed: 42
+    anomaly:
+      scoring_method: negative_log_posterior
+      warmup_period: 50
+  threshold:
+    method: percentile
+    percentile_value: 95
+    mad_multiplier: 3.0
+    min_anomaly_rate: 0.01
+    max_anomaly_rate: 0.1
+    calibration_window: 200
+    adaptive_threshold: true
+    smoothing_factor: 0.1
+  paths:
+    base_dir: ..
+    raw_data: ../data/raw
+    processed_data: ../data/processed
+    results: ../data/results
+    logs: ../logs
+    state: ../state
+  datasets:
+    electricity:
+      url: https://archive.ics.uci.edu/ml/machine-learning-databases/00321/LD2011_2014.txt
+      file: electricity_load.csv
+      has_anomaly_labels: false
+      observation_count: 35040
+    traffic:
+      url: https://archive.ics.uci.edu/ml/machine-learning-databases/00331/Traffic%20Volume%20Data.zip
+      file: traffic_volume.csv
+      has_anomaly_labels: false
+      observation_count: 17544
+    synthetic_control:
+      url: https://archive.ics.uci.edu/ml/machine-learning-databases/00360/synthetic_control.data
+      file: synthetic_control.csv
+      has_anomaly_labels: true
+      observation_count: 600
+  evaluation:
+    baselines:
+    - moving_average_zscore
+    - arima
+    - lstm_autoencoder
+    statistical_tests:
+      use_bonferroni: true
+      alpha: 0.05
+    max_runtime_minutes: 30
+    max_memory_gb: 7
+  performance:
+    max_components: 50
+    prune_threshold: 0.001
+    profile_memory: true
+    batch_size: 1
+  replication:
+    global_seed: 42
+    deterministic_mode: true
+    config_version: 1.0.0
+  last_updated: '2026-04-30T20:43:12.227859'
+  original_config_path: /Users/jmanning/llmXive/projects/PROJ-024-bayesian-nonparametrics-for-anomaly-dete/code/config.yaml
+updated_at: '2026-04-30T20:43:12.228012'
+state_checksum: 0273d341d4ba726d660cda10d1f8ed9dc931ef21f53262e140ecebf5de66f349

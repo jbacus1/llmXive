@@ -1,0 +1,13 @@
+{
+  "success": false,
+  "total_artifacts": 0,
+  "validated_artifacts": 0,
+  "failed_artifacts": 0,
+  "missing_artifacts": [],
+  "checksum_mismatches": [],
+  "validation_errors": [
+    "Could not load quickstart.md at /Users/jmanning/llmXive/projects/PROJ-024-bayesian-nonparametrics-for-anomaly-dete/specs/001-bayesian-nonparametrics-anomaly-detection/quickstart.md"
+  ],
+  "artifacts_validated": [],
+  "report_path": null
+}

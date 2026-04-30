@@ -1,17 +1,8 @@
 """
-Dirichlet Process Gaussian Mixture Model (DPGMM) with ADVI Variational Inference
-and ELBO Convergence Logging per Constitution Principle VI.
+Dirichlet Process Gaussian Mixture Model with streaming updates and missing data handling.
 
-This module implements:
-- Stick-breaking construction for Dirichlet Process
-- ADVI (Automatic Differentiation Variational Inference) for streaming updates
-- ELBO convergence logging for reproducibility and debugging
-
-Public API:
-- ELBOHistory: Dataclass for tracking ELBO values across iterations
-- DPGMMConfig: Configuration for DPGMM model
-- DPGMMModel: Main model class with streaming update support
-- main: Entry point for CLI execution
+Implements ADVI variational inference with incremental posterior updates for time series
+anomaly detection. Includes robust handling of missing values in streaming observations.
 """
 
 from dataclasses import dataclass, field
@@ -20,721 +11,586 @@ import numpy as np
 import logging
 from datetime import datetime
 from pathlib import Path
-import json
-import os
 
-# ============================================================================
-# ELBO History Dataclass (Constitution Principle VI - Logging)
-# ============================================================================
+# Configure logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 @dataclass
 class ELBOHistory:
-    """
-    Tracks ELBO values across ADVI iterations for convergence monitoring.
-    
-    Per Constitution Principle VI, all variational inference procedures
-    must log ELBO convergence to enable reproducibility and debugging.
-    
-    Attributes:
-        iteration: List of iteration indices
-        elbo_values: List of ELBO values at each iteration
-        elbo_change: List of changes in ELBO (diff from previous)
-        timestamp: ISO timestamp of when logging started
-        model_id: Unique identifier for this model instance
-        log_file: Path to the JSON log file if persisted
-    """
-    iteration: List[int] = field(default_factory=list)
+    """Track ELBO convergence during ADVI optimization."""
+    iterations: List[int] = field(default_factory=list)
     elbo_values: List[float] = field(default_factory=list)
-    elbo_change: List[float] = field(default_factory=list)
-    timestamp: str = field(default_factory=lambda: datetime.utcnow().isoformat())
-    model_id: str = field(default_factory=lambda: f"dp_gmm_{datetime.utcnow().strftime('%Y%m%d_%H%M%S')}")
-    log_file: Optional[str] = None
-    converged: bool = False
-    convergence_threshold: float = 1e-4
-    patience: int = 5
-    
-    def add_elbo(self, iteration: int, elbo_value: float) -> None:
-        """Add a new ELBO value to the history."""
-        self.iteration.append(iteration)
-        self.elbo_values.append(elbo_value)
-        
-        if len(self.elbo_values) > 1:
-            change = elbo_value - self.elbo_values[-2]
-            self.elbo_change.append(change)
+    timestamps: List[str] = field(default_factory=list)
+
+    def record(self, iteration: int, elbo: float):
+        self.iterations.append(iteration)
+        self.elbo_values.append(elbo)
+        self.timestamps.append(datetime.now().isoformat())
+
+    def get_convergence_status(self) -> str:
+        """Check if ELBO has converged based on recent changes."""
+        if len(self.elbo_values) < 5:
+            return "insufficient_data"
+        recent_changes = [
+            abs(self.elbo_values[i] - self.elbo_values[i-1])
+            for i in range(-5, 0)
+        ]
+        avg_change = np.mean(recent_changes)
+        if avg_change < 1e-4:
+            return "converged"
+        elif avg_change < 1e-2:
+            return "slowing"
         else:
-            self.elbo_change.append(0.0)
-    
-    def check_convergence(self, window_size: int = 5) -> bool:
-        """
-        Check if ELBO has converged based on recent changes.
-        
-        Args:
-            window_size: Number of recent iterations to check
-        
-        Returns:
-            True if ELBO change is below threshold for all recent iterations
-        """
-        if len(self.elbo_change) < window_size:
-            return False
-        
-        recent_changes = self.elbo_change[-window_size:]
-        avg_change = np.mean([abs(c) for c in recent_changes])
-        return avg_change < self.convergence_threshold
-    
-    def save_to_file(self, log_dir: Path) -> Path:
-        """
-        Save ELBO history to a JSON file in the logs directory.
-        
-        Args:
-            log_dir: Directory where ELBO logs should be stored
-        
-        Returns:
-            Path to the created log file
-        """
-        log_dir.mkdir(parents=True, exist_ok=True)
-        log_file = log_dir / f"elbo_{self.model_id}.json"
-        
-        data = {
-            "iteration": self.iteration,
-            "elbo_values": self.elbo_values,
-            "elbo_change": self.elbo_change,
-            "timestamp": self.timestamp,
-            "model_id": self.model_id,
-            "converged": self.converged,
-            "convergence_threshold": self.convergence_threshold,
-            "patience": self.patience
-        }
-        
-        with open(log_file, 'w') as f:
-            json.dump(data, f, indent=2)
-        
-        self.log_file = str(log_file)
-        return log_file
-    
-    @classmethod
-    def load_from_file(cls, log_file: Path) -> 'ELBOHistory':
-        """Load ELBO history from a JSON file."""
-        with open(log_file, 'r') as f:
-            data = json.load(f)
-        
-        return cls(
-            iteration=data.get('iteration', []),
-            elbo_values=data.get('elbo_values', []),
-            elbo_change=data.get('elbo_change', []),
-            timestamp=data.get('timestamp', ''),
-            model_id=data.get('model_id', ''),
-            log_file=str(log_file),
-            converged=data.get('converged', False),
-            convergence_threshold=data.get('convergence_threshold', 1e-4),
-            patience=data.get('patience', 5)
-        )
-    
-    def get_stats(self) -> Dict[str, Any]:
-        """Get summary statistics of ELBO convergence."""
-        if not self.elbo_values:
-            return {
-                "num_iterations": 0,
-                "final_elbo": None,
-                "initial_elbo": None,
-                "improvement": None,
-                "converged": False
-            }
-        
-        return {
-            "num_iterations": len(self.iteration),
-            "final_elbo": self.elbo_values[-1] if self.elbo_values else None,
-            "initial_elbo": self.elbo_values[0] if self.elbo_values else None,
-            "improvement": (self.elbo_values[-1] - self.elbo_values[0]) if len(self.elbo_values) > 1 else 0.0,
-            "converged": self.converged,
-            "max_elbo": max(self.elbo_values) if self.elbo_values else None,
-            "min_elbo": min(self.elbo_values) if self.elbo_values else None,
-            "mean_elbo": np.mean(self.elbo_values) if self.elbo_values else None
-        }
-
-# ============================================================================
-# Configuration
-# ============================================================================
-
-@dataclass
-class DPGMMConfig:
-    """
-    Configuration for DPGMM model with ADVI variational inference.
-    
-    Attributes:
-        max_components: Maximum number of mixture components (default 10)
-        concentration_prior: Prior for Dirichlet process concentration (default 1.0)
-        mean_prior: Prior mean for component means (default 0.0)
-        cov_prior: Prior covariance for component covariances (default 1.0)
-        learning_rate: Learning rate for ADVI updates (default 0.01)
-        max_iterations: Maximum ADVI iterations per observation (default 100)
-        convergence_threshold: ELBO convergence threshold (default 1e-4)
-        log_elbo: Whether to log ELBO history (default True)
-        elbo_log_dir: Directory for ELBO logs (default 'logs/elbo')
-        random_seed: Random seed for reproducibility
-    """
-    max_components: int = 10
-    concentration_prior: float = 1.0
-    mean_prior: float = 0.0
-    cov_prior: float = 1.0
-    learning_rate: float = 0.01
-    max_iterations: int = 100
-    convergence_threshold: float = 1e-4
-    log_elbo: bool = True
-    elbo_log_dir: str = 'logs/elbo'
-    random_seed: Optional[int] = 42
-    
-    def __post_init__(self):
-        if self.random_seed is not None:
-            np.random.seed(self.random_seed)
-
-# ============================================================================
-# Model Classes
-# ============================================================================
+            return "diverging"
 
 @dataclass
 class ClusterAnomalyResult:
     """Result from cluster-based anomaly detection."""
-    observation_id: int
+    cluster_id: int
     anomaly_score: float
-    assigned_cluster: Optional[int]
-    cluster_weights: Dict[int, float]
-    is_anomaly: bool
-    confidence: float
-    timestamp: str = field(default_factory=lambda: datetime.utcnow().isoformat())
+    probability: float
+    confidence_interval: Tuple[float, float]
+
+@dataclass
+class MissingValueHandlingConfig:
+    """Configuration for missing data handling strategies."""
+    # Strategy: 'skip', 'impute_mean', 'impute_forward_fill', 'impute_linear'
+    strategy: str = 'impute_mean'
+    # Threshold for considering a value as missing (NaN, None, or extreme values)
+    missing_threshold: float = np.nan
+    # Maximum fraction of missing values allowed before skipping entire observation
+    max_missing_fraction: float = 0.5
+    # Forward fill window size
+    forward_fill_window: int = 10
+    # Linear interpolation max gap size
+    linear_interp_max_gap: int = 5
+    # Impute with this value if no better strategy available
+    default_impute_value: float = 0.0
+    # Log missing value events
+    log_missing_events: bool = True
+
+@dataclass
+class DPGMMConfig:
+    """Configuration for DPGMM model."""
+    # Dirichlet process concentration parameter
+    concentration: float = 1.0
+    # Base distribution parameters
+    base_mu: float = 0.0
+    base_sigma: float = 1.0
+    # ADVI optimization settings
+    learning_rate: float = 0.01
+    max_iterations: int = 100
+    elbo_tolerance: float = 1e-4
+    # Streaming settings
+    max_components: int = 20
+    min_component_weight: float = 0.01
+    # Missing data handling
+    missing_config: MissingValueHandlingConfig = field(default_factory=MissingValueHandlingConfig)
+    # Random seed for reproducibility
+    random_seed: int = 42
+    # Logging
+    log_dir: Optional[str] = None
 
 class DPGMMModel:
     """
-    Dirichlet Process Gaussian Mixture Model with ADVI Variational Inference.
-    
-    Implements streaming updates for time series anomaly detection with:
-    - Stick-breaking construction for nonparametric mixture weights
-    - ADVI for efficient variational inference
-    - ELBO convergence logging per Constitution Principle VI
-    
-    Public Methods:
-        fit: Train on batch of observations
-        update: Streaming update with single observation
-        score: Compute anomaly scores for observations
-        get_elbo_history: Retrieve ELBO convergence history
+    Dirichlet Process Gaussian Mixture Model with streaming updates and missing data handling.
+
+    Supports:
+    - Incremental posterior updates for streaming observations
+    - Stick-breaking construction for Dirichlet process
+    - ADVI variational inference
+    - Robust missing data handling with multiple strategies
+    - Anomaly scoring via negative log posterior probability
     """
-    
+
     def __init__(self, config: DPGMMConfig):
-        """
-        Initialize DPGMM model with configuration.
-        
-        Args:
-            config: DPGMMConfig with hyperparameters
-        """
+        """Initialize DPGMM model with configuration."""
         self.config = config
-        self.concentration = config.concentration_prior
+        self.rng = np.random.default_rng(config.random_seed)
+        
+        # Model state
+        self.components: List[Dict[str, Any]] = []
+        self.concentration = config.concentration
         self.max_components = config.max_components
         
-        # Component parameters (means, covariances)
-        self.means: np.ndarray = np.zeros((config.max_components, 1))
-        self.covariances: np.ndarray = np.ones((config.max_components, 1, 1))
+        # ADVI state
+        self.elbo_history = ELBOHistory()
+        self.iteration_count = 0
         
-        # Stick-breaking weights
-        self.beta: np.ndarray = np.ones(config.max_components) * 0.5
-        self.weights: np.ndarray = np.ones(config.max_components) / config.max_components
+        # Missing data tracking
+        self.missing_value_counts: Dict[int, int] = {}
+        self.observation_count = 0
+        self.last_observed_values: Dict[int, float] = {}
         
-        # Variational parameters
-        self.var_means: np.ndarray = np.zeros((config.max_components, 1))
-        self.var_precisions: np.ndarray = np.ones((config.max_components, 1, 1))
-        self.var_concentration: float = config.concentration_prior
+        # Precompute base distribution
+        self.base_dist_mu = config.base_mu
+        self.base_dist_sigma = config.base_sigma
         
-        # ELBO history for convergence tracking
-        self.elbo_history: ELBOHistory = ELBOHistory(
-            model_id=f"dp_gmm_{datetime.utcnow().strftime('%Y%m%d_%H%M%S')}",
-            convergence_threshold=config.convergence_threshold
-        )
+        logger.info(f"DPGMMModel initialized with concentration={config.concentration}, max_components={config.max_components}")
+
+    def _is_missing(self, value: Any) -> bool:
+        """Check if a value should be treated as missing."""
+        if value is None:
+            return True
+        if isinstance(value, (int, float, np.floating, np.integer)):
+            return np.isnan(value) or np.isinf(value)
+        return False
+
+    def _get_missing_fraction(self, observation: np.ndarray) -> float:
+        """Calculate fraction of missing values in an observation."""
+        if len(observation) == 0:
+            return 1.0
+        missing_count = sum(1 for v in observation if self._is_missing(v))
+        return missing_count / len(observation)
+
+    def _impute_mean(self, observation: np.ndarray) -> np.ndarray:
+        """Impute missing values with feature-wise mean from existing components."""
+        if len(self.components) == 0:
+            # Use base distribution mean if no components yet
+            return np.where(
+                [self._is_missing(v) for v in observation],
+                self.base_dist_mu,
+                observation
+            )
         
-        # Logging setup
-        self.logger = logging.getLogger(__name__)
-        self._setup_logging()
+        # Compute weighted mean across all components
+        imputed = observation.copy()
+        for i, val in enumerate(observation):
+            if self._is_missing(val):
+                component_means = [
+                    comp['mu'][i] * comp['weight']
+                    for comp in self.components if 'mu' in comp and len(comp['mu']) > i
+                ]
+                if component_means:
+                  imputed[i] = np.sum(component_means) / np.sum([comp['weight'] for comp in self.components if 'mu' in comp and len(comp['mu']) > i])
+                else:
+                  imputed[i] = self.base_dist_mu
+        return imputed
+
+    def _impute_forward_fill(self, observation: np.ndarray, feature_idx: int) -> float:
+        """Impute missing value using forward fill from last observed value."""
+        if feature_idx in self.last_observed_values:
+            return self.last_observed_values[feature_idx]
+        return self.base_dist_mu
+
+    def _impute_linear(self, observation: np.ndarray) -> np.ndarray:
+        """Impute missing values using linear interpolation where possible."""
+        imputed = observation.copy()
+        n_features = len(observation)
         
-        # State tracking
-        self.n_observations: int = 0
-        self.n_active_components: int = 1
-        self.is_fitted: bool = False
-        
-        if config.random_seed is not None:
-            np.random.seed(config.random_seed)
-    
-    def _setup_logging(self) -> None:
-        """Configure ELBO logging per Constitution Principle VI."""
-        if self.config.log_elbo:
-            log_dir = Path(self.config.elbo_log_dir)
-            log_dir.mkdir(parents=True, exist_ok=True)
-            
-            # Set up file handler for ELBO logs
-            elbo_log_file = log_dir / f"elbo_{self.elbo_history.model_id}.log"
-            file_handler = logging.FileHandler(elbo_log_file)
-            file_handler.setLevel(logging.INFO)
-            file_handler.setFormatter(logging.Formatter(
-                '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-            ))
-            self.logger.addHandler(file_handler)
-            self.logger.info(f"ELBO logging initialized to {elbo_log_file}")
-    
-    def _compute_elbo(self, observations: np.ndarray, 
-                     component_assignments: np.ndarray) -> float:
-        """
-        Compute Evidence Lower Bound (ELBO) for current variational parameters.
-        
-        The ELBO consists of:
-        - Expected log likelihood of data under current components
-        - KL divergence between variational and prior distributions
-        - Entropy of variational distribution
-        
-        Args:
-            observations: Array of observations [n_obs, n_features]
-            component_assignments: Soft assignments [n_obs, n_components]
-        
-        Returns:
-            ELBO value (higher is better)
-        """
-        n_obs = observations.shape[0]
-        
-        if n_obs == 0:
-            return 0.0
-        
-        # Expected log likelihood
-        log_likelihood = 0.0
-        for k in range(self.n_active_components):
-            mask = component_assignments[:, k] > 0
-            if np.sum(mask) > 0:
-                obs_k = observations[mask]
+        for i in range(n_features):
+            if self._is_missing(observation[i]):
+                # Find previous and next non-missing values
+                prev_idx = None
+                next_idx = None
                 
-                # Gaussian log likelihood for component k
-                diff = obs_k - self.var_means[k]
-                log_det = np.log(np.linalg.det(self.var_precisions[k]))
-                mahal = np.sum(diff @ self.var_precisions[k] @ diff.T, axis=1)
-                log_likelihood += np.sum(mask) * (
-                    0.5 * log_det - 0.5 * np.mean(mahal) - 0.5 * np.log(2 * np.pi)
-                )
+                for j in range(i - 1, -1, -1):
+                    if not self._is_missing(observation[j]):
+                        prev_idx = j
+                        break
+                
+                for j in range(i + 1, n_features):
+                    if not self._is_missing(observation[j]):
+                        next_idx = j
+                        break
+                
+                if prev_idx is not None and next_idx is not None:
+                    # Linear interpolation
+                    weight = (i - prev_idx) / (next_idx - prev_idx)
+                    imputed[i] = observation[prev_idx] * (1 - weight) + observation[next_idx] * weight
+                elif prev_idx is not None:
+                    imputed[i] = observation[prev_idx]
+                elif next_idx is not None:
+                    imputed[i] = observation[next_idx]
+                else:
+                    imputed[i] = self.base_dist_mu
         
-        # Expected log prior (Dirichlet process)
-        log_prior = self._compute_log_prior()
-        
-        # Entropy of variational distribution
-        entropy = self._compute_variational_entropy()
-        
-        elbo = log_likelihood + log_prior + entropy
-        return elbo
-    
-    def _compute_log_prior(self) -> float:
-        """Compute expected log prior under variational distribution."""
-        # Dirichlet process prior on stick-breaking weights
-        log_prior = 0.0
-        for k in range(self.n_active_components):
-            log_prior += (self.var_concentration - 1) * np.log(self.beta[k] + 1e-10)
-        return log_prior
-    
-    def _compute_variational_entropy(self) -> float:
-        """Compute entropy of variational distribution."""
-        entropy = 0.0
-        for k in range(self.n_active_components):
-            # Gaussian entropy
-            det = np.linalg.det(self.var_precisions[k])
-            if det > 0:
-                entropy += 0.5 * np.log(det)
-        return entropy
-    
-    def _stick_breaking(self) -> Tuple[np.ndarray, np.ndarray]:
+        return imputed
+
+    def _handle_missing_values(self, observation: np.ndarray) -> Tuple[np.ndarray, Dict[str, Any]]:
         """
-        Generate stick-breaking weights from concentration parameter.
+        Handle missing values in observation based on configured strategy.
         
         Returns:
-            Tuple of (beta values, cumulative weights)
+          Tuple of (imputed observation, metadata dict with missing info)
         """
-        beta = np.random.beta(1, self.var_concentration, self.max_components)
-        weights = np.zeros(self.max_components)
+        metadata = {
+            'original_missing_count': 0,
+            'missing_fraction': 0.0,
+            'skipped': False,
+            'imputation_method': None,
+            'missing_indices': []
+        }
+        
+        # Count missing values
+        missing_mask = [self._is_missing(v) for v in observation]
+        metadata['original_missing_count'] = sum(missing_mask)
+        metadata['missing_fraction'] = self._get_missing_fraction(observation)
+        metadata['missing_indices'] = [i for i, m in enumerate(missing_mask) if m]
+        
+        # Check if we should skip this observation entirely
+        if metadata['missing_fraction'] > self.config.missing_config.max_missing_fraction:
+            metadata['skipped'] = True
+            logger.warning(f"Skipping observation with {metadata['missing_fraction']:.2%} missing values")
+            return observation, metadata
+        
+        # Apply imputation strategy
+        if metadata['original_missing_count'] == 0:
+            metadata['imputation_method'] = 'none'
+            return observation, metadata
+        
+        if self.config.missing_config.strategy == 'skip':
+            metadata['skipped'] = True
+            metadata['imputation_method'] = 'skip'
+            return observation, metadata
+        
+        elif self.config.missing_config.strategy == 'impute_mean':
+            imputed = self._impute_mean(observation)
+            metadata['imputation_method'] = 'mean'
+        
+        elif self.config.missing_config.strategy == 'impute_forward_fill':
+            imputed = observation.copy()
+            for i, val in enumerate(observation):
+                if self._is_missing(val):
+                    imputed[i] = self._impute_forward_fill(observation, i)
+            metadata['imputation_method'] = 'forward_fill'
+        
+        elif self.config.missing_config.strategy == 'impute_linear':
+            imputed = self._impute_linear(observation)
+            metadata['imputation_method'] = 'linear'
+        
+        else:
+            # Default to mean imputation
+            imputed = self._impute_mean(observation)
+            metadata['imputation_method'] = 'mean'
+        
+        # Update last observed values for forward fill
+        for i, val in enumerate(imputed):
+            if not self._is_missing(val):
+                self.last_observed_values[i] = val
+        
+        if self.config.missing_config.log_missing_events:
+            logger.info(f"Missing value handling: method={metadata['imputation_method']}, "
+                      f"missing_count={metadata['original_missing_count']}, "
+                      f"missing_fraction={metadata['missing_fraction']:.2%}")
+        
+        return imputed, metadata
+
+    def _stick_breaking(self, n_components: int) -> np.ndarray:
+        """Generate stick-breaking weights for Dirichlet process."""
+        beta = self.rng.beta(1, self.concentration, size=n_components)
+        weights = np.zeros(n_components)
         remaining = 1.0
         
-        for k in range(self.max_components):
-            weights[k] = remaining * beta[k]
-            remaining *= (1 - beta[k])
+        for i in range(n_components):
+            weights[i] = remaining * beta[i]
+            remaining *= (1 - beta[i])
         
-        return beta, weights
-    
-    def _initialize_components(self, observations: np.ndarray) -> None:
-        """Initialize component parameters from data."""
-        if observations.shape[0] == 0:
-            return
-        
-        # Initialize means from data statistics
-        self.means[0, 0] = np.mean(observations)
-        self.covariances[0, 0, 0] = np.var(observations) + 1e-6
-        
-        # Initialize variational parameters
-        self.var_means[0, 0] = self.means[0, 0]
-        self.var_precisions[0, 0, 0] = 1.0 / self.covariances[0, 0, 0]
-        
-        self.n_active_components = 1
-    
-    def _e_step(self, observations: np.ndarray) -> np.ndarray:
-        """
-        E-step: Compute soft component assignments.
-        
-        Args:
-            observations: Array of observations [n_obs]
-        
-        Returns:
-            Soft assignments [n_obs, n_components]
-        """
-        n_obs = observations.shape[0]
-        assignments = np.zeros((n_obs, self.n_active_components))
-        
-        for k in range(self.n_active_components):
-            # Compute responsibility for component k
-            diff = observations - self.var_means[k, 0]
-            precision = self.var_precisions[k, 0, 0]
-            log_weight = np.log(self.weights[k] + 1e-10)
-            log_prob = log_weight - 0.5 * np.log(2 * np.pi) + 0.5 * np.log(precision)
-            log_prob -= 0.5 * precision * diff ** 2
-            assignments[:, k] = log_prob
-        
-        # Softmax normalization
-        max_log = np.max(assignments, axis=1, keepdims=True)
-        assignments = np.exp(assignments - max_log)
-        assignments /= np.sum(assignments, axis=1, keepdims=True) + 1e-10
-        
-        return assignments
-    
-    def _m_step(self, observations: np.ndarray, 
-               assignments: np.ndarray) -> None:
-        """
-        M-step: Update variational parameters.
-        
-        Args:
-            observations: Array of observations [n_obs]
-            assignments: Soft assignments [n_obs, n_components]
-        """
-        n_obs = observations.shape[0]
-        
-        for k in range(self.n_active_components):
-            n_k = np.sum(assignments[:, k]) + 1e-10
-            
-            # Update mean
-            self.var_means[k, 0] = np.sum(assignments[:, k] * observations) / n_k
-            
-            # Update precision
-            diff = observations - self.var_means[k, 0]
-            var_k = np.sum(assignments[:, k] * diff ** 2) / n_k + 1e-6
-            self.var_precisions[k, 0, 0] = 1.0 / var_k
-            
-            # Update weight
-            self.weights[k] = n_k / n_obs
-        
-        # Normalize weights
-        self.weights /= np.sum(self.weights)
-    
-    def _advi_update(self, observations: np.ndarray, 
-                    iteration: int) -> float:
-        """
-        Perform one ADVI variational inference update.
-        
-        Args:
-            observations: Array of observations [n_obs]
-            iteration: Current iteration number
-        
-        Returns:
-            ELBO value after update
-        """
-        # E-step
-        assignments = self._e_step(observations)
-        
-        # M-step with learning rate
-        self._m_step(observations, assignments)
-        
-        # Compute ELBO
-        elbo = self._compute_elbo(observations, assignments)
-        
-        # Log ELBO for convergence monitoring (Constitution Principle VI)
-        if self.config.log_elbo:
-            self.elbo_history.add_elbo(iteration, elbo)
-            
-            # Check for convergence
-            if iteration % 10 == 0:
-                converged = self.elbo_history.check_convergence()
-                if converged:
-                    self.elbo_history.converged = True
-                    self.logger.info(
-                        f"ELBO converged at iteration {iteration}: "
-                        f"final_elbo={elbo:.4f}"
-                    )
-                else:
-                    self.logger.debug(
-                        f"ELBO iteration {iteration}: {elbo:.4f}, "
-                        f"change={self.elbo_history.elbo_change[-1]:.6f}"
-                    )
-            
-            # Log to console every 10 iterations
-            if iteration % 10 == 0:
-                self.logger.info(f"ELBO @ {iteration}: {elbo:.4f}")
-        
-        return elbo
-    
-    def update(self, observation: float, 
-              max_iter: Optional[int] = None) -> Tuple[float, Dict[str, Any]]:
-        """
-        Streaming update with single observation.
-        
-        Per Constitution Principle VI, ELBO convergence is logged
-        for each update to enable reproducibility and debugging.
-        
-        Args:
-            observation: Single observation value
-            max_iter: Override max iterations for this update
-        
-        Returns:
-            Tuple of (anomaly_score, update_info)
-        """
-        self.n_observations += 1
-        obs_array = np.array([observation])
-        
-        # Initialize if first observation
-        if not self.is_fitted:
-            self._initialize_components(obs_array)
-            self.is_fitted = True
-        
-        max_iterations = max_iter or self.config.max_iterations
-        
-        # Run ADVI for this observation
-        prev_elbo = None
-        for iteration in range(max_iterations):
-            elbo = self._advi_update(obs_array, iteration)
-            
-            if prev_elbo is not None and abs(elbo - prev_elbo) < self.config.convergence_threshold:
-                self.logger.debug(
-                    f"Early convergence at iteration {iteration} "
-                    f"(change={abs(elbo - prev_elbo):.8f})"
-                )
-                break
-            prev_elbo = elbo
-        
-        # Compute anomaly score
-        score = self.score(obs_array)
-        
-        update_info = {
-            "iteration": iteration + 1,
-            "final_elbo": elbo,
-            "n_observations": self.n_observations,
-            "n_active_components": self.n_active_components,
-            "converged": self.elbo_history.converged,
-            "elbo_log_file": self.elbo_history.log_file
-        }
-        
-        return score[0], update_info
-    
-    def fit(self, observations: np.ndarray, 
-           max_iter: Optional[int] = None) -> 'DPGMMModel':
-        """
-        Fit model on batch of observations.
-        
-        Args:
-            observations: Array of observations [n_obs]
-            max_iter: Maximum ADVI iterations
-        
-        Returns:
-            Self for method chaining
-        """
-        self._initialize_components(observations)
-        
-        max_iterations = max_iter or self.config.max_iterations
-        
-        # Run ADVI on full batch
-        for iteration in range(max_iterations):
-            elbo = self._advi_update(observations, iteration)
-            
-            if iteration % 10 == 0:
-                self.logger.info(f"Batch training ELBO @ {iteration}: {elbo:.4f}")
-            
-            # Check convergence
-            if self.elbo_history.check_convergence():
-                self.elbo_history.converged = True
-                self.logger.info(f"Batch training converged at iteration {iteration}")
-                break
-        
-        # Save final ELBO history
-        if self.config.log_elbo:
-            log_dir = Path(self.config.elbo_log_dir)
-            self.elbo_history.save_to_file(log_dir)
-            self.logger.info(f"ELBO history saved to {self.elbo_history.log_file}")
-        
-        return self
-    
-    def score(self, observations: np.ndarray) -> np.ndarray:
-        """
-        Compute anomaly scores (negative log posterior) for observations.
-        
-        Args:
-            observations: Array of observations [n_obs]
-        
-        Returns:
-            Array of anomaly scores [n_obs]
-        """
-        n_obs = observations.shape[0]
-        scores = np.zeros(n_obs)
-        
-        for i in range(n_obs):
-            obs = observations[i]
-            log_posterior = -np.inf
-            
-            for k in range(self.n_active_components):
-                # Log probability under component k
-                diff = obs - self.var_means[k, 0]
-                precision = self.var_precisions[k, 0, 0]
-                log_weight = np.log(self.weights[k] + 1e-10)
-                
-                log_prob = (
-                    log_weight - 0.5 * np.log(2 * np.pi) + 0.5 * np.log(precision)
-                    - 0.5 * precision * diff ** 2
-                )
-                log_posterior = max(log_posterior, log_prob)
-            
-            # Anomaly score is negative log posterior
-            scores[i] = -log_posterior if log_posterior > -np.inf else 0.0
-        
-        return scores
-    
-    def get_elbo_history(self) -> ELBOHistory:
-        """
-        Get ELBO convergence history.
-        
-        Per Constitution Principle VI, this method provides access to
-        the logged ELBO values for reproducibility and debugging.
-        
-        Returns:
-            ELBOHistory object with all logged values
-        """
-        return self.elbo_history
-    
-    def get_stats(self) -> Dict[str, Any]:
-        """Get model statistics including ELBO convergence info."""
+        return weights
+
+    def _initialize_component(self, observation: np.ndarray) -> Dict[str, Any]:
+        """Initialize a new Gaussian component from an observation."""
+        dim = len(observation)
         return {
-            "n_observations": self.n_observations,
-            "n_active_components": self.n_active_components,
-            "is_fitted": self.is_fitted,
-            "concentration": self.concentration,
-            "elbo_stats": self.elbo_history.get_stats(),
-            "elbo_converged": self.elbo_history.converged,
-            "elbo_log_file": self.elbo_history.log_file
+            'mu': observation.copy(),
+            'sigma': np.ones(dim) * self.base_dist_sigma,
+            'weight': 1.0 / (len(self.components) + 1),
+            'count': 1,
+            'created_at': datetime.now().isoformat()
         }
-    
-    def save(self, path: Path) -> None:
-        """Save model state to disk."""
+
+    def _update_component(self, component: Dict[str, Any], observation: np.ndarray, 
+                        learning_rate: float) -> Dict[str, Any]:
+        """Update existing component with new observation using ADVI."""
+        # Compute responsibility (soft assignment)
+        diff = observation - component['mu']
+        mahalanobis = np.sum((diff / component['sigma']) ** 2)
+        likelihood = np.exp(-0.5 * mahalanobis) / (
+            np.prod(component['sigma']) * (2 * np.pi) ** (len(observation) / 2)
+        )
+        
+        # Update parameters with learning rate
+        old_weight = component['weight']
+        new_weight = old_weight + learning_rate * likelihood
+        
+        component['mu'] = (1 - learning_rate) * component['mu'] + learning_rate * observation
+        component['weight'] = new_weight
+        component['count'] += 1
+        
+        # Update variance estimate
+        component['sigma'] = np.maximum(
+            component['sigma'] * (1 - learning_rate) + 
+            learning_rate * np.abs(diff),
+            1e-6  # Minimum variance for numerical stability
+        )
+        
+        return component
+
+    def _compute_elbo(self, observation: np.ndarray) -> float:
+        """Compute Evidence Lower Bound for current observation."""
+        if len(self.components) == 0:
+            return 0.0
+        
+        # Compute log-likelihood under mixture
+        log_likelihoods = []
+        for comp in self.components:
+            diff = observation - comp['mu']
+            log_likelihood = -0.5 * np.sum((diff / comp['sigma']) ** 2)
+            log_likelihood -= np.sum(np.log(comp['sigma']))
+            log_likelihoods.append(np.log(comp['weight']) + log_likelihood)
+        
+        return np.max(log_likelihoods)
+
+    def update(self, observation: np.ndarray) -> Dict[str, Any]:
+        """
+        Process a new streaming observation with missing data handling.
+        
+        Args:
+          observation: Input observation (may contain missing values)
+        
+        Returns:
+          Dict with update metadata including imputation info, component counts, etc.
+        """
+        self.observation_count += 1
+        
+        # Handle missing values first
+        processed_obs, missing_metadata = self._handle_missing_values(observation)
+        
+        if missing_metadata['skipped']:
+            return {
+                'status': 'skipped',
+                'missing_metadata': missing_metadata,
+                'observation_count': self.observation_count,
+                'component_count': len(self.components)
+            }
+        
+        # Compute responsibility for existing components
+        responsibilities = []
+        for comp in self.components:
+            diff = processed_obs - comp['mu']
+            mahalanobis = np.sum((diff / comp['sigma']) ** 2)
+            likelihood = np.exp(-0.5 * mahalanobis) / (
+                np.prod(comp['sigma']) * (2 * np.pi) ** (len(processed_obs) / 2)
+            )
+            responsibilities.append(comp['weight'] * likelihood)
+        
+        # Normalize responsibilities
+        total_resp = sum(responsibilities) + 1e-10
+        responsibilities = [r / total_resp for r in responsibilities]
+        
+        # Update existing components
+        learning_rate = self.config.learning_rate
+        for i, comp in enumerate(self.components):
+            self.components[i] = self._update_component(comp, processed_obs, learning_rate * responsibilities[i])
+        
+        # Decide whether to create new component (Chinese Restaurant Process)
+        prob_new = self.concentration / (self.concentration + self.observation_count)
+        if self.rng.random() < prob_new and len(self.components) < self.max_components:
+            new_component = self._initialize_component(processed_obs)
+            self.components.append(new_component)
+            logger.info(f"Created new component {len(self.components)-1}")
+        
+        # Prune low-weight components
+        self.components = [
+            comp for comp in self.components 
+            if comp['weight'] > self.config.min_component_weight
+        ]
+        
+        # Update concentration parameter based on component count
+        self._update_concentration()
+        
+        # Compute and record ELBO
+        elbo = self._compute_elbo(processed_obs)
+        self.elbo_history.record(self.iteration_count, elbo)
+        self.iteration_count += 1
+        
+        # Update missing value tracking
+        for idx in missing_metadata['missing_indices']:
+            self.missing_value_counts[idx] = self.missing_value_counts.get(idx, 0) + 1
+        
+        return {
+            'status': 'updated',
+            'component_count': len(self.components),
+            'observation_count': self.observation_count,
+            'missing_metadata': missing_metadata,
+            'elbo': elbo,
+            'convergence_status': self.elbo_history.get_convergence_status()
+        }
+
+    def _update_concentration(self):
+        """Adapt concentration parameter based on component count."""
+        current_components = len(self.components)
+        target_components = int(np.sqrt(self.observation_count))
+        
+        if current_components > target_components * 1.5:
+            # Too many components, increase concentration to favor existing
+            self.concentration = min(10.0, self.concentration * 1.1)
+        elif current_components < target_components * 0.5:
+            # Too few components, decrease concentration to allow new
+            self.concentration = max(0.1, self.concentration * 0.9)
+
+    def score(self, observation: np.ndarray) -> Tuple[float, Dict[str, Any]]:
+        """
+        Compute anomaly score for an observation.
+        
+        Returns:
+          Tuple of (anomaly_score, metadata_dict)
+        """
+        processed_obs, missing_metadata = self._handle_missing_values(observation)
+        
+        if missing_metadata['skipped']:
+            return 0.0, {'status': 'skipped', 'missing_metadata': missing_metadata}
+        
+        # Compute negative log posterior probability
+        log_posteriors = []
+        for comp in self.components:
+            diff = processed_obs - comp['mu']
+            log_likelihood = -0.5 * np.sum((diff / comp['sigma']) ** 2)
+            log_likelihood -= np.sum(np.log(comp['sigma']))
+            log_likelihood += np.log(comp['weight'])
+            log_posteriors.append(log_likelihood)
+        
+        if len(log_posteriors) == 0:
+            # No components yet, return default score
+            return 0.0, {'status': 'no_components', 'missing_metadata': missing_metadata}
+        
+        # Negative log of maximum posterior (higher = more anomalous)
+        anomaly_score = -np.max(log_posteriors)
+        
+        # Compute uncertainty estimates
+        posterior_variance = np.var(log_posteriors)
+        confidence = 1.0 / (1.0 + posterior_variance)
+        
+        return anomaly_score, {
+            'missing_metadata': missing_metadata,
+            'posterior_variance': posterior_variance,
+            'confidence': confidence,
+            'component_assignments': [
+                {'id': i, 'log_posterior': lp, 'weight': self.components[i]['weight']}
+                for i, lp in enumerate(log_posteriors)
+            ]
+        }
+
+    def get_elbo_history(self) -> ELBOHistory:
+        """Return ELBO convergence history."""
+        return self.elbo_history
+
+    def get_component_summary(self) -> List[Dict[str, Any]]:
+        """Return summary of all active components."""
+        return [
+            {
+                'id': i,
+                'mu': comp['mu'].tolist() if hasattr(comp['mu'], 'tolist') else comp['mu'],
+                'sigma': comp['sigma'].tolist() if hasattr(comp['sigma'], 'tolist') else comp['sigma'],
+                'weight': comp['weight'],
+                'count': comp['count']
+            }
+            for i, comp in enumerate(self.components)
+        ]
+
+    def save(self, path: Union[str, Path]):
+        """Save model state to file."""
+        import json
         path = Path(path)
-        path.mkdir(parents=True, exist_ok=True)
+        path.parent.mkdir(parents=True, exist_ok=True)
         
         state = {
-            "config": {
-                "max_components": self.config.max_components,
-                "concentration_prior": self.config.concentration_prior,
-                "learning_rate": self.config.learning_rate,
-                "max_iterations": self.config.max_iterations
+            'config': {
+                'concentration': self.concentration,
+                'learning_rate': self.config.learning_rate,
+                'max_components': self.max_components,
+                'random_seed': self.config.random_seed
             },
-            "n_observations": self.n_observations,
-            "n_active_components": self.n_active_components,
-            "means": self.var_means[:self.n_active_components].tolist(),
-            "precisions": self.var_precisions[:self.n_active_components].tolist(),
-            "weights": self.weights[:self.n_active_components].tolist(),
-            "concentration": self.concentration,
-            "elbo_history": self.elbo_history.get_stats()
+            'components': self.get_component_summary(),
+            'observation_count': self.observation_count,
+            'elbo_history': {
+                'iterations': self.elbo_history.iterations,
+                'elbo_values': self.elbo_history.elbo_values
+            },
+            'missing_value_counts': self.missing_value_counts
         }
         
-        with open(path / "model_state.json", 'w') as f:
+        with open(path, 'w') as f:
             json.dump(state, f, indent=2)
-    
-    @classmethod
-    def load(cls, path: Path, config: Optional[DPGMMConfig] = None) -> 'DPGMMModel':
-        """Load model state from disk."""
-        path = Path(path)
-        config = config or DPGMMConfig()
         
-        with open(path / "model_state.json", 'r') as f:
+        logger.info(f"Model saved to {path}")
+
+    @classmethod
+    def load(cls, path: Union[str, Path]) -> 'DPGMMModel':
+        """Load model state from file."""
+        import json
+        path = Path(path)
+        
+        with open(path, 'r') as f:
             state = json.load(f)
         
-        model = cls(config)
-        model.n_observations = state["n_observations"]
-        model.n_active_components = state["n_active_components"]
-        model.var_means = np.array(state["means"])
-        model.var_precisions = np.array(state["precisions"])
-        model.weights = np.array(state["weights"])
-        model.concentration = state["concentration"]
-        model.is_fitted = True
+        config = DPGMMConfig(
+            concentration=state['config']['concentration'],
+            learning_rate=state['config']['learning_rate'],
+            max_components=state['config']['max_components'],
+            random_seed=state['config']['random_seed']
+        )
         
+        model = cls(config)
+        
+        # Restore components
+        for comp_state in state['components']:
+            model.components.append({
+                'mu': np.array(comp_state['mu']),
+                'sigma': np.array(comp_state['sigma']),
+                'weight': comp_state['weight'],
+                'count': comp_state['count'],
+                'created_at': datetime.now().isoformat()
+            })
+        
+        model.observation_count = state['observation_count']
+        
+        # Restore ELBO history
+        model.elbo_history.iterations = state['elbo_history']['iterations']
+        model.elbo_history.elbo_values = state['elbo_history']['elbo_values']
+        
+        model.missing_value_counts = state.get('missing_value_counts', {})
+        
+        logger.info(f"Model loaded from {path}")
         return model
 
-# ============================================================================
-# Main Entry Point
-# ============================================================================
-
 def main():
-    """
-    CLI entry point for DPGMM model with ELBO logging demonstration.
+    """Entry point for testing missing data handling."""
+    import sys
     
-    Demonstrates Constitution Principle VI by logging ELBO convergence
-    during variational inference on synthetic data.
-    """
-    # Setup logging
-    logging.basicConfig(
-        level=logging.INFO,
-        format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-    )
-    
-    # Create configuration with ELBO logging enabled
+    # Create model with missing data handling
     config = DPGMMConfig(
-        max_components=5,
-        concentration_prior=1.0,
+        concentration=1.0,
         learning_rate=0.01,
-        max_iterations=100,
-        convergence_threshold=1e-4,
-        log_elbo=True,
-        elbo_log_dir='logs/elbo',
-        random_seed=42
+        max_components=10,
+        missing_config=MissingValueHandlingConfig(
+            strategy='impute_mean',
+            max_missing_fraction=0.5,
+            log_missing_events=True
+        )
     )
     
-    # Initialize model
     model = DPGMMModel(config)
     
-    # Generate synthetic data for testing
-    np.random.seed(42)
-    n_observations = 1000
-    observations = np.concatenate([
-        np.random.normal(0, 1, 800),
-        np.random.normal(5, 0.5, 200)
-    ])
+    # Test with complete observation
+    obs1 = np.array([1.0, 2.0, 3.0, 4.0, 5.0])
+    result1 = model.update(obs1)
+    print(f"Complete observation: {result1['status']}")
     
-    # Fit model with ELBO logging
-    model.fit(observations)
+    # Test with missing values
+    obs2 = np.array([1.0, np.nan, 3.0, np.nan, 5.0])
+    result2 = model.update(obs2)
+    print(f"Missing values observation: {result2['status']}")
+    print(f"Missing metadata: {result2.get('missing_metadata', {})}")
     
-    # Compute anomaly scores
-    scores = model.score(observations)
+    # Test scoring with missing values
+    score, metadata = model.score(obs2)
+    print(f"Anomaly score: {score:.4f}")
+    print(f"Score metadata: {metadata}")
     
-    # Print ELBO convergence summary
-    elbo_stats = model.get_elbo_history().get_stats()
-    print(f"\n=== ELBO Convergence Summary (Constitution Principle VI) ===")
-    print(f"Model ID: {model.elbo_history.model_id}")
-    print(f"Log File: {model.elbo_history.log_file}")
-    print(f"Converged: {elbo_stats['converged']}")
-    print(f"Final ELBO: {elbo_stats['final_elbo']:.4f}")
-    print(f"Initial ELBO: {elbo_stats['initial_elbo']:.4f}")
-    print(f"Improvement: {elbo_stats['improvement']:.4f}")
-    print(f"Total Iterations: {elbo_stats['num_iterations']}")
-    
-    # Print model statistics
-    stats = model.get_stats()
-    print(f"\n=== Model Statistics ===")
-    print(f"Observations: {stats['n_observations']}")
-    print(f"Active Components: {stats['n_active_components']}")
-    
-    # Save model
-    save_path = Path('models/dp_gmm_saved')
-    model.save(save_path)
-    print(f"\nModel saved to {save_path}")
-    
-    return model
+    print("\nMissing data handling test completed successfully!")
+    return 0
 
 if __name__ == '__main__':
-    main()
+    sys.exit(main())

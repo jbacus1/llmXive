@@ -1,476 +1,252 @@
-name: CI Pipeline - Anomaly Detection
+name: CI Pipeline
 
 on:
   push:
-    branches:
-      - main
-      - develop
-      - '001-bayesian-nonparametrics-anomaly-detection'
+    branches: [main, develop]
   pull_request:
-    branches:
-      - main
-      - develop
-  workflow_dispatch:
-    inputs:
-      retry_failed:
-        description: 'Retry failed jobs'
-        required: false
-        default: 'false'
-
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
-
-defaults:
-  run:
-    shell: bash
+    branches: [main, develop]
 
 jobs:
-  setup-environment:
-    name: Setup Python Environment
+  lint-and-type-check:
+    name: Lint & Type Check
     runs-on: ubuntu-latest
-    timeout-minutes: 5
-    outputs:
-      python-version: ${{ steps.setup-python.outputs.python-version }}
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 2
+      - uses: actions/checkout@v4
 
-      - name: Setup Python 3.11
-        id: setup-python
+      - name: Set up Python 3.11
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
 
-      - name: Cache pip dependencies
-        uses: actions/cache@v4
-        with:
-          path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
-          restore-keys: |
-            ${{ runner.os }}-pip-
-
       - name: Install dependencies
         run: |
-          cd projects/PROJ-024-bayesian-nonparametrics-for-anomaly-dete/code
-          pip install --upgrade pip
-          pip install -r requirements.txt
-          pip install pytest pytest-cov pytest-timeout
+          python -m pip install --upgrade pip
+          pip install -r code/requirements.txt
+          pip install mypy ruff black pytest
 
-      - name: Verify installation
+      - name: Run Ruff linter
         run: |
-          python --version
-          pip list
+          ruff check code/
+
+      - name: Run Black formatter check
+        run: |
+          black --check code/
+
+      - name: Run mypy type checking
+        run: |
+          cd code
+          mypy --config-file=mypy.ini
+        continue-on-error: false
+
+      - name: Report type check results
+        if: failure()
+        run: |
+          echo "## Type Check Failed" >> $GITHUB_STEP_SUMMARY
+          echo "Please fix type errors before merging." >> $GITHUB_STEP_SUMMARY
 
   contract-tests:
     name: Contract Tests
     runs-on: ubuntu-latest
-    timeout-minutes: 30
-    needs: setup-environment
-    continue-on-error: false
+    needs: lint-and-type-check
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Setup Python 3.11
+      - name: Set up Python 3.11
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
 
       - name: Install dependencies
         run: |
-          cd projects/PROJ-024-bayesian-nonparametrics-for-anomaly-dete/code
-          pip install -r requirements.txt
-          pip install pytest pytest-cov pytest-timeout
+          python -m pip install --upgrade pip
+          pip install -r code/requirements.txt
+          pip install pytest pytest-json-report
 
       - name: Run contract tests
-        id: contract-tests
         run: |
-          cd projects/PROJ-024-bayesian-nonparametrics-for-anomaly-dete
-          echo "Starting contract tests at $(date -u +%Y-%m-%dT%H:%M:%SZ)"
-          echo "TIMEOUT_WARNING_THRESHOLD=1800" >> $GITHUB_ENV
-          python -m pytest tests/contract/ -v --tb=short \
-            --timeout=1800 \
-            --junit-xml=reports/contract-tests.xml \
-            --cov=code/src \
-            --cov-report=xml:reports/coverage.xml \
-            --cov-report=html:reports/coverage_html \
-            2>&1 | tee reports/contract-tests.log
-          echo "Contract tests completed at $(date -u +%Y-%m-%dT%H:%M:%SZ)"
-        continue-on-error: true
-        env:
-          PYTHONPATH: ${{ github.workspace }}/projects/PROJ-024-bayesian-nonparametrics-for-anomaly-dete/code/src
+          cd code
+          pytest tests/contract/ --json-report --json-report-file=../reports/contract-report.json
 
-      - name: Check test results
-        id: check-results
-        run: |
-          cd projects/PROJ-024-bayesian-nonparametrics-for-anomaly-dete
-          if [ -f reports/contract-tests.xml ]; then
-            FAILED=$(grep -c 'failure="1"' reports/contract-tests.xml || echo "0")
-            ERROR=$(grep -c 'error="1"' reports/contract-tests.xml || echo "0")
-            echo "failed_count=$FAILED" >> $GITHUB_OUTPUT
-            echo "error_count=$ERROR" >> $GITHUB_OUTPUT
-            echo "Total failures/errors: $((FAILED + ERROR))"
-          else
-            echo "failed_count=0" >> $GITHUB_OUTPUT
-            echo "error_count=0" >> $GITHUB_OUTPUT
-          fi
-
-      - name: Upload test artifacts
+      - name: Upload contract test report
         uses: actions/upload-artifact@v4
-        if: always()
         with:
-          name: contract-test-reports
-          path: |
-            projects/PROJ-024-bayesian-nonparametrics-for-anomaly-dete/reports/
-          retention-days: 7
-
-      - name: Handle timeout or failure
-        if: failure() || steps.check-results.outputs.failed_count != '0' || steps.check-results.outputs.error_count != '0'
-        run: |
-          echo "⚠️ TIMEOUT WARNING: Contract tests exceeded expected runtime or failed"
-          echo "FAILED_COUNT=${{ steps.check-results.outputs.failed_count }}"
-          echo "ERROR_COUNT=${{ steps.check-results.outputs.error_count }}"
-          echo "TIMESTAMP=$(date -u +%Y-%m-%dT%H:%M:%SZ)" >> reports/timeout_log.txt
-          echo "JOB_NAME=contract-tests" >> reports/timeout_log.txt
-          echo "RUN_ID=${{ github.run_id }}" >> reports/timeout_log.txt
-          echo "TRIGGERING_ACTOR=${{ github.triggering_actor }}" >> reports/timeout_log.txt
+          name: contract-test-report
+          path: reports/contract-report.json
 
   integration-tests:
     name: Integration Tests
     runs-on: ubuntu-latest
-    timeout-minutes: 30
-    needs: setup-environment
-    continue-on-error: false
+    needs: contract-tests
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Setup Python 3.11
+      - name: Set up Python 3.11
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
 
       - name: Install dependencies
         run: |
-          cd projects/PROJ-024-bayesian-nonparametrics-for-anomaly-dete/code
-          pip install -r requirements.txt
-          pip install pytest pytest-cov pytest-timeout
+          python -m pip install --upgrade pip
+          pip install -r code/requirements.txt
+          pip install pytest
 
       - name: Run integration tests
-        id: integration-tests
+        timeout-minutes: 25
         run: |
-          cd projects/PROJ-024-bayesian-nonparametrics-for-anomaly-dete
-          echo "Starting integration tests at $(date -u +%Y-%m-%dT%H:%M:%SZ)"
-          echo "TIMEOUT_WARNING_THRESHOLD=1800" >> $GITHUB_ENV
-          python -m pytest tests/integration/ -v --tb=short \
-            --timeout=1800 \
-            --junit-xml=reports/integration-tests.xml \
-            --cov=code/src \
-            --cov-report=xml:reports/coverage.xml \
-            --cov-report=html:reports/coverage_html \
-            2>&1 | tee reports/integration-tests.log
-          echo "Integration tests completed at $(date -u +%Y-%m-%dT%H:%M:%SZ)"
-        continue-on-error: true
-        env:
-          PYTHONPATH: ${{ github.workspace }}/projects/PROJ-024-bayesian-nonparametrics-for-anomaly-dete/code/src
+          cd code
+          pytest tests/integration/ --tb=short
 
-      - name: Check test results
-        id: check-results
+      - name: Report integration test results
+        if: failure()
         run: |
-          cd projects/PROJ-024-bayesian-nonparametrics-for-anomaly-dete
-          if [ -f reports/integration-tests.xml ]; then
-            FAILED=$(grep -c 'failure="1"' reports/integration-tests.xml || echo "0")
-            ERROR=$(grep -c 'error="1"' reports/integration-tests.xml || echo "0")
-            echo "failed_count=$FAILED" >> $GITHUB_OUTPUT
-            echo "error_count=$ERROR" >> $GITHUB_OUTPUT
-            echo "Total failures/errors: $((FAILED + ERROR))"
-          else
-            echo "failed_count=0" >> $GITHUB_OUTPUT
-            echo "error_count=0" >> $GITHUB_OUTPUT
-          fi
-
-      - name: Upload test artifacts
-        uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: integration-test-reports
-          path: |
-            projects/PROJ-024-bayesian-nonparametrics-for-anomaly-dete/reports/
-          retention-days: 7
-
-      - name: Handle timeout or failure
-        if: failure() || steps.check-results.outputs.failed_count != '0' || steps.check-results.outputs.error_count != '0'
-        run: |
-          echo "⚠️ TIMEOUT WARNING: Integration tests exceeded expected runtime or failed"
-          echo "FAILED_COUNT=${{ steps.check-results.outputs.failed_count }}"
-          echo "ERROR_COUNT=${{ steps.check-results.outputs.error_count }}"
-          echo "TIMESTAMP=$(date -u +%Y-%m-%dT%H:%M:%SZ)" >> reports/timeout_log.txt
-          echo "JOB_NAME=integration-tests" >> reports/timeout_log.txt
-          echo "RUN_ID=${{ github.run_id }}" >> reports/timeout_log.txt
-          echo "TRIGGERING_ACTOR=${{ github.triggering_actor }}" >> reports/timeout_log.txt
+          echo "## Integration Tests Failed" >> $GITHUB_STEP_SUMMARY
+          echo "Please review integration test failures." >> $GITHUB_STEP_SUMMARY
 
   unit-tests:
     name: Unit Tests
     runs-on: ubuntu-latest
-    timeout-minutes: 30
-    needs: setup-environment
-    continue-on-error: false
+    needs: contract-tests
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Setup Python 3.11
+      - name: Set up Python 3.11
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
 
       - name: Install dependencies
         run: |
-          cd projects/PROJ-024-bayesian-nonparametrics-for-anomaly-dete/code
-          pip install -r requirements.txt
-          pip install pytest pytest-cov pytest-timeout
+          python -m pip install --upgrade pip
+          pip install -r code/requirements.txt
+          pip install pytest
 
       - name: Run unit tests
-        id: unit-tests
+        timeout-minutes: 20
         run: |
-          cd projects/PROJ-024-bayesian-nonparametrics-for-anomaly-dete
-          echo "Starting unit tests at $(date -u +%Y-%m-%dT%H:%M:%SZ)"
-          echo "TIMEOUT_WARNING_THRESHOLD=1800" >> $GITHUB_ENV
-          python -m pytest tests/unit/ -v --tb=short \
-            --timeout=1800 \
-            --junit-xml=reports/unit-tests.xml \
-            --cov=code/src \
-            --cov-report=xml:reports/coverage.xml \
-            --cov-report=html:reports/coverage_html \
-            2>&1 | tee reports/unit-tests.log
-          echo "Unit tests completed at $(date -u +%Y-%m-%dT%H:%M:%SZ)"
-        continue-on-error: true
-        env:
-          PYTHONPATH: ${{ github.workspace }}/projects/PROJ-024-bayesian-nonparametrics-for-anomaly-dete/code/src
+          cd code
+          pytest tests/unit/ --tb=short
 
-      - name: Check test results
-        id: check-results
-        run: |
-          cd projects/PROJ-024-bayesian-nonparametrics-for-anomaly-dete
-          if [ -f reports/unit-tests.xml ]; then
-            FAILED=$(grep -c 'failure="1"' reports/unit-tests.xml || echo "0")
-            ERROR=$(grep -c 'error="1"' reports/unit-tests.xml || echo "0")
-            echo "failed_count=$FAILED" >> $GITHUB_OUTPUT
-            echo "error_count=$ERROR" >> $GITHUB_OUTPUT
-            echo "Total failures/errors: $((FAILED + ERROR))"
-          else
-            echo "failed_count=0" >> $GITHUB_OUTPUT
-            echo "error_count=0" >> $GITHUB_OUTPUT
-          fi
-
-      - name: Upload test artifacts
-        uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: unit-test-reports
-          path: |
-            projects/PROJ-024-bayesian-nonparametrics-for-anomaly-dete/reports/
-          retention-days: 7
-
-      - name: Handle timeout or failure
-        if: failure() || steps.check-results.outputs.failed_count != '0' || steps.check-results.outputs.error_count != '0'
-        run: |
-          echo "⚠️ TIMEOUT WARNING: Unit tests exceeded expected runtime or failed"
-          echo "FAILED_COUNT=${{ steps.check-results.outputs.failed_count }}"
-          echo "ERROR_COUNT=${{ steps.check-results.outputs.error_count }}"
-          echo "TIMESTAMP=$(date -u +%Y-%m-%dT%H:%M:%SZ)" >> reports/timeout_log.txt
-          echo "JOB_NAME=unit-tests" >> reports/timeout_log.txt
-          echo "RUN_ID=${{ github.run_id }}" >> reports/timeout_log.txt
-          echo "TRIGGERING_ACTOR=${{ github.triggering_actor }}" >> reports/timeout_log.txt
-
-  runtime-validation:
-    name: Runtime Validation (<30 min constraint)
+  memory-profile:
+    name: Memory Profile Test
     runs-on: ubuntu-latest
-    timeout-minutes: 30
-    needs: [contract-tests, integration-tests, unit-tests]
-    if: always()
+    needs: unit-tests
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Download test reports
-        uses: actions/download-artifact@v4
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
         with:
-          path: artifacts
+          python-version: '3.11'
 
-      - name: Measure runtime and validate
-        id: runtime-check
+      - name: Install dependencies
         run: |
-          START_TIME=$(date +%s)
-          echo "Runtime validation started at $(date -u +%Y-%m-%dT%H:%M:%SZ)"
-          
-          # Check for timeout warnings in logs
-          TIMEOUT_WARNINGS=0
-          if [ -f artifacts/contract-test-reports/contract-tests.log ]; then
-            WARNINGS=$(grep -c "TIMEOUT WARNING" artifacts/contract-test-reports/contract-tests.log || echo "0")
-            TIMEOUT_WARNINGS=$((TIMEOUT_WARNINGS + WARNINGS))
-          fi
-          if [ -f artifacts/integration-test-reports/integration-tests.log ]; then
-            WARNINGS=$(grep -c "TIMEOUT WARNING" artifacts/integration-test-reports/integration-tests.log || echo "0")
-            TIMEOUT_WARNINGS=$((TIMEOUT_WARNINGS + WARNINGS))
-          fi
-          if [ -f artifacts/unit-test-reports/unit-tests.log ]; then
-            WARNINGS=$(grep -c "TIMEOUT WARNING" artifacts/unit-test-reports/unit-tests.log || echo "0")
-            TIMEOUT_WARNINGS=$((TIMEOUT_WARNINGS + WARNINGS))
-          fi
-          
-          echo "timeout_warnings=$TIMEOUT_WARNINGS" >> $GITHUB_OUTPUT
-          
-          # Calculate total pipeline runtime
-          END_TIME=$(date +%s)
-          TOTAL_SECONDS=$((END_TIME - START_TIME))
-          TOTAL_MINUTES=$((TOTAL_SECONDS / 60))
-          echo "total_pipeline_runtime_seconds=$TOTAL_SECONDS" >> $GITHUB_OUTPUT
-          echo "total_pipeline_runtime_minutes=$TOTAL_MINUTES" >> $GITHUB_OUTPUT
-          
-          # Validate against 30-minute constraint
-          if [ $TOTAL_MINUTES -gt 30 ]; then
-            echo "⚠️ RUNTIME EXCEEDED: Total pipeline runtime ${TOTAL_MINUTES} minutes exceeds 30-minute constraint"
-            echo "runtime_exceeded=true" >> $GITHUB_OUTPUT
-          else
-            echo "✅ RUNTIME OK: Total pipeline runtime ${TOTAL_MINUTES} minutes within 30-minute constraint"
-            echo "runtime_exceeded=false" >> $GITHUB_OUTPUT
-          fi
+          python -m pip install --upgrade pip
+          pip install -r code/requirements.txt
+          pip install pytest memory-profiler
 
-      - name: Log runtime metrics
+      - name: Run memory profile test
+        timeout-minutes: 15
         run: |
-          echo "=== RUNTIME VALIDATION REPORT ===" | tee reports/runtime_validation.txt
-          echo "Pipeline Run ID: ${{ github.run_id }}" | tee -a reports/runtime_validation.txt
-          echo "Triggering Actor: ${{ github.triggering_actor }}" | tee -a reports/runtime_validation.txt
-          echo "Total Runtime: ${{ steps.runtime-check.outputs.total_pipeline_runtime_minutes }} minutes" | tee -a reports/runtime_validation.txt
-          echo "Timeout Warnings: ${{ steps.runtime-check.outputs.timeout_warnings }}" | tee -a reports/runtime_validation.txt
-          echo "Runtime Exceeded: ${{ steps.runtime-check.outputs.runtime_exceeded }}" | tee -a reports/runtime_validation.txt
-          echo "Validation Completed: $(date -u +%Y-%m-%dT%H:%M:%SZ)" | tee -a reports/runtime_validation.txt
+          cd code
+          pytest tests/unit/test_memory_profile.py -v
 
-      - name: Upload runtime validation report
-        uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: runtime-validation-report
-          path: |
-            projects/PROJ-024-bayesian-nonparametrics-for-anomaly-dete/reports/
-
-  retry-handler:
-    name: Retry Handler
+  baseline-comparison:
+    name: Baseline Comparison
     runs-on: ubuntu-latest
-    timeout-minutes: 10
-    needs: [contract-tests, integration-tests, unit-tests, runtime-validation]
-    if: failure() && github.event_name != 'pull_request'
+    needs: memory-profile
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Download timeout logs
-        uses: actions/download-artifact@v4
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
         with:
-          name: contract-test-reports
-          path: artifacts
+          python-version: '3.11'
 
-      - name: Check for retry conditions
-        id: retry-check
+      - name: Install dependencies
         run: |
-          RETRY_NEEDED=false
-          RETRY_REASON=""
-          
-          # Check for timeout warnings
-          if [ -f artifacts/timeout_log.txt ]; then
-            echo "Found timeout log file"
-            RETRY_NEEDED=true
-            RETRY_REASON="Timeout warning detected in previous run"
-          fi
-          
-          # Check for retry_failed input
-          if [ "${{ github.event.inputs.retry_failed }}" == "true" ]; then
-            RETRY_NEEDED=true
-            RETRY_REASON="Manual retry requested via workflow_dispatch"
-          fi
-          
-          echo "retry_needed=$RETRY_NEEDED" >> $GITHUB_OUTPUT
-          echo "retry_reason=$RETRY_REASON" >> $GITHUB_OUTPUT
+          python -m pip install --upgrade pip
+          pip install -r code/requirements.txt
+          pip install pytest
 
-      - name: Trigger retry workflow
-        if: steps.retry-check.outputs.retry_needed == 'true'
+      - name: Run baseline comparison test
+        timeout-minutes: 30
         run: |
-          echo "🔄 RETRY LOGIC TRIGGERED"
-          echo "Reason: ${{ steps.retry-check.outputs.retry_reason }}"
-          echo "Run ID: ${{ github.run_id }}"
-          
-          # Create retry marker file
-          echo "RETRY_ATTEMPT=1" > retry_marker.txt
-          echo "ORIGINAL_RUN_ID=${{ github.run_id }}" >> retry_marker.txt
-          echo "RETRY_TRIGGERED_AT=$(date -u +%Y-%m-%dT%H:%M:%SZ)" >> retry_marker.txt
-          echo "RETRY_REASON=${{ steps.retry-check.outputs.retry_reason }}" >> retry_marker.txt
+          cd code
+          pytest tests/integration/test_baseline_comparison.py -v
 
-      - name: Upload retry marker
-        if: steps.retry-check.outputs.retry_needed == 'true'
-        uses: actions/upload-artifact@v4
+      - name: Report baseline comparison results
+        if: failure()
+        run: |
+          echo "## Baseline Comparison Failed" >> $GITHUB_STEP_SUMMARY
+          echo "Please review baseline comparison failures." >> $GITHUB_STEP_SUMMARY
+
+  threshold-calculation:
+    name: Threshold Calibration
+    runs-on: ubuntu-latest
+    needs: memory-profile
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
         with:
-          name: retry-marker
-          path: retry_marker.txt
-          retention-days: 1
+          python-version: '3.11'
 
-      - name: Notify about retry
-        if: steps.retry-check.outputs.retry_needed == 'true'
+      - name: Install dependencies
         run: |
-          echo "=========================================="
-          echo "RETRY LOGIC ACTIVATED"
-          echo "=========================================="
-          echo "Original Run ID: ${{ github.run_id }}"
-          echo "Retry Reason: ${{ steps.retry-check.outputs.retry_reason }}"
-          echo "Please check timeout logs for detailed failure information"
-          echo "=========================================="
+          python -m pip install --upgrade pip
+          pip install -r code/requirements.txt
+          pip install pytest
+
+      - name: Run threshold calibration test
+        timeout-minutes: 15
+        run: |
+          cd code
+          pytest tests/integration/test_threshold_calibration.py -v
+
+  edge-case-tests:
+    name: Edge Case Tests
+    runs-on: ubuntu-latest
+    needs: threshold-calculation
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r code/requirements.txt
+          pip install pytest
+
+      - name: Run edge case tests
+        timeout-minutes: 15
+        run: |
+          cd code
+          pytest tests/unit/test_edge_cases.py -v
 
   summary:
-    name: Pipeline Summary
+    name: CI Summary
     runs-on: ubuntu-latest
-    timeout-minutes: 5
-    needs: [contract-tests, integration-tests, unit-tests, runtime-validation, retry-handler]
+    needs: [lint-and-type-check, contract-tests, integration-tests, unit-tests, memory-profile, baseline-comparison, threshold-calculation, edge-case-tests]
     if: always()
     steps:
-      - name: Download all reports
-        uses: actions/download-artifact@v4
-        with:
-          path: artifacts
-
-      - name: Generate summary
+      - name: Check job statuses
         run: |
-          echo "=========================================="
-          echo "CI PIPELINE SUMMARY"
-          echo "=========================================="
-          echo "Run ID: ${{ github.run_id }}"
-          echo "Branch: ${{ github.ref }}"
-          echo "Trigger: ${{ github.event_name }}"
-          echo "Status: ${{ job.status }}"
-          echo ""
-          echo "Job Results:"
-          echo "  - Setup: ${{ needs.setup-environment.result }}"
-          echo "  - Contract Tests: ${{ needs.contract-tests.result }}"
-          echo "  - Integration Tests: ${{ needs.integration-tests.result }}"
-          echo "  - Unit Tests: ${{ needs.unit-tests.result }}"
-          echo "  - Runtime Validation: ${{ needs.runtime-validation.result }}"
-          echo "  - Retry Handler: ${{ needs.retry-handler.result }}"
-          echo ""
-          echo "=========================================="
-
-      - name: Upload final summary
-        uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: pipeline-summary
-          path: |
-            artifacts/
-          retention-days: 7
-
-# Timeout warning configuration
-env:
-  TIMEOUT_WARNING_THRESHOLD: 1800
-  MAX_PIPELINE_RUNTIME_MINUTES: 30
-  RETRY_MAX_ATTEMPTS: 3
+          echo "## CI Pipeline Status" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Job | Status |" >> $GITHUB_STEP_SUMMARY
+          echo "|-----|--------|" >> $GITHUB_STEP_SUMMARY
+          echo "| Lint & Type Check | ${{ needs.lint-and-type-check.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Contract Tests | ${{ needs.contract-tests.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Integration Tests | ${{ needs.integration-tests.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Unit Tests | ${{ needs.unit-tests.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Memory Profile | ${{ needs.memory-profile.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Baseline Comparison | ${{ needs.baseline-comparison.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Threshold Calibration | ${{ needs.threshold-calculation.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Edge Case Tests | ${{ needs.edge-case-tests.result }} |" >> $GITHUB_STEP_SUMMARY
+        continue-on-error: true

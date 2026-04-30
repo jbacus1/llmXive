@@ -1,8 +1,7 @@
 """
-Moving Average with Z-Score Baseline for Time Series Anomaly Detection.
+Moving Average with Z-Score Baseline for Anomaly Detection.
 
-This module implements a simple yet effective baseline that uses
-rolling window statistics to compute z-scores for anomaly detection.
+Implements simple moving average baseline with z-score anomaly scoring.
 """
 import numpy as np
 from dataclasses import dataclass, field
@@ -12,284 +11,246 @@ from pathlib import Path
 import sys
 import logging
 
-# Configure logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 
 @dataclass
 class MovingAverageConfig:
-    """Configuration for Moving Average baseline model."""
-    window_size: int = 20
-    z_threshold: float = 3.0
-    min_observations: int = 10
-    random_seed: Optional[int] = None
-    smoothing_factor: float = 0.1  # For exponential moving average fallback
+    """Configuration for moving average baseline model."""
+    window_size: int = 10
+    z_score_threshold: float = 2.0
+    min_samples: int = 5
+    min_variance: float = 1e-6
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
+        """Validate configuration after initialization."""
         if self.window_size < 1:
-            raise ValueError("window_size must be >= 1")
-        if self.z_threshold < 0:
-            raise ValueError("z_threshold must be >= 0")
-        if self.min_observations < 1:
-            raise ValueError("min_observations must be >= 1")
+            raise ValueError("window_size must be at least 1")
+        if self.z_score_threshold <= 0:
+            raise ValueError("z_score_threshold must be positive")
+        if self.min_samples < 1:
+            raise ValueError("min_samples must be at least 1")
+        if self.min_variance <= 0:
+            raise ValueError("min_variance must be positive")
 
 
 @dataclass
 class MovingAveragePrediction:
     """Prediction result from moving average model."""
-    timestamp: datetime
-    value: float
+    timestamp: str
+    observed: float
     moving_average: float
-    std_dev: float
+    standard_deviation: float
     z_score: float
     is_anomaly: bool
-    confidence: float
-    window_size_used: int
-    n_observations: int
+
+    def to_dict(self) -> Dict[str, Any]:
+        """Convert prediction to dictionary."""
+        return {
+            "timestamp": self.timestamp,
+            "observed": self.observed,
+            "moving_average": self.moving_average,
+            "standard_deviation": self.standard_deviation,
+            "z_score": self.z_score,
+            "is_anomaly": self.is_anomaly
+        }
 
 
 @dataclass
 class MovingAverageState:
-    """State for streaming updates."""
-    window: List[float] = field(default_factory=list)
-    n_observations: int = 0
+    """Internal state for streaming moving average computation."""
+    values: List[float] = field(default_factory=list)
     sum_values: float = 0.0
     sum_sq_values: float = 0.0
-    timestamps: List[datetime] = field(default_factory=list)
+    n_observations: int = 0
 
-    def add_observation(self, value: float, timestamp: Optional[datetime] = None) -> None:
-        """Add a new observation to the sliding window."""
-        if timestamp is None:
-            timestamp = datetime.now()
-
-        self.timestamps.append(timestamp)
-        self.n_observations += 1
+    def update(self, value: float) -> None:
+        """Update state with new observation."""
+        self.values.append(value)
         self.sum_values += value
-        self.sum_sq_values += value * value
-
-        self.window.append(value)
+        self.sum_sq_values += value ** 2
+        self.n_observations += 1
 
         # Maintain window size
-        if len(self.window) > self._max_window:
-            old_value = self.window.pop(0)
+        if len(self.values) > self.window_size:
+            old_value = self.values.pop(0)
             self.sum_values -= old_value
-            self.sum_sq_values -= old_value * old_value
+            self.sum_sq_values -= old_value ** 2
 
-    def _max_window(self) -> int:
-        """Maximum window size (property for internal use)."""
-        return 1000  # Cap window to prevent memory issues
+    @property
+    def window_size(self) -> int:
+        """Default window size."""
+        return 10
 
     def get_mean(self) -> float:
-        """Get current window mean."""
-        if len(self.window) == 0:
+        """Get current moving average."""
+        if len(self.values) == 0:
             return 0.0
-        return self.sum_values / len(self.window)
+        return self.sum_values / len(self.values)
 
     def get_std(self) -> float:
-        """Get current window standard deviation."""
-        if len(self.window) < 2:
-            return 1.0  # Default std when insufficient data
-        n = len(self.window)
-        mean = self.sum_values / n
-        variance = (self.sum_sq_values / n) - (mean * mean)
-        # Numerical stability
-        variance = max(0.0, variance)
-        return np.sqrt(variance) if variance > 0 else 1.0
+        """Get current standard deviation."""
+        n = len(self.values)
+        if n < 2:
+            return 1.0
+        mean = self.get_mean()
+        variance = (self.sum_sq_values / n) - (mean ** 2)
+        return max(np.sqrt(max(variance, 0.0)), 1e-6)
 
 
 class MovingAverageBaseline:
     """
-    Moving Average with Z-Score anomaly detection baseline.
+    Moving average with z-score anomaly detection baseline.
 
-    This baseline computes a rolling mean and standard deviation,
-    then flags observations as anomalies when their z-score exceeds
-    a configurable threshold.
+    Uses rolling window statistics to compute anomaly scores.
     """
 
-    def __init__(self, config: Optional[MovingAverageConfig] = None):
-        """Initialize the baseline with configuration."""
+    def __init__(self, config: Optional[MovingAverageConfig] = None) -> None:
+        """Initialize moving average baseline with configuration."""
         self.config = config or MovingAverageConfig()
-        self.state = MovingAverageState()
-        self._max_window = self.config.window_size
+        self._state = MovingAverageState()
         self._predictions: List[MovingAveragePrediction] = []
 
-        # Set random seed if provided
-        if self.config.random_seed is not None:
-            np.random.seed(self.config.random_seed)
+    def _get_window_size(self) -> int:
+        """Get window size from state or config."""
+        return self.config.window_size
 
-        logger.info(f"Initialized MovingAverageBaseline with window_size={self.config.window_size}, z_threshold={self.config.z_threshold}")
-
-    def update(self, value: float, timestamp: Optional[datetime] = None) -> MovingAveragePrediction:
+    def process(self, observation: float,
+               timestamp: Optional[str] = None) -> MovingAveragePrediction:
         """
-        Update model with a new observation and return prediction.
+Process a single observation and compute anomaly score.
 
-        Args:
-            value: The new observation value
-            timestamp: Optional timestamp for the observation
+Args:
+    observation: Single time series value
+    timestamp: Optional timestamp for the observation
 
-        Returns:
-            MovingAveragePrediction with anomaly score
-        """
-        # Add observation to state
-        self.state.add_observation(value, timestamp)
+Returns:
+    MovingAveragePrediction object with anomaly assessment
+"""
+        ts = timestamp or datetime.now().isoformat()
 
-        # Compute statistics
-        mean = self.state.get_mean()
-        std = self.state.get_std()
+        # Get current statistics before updating
+        if len(self._state.values) < self.config.min_samples:
+            # Not enough samples yet, just update state
+            self._state.update(observation)
+            return MovingAveragePrediction(
+                timestamp=ts,
+                observed=observation,
+                moving_average=observation,
+                standard_deviation=0.0,
+                z_score=0.0,
+                is_anomaly=False
+            )
 
-        # Compute z-score (handle edge case where std is 0)
-        if std < 1e-10:
+        moving_avg = self._state.get_mean()
+        std_dev = self._state.get_std()
+
+        # Compute z-score
+        variance = std_dev ** 2
+        if variance < self.config.min_variance:
             z_score = 0.0
         else:
-            z_score = (value - mean) / std
+            z_score = abs(observation - moving_avg) / std_dev
 
-        # Determine anomaly
-        is_anomaly = abs(z_score) > self.config.z_threshold
+        is_anomaly = z_score > self.config.z_score_threshold
 
-        # Compute confidence (higher z-score = higher confidence)
-        confidence = min(1.0, abs(z_score) / (self.config.z_threshold * 2))
-
-        # Create prediction
         prediction = MovingAveragePrediction(
-            timestamp=timestamp or datetime.now(),
-            value=value,
-            moving_average=mean,
-            std_dev=std,
+            timestamp=ts,
+            observed=observation,
+            moving_average=moving_avg,
+            standard_deviation=std_dev,
             z_score=z_score,
-            is_anomaly=is_anomaly,
-            confidence=confidence,
-            window_size_used=min(len(self.state.window), self.config.window_size),
-            n_observations=self.state.n_observations
+            is_anomaly=is_anomaly
         )
 
         self._predictions.append(prediction)
+        self._state.update(observation)
+
         return prediction
 
-    def process_batch(self, values: List[float], timestamps: Optional[List[datetime]] = None) -> List[MovingAveragePrediction]:
+    def process_batch(self, observations: np.ndarray,
+                    timestamps: Optional[List[str]] = None) -> List[MovingAveragePrediction]:
         """
-        Process a batch of observations.
+Process a batch of observations.
 
-        Args:
-            values: List of observation values
-            timestamps: Optional list of timestamps
+Args:
+    observations: Array of time series values
+    timestamps: Optional list of timestamps
 
-        Returns:
-            List of predictions
-        """
+Returns:
+    List of MovingAveragePrediction objects
+"""
         if timestamps is None:
-            timestamps = [datetime.now()] * len(values)
+            timestamps = [datetime.now().isoformat()] * len(observations)
 
         predictions = []
-        for i, value in enumerate(values):
-            ts = timestamps[i] if i < len(timestamps) else None
-            pred = self.update(value, ts)
+        for i, obs in enumerate(observations):
+            pred = self.process(float(obs), timestamps[i])
             predictions.append(pred)
+
         return predictions
 
-    def get_statistics(self) -> Dict[str, Any]:
-        """Get model statistics for diagnostics."""
-        return {
-            "n_observations": self.state.n_observations,
-            "current_mean": self.state.get_mean(),
-            "current_std": self.state.get_std(),
-            "window_size": len(self.state.window),
-            "anomaly_count": sum(1 for p in self._predictions if p.is_anomaly),
-            "anomaly_rate": sum(1 for p in self._predictions if p.is_anomaly) / max(1, len(self._predictions))
-        }
+    def get_predictions(self) -> List[MovingAveragePrediction]:
+        """Return all stored predictions."""
+        return self._predictions.copy()
 
     def reset(self) -> None:
-        """Reset model state."""
-        self.state = MovingAverageState()
+        """Reset model state for fresh processing."""
+        self._state = MovingAverageState()
         self._predictions = []
-        logger.info("MovingAverageBaseline state reset")
 
 
 def create_baseline(config: Optional[MovingAverageConfig] = None) -> MovingAverageBaseline:
     """
-    Factory function to create a MovingAverageBaseline instance.
+Factory function to create moving average baseline.
 
-    Args:
-        config: Optional configuration (uses defaults if None)
+Args:
+    config: Optional configuration
 
-    Returns:
-        Configured MovingAverageBaseline instance
-    """
+Returns:
+    Configured MovingAverageBaseline instance
+"""
     return MovingAverageBaseline(config)
 
 
-def main():
-    """
-    Main entry point for testing the moving average baseline.
+def main() -> None:
+    """Main entry point for moving average baseline testing."""
+    logger.info("Moving Average Baseline Test")
 
-    This function runs a self-test with synthetic data to verify
-    the baseline works correctly without errors.
-    """
-    logger.info("=== Moving Average Baseline Self-Test ===")
-
-    # Create baseline with test configuration
+    # Create configuration
     config = MovingAverageConfig(
         window_size=10,
-        z_threshold=2.5,
-        min_observations=5,
-        random_seed=42
+        z_score_threshold=2.5
     )
-    baseline = create_baseline(config)
 
-    # Generate synthetic test data with known anomalies
+    # Create and run model
+    model = create_baseline(config)
+
+    # Generate synthetic time series with anomalies
     np.random.seed(42)
-    n_observations = 100
+    time_series = np.sin(np.linspace(0, 10, 100)) + np.random.randn(100) * 0.3
 
-    # Normal data
-    normal_values = np.random.normal(loc=100, scale=5, size=n_observations - 10)
-
-    # Inject anomalies at known positions
-    anomaly_positions = [50, 51, 52, 75, 76]
-    anomaly_values = np.array([150, 155, 160, 140, 145])  # Values that should be flagged
-
-    values = normal_values.tolist()
-    for pos, val in zip(anomaly_positions, anomaly_values):
-        values[pos] = val
+    # Inject some anomalies
+    time_series[30] += 3.0
+    time_series[60] += 4.0
+    time_series[85] += 3.5
 
     # Process batch
-    logger.info(f"Processing {len(values)} observations...")
-    predictions = baseline.process_batch(values)
+    predictions = model.process_batch(time_series)
 
-    # Verify results
-    anomaly_count = sum(1 for p in predictions if p.is_anomaly)
-    logger.info(f"Detected {anomaly_count} anomalies out of {len(predictions)} observations")
+    # Report results
+    n_anomalies = sum(1 for p in predictions if p.is_anomaly)
+    logger.info(f"Total predictions: {len(predictions)}")
+    logger.info(f"Anomalies detected: {n_anomalies}")
 
-    # Check that anomalies were detected at expected positions
-    detected_anomalies = [i for i, p in enumerate(predictions) if p.is_anomaly]
-    logger.info(f"Anomaly positions detected: {detected_anomalies}")
+    # Print detected anomalies
+    for i, pred in enumerate(predictions):
+        if pred.is_anomaly:
+            logger.info(f"Anomaly at index {i}: z_score={pred.z_score:.2f}")
 
-    # Verify we detected most of the injected anomalies
-    injected_detected = sum(1 for pos in anomaly_positions if pos in detected_anomalies)
-    logger.info(f"Injected anomalies detected: {injected_detected}/{len(anomaly_positions)}")
-
-    # Get final statistics
-    stats = baseline.get_statistics()
-    logger.info(f"Final statistics: {stats}")
-
-    # Verify predictions have valid z-scores
-    z_scores = [p.z_score for p in predictions]
-    logger.info(f"Z-score range: [{min(z_scores):.2f}, {max(z_scores):.2f}]")
-
-    # Success message
-    logger.info("=== Moving Average Baseline Self-Test PASSED ===")
-    print("Moving Average Baseline test completed successfully.")
-    print(f"Processed {len(predictions)} observations")
-    print(f"Detected {anomaly_count} anomalies")
-    print(f"Statistics: {stats}")
-
-    return 0
+    logger.info("Test completed successfully")
 
 
 if __name__ == "__main__":
-    try:
-        sys.exit(main())
-    except Exception as e:
-        logger.error(f"Error during execution: {e}")
-        import traceback
-        traceback.print_exc()
-        sys.exit(1)
+    main()
