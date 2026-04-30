@@ -249,3 +249,14 @@ state/run-log/*/.invalid/
 .env.*
 .playwright-mcp/
 live-*.png
+
+# Per-project large dataset files — datasets are reproducible via
+# project's code/data/download_datasets.py. Never commit.
+projects/*/data/raw/*
+projects/*/data/processed/*
+!projects/*/data/raw/.gitkeep
+!projects/*/data/processed/.gitkeep
+!projects/*/data/raw/.checksums.sha256
+!projects/*/data/raw/checksums.txt
+!projects/*/data/raw/README.md
+!projects/*/data/processed/README.md

@@ -42,11 +42,16 @@ Thumbs.db
 !logs/elbo/*.log
 logs/*.log
 
-# Data
-data/raw/*.csv
-data/processed/*.csv
-data/raw/*.json
-data/processed/*.json
+# Data — all raw + processed datasets are regenerable from
+# code/data/download_datasets.py; never committed.
+data/raw/*
+data/processed/*
+!data/raw/.gitkeep
+!data/processed/.gitkeep
+!data/raw/.checksums.sha256
+!data/raw/checksums.txt
+!data/raw/README.md
+!data/processed/README.md
 
 # State (checksums should be tracked, but large files not)
 state/projects/*.yaml
