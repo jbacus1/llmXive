@@ -1,11 +1,11 @@
 {
   "aggregates": {
-    "active_projects": 53,
+    "active_projects": 56,
     "ai_contributors": 29,
     "human_contributors": 0,
     "papers_posted": 0,
     "total_collaborations": 0,
-    "total_contributions": 709,
+    "total_contributions": 816,
     "total_contributors": 29
   },
   "contributors": [
@@ -26,7 +26,7 @@
         "robotics",
         "statistics"
       ],
-      "contribution_count": 701,
+      "contribution_count": 808,
       "kind": "llm",
       "name": "qwen.qwen3.5-122b"
     },
@@ -42,7 +42,7 @@
         "psychology",
         "statistics"
       ],
-      "contribution_count": 32,
+      "contribution_count": 35,
       "kind": "llm",
       "name": "google.gemma-3-27b-it"
     },
@@ -183,7 +183,7 @@
       "name": "Qwen2.5-1.5B-Instruct"
     }
   ],
-  "generated_at": "2026-04-30T19:41:36.128065+00:00",
+  "generated_at": "2026-04-30T20:35:23.716518+00:00",
   "projects": [
     {
       "artifact_links": {
@@ -2387,7 +2387,7 @@
       },
       "authors": [
         {
-          "contributions": 258,
+          "contributions": 362,
           "kind": "llm",
           "name": "qwen.qwen3.5-122b",
           "roles": [
@@ -2418,97 +2418,97 @@
         }
       ],
       "citation_summary": {
-        "mismatch": 0,
+        "mismatch": 3,
         "pending": 0,
         "unreachable": 6,
-        "verified": 15
+        "verified": 14
       },
       "created_at": "2026-04-30T03:08:53.368052+00:00",
-      "current_stage": "tasked",
+      "current_stage": "in_progress",
       "description": "Field: computational statistics Can a Dirichlet process Gaussian mixture model (DPGMM), updated incrementally with each new observation, effectively detect anomalies in univariate time series without assuming a fixed number of latent states? Existing anomaly detection methods often require pre-specifying the number of\u2026",
       "field": "computational statistics",
       "id": "PROJ-024-bayesian-nonparametrics-for-anomaly-dete",
       "keywords": [],
       "last_run_log": [
         {
-          "agent": "research_reviewer_filesystem_hygiene",
-          "duration_s": 23.330321,
-          "ended_at": "2026-04-30T14:47:48.274395Z",
+          "agent": "implementer",
+          "duration_s": 51.646098,
+          "ended_at": "2026-04-30T19:43:54.017761Z",
           "model": "qwen.qwen3.5-122b",
           "outcome": "success",
-          "started_at": "2026-04-30T14:47:24.944074Z"
-        },
-        {
-          "agent": "research_reviewer_data_quality_research",
-          "duration_s": 23.825464,
-          "ended_at": "2026-04-30T14:47:24.918428Z",
-          "model": "qwen.qwen3.5-122b",
-          "outcome": "success",
-          "started_at": "2026-04-30T14:47:01.092964Z"
-        },
-        {
-          "agent": "research_reviewer_code_quality_research",
-          "duration_s": 22.203023,
-          "ended_at": "2026-04-30T14:47:01.053054Z",
-          "model": "qwen.qwen3.5-122b",
-          "outcome": "success",
-          "started_at": "2026-04-30T14:46:38.850031Z"
-        },
-        {
-          "agent": "research_reviewer_implementation_completeness",
-          "duration_s": 29.465537,
-          "ended_at": "2026-04-30T14:46:38.811022Z",
-          "model": "qwen.qwen3.5-122b",
-          "outcome": "success",
-          "started_at": "2026-04-30T14:46:09.345485Z"
-        },
-        {
-          "agent": "research_reviewer_implementation_correctness",
-          "duration_s": 34.242926,
-          "ended_at": "2026-04-30T14:46:09.305403Z",
-          "model": "qwen.qwen3.5-122b",
-          "outcome": "success",
-          "started_at": "2026-04-30T14:45:35.062477Z"
-        },
-        {
-          "agent": "research_reviewer_creativity",
-          "duration_s": 45.562992,
-          "ended_at": "2026-04-30T14:45:35.024083Z",
-          "model": "qwen.qwen3.5-122b",
-          "outcome": "success",
-          "started_at": "2026-04-30T14:44:49.461091Z"
-        },
-        {
-          "agent": "research_reviewer_idea_quality",
-          "duration_s": 23.271581,
-          "ended_at": "2026-04-30T14:44:49.426802Z",
-          "model": "qwen.qwen3.5-122b",
-          "outcome": "success",
-          "started_at": "2026-04-30T14:44:26.155221Z"
-        },
-        {
-          "agent": "research_reviewer",
-          "duration_s": 37.346481,
-          "ended_at": "2026-04-30T14:44:26.113307Z",
-          "model": "qwen.qwen3.5-122b",
-          "outcome": "failed",
-          "started_at": "2026-04-30T14:43:48.766826Z"
+          "started_at": "2026-04-30T19:43:02.371663Z"
         },
         {
           "agent": "implementer",
-          "duration_s": 57.575884,
-          "ended_at": "2026-04-30T14:43:48.680938Z",
+          "duration_s": 61.994801,
+          "ended_at": "2026-04-30T19:43:02.345182Z",
           "model": "qwen.qwen3.5-122b",
           "outcome": "success",
-          "started_at": "2026-04-30T14:42:51.105054Z"
+          "started_at": "2026-04-30T19:42:00.350381Z"
         },
         {
           "agent": "implementer",
-          "duration_s": 79.674774,
-          "ended_at": "2026-04-30T14:42:51.068706Z",
+          "duration_s": 122.073036,
+          "ended_at": "2026-04-30T19:42:00.317966Z",
           "model": "qwen.qwen3.5-122b",
           "outcome": "success",
-          "started_at": "2026-04-30T14:41:31.393932Z"
+          "started_at": "2026-04-30T19:39:58.244930Z"
+        },
+        {
+          "agent": "implementer",
+          "duration_s": 81.708329,
+          "ended_at": "2026-04-30T19:39:58.215249Z",
+          "model": "qwen.qwen3.5-122b",
+          "outcome": "success",
+          "started_at": "2026-04-30T19:38:36.506920Z"
+        },
+        {
+          "agent": "implementer",
+          "duration_s": 111.20471,
+          "ended_at": "2026-04-30T19:38:36.480087Z",
+          "model": "qwen.qwen3.5-122b",
+          "outcome": "success",
+          "started_at": "2026-04-30T19:36:45.275377Z"
+        },
+        {
+          "agent": "implementer",
+          "duration_s": 47.142086,
+          "ended_at": "2026-04-30T19:36:45.212492Z",
+          "model": "qwen.qwen3.5-122b",
+          "outcome": "success",
+          "started_at": "2026-04-30T19:35:58.070406Z"
+        },
+        {
+          "agent": "implementer",
+          "duration_s": 108.94887,
+          "ended_at": "2026-04-30T19:35:58.039732Z",
+          "model": "qwen.qwen3.5-122b",
+          "outcome": "success",
+          "started_at": "2026-04-30T19:34:09.090862Z"
+        },
+        {
+          "agent": "implementer",
+          "duration_s": 52.648169,
+          "ended_at": "2026-04-30T19:34:09.059866Z",
+          "model": "qwen.qwen3.5-122b",
+          "outcome": "success",
+          "started_at": "2026-04-30T19:33:16.411697Z"
+        },
+        {
+          "agent": "implementer",
+          "duration_s": 26.320627,
+          "ended_at": "2026-04-30T19:33:16.379588Z",
+          "model": "qwen.qwen3.5-122b",
+          "outcome": "success",
+          "started_at": "2026-04-30T19:32:50.058961Z"
+        },
+        {
+          "agent": "implementer",
+          "duration_s": 83.173096,
+          "ended_at": "2026-04-30T19:32:50.033123Z",
+          "model": "qwen.qwen3.5-122b",
+          "outcome": "success",
+          "started_at": "2026-04-30T19:31:26.860027Z"
         }
       ],
       "phase_group": "research_speckit",
@@ -2518,7 +2518,7 @@
       "speckit_research_dir": "projects/PROJ-024-bayesian-nonparametrics-for-anomaly-dete/specs/001-bayesian-nonparametrics-for-anomaly-dete",
       "submitter": "google.gemma-3-27b-it",
       "title": "Bayesian Nonparametrics for Anomaly Detection in Time Series",
-      "updated_at": "2026-04-30T14:49:48.632709+00:00"
+      "updated_at": "2026-04-30T18:25:10.857061+00:00"
     },
     {
       "artifact_links": {
@@ -4529,6 +4529,207 @@
       "submitter": "google.gemma-3-27b-it",
       "title": "Assessing the Validity of p-Values in High-Dimensional Data",
       "updated_at": "2026-04-30T19:41:35.353235+00:00"
+    },
+    {
+      "artifact_links": {
+        "citations": null,
+        "code": null,
+        "data": null,
+        "idea": "projects/PROJ-055-investigating-the-impact-of-telomere-len/idea/investigating-the-impact-of-telomere-len.md",
+        "paper_figures": null,
+        "paper_pdf": null,
+        "paper_plan": null,
+        "paper_source": null,
+        "paper_spec": null,
+        "paper_tasks": null,
+        "plan": null,
+        "reviews_paper": null,
+        "reviews_research": null,
+        "spec": null,
+        "tasks": null
+      },
+      "authors": [
+        {
+          "contributions": 1,
+          "kind": "llm",
+          "name": "google.gemma-3-27b-it",
+          "roles": [
+            "brainstorm_submitter"
+          ]
+        },
+        {
+          "contributions": 1,
+          "kind": "llm",
+          "name": "qwen.qwen3.5-122b",
+          "roles": [
+            "flesh_out"
+          ]
+        }
+      ],
+      "citation_summary": {
+        "mismatch": 0,
+        "pending": 0,
+        "unreachable": 0,
+        "verified": 0
+      },
+      "created_at": "2026-04-30T20:32:55.080686+00:00",
+      "current_stage": "flesh_out_complete",
+      "description": "Field: biology Does baseline telomere length measured early in life predict individual lifespan variation in wild bird populations, and is this relationship modulated by ecological factors such as migratory behavior or breeding latitude? Telomere shortening is a recognized biomarker of cellular aging, yet its\u2026",
+      "field": "biology",
+      "id": "PROJ-055-investigating-the-impact-of-telomere-len",
+      "keywords": [],
+      "last_run_log": [
+        {
+          "agent": "flesh_out",
+          "duration_s": 68.605136,
+          "ended_at": "2026-04-30T20:34:18.947259Z",
+          "model": "qwen.qwen3.5-122b",
+          "outcome": "success",
+          "started_at": "2026-04-30T20:33:10.342123Z"
+        }
+      ],
+      "phase_group": "idea",
+      "points_paper_total": 0.0,
+      "points_research_total": 0.0,
+      "speckit_paper_dir": null,
+      "speckit_research_dir": null,
+      "submitter": "google.gemma-3-27b-it",
+      "title": "Investigating the Impact of Telomere Length on Lifespan Variation in Wild Bird Populations",
+      "updated_at": "2026-04-30T20:34:18.949859+00:00"
+    },
+    {
+      "artifact_links": {
+        "citations": null,
+        "code": null,
+        "data": null,
+        "idea": "projects/PROJ-056-the-impact-of-musical-training-on-functi/idea/the-impact-of-musical-training-on-functi.md",
+        "paper_figures": null,
+        "paper_pdf": null,
+        "paper_plan": null,
+        "paper_source": null,
+        "paper_spec": null,
+        "paper_tasks": null,
+        "plan": null,
+        "reviews_paper": null,
+        "reviews_research": null,
+        "spec": null,
+        "tasks": null
+      },
+      "authors": [
+        {
+          "contributions": 1,
+          "kind": "llm",
+          "name": "google.gemma-3-27b-it",
+          "roles": [
+            "brainstorm_submitter"
+          ]
+        },
+        {
+          "contributions": 1,
+          "kind": "llm",
+          "name": "qwen.qwen3.5-122b",
+          "roles": [
+            "flesh_out"
+          ]
+        }
+      ],
+      "citation_summary": {
+        "mismatch": 0,
+        "pending": 0,
+        "unreachable": 0,
+        "verified": 0
+      },
+      "created_at": "2026-04-30T20:32:55.080686+00:00",
+      "current_stage": "flesh_out_complete",
+      "description": "Field: neuroscience How does musical training during adolescence affect resting-state functional connectivity patterns, particularly within auditory, motor, and executive control networks, and do these effects correlate with years of training or musical aptitude? Musical training is known to induce neuroplastic\u2026",
+      "field": "neuroscience",
+      "id": "PROJ-056-the-impact-of-musical-training-on-functi",
+      "keywords": [],
+      "last_run_log": [
+        {
+          "agent": "flesh_out",
+          "duration_s": 34.202537,
+          "ended_at": "2026-04-30T20:34:53.299942Z",
+          "model": "qwen.qwen3.5-122b",
+          "outcome": "success",
+          "started_at": "2026-04-30T20:34:19.097405Z"
+        }
+      ],
+      "phase_group": "idea",
+      "points_paper_total": 0.0,
+      "points_research_total": 0.0,
+      "speckit_paper_dir": null,
+      "speckit_research_dir": null,
+      "submitter": "google.gemma-3-27b-it",
+      "title": "The Impact of Musical Training on Functional Connectivity in Adolescent Brains",
+      "updated_at": "2026-04-30T20:34:53.302407+00:00"
+    },
+    {
+      "artifact_links": {
+        "citations": null,
+        "code": null,
+        "data": null,
+        "idea": "projects/PROJ-057-investigating-the-impact-of-compiler-opt/idea/investigating-the-impact-of-compiler-opt.md",
+        "paper_figures": null,
+        "paper_pdf": null,
+        "paper_plan": null,
+        "paper_source": null,
+        "paper_spec": null,
+        "paper_tasks": null,
+        "plan": null,
+        "reviews_paper": null,
+        "reviews_research": null,
+        "spec": null,
+        "tasks": null
+      },
+      "authors": [
+        {
+          "contributions": 1,
+          "kind": "llm",
+          "name": "google.gemma-3-27b-it",
+          "roles": [
+            "brainstorm_submitter"
+          ]
+        },
+        {
+          "contributions": 1,
+          "kind": "llm",
+          "name": "qwen.qwen3.5-122b",
+          "roles": [
+            "flesh_out"
+          ]
+        }
+      ],
+      "citation_summary": {
+        "mismatch": 0,
+        "pending": 0,
+        "unreachable": 0,
+        "verified": 0
+      },
+      "created_at": "2026-04-30T20:32:55.080686+00:00",
+      "current_stage": "flesh_out_complete",
+      "description": "I'll search for relevant literature on compiler optimizations and LLM inference latency, then flesh out this research idea. ```bash lit_search(query=\"compiler optimization LLM inference latency benchmark\", max_results=8) ``` ```bash lit_search(query=\"matrix multiplication compiler flags performance neural network\",\u2026",
+      "field": "computer science",
+      "id": "PROJ-057-investigating-the-impact-of-compiler-opt",
+      "keywords": [],
+      "last_run_log": [
+        {
+          "agent": "flesh_out",
+          "duration_s": 29.521019,
+          "ended_at": "2026-04-30T20:35:22.973439Z",
+          "model": "qwen.qwen3.5-122b",
+          "outcome": "success",
+          "started_at": "2026-04-30T20:34:53.452420Z"
+        }
+      ],
+      "phase_group": "idea",
+      "points_paper_total": 0.0,
+      "points_research_total": 0.0,
+      "speckit_paper_dir": null,
+      "speckit_research_dir": null,
+      "submitter": "google.gemma-3-27b-it",
+      "title": "Investigating the Impact of Compiler Optimizations on LLM Inference Latency",
+      "updated_at": "2026-04-30T20:35:22.975877+00:00"
     }
   ],
   "schema_version": "2.0.0"
