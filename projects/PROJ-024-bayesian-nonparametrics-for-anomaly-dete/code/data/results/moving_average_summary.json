@@ -1,0 +1,17 @@
+{
+  "total_observations": 1000,
+  "anomaly_count": 0,
+  "anomaly_rate": 0.0,
+  "mean_z_score": 0.9485783137774482,
+  "max_z_score": 2.9476943375491738,
+  "mean_anomaly_score": 0.9485783137774482,
+  "config": {
+    "window_size": 50,
+    "z_threshold": 3.0,
+    "min_samples": 10,
+    "smoothing_factor": 0.1,
+    "use_exponential": false
+  },
+  "window_size": 50,
+  "running_mean": 50.20745540695893
+}

@@ -1,2 +1,1 @@
-# This file ensures the data/processed directory is tracked by git
-# Processed/transformed data for model training will be stored here
+# Processed data directory - datasets prepared for model training

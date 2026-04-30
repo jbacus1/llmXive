@@ -1,0 +1,38 @@
+# Test dependencies for Bayesian Nonparametrics Anomaly Detection Project
+# These are additional dependencies beyond the main requirements.txt
+
+# Core testing framework
+pytest>=7.4.0
+pytest-cov>=4.1.0
+pytest-timeout>=2.2.0
+pytest-xdist>=3.3.0
+
+# Mocking and fixtures
+pytest-mock>=3.11.1
+
+# Code quality and type checking
+mypy>=1.5.0
+types-requests>=2.31.0
+
+# Test data generation
+hypothesis>=6.85.0
+
+# Memory profiling
+memory-profiler>=0.61.0
+
+# Coverage reporting
+coverage>=7.3.0
+
+# JSON report generation for CI integration
+pytest-json-report>=1.5.0
+
+# Seaborn for test visualization (if needed)
+seaborn>=0.12.0
+
+# Pin to match main requirements
+numpy>=1.24.0
+pandas>=2.0.0
+scipy>=1.11.0
+scikit-learn>=1.3.0
+matplotlib>=3.7.0
+pyyaml>=6.0

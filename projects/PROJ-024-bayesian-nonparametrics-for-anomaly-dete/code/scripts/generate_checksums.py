@@ -1,26 +1,24 @@
 """
-Generate and record SHA256 checksums for all raw and processed data files.
+Generate and verify checksums for project artifacts.
 
-This script scans data/raw/ and data/processed/ directories, computes
-SHA256 checksums for all files, and updates the state YAML file with
-the checksums per Constitution Principle III.
+This script provides functionality to:
+1. Compute SHA256 checksums for files in specified directories
+2. Save checksums to a state YAML file
+3. Verify existing checksums against current files
+4. Generate checksum cache for downloaded datasets
 
-Usage: python generate_checksums.py
+Usage:
+    python code/scripts/generate_checksums.py --generate --output state/checksums.yaml
+    python code/scripts/generate_checksums.py --verify --input state/checksums.yaml
 """
 import os
 import sys
 import hashlib
 import yaml
-from pathlib import Path
-from typing import Dict, Any, List, Tuple
-from datetime import datetime
 import logging
-
-# Add project root to path
-project_root = Path(__file__).parent.parent
-sys.path.insert(0, str(project_root))
-
-from utils.checksum_manager import ChecksumManager, ArtifactEntry
+from pathlib import Path
+from datetime import datetime
+from typing import Dict, Any, List, Optional, Tuple
 
 logging.basicConfig(
     level=logging.INFO,
@@ -28,168 +26,186 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-STATE_FILE = project_root / "state" / "projects" / "PROJ-024-bayesian-nonparametrics-for-anomaly-dete.yaml"
-DATA_RAW_DIR = project_root / "data" / "raw"
-DATA_PROCESSED_DIR = project_root / "data" / "processed"
 
-def compute_file_checksum_sha256(file_path: Path) -> str:
-    """Compute SHA256 checksum for a file."""
+def compute_file_checksum_sha256(file_path: Path) -> Optional[str]:
+    """Compute SHA256 checksum of a file."""
+    if not file_path.exists():
+        logger.warning(f"File not found: {file_path}")
+        return None
+    
     sha256_hash = hashlib.sha256()
-    with open(file_path, "rb") as f:
-        for byte_block in iter(lambda: f.read(4096), b""):
-            sha256_hash.update(byte_block)
-    return sha256_hash.hexdigest()
+    try:
+        with open(file_path, "rb") as f:
+            for byte_block in iter(lambda: f.read(4096), b""):
+                sha256_hash.update(byte_block)
+        return sha256_hash.hexdigest()
+    except Exception as e:
+        logger.error(f"Error computing checksum for {file_path}: {e}")
+        return None
 
-def scan_directory_for_files(directory: Path) -> List[Path]:
-    """Recursively scan directory for all files."""
-    if not directory.exists():
-        logger.warning(f"Directory does not exist: {directory}")
-        return []
 
+def scan_directory_for_files(directory: Path, extensions: Optional[List[str]] = None) -> List[Path]:
+    """Scan directory for files with specified extensions."""
     files = []
-    for root, _, filenames in os.walk(directory):
-        for filename in filenames:
-            # Skip hidden files and common non-data files
-            if filename.startswith('.') or filename.endswith('.md'):
-                continue
-            file_path = Path(root) / filename
-            files.append(file_path)
-
+    if not directory.exists():
+        logger.warning(f"Directory not found: {directory}")
+        return files
+    
+    for file_path in directory.rglob('*'):
+        if file_path.is_file():
+            if extensions is None or any(file_path.suffix == ext for ext in extensions):
+                files.append(file_path)
+    
     return files
 
-def load_state_file(state_path: Path) -> Dict[str, Any]:
-    """Load existing state file or create new structure."""
-    if state_path.exists():
-        with open(state_path, 'r') as f:
-            return yaml.safe_load(f) or {}
-    else:
-        # Create directory if it doesn't exist
-        state_path.parent.mkdir(parents=True, exist_ok=True)
-        return {
-            "project_id": "PROJ-024-bayesian-nonparametrics-for-anomaly-dete",
-            "last_updated": None,
-            "checksums": {
-                "raw": {},
-                "processed": {}
-            },
-            "metadata": {
-                "total_files": 0,
-                "total_size_bytes": 0
-            }
-        }
 
-def save_state_file(state_path: Path, state: Dict[str, Any]) -> None:
-    """Save state file with checksums."""
-    state_path.parent.mkdir(parents=True, exist_ok=True)
-    with open(state_path, 'w') as f:
-        yaml.dump(state, f, default_flow_style=False, sort_keys=False)
-    logger.info(f"State file saved: {state_path}")
+def load_state_file(state_path: Path) -> Dict[str, Any]:
+    """Load state YAML file."""
+    if not state_path.exists():
+        logger.warning(f"State file not found: {state_path}")
+        return {}
+    
+    try:
+        with open(state_path, 'r') as f:
+            return yaml.safe_load(f)
+    except Exception as e:
+        logger.error(f"Error loading state file: {e}")
+        return {}
+
+
+def save_state_file(state_path: Path, state_data: Dict[str, Any]) -> bool:
+    """Save state YAML file."""
+    try:
+        state_path.parent.mkdir(parents=True, exist_ok=True)
+        with open(state_path, 'w') as f:
+            yaml.dump(state_data, f, default_flow_style=False, sort_keys=False)
+        return True
+    except Exception as e:
+        logger.error(f"Error saving state file: {e}")
+        return False
+
 
 def generate_checksums_for_directory(
     directory: Path,
-    state: Dict[str, Any],
-    category: str
-) -> Tuple[int, int]:
-    """
-    Generate checksums for all files in directory.
-
-    Returns: (files_processed, errors)
-    """
-    files = scan_directory_for_files(directory)
-    files_processed = 0
-    errors = 0
-
+    output_path: Path,
+    extensions: Optional[List[str]] = None
+) -> Dict[str, str]:
+    """Generate checksums for all files in a directory."""
+    checksums = {}
+    files = scan_directory_for_files(directory, extensions)
+    
+    logger.info(f"Found {len(files)} files in {directory}")
+    
     for file_path in files:
-        relative_path = str(file_path.relative_to(project_root))
+        rel_path = file_path.relative_to(directory)
+        checksum = compute_file_checksum_sha256(file_path)
+        
+        if checksum:
+          checksums[str(rel_path)] = checksum
+          logger.debug(f"Checksum: {rel_path} -> {checksum[:16]}...")
+    
+    # Save to output file
+    state_data = {
+        'generated_at': datetime.utcnow().isoformat() + 'Z',
+        'directory': str(directory),
+        'checksums': checksums
+    }
+    
+    if save_state_file(output_path, state_data):
+        logger.info(f"Checksums saved to {output_path}")
+    else:
+        logger.error(f"Failed to save checksums to {output_path}")
+    
+    return checksums
 
-        try:
-            # Compute checksum
-            checksum = compute_file_checksum_sha256(file_path)
-            file_size = file_path.stat().st_size
 
-            # Update state
-            state["checksums"][category][relative_path] = {
-                "sha256": checksum,
-                "size_bytes": file_size,
-                "last_modified": datetime.fromtimestamp(
-                    file_path.stat().st_mtime
-                ).isoformat()
-            }
+def verify_checksums(checksums: Dict[str, str], base_path: Path) -> Tuple[int, int]:
+    """Verify checksums against current files."""
+    passed = 0
+    failed = 0
+    
+    for rel_path, expected_hash in checksums.items():
+        file_path = base_path / rel_path
+        actual_hash = compute_file_checksum_sha256(file_path)
+        
+        if actual_hash == expected_hash:
+            passed += 1
+            logger.debug(f"Verified: {rel_path}")
+        else:
+            failed += 1
+            logger.error(f"Failed: {rel_path} (expected {expected_hash}, got {actual_hash})")
+    
+    return passed, failed
 
-            files_processed += 1
-            state["metadata"]["total_size_bytes"] += file_size
-            logger.info(f"  Checksummed: {relative_path} ({file_size} bytes)")
-
-        except Exception as e:
-            logger.error(f"  Error processing {relative_path}: {e}")
-            errors += 1
-
-    return files_processed, errors
 
 def main():
-    """Main entry point - generates checksums for all data files."""
-    logger.info("=" * 60)
-    logger.info("T068: Generate SHA256 Checksums for Data Files")
-    logger.info("=" * 60)
-
-    # Load or create state file
-    state = load_state_file(STATE_FILE)
-    logger.info(f"State file: {STATE_FILE}")
-
-    # Track total files processed
-    total_raw_files = 0
-    total_raw_errors = 0
-    total_processed_files = 0
-    total_processed_errors = 0
-
-    # Generate checksums for raw data
-    if DATA_RAW_DIR.exists():
-        logger.info(f"\nScanning raw data directory: {DATA_RAW_DIR}")
-        total_raw_files, total_raw_errors = generate_checksums_for_directory(
-            DATA_RAW_DIR, state, "raw"
-        )
-    else:
-        logger.warning(f"Raw data directory does not exist: {DATA_RAW_DIR}")
-
-    # Generate checksums for processed data
-    if DATA_PROCESSED_DIR.exists():
-        logger.info(f"\nScanning processed data directory: {DATA_PROCESSED_DIR}")
-        total_processed_files, total_processed_errors = generate_checksums_for_directory(
-            DATA_PROCESSED_DIR, state, "processed"
-        )
-    else:
-        logger.warning(f"Processed data directory does not exist: {DATA_PROCESSED_DIR}")
-
-    # Update metadata
-    state["metadata"]["total_files"] = (
-        total_raw_files + total_processed_files
+    """Main entry point."""
+    import argparse
+    
+    parser = argparse.ArgumentParser(
+        description='Generate and verify checksums for project artifacts'
     )
-    state["last_updated"] = datetime.now().isoformat()
-
-    # Save updated state
-    save_state_file(STATE_FILE, state)
-
-    # Print summary
-    logger.info("\n" + "=" * 60)
-    logger.info("CHECKSUM GENERATION SUMMARY")
-    logger.info("=" * 60)
-    logger.info(f"Raw data files processed: {total_raw_files}")
-    logger.info(f"Raw data errors: {total_raw_errors}")
-    logger.info(f"Processed data files: {total_processed_files}")
-    logger.info(f"Processed data errors: {total_processed_errors}")
-    logger.info(f"Total files: {state['metadata']['total_files']}")
-    logger.info(f"Total size: {state['metadata']['total_size_bytes']} bytes")
-    logger.info(f"State file updated: {STATE_FILE}")
-    logger.info("=" * 60)
-
-    # Exit with error code if there were any errors
-    total_errors = total_raw_errors + total_processed_errors
-    if total_errors > 0:
-        logger.error(f"Completed with {total_errors} errors")
+    parser.add_argument(
+        '--generate',
+        action='store_true',
+        help='Generate checksums for directory'
+    )
+    parser.add_argument(
+        '--verify',
+        action='store_true',
+        help='Verify checksums'
+    )
+    parser.add_argument(
+        '--input',
+        type=str,
+        help='Input state file for verification'
+    )
+    parser.add_argument(
+        '--output',
+        type=str,
+        help='Output state file for generation'
+    )
+    parser.add_argument(
+        '--directory',
+        type=str,
+        help='Directory to scan for checksums'
+    )
+    parser.add_argument(
+        '--extensions',
+        type=str,
+        nargs='+',
+        help='File extensions to include (e.g., .py .yaml)'
+    )
+    
+    args = parser.parse_args()
+    
+    if args.generate:
+        if not args.directory or not args.output:
+            parser.error("--generate requires --directory and --output")
+        
+        directory = Path(args.directory)
+        output = Path(args.output)
+        extensions = args.extensions if args.extensions else None
+        
+        generate_checksums_for_directory(directory, output, extensions)
+    
+    elif args.verify:
+        if not args.input:
+            parser.error("--verify requires --input")
+        
+        state_data = load_state_file(Path(args.input))
+        checksums = state_data.get('checksums', {})
+        base_path = Path(state_data.get('directory', '.'))
+        
+        passed, failed = verify_checksums(checksums, base_path)
+        logger.info(f"Verification complete: {passed} passed, {failed} failed")
+        
+        sys.exit(0 if failed == 0 else 1)
+    
+    else:
+        parser.print_help()
         sys.exit(1)
 
-    logger.info("Checksum generation completed successfully!")
-    sys.exit(0)
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()

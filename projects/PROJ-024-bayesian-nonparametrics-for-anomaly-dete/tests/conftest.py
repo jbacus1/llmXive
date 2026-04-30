@@ -1,125 +1,156 @@
 """
-Pytest configuration and shared fixtures for all test suites.
+Pytest configuration and shared fixtures for the test suite.
 
-Per spec.md: Tests are REQUIRED per Independent Test scenarios.
-All fixtures here are available to contract/, integration/, and unit/ tests.
+This file provides:
+- Shared fixtures for test data and models
+- Configuration for test discovery
+- Common test utilities
 """
 import os
 import sys
 import pytest
 from pathlib import Path
-from datetime import datetime
 import numpy as np
+from datetime import datetime
+from typing import Dict, Any, List, Optional, Tuple
 
 # Add project code to path for imports
 @pytest.fixture(scope="session", autouse=True)
-def add_project_to_path():
-    """Ensure project code is importable during tests."""
+def setup_test_paths():
+    """Add project code directory to Python path for imports."""
     project_root = Path(__file__).parent.parent
-    code_path = project_root / "code"
-    if str(code_path) not in sys.path:
-        sys.path.insert(0, str(code_path))
+    code_dir = project_root / "code"
+    if code_dir not in sys.path:
+        sys.path.insert(0, str(code_dir))
     yield
-    if str(code_path) in sys.path:
-        sys.path.remove(str(code_path))
+    # Cleanup if needed
+    if str(code_dir) in sys.path:
+        sys.path.remove(str(code_dir))
 
 @pytest.fixture
-def project_root():
-    """Return the project root directory path."""
-    return Path(__file__).parent.parent
+def sample_timeseries_data():
+    """Generate sample time series data for testing."""
+    np.random.seed(42)
+    n_points = 1000
+    time = np.arange(n_points)
+    # Base signal: sine wave with noise
+    signal = np.sin(2 * np.pi * time / 50) + np.random.normal(0, 0.1, n_points)
+    # Inject anomalies at known positions
+    anomaly_positions = [100, 300, 500, 700, 900]
+    for pos in anomaly_positions:
+        if pos < n_points:
+            signal[pos] += 5.0  # Add spike anomalies
+    return {
+        "time": time,
+        "values": signal,
+        "anomaly_positions": anomaly_positions,
+        "n_points": n_points
+    }
 
 @pytest.fixture
-def code_dir(project_root):
-    """Return the code directory path."""
-    return project_root / "code"
+def sample_anomaly_labels():
+    """Generate sample anomaly labels for testing."""
+    n_points = 1000
+    labels = np.zeros(n_points, dtype=int)
+    anomaly_positions = [100, 300, 500, 700, 900]
+    for pos in anomaly_positions:
+        if pos < n_points:
+            labels[pos] = 1
+    return labels
 
 @pytest.fixture
-def data_dir(project_root):
-    """Return the data directory path."""
-    return project_root / "data"
+def test_config():
+    """Provide a test configuration dictionary."""
+    return {
+        "random_seed": 42,
+        "n_components": 5,
+        "concentration_parameter": 1.0,
+        "learning_rate": 0.01,
+        "max_iterations": 100,
+        "anomaly_threshold": 0.95,
+        "memory_limit_gb": 7.0,
+        "runtime_limit_minutes": 30
+    }
 
 @pytest.fixture
-def raw_data_dir(data_dir):
-    """Return the raw data directory path."""
-    return data_dir / "raw"
+def temp_data_dir(tmp_path):
+    """Create a temporary data directory for test artifacts."""
+    data_dir = tmp_path / "data"
+    data_dir.mkdir(parents=True, exist_ok=True)
+    yield data_dir
 
 @pytest.fixture
-def processed_data_dir(data_dir):
-    """Return the processed data directory path."""
-    return data_dir / "processed"
+def temp_output_dir(tmp_path):
+    """Create a temporary output directory for test results."""
+    output_dir = tmp_path / "output"
+    output_dir.mkdir(parents=True, exist_ok=True)
+    yield output_dir
 
 @pytest.fixture
-def config_path(code_dir):
-    """Return the config.yaml path."""
-    return code_dir / "config.yaml"
+def mock_streaming_observations(sample_timeseries_data):
+    """Generate mock streaming observations for testing."""
+    for i, value in enumerate(sample_timeseries_data["values"]):
+        yield {
+            "timestamp": datetime.now(),
+            "value": float(value),
+            "index": i
+        }
 
 @pytest.fixture
-def synthetic_timeseries(length=1000, seed=42):
-    """
-    Generate a synthetic time series with known anomaly points.
-    
-    Used for US1 independent testing: processes synthetic time series with
-    known anomaly points and verifies model produces anomaly scores.
-    
-    Args:
-        length: Number of observations
-        seed: Random seed for reproducibility
-    
-    Returns:
-        tuple: (values array, anomaly_indices array)
-    """
-    np.random.seed(seed)
-    t = np.arange(length)
-    
-    # Base signal: sine wave + trend + noise
-    base = 10 * np.sin(2 * np.pi * t / 100) + 0.01 * t + np.random.normal(0, 1, length)
-    
-    # Inject known anomalies at specific indices
-    anomaly_indices = np.array([150, 151, 152, 450, 451, 750, 751, 752])
-    base[anomaly_indices] = base[anomaly_indices] + np.random.choice([-1, 1], len(anomaly_indices)) * 5
-    
-    return base, anomaly_indices
+def contract_test_schema():
+    """Provide a basic contract schema for validation tests."""
+    return {
+        "required_fields": [
+            "model_type",
+            "timestamp",
+            "anomaly_score",
+            "confidence_interval"
+        ],
+        "field_types": {
+            "model_type": str,
+            "timestamp": (str, datetime),
+            "anomaly_score": (float, np.floating),
+            "confidence_interval": (list, tuple, np.ndarray)
+        }
+    }
 
 @pytest.fixture
-def synthetic_streaming_data(num_observations=100, seed=42):
-    """
-    Generate streaming observations for US1 streaming update testing.
-    
-    Used for T014 integration test for streaming observation update.
-    
-    Args:
-        num_observations: Number of streaming observations
-        seed: Random seed for reproducibility
-    
-    Returns:
-        generator: Yields observations one at a time
-    """
-    np.random.seed(seed)
-    
-    def observation_generator():
-        for i in range(num_observations):
-            # Normal observation
-            value = np.random.normal(0, 1)
-            
-            # Inject anomaly at observation 50
-            if i == 50:
-                value = 5.0
-            
-            yield {"timestamp": datetime.now(), "value": value, "index": i}
-    
-    return observation_generator()
+def baseline_comparison_data():
+    """Provide data for baseline comparison tests."""
+    np.random.seed(123)
+    n_samples = 500
+    return {
+        "dp_gmm_scores": np.random.normal(0.5, 0.2, n_samples),
+        "arima_scores": np.random.normal(0.6, 0.25, n_samples),
+        "ma_scores": np.random.normal(0.55, 0.3, n_samples),
+        "ground_truth": np.random.randint(0, 2, n_samples)
+    }
 
 @pytest.fixture
-def memory_budget_gb():
-    """Return memory budget per SC-003 (7GB for US1)."""
-    return 7.0
+def threshold_calibration_data():
+    """Provide data for threshold calibration tests."""
+    np.random.seed(456)
+    n_samples = 1000
+    return {
+        "scores": np.random.exponential(scale=1.0, size=n_samples),
+        "expected_percentile": 95,
+        "target_anomaly_rate": 0.05
+    }
 
 @pytest.fixture
-def runtime_budget_minutes():
-    """Return runtime budget per SC-003 (30 minutes)."""
-    return 30
+def memory_profile_config():
+    """Provide configuration for memory profiling tests."""
+    return {
+        "max_memory_gb": 7.0,
+        "sample_size": 1000,
+        "measurement_interval_ms": 100,
+        "gc_collect_before": True
+    }
 
-@pytest.fixture
-def anomaly_threshold_percentile():
-    """Return default anomaly threshold percentile (95th per FR-004)."""
-    return 95
+@pytest.fixture(autouse=True)
+def reset_state_between_tests():
+    """Reset any global state between test runs."""
+    yield
+    # Force garbage collection after each test
+    import gc
+    gc.collect()

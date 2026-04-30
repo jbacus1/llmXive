@@ -11,3 +11,6 @@
 {"at": "2026-04-30T17:37:11.070769+00:00", "from_stage": "clarified", "last_run_id": "c859d338-ef2d-4116-8cb5-e608c40db9be", "to_stage": "planned"}
 {"at": "2026-04-30T17:55:08.449826+00:00", "from_stage": "planned", "last_run_id": "9387702f-333b-4696-ae03-2d4810f7ea2e", "to_stage": "tasked"}
 {"at": "2026-04-30T18:02:03.505068+00:00", "from_stage": "research_review", "last_run_id": "67f5f844-8342-4076-b1e3-2faa5cacb39e", "to_stage": "research_minor_revision"}
+{"at": "2026-04-30T18:02:27.680238+00:00", "from_stage": "research_minor_revision", "last_run_id": "67f5f844-8342-4076-b1e3-2faa5cacb39e", "to_stage": "tasked"}
+{"at": "2026-04-30T18:23:55.324858+00:00", "from_stage": "tasked", "last_run_id": "efec4843-51d7-4c13-8c4e-2071056cf4e8", "to_stage": "analyzed"}
+{"at": "2026-04-30T18:25:10.858026+00:00", "from_stage": "analyzed", "last_run_id": "afdfdd61-a00d-4fcd-b056-777ecce1b49c", "to_stage": "in_progress"}

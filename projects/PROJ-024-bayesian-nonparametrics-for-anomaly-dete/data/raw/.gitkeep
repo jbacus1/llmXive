@@ -1,2 +1,2 @@
-# This file ensures the data/raw directory is tracked by git
-# Raw dataset files will be downloaded here by download_datasets.py
+# Raw data directory - actual datasets downloaded by download_datasets.py
+# All files here must have SHA256 checksums in state/projects/PROJ-024-bayesian-nonparametrics-for-anomaly-dete.yaml

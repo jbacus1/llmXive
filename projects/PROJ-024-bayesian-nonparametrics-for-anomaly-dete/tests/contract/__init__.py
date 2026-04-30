@@ -1,8 +1,7 @@
 """
-Contract tests package.
+Contract tests directory.
 
-Per spec.md Independent Test scenarios:
-- Contract tests validate output schema compliance
-- Must pass before integration tests can run
-- Each user story has dedicated contract tests
+These tests validate that the project's public APIs conform to their
+specified schemas as defined in specs/contracts/. Each test file
+corresponds to a specific user story's contract requirements.
 """

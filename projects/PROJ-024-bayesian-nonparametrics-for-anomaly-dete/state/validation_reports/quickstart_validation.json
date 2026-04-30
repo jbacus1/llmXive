@@ -1,0 +1,15 @@
+{
+  "quickstart_path": "/Users/jmanning/llmXive/projects/PROJ-024-bayesian-nonparametrics-for-anomaly-dete/specs/001-bayesian-nonparametrics-anomaly-detection/quickstart.md",
+  "total_artifacts": 0,
+  "passed": 0,
+  "failed": 1,
+  "artifacts": [
+    {
+      "path": "/Users/jmanning/llmXive/projects/PROJ-024-bayesian-nonparametrics-for-anomaly-dete/specs/001-bayesian-nonparametrics-anomaly-detection/quickstart.md",
+      "status": "error",
+      "message": "quickstart.md not found at /Users/jmanning/llmXive/projects/PROJ-024-bayesian-nonparametrics-for-anomaly-dete/specs/001-bayesian-nonparametrics-anomaly-detection/quickstart.md"
+    }
+  ],
+  "timestamp": "2026-04-30T15:36:45.123844",
+  "overall_status": "failed"
+}

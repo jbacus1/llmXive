@@ -1,60 +1,57 @@
 """
-Script to download and prepare the UCI Synthetic Control Chart dataset.
+Standalone script to download UCI Synthetic Control Chart dataset.
 
-This script downloads the dataset, validates the checksum, and provides
-a summary of the downloaded data for verification.
+This script provides a convenient entry point for downloading
+the UCI Synthetic Control Chart Time Series dataset used in
+User Story 2 baseline comparisons.
+
+Usage:
+    python download_synthetic_control.py [--force]
 """
 import sys
 import os
 from pathlib import Path
 import logging
 
-# Add project root to path
-project_root = Path(__file__).parent.parent
-sys.path.insert(0, str(project_root))
+# Add code directory to path
+script_dir = Path(__file__).parent
+code_dir = script_dir.parent
+sys.path.insert(0, str(code_dir))
 
-from download_datasets import (
+from src.data.download_datasets import (
     download_synthetic_control_chart_dataset,
-    compute_file_checksum,
-    load_checksum_cache
+    DownloadResult
 )
 
 logging.basicConfig(
     level=logging.INFO,
-    format='%(asctime)s - %(levelname)s - %(message)s'
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
 )
 logger = logging.getLogger(__name__)
 
 def main():
-    """Download and verify the Synthetic Control Chart dataset."""
-    logger.info("Downloading UCI Synthetic Control Chart dataset...")
-    
-    result = download_synthetic_control_chart_dataset("data/raw/synthetic_control/")
-    
-    if result.success:
-        logger.info(f"✓ Download successful: {result.filepath}")
-        logger.info(f"  Size: {result.size_bytes:,} bytes")
-        logger.info(f"  Checksum: {result.checksum[:32]}...")
-        
-        # Verify against cache if available
-        cache = load_checksum_cache()
-        if 'synthetic_control' in cache:
-            if result.checksum == cache['synthetic_control']:
-                logger.info("✓ Checksum matches previous download")
-            else:
-                logger.warning("⚠ Checksum differs from cached value")
-        
-        # Print dataset summary
-        logger.info("\nDataset Summary:")
-        logger.info("  - 600 time series")
-        logger.info("  - 60 time points per series")
-        logger.info("  - 6 classes (1 normal, 5 anomaly types)")
-        logger.info("  - Ground truth labels available")
-        
-        return 0
-    else:
-        logger.error(f"✗ Download failed: {result.message}")
-        return 1
+    """Download the UCI Synthetic Control Chart dataset."""
+    # Determine data directory
+    project_root = code_dir.parent
+    data_dir = project_root / 'data' / 'raw'
 
-if __name__ == "__main__":
-    sys.exit(main())
+    logger.info(f"Data directory: {data_dir}")
+
+    # Parse arguments
+    force = '--force' in sys.argv or '-f' in sys.argv
+
+    # Download dataset
+    result = download_synthetic_control_chart_dataset(data_dir, force)
+
+    # Report result
+    if result.success:
+        logger.info(f"✓ {result.message}")
+        logger.info(f"  Path: {result.path}")
+        logger.info(f"  Checksum: {result.checksum}")
+        sys.exit(0)
+    else:
+        logger.error(f"✗ {result.message}")
+        sys.exit(1)
+
+if __name__ == '__main__':
+    main()

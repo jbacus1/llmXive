@@ -1,8 +1,7 @@
 """
-Integration tests package.
+Integration tests directory.
 
-Per spec.md Independent Test scenarios:
-- Integration tests validate end-to-end pipeline functionality
-- Run after contract tests pass
-- Each user story has dedicated integration tests
+These tests validate end-to-end workflows across multiple components,
+ensuring that the system functions correctly when components are
+combined and executed in sequence.
 """

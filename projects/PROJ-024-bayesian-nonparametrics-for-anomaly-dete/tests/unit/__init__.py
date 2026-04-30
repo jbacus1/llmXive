@@ -1,8 +1,6 @@
 """
-Unit tests package.
+Unit tests directory.
 
-Per spec.md Independent Test scenarios:
-- Unit tests validate individual component functionality
-- Run independently of external dependencies
-- Each user story has dedicated unit tests
+These tests validate individual components in isolation, focusing
+on specific functions, classes, and edge cases.
 """

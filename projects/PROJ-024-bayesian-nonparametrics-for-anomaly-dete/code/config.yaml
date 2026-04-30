@@ -1,266 +1,193 @@
-# =============================================================================
-# Configuration File for Bayesian Nonparametrics Anomaly Detection System
-# =============================================================================
-# This file contains all hyperparameters, random seeds, dataset paths, and
-# decision boundary settings for the DPGMM-based anomaly detection pipeline.
-#
-# Per Constitution Principle III: All artifacts must be hashable and
-# reproducible. All random seeds and decision boundaries are documented here.
-# =============================================================================
+# ============================================================================
+# DPGMM Anomaly Detection Configuration
+# ============================================================================
+# Project: Bayesian Nonparametrics for Anomaly Detection in Time Series
+# Branch: 001-bayesian-nonparametrics-anomaly-detection
+# ============================================================================
 
 # -----------------------------------------------------------------------------
-# Random Seeds (Reproducibility)
+# HYPERPARAMETERS
 # -----------------------------------------------------------------------------
-random_seeds:
-  global_seed: 42                    # Global seed for numpy, python random
-  model_init_seed: 123               # Seed for DPGMM model initialization
-  synthetic_data_seed: 456           # Seed for synthetic dataset generation
-  train_test_split_seed: 789         # Seed for data splitting
+dpgmm:
+  # Dirichlet Process concentration parameter (alpha)
+  # Controls expected number of mixture components
+  # Lower values favor fewer components, higher values allow more flexibility
+  concentration_alpha: 1.0
 
-# -----------------------------------------------------------------------------
-# DPGMM Model Hyperparameters (US1 - Core DPGMM Implementation)
-# -----------------------------------------------------------------------------
-dp_gmm:
-  # Dirichlet Process concentration parameter
-  # Controls number of mixture components (higher = more components)
-  concentration_initial: 1.0
-  concentration_min: 0.1             # Lower bound for adaptive tuning
-  concentration_max: 10.0            # Upper bound for adaptive tuning
-  concentration_update_interval: 100 # Update every N observations
+  # Gaussian-Wishart prior hyperparameters for each mixture component
+  # mu_0: prior mean for component means
+  # kappa_0: precision scaling factor for prior mean
+  # lambda_0: prior degrees of freedom for Wishart
+  # psi_0: prior scale matrix for Wishart (inverse covariance)
+  gaussian_wishart:
+    mu_0: 0.0
+    kappa_0: 0.01
+    lambda_0: 2
+    psi_0: 1.0
 
-  # Gaussian mixture component priors
-  mean_prior_mu: 0.0                 # Prior mean for component means
-  mean_prior_lambda: 0.01            # Precision of mean prior
-  mean_prior_alpha: 1.0              # Degrees of freedom for covariance
-  mean_prior_beta: 0.01              # Scale parameter for covariance
-
-  # Variational inference (ADVI) settings
-  variational_iterations: 100        # Max ELBO iterations per update
-  variational_learning_rate: 0.01    # Step size for ADVI updates
-  variational_elbo_tolerance: 1e-6   # Convergence tolerance for ELBO
-  variational_batch_size: 1          # Streaming = 1 observation at a time
+  # ADVI variational inference parameters
+  advi:
+    # Number of variational iterations per streaming update
+    n_iter: 100
+    # Learning rate for stochastic gradient updates
+    learning_rate: 0.01
+    # ELBO convergence tolerance
+    elbo_tol: 1e-4
+    # Random seed for reproducibility
+    random_seed: 42
 
   # Anomaly scoring parameters
-  anomaly_score_type: negative_log_posterior  # Score computation method
-  score_smoothing_factor: 0.9        # Exponential smoothing for scores
-
-  # Numerical stability settings
-  min_variance: 1e-6                 # Minimum variance to prevent instability
-  max_components: 50                 # Maximum mixture components allowed
-  min_component_weight: 1e-4         # Prune components below this weight
+  anomaly:
+    # Scoring method: 'negative_log_posterior' or 'mahalanobis_distance'
+    scoring_method: negative_log_posterior
+    # Minimum number of observations before scoring is enabled
+    warmup_period: 50
 
 # -----------------------------------------------------------------------------
-# Decision Boundary Configuration (US3 - Threshold Calibration)
+# THRESHOLD CALIBRATION (User Story 3)
 # -----------------------------------------------------------------------------
-# =============================================================================
-# DECISION BOUNDARY DOCUMENTATION
-# =============================================================================
-# Per FR-007 and US3 Acceptance Scenario 2:
-# This section documents the decision boundary logic for anomaly flagging.
-# The threshold is ADAPTIVE and computed from unlabeled data using statistical
-# properties of the anomaly score distribution.
-#
-# Decision Boundary Logic:
-# -------------------------
-# 1. Score Distribution Analysis:
-#    - Anomaly scores follow a negative log-posterior distribution
-#    - Normal observations cluster around lower scores
-#    - Anomalies appear as outliers with higher scores
-#
-# 2. Threshold Computation (Adaptive):
-#    - Primary method: 95th percentile of score distribution
-#    - Alternative: mean + 3*std (for Gaussian-like distributions)
-#    - Minimum threshold: 90th percentile (conservative)
-#    - Maximum threshold: 99th percentile (aggressive)
-#
-# 3. Calibration Process:
-#    - Collect anomaly scores over a calibration window (default: 1000 obs)
-#    - Compute adaptive threshold using percentile method
-#    - Validate anomaly rate is within expected bounds (1-5%)
-#    - Store threshold in AdaptiveThresholdState for streaming use
-#
-# 4. Decision Rule:
-#    - If anomaly_score > threshold: FLAG as anomaly
-#    - Else: classify as normal
-#
-# 5. Replication Notes:
-#    - All threshold parameters are stored here for exact replication
-#    - Random seeds ensure reproducible score distributions
-#    - Calibration window size affects threshold stability
-# =============================================================================
+# Decision boundary configuration for anomaly flagging without labeled data
+# Per FR-007 and US3 acceptance scenario 2
+threshold:
+  # Calibration method for unlabeled data
+  # Options: 'percentile', 'mad', 'adaptive'
+  method: percentile
 
-decision_boundary:
-  # Threshold computation method
-  # Options: 'percentile', 'gaussian', 'adaptive', 'fixed'
-  threshold_method: percentile
+  # Percentile threshold for anomaly detection (95th percentile of score distribution)
+  # Points with anomaly scores above this percentile are flagged as anomalies
+  # This is the primary decision boundary for US3
+  percentile_value: 95
 
-  # Percentile-based threshold (primary method)
-  percentile_target: 95.0            # 95th percentile = 5% expected anomaly rate
-  percentile_min: 90.0               # Minimum acceptable percentile
-  percentile_max: 99.0               # Maximum acceptable percentile
+  # MAD (Median Absolute Deviation) multiplier for alternative threshold
+  # Used when percentile method is not appropriate
+  mad_multiplier: 3.0
 
-  # Gaussian-based threshold (fallback method)
-  gaussian_sigma_multiplier: 3.0     # mean + 3*std for normal distribution
+  # Minimum anomaly rate floor (0.01 = 1% minimum anomaly rate)
+  min_anomaly_rate: 0.01
 
-  # Adaptive threshold configuration
-  adaptive_enabled: true             # Enable dynamic threshold adjustment
-  calibration_window_size: 1000      # Number of observations for calibration
-  calibration_update_frequency: 500  # Update threshold every N observations
+  # Maximum anomaly rate ceiling (0.10 = 10% maximum anomaly rate)
+  max_anomaly_rate: 0.10
 
-  # Anomaly rate validation bounds
-  anomaly_rate_min: 0.01             # Minimum expected anomaly rate (1%)
-  anomaly_rate_max: 0.10             # Maximum expected anomaly rate (10%)
-  anomaly_rate_target: 0.05          # Target anomaly rate (5%)
+  # Number of observations to collect before initial threshold calibration
+  calibration_window: 200
 
-  # Threshold smoothing (to prevent rapid fluctuations)
-  threshold_smoothing_alpha: 0.1     # Exponential smoothing factor
-  threshold_min_change: 0.01         # Minimum change to trigger update
+  # Whether to update threshold adaptively during streaming
+  adaptive_threshold: true
 
-  # Decision boundary documentation hash (for verification)
-  # This hash documents the exact decision boundary logic version
-  boundary_version: "1.0.0"
-  boundary_hash: "tbd_after_implementation"  # Will be computed after T047
-
-  # Multiple dataset calibration (US3 Acceptance Scenario 3)
-  multi_dataset_enabled: true
-  multi_dataset_weight_method: harmonic_mean  # Combine thresholds across datasets
+  # Smoothing factor for adaptive threshold updates (0.0 = no smoothing, 1.0 = full smoothing)
+  smoothing_factor: 0.1
 
 # -----------------------------------------------------------------------------
-# Dataset Configuration
+# DATASET PATHS
+# -----------------------------------------------------------------------------
+paths:
+  # Base project directory (relative to code/)
+  base_dir: ..
+
+  # Raw data directory
+  raw_data: ../data/raw
+
+  # Processed data directory
+  processed_data: ../data/processed
+
+  # Results output directory
+  results: ../data/results
+
+  # Log files directory
+  logs: ../logs
+
+  # State/checksums directory
+  state: ../state
+
+# -----------------------------------------------------------------------------
+# DATASET CONFIGURATION
 # -----------------------------------------------------------------------------
 datasets:
-  # Base directory for all data
-  base_path: data/
+  # UCI Electricity Load Diagrams
+  electricity:
+    url: https://archive.ics.uci.edu/ml/machine-learning-databases/00321/LD2011_2014.txt
+    file: electricity_load.csv
+    has_anomaly_labels: false
+    observation_count: 35040
 
-  # Raw data directory (downloaded datasets)
-  raw_path: data/raw/
+  # UCI Traffic Volume
+  traffic:
+    url: https://archive.ics.uci.edu/ml/machine-learning-databases/00331/Traffic%20Volume%20Data.zip
+    file: traffic_volume.csv
+    has_anomaly_labels: false
+    observation_count: 17544
 
-  # Processed data directory (preprocessed/feature-engineered)
-  processed_path: data/processed/
-
-  # Results directory (outputs, metrics, plots)
-  results_path: data/results/
-
-  # Available datasets (see download_datasets.py for fetchers)
-  available:
-    - name: electricity
-      url: https://archive.ics.uci.edu/ml/machine-learning-databases/00491/
-      local_path: data/raw/electricity.csv
-      checksum_file: data/checksums/electricity.sha256
-      description: "UCI Electricity Load Diagrams (2014-2015)"
-
-    - name: traffic
-      url: https://archive.ics.uci.edu/ml/machine-learning-databases/00502/
-      local_path: data/raw/traffic.csv
-      checksum_file: data/checksums/traffic.sha256
-      description: "UCI Traffic Flow Data (San Francisco Bay Area)"
-
-    - name: pems_sf
-      url: https://pems.dot.ca.gov/
-      local_path: data/raw/pems_sf.csv
-      checksum_file: data/checksums/pems_sf.sha256
-      description: "PEMS-SF Traffic Data (California Department of Transportation)"
-
-    - name: nyc_taxi
-      url: https://raw.githubusercontent.com/numenta/NAB/master/data/realKnownCause/nyc_taxi.csv
-      local_path: data/raw/nyc_taxi.csv
-      checksum_file: data/checksums/nyc_taxi.sha256
-      description: "NAB Benchmark - NYC Taxi Passenger Count"
-
-    - name: synthetic
-      local_path: data/raw/synthetic.csv
-      checksum_file: data/checksums/synthetic.sha256
-      description: "Synthetic dataset generated by code/data/synthetic_generator.py"
+  # UCI Synthetic Control Chart
+  synthetic_control:
+    url: https://archive.ics.uci.edu/ml/machine-learning-databases/00360/synthetic_control.data
+    file: synthetic_control.csv
+    has_anomaly_labels: true
+    observation_count: 600
 
 # -----------------------------------------------------------------------------
-# Evaluation Configuration (US2 - Baseline Comparison)
+# EVALUATION SETTINGS (User Story 2)
 # -----------------------------------------------------------------------------
 evaluation:
-  # Metrics to compute
-  metrics:
-    - f1_score
-    - precision
-    - recall
-    - auc_roc
-    - auc_pr
-    - confusion_matrix
+  # Baseline models to compare against DPGMM
+  baselines:
+    - moving_average_zscore
+    - arima
+    - lstm_autoencoder
 
-  # Statistical testing
+  # Statistical test configuration
   statistical_tests:
-    - paired_ttest
-    - bonferroni_correction
+    # Paired t-test with Bonferroni correction
+    use_bonferroni: true
+    # Significance level
+    alpha: 0.05
 
-  # Plot generation
-  plots:
-    - roc_curve
-    - pr_curve
-    - confusion_matrix
-    - score_distribution
-
-  # Performance constraints
-  max_runtime_per_dataset_minutes: 30
+  # Runtime constraints
+  max_runtime_minutes: 30
   max_memory_gb: 7
 
 # -----------------------------------------------------------------------------
-# Baseline Models Configuration (US2 - Baseline Comparison)
+# MEMORY & PERFORMANCE
 # -----------------------------------------------------------------------------
-baselines:
-  arima:
-    order:
-      p: 1
-      d: 1
-      q: 1
-    seasonal_order:
-      P: 0
-      D: 0
-      Q: 0
-      s: 0
-    trend: 'c'
-    enforce_stationarity: true
-    enforce_invertibility: true
+performance:
+  # Maximum number of mixture components to prevent unbounded growth
+  max_components: 50
 
-  moving_average:
-    window_size: 20                # Number of observations for moving average
-    z_score_threshold: 3.0         # Standard deviations for anomaly detection
-    min_samples: 50                # Minimum samples before threshold valid
+  # Prune components with weight below this threshold
+  prune_threshold: 0.001
+
+  # Memory profiling enabled
+  profile_memory: true
+
+  # Streaming batch size (1 for true streaming, >1 for mini-batch updates)
+  batch_size: 1
 
 # -----------------------------------------------------------------------------
-# Streaming Configuration (Foundation - Phase 2)
+# REPLICATION & REPRODUCIBILITY
 # -----------------------------------------------------------------------------
-streaming:
-  # Observation buffer settings
-  window_buffer_size: 100          # Sliding window for local statistics
-  max_memory_mb: 500               # Maximum memory for streaming buffers
+replication:
+  # Global random seed for all stochastic operations
+  global_seed: 42
 
-  # Missing value handling
-  missing_value_strategy: impute   # Options: 'impute', 'skip', 'interpolate'
-  imputation_method: forward_fill  # Options: 'forward_fill', 'mean', 'linear'
+  # Enable deterministic operations where possible
+  deterministic_mode: true
 
-  # Observation frequency
-  expected_frequency_seconds: 300  # Expected time between observations
-  timeout_seconds: 600             # Timeout for missing observations
+  # Version control for configuration
+  config_version: "1.0.0"
 
-# -----------------------------------------------------------------------------
-# Logging Configuration
-# -----------------------------------------------------------------------------
-logging:
-  level: INFO                      # Options: DEBUG, INFO, WARNING, ERROR
-  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
-  file: logs/anomaly_detection.log
-  max_file_size_mb: 100
-  backup_count: 5
-
-# -----------------------------------------------------------------------------
-# Constitution Principle Compliance
-# -----------------------------------------------------------------------------
-# Per Constitution Principle III: All artifacts must have checksums recorded.
-# Per Constitution Principle VI: ELBO convergence must be logged.
-# Per Constitution Principle VII: All decisions must be documented and hashable.
-#
-# This config file itself should be hashed after any changes and recorded
-# in state/projects/PROJ-024-bayesian-nonparametrics-for-anomaly-dete.yaml
-#
-# Decision boundary version: ${decision_boundary.boundary_version}
-# Decision boundary hash: ${decision_boundary.boundary_hash}
-# Last updated: 2024-01-15 (T046 implementation)
-# =============================================================================
+  # Decision boundary documentation:
+  # The primary decision boundary for anomaly detection is set via the
+  # threshold.percentile_value parameter (95th percentile by default).
+  # This creates an adaptive threshold that calibrates to the observed
+  # score distribution without requiring labeled anomaly data.
+  #
+  # For replication:
+  # 1. Set threshold.method = 'percentile'
+  # 2. Adjust threshold.percentile_value to control sensitivity
+  # 3. Lower percentile_value = more sensitive (more anomalies detected)
+  # 4. Higher percentile_value = less sensitive (fewer anomalies detected)
+  # 5. The adaptive_threshold flag enables dynamic threshold updates during
+  #    streaming to handle concept drift in the score distribution
+  #
+  # Alternative methods available:
+  # - 'mad': Uses Median Absolute Deviation (threshold_multiplier * MAD)
+  # - 'adaptive': Combines percentile with exponential smoothing

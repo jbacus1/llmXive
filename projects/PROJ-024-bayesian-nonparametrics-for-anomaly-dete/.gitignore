@@ -22,8 +22,8 @@ wheels/
 
 # Virtual environments
 venv/
-ENV/
 env/
+ENV/
 .venv/
 
 # IDE
@@ -31,20 +31,35 @@ env/
 .vscode/
 *.swp
 *.swo
-
-# Data
-data/raw/*.csv
-data/raw/*.json
-data/processed/*.csv
-data/processed/*.json
-
-# Logs
-*.log
-code/.tasks/
-
-# State (keep only the yaml, not generated artifacts)
-state/artifacts/
+*~
 
 # OS
 .DS_Store
 Thumbs.db
+
+# Logs (except ELBO logs)
+*.log
+!logs/elbo/*.log
+logs/*.log
+
+# Data
+data/raw/*.csv
+data/processed/*.csv
+data/raw/*.json
+data/processed/*.json
+
+# State (checksums should be tracked, but large files not)
+state/projects/*.yaml
+
+# Test artifacts
+.pytest_cache/
+.coverage
+htmlcov/
+.mypy_cache/
+
+# Jupyter
+*.ipynb_checkpoints
+
+# Config with sensitive data
+.env
+.env.local

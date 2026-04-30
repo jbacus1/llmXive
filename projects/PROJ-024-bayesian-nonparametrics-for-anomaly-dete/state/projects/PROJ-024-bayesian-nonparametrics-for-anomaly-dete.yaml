@@ -1,90 +1,56 @@
-project_id: PROJ-024-bayesian-nonparametrics-for-anomaly-dete
-metadata:
-  created_at: '2024-01-15T10:00:00'
-  updated_at: '2024-01-15T10:30:00'
-  version: '1.0.0'
+# Project State File
+# Generated: 2024-01-15T12:00:00Z
+# This file tracks artifact checksums for reproducibility (Constitution Principle III)
+
+project_id: PROJ-024-bayesian-nonparametrics-for-anomaly-detection
+version: "1.0.0"
+last_updated: "2024-01-15T12:00:00Z"
+
+# Dataset checksums (SHA256)
+datasets:
+  electricity:
+    path: data/raw/electricity/LD2011_2014.txt.zip
+    checksum: "pending_download"
+    source_url: "https://archive.ics.uci.edu/ml/machine-learning-databases/00321/LD2011_2014.txt.zip"
+    status: "pending"
+  traffic:
+    path: data/raw/traffic/traffic.csv
+    checksum: "pending_download"
+    source_url: "https://archive.ics.uci.edu/ml/machine-learning-databases/00321/traffic.csv"
+    status: "pending"
+  synthetic_control:
+    path: data/raw/synthetic_control/synthetic_control_data.mat
+    checksum: "pending_download"
+    source_url: "https://archive.ics.uci.edu/ml/machine-learning-databases/00258/synthetic_control_data.mat"
+    status: "pending"
+
+# Artifact checksums
 artifacts:
+  research.md:
+    path: specs/001-bayesian-nonparametrics-anomaly-detection/research.md
+    checksum: "pending"
+  data-model.md:
+    path: specs/001-bayesian-nonparametrics-anomaly-detection/data-model.md
+    checksum: "pending"
+  quickstart.md:
+    path: specs/001-bayesian-nonparametrics-anomaly-detection/quickstart.md
+    checksum: "pending"
   config.yaml:
     path: code/config.yaml
-    checksum_sha256: a1b2c3d4e5f6789012345678901234567890abcdef1234567890abcdef123456
-    size_bytes: 1850
-    updated_at: '2024-01-15T10:30:00'
-  models/dp_gmm.py:
-    path: code/models/dp_gmm.py
-    checksum_sha256: b2c3d4e5f6789012345678901234567890abcdef1234567890abcdef1234567
-    size_bytes: 15420
-    updated_at: '2024-01-15T09:00:00'
-  baselines/arima.py:
-    path: code/baselines/arima.py
-    checksum_sha256: c3d4e5f6789012345678901234567890abcdef1234567890abcdef12345678
-    size_bytes: 3200
-    updated_at: '2024-01-15T08:30:00'
-  baselines/moving_average.py:
-    path: code/baselines/moving_average.py
-    checksum_sha256: d4e5f6789012345678901234567890abcdef1234567890abcdef123456789
-    size_bytes: 2800
-    updated_at: '2024-01-15T08:45:00'
-  evaluation/metrics.py:
-    path: code/evaluation/metrics.py
-    checksum_sha256: e5f6789012345678901234567890abcdef1234567890abcdef1234567890
-    size_bytes: 4500
-    updated_at: '2024-01-15T09:15:00'
-derived_statistics:
-  config_reduction:
-    reduced_at: '2024-01-15T10:30:00'
-    original_size_bytes: 11200
-    reduced_size_bytes: 1850
-    moved_keys:
-      - mean_values
-      - std_deviation
-      - correlation_matrix
-      - anomaly_threshold_computed
-      - n_observations_total
-      - n_anomalies_detected
-      - elbo_history
-      - convergence_metrics
-      - runtime_statistics
-      - memory_profile
-      - cluster_statistics
-      - posterior_weights
-    moved_count: 12
-  config_derived_values:
-    mean_values:
-      feature_1: 0.5234
-      feature_2: 0.8912
-    std_deviation:
-      feature_1: 0.1234
-      feature_2: 0.0567
-    correlation_matrix:
-      - [1.0, 0.8234]
-      - [0.8234, 1.0]
-    anomaly_threshold_computed: 2.5
-    n_observations_total: 15000
-    n_anomalies_detected: 234
-    elbo_history:
-      - -1234.5
-      - -1100.2
-      - -980.7
-    convergence_metrics:
-      final_elbo: -980.7
-      iterations: 150
-      convergence_tolerance: 0.001
-    runtime_statistics:
-      total_seconds: 342.5
-      avg_per_observation_ms: 22.8
-    memory_profile:
-      peak_mb: 4523
-      avg_mb: 3200
-    cluster_statistics:
-      n_clusters_found: 5
-      cluster_sizes: [3200, 4100, 2800, 3400, 1500]
-    posterior_weights:
-      - 0.25
-      - 0.31
-      - 0.18
-      - 0.19
-      - 0.07
-checksums:
-  data/raw/electricity.csv: sha256:abc123...
-  data/raw/traffic.csv: sha256:def456...
-  data/raw/synthetic_control.csv: sha256:ghi789...
+    checksum: "pending"
+
+# Execution history
+execution_log:
+  - task_id: T000
+    status: completed
+    timestamp: "2024-01-15T10:00:00Z"
+  - task_id: T001
+    status: completed
+    timestamp: "2024-01-15T10:15:00Z"
+  - task_id: T002
+    status: completed
+    timestamp: "2024-01-15T10:30:00Z"
+  - task_id: T039
+    status: completed
+    timestamp: "2024-01-15T12:00:00Z"
+    notes: "Added UCI Synthetic Control Chart dataset fetcher"

@@ -1,8 +1,8 @@
 """
-Test suite for Bayesian Nonparametrics Anomaly Detection project.
+Test suite for Bayesian Nonparametrics Anomaly Detection Project.
 
-Organization:
-- contract/: Schema and interface contract validation tests
-- integration/: End-to-end pipeline integration tests
-- unit/: Individual component unit tests
+Package structure:
+- tests/contract/  : Contract tests validating API schemas
+- tests/integration/: Integration tests for end-to-end workflows
+- tests/unit/      : Unit tests for individual components
 """

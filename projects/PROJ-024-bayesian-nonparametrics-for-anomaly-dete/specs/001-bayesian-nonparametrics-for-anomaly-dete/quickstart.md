@@ -1,132 +1,139 @@
-# Quickstart: Bayesian Nonparametrics for Anomaly Detection in Time Series
-
-## Prerequisites
-
-- Python 3.11+
-- pip 23.0+
-- 7GB+ available RAM
-- Network connectivity for dataset downloads
+# Quick Start Guide
 
 ## Installation
 
-1. **Clone and setup virtual environment**
-
 ```bash
+# Clone and setup
+git clone <repository-url>
 cd projects/PROJ-024-bayesian-nonparametrics-for-anomaly-dete/code
+
+# Create virtual environment
 python -m venv venv
 source venv/bin/activate  # On Windows: venv\Scripts\activate
+
+# Install dependencies
 pip install -r requirements.txt
 ```
 
-2. **Verify installation**
+## Quick Example
+
+### 1. Download Datasets
 
 ```bash
-python -c "import pymc; import numpy; import pandas; print('Dependencies OK')"
+python code/download_datasets.py --all
+```
+
+This downloads all NAB and UCI datasets with checksum validation.
+
+### 2. Run DPGMM on Synthetic Data
+
+```bash
+python code/scripts/test_advi_inference.py
+```
+
+This generates synthetic data, trains the DPGMM, and outputs anomaly scores.
+
+### 3. Compare with Baselines
+
+```bash
+python code/evaluation/statistical_tests.py --datasets nyc_taxi electricity
+```
+
+Compares DPGMM against ARIMA and Moving Average baselines.
+
+## Project Structure
+
+```
+projects/PROJ-024-bayesian-nonparametrics-for-anomaly-dete/
+├── code/
+│   ├── src/
+│   │   ├── models/
+│   │   │   ├── dp_gmm.py          # Main DPGMM implementation
+│   │   │   └── time_series.py     # Time series dataclass
+│   │   ├── baselines/
+│   │   │   ├── arima.py           # ARIMA baseline
+│   │   │   └── moving_average.py  # Moving average baseline
+│   │   ├── evaluation/
+│   │   │   ├── metrics.py         # Evaluation metrics
+│   │   │   └── plots.py           # ROC/PR curve plots
+│   │   └── utils/
+│   │       ├── streaming.py       # Streaming observation utils
+│   │       └── threshold.py       # Threshold calibration
+│   ├── scripts/
+│   │   ├── download_datasets.py   # Dataset download script
+│   │   └── test_advi_inference.py # Quick test script
+│   └── config.yaml                # Hyperparameters
+├── data/
+│   ├── raw/                       # Downloaded datasets
+│   └── processed/                 # Processed data
+├── specs/
+│   └── 001-bayesian-nonparametrics-anomaly-detection/
+│       ├── research.md            # Literature review
+│       ├── data-model.md          # Data specifications
+│       └── quickstart.md          # This file
+├── tests/
+│   ├── contract/                  # Schema contract tests
+│   ├── integration/               # Integration tests
+│   └── unit/                      # Unit tests
+└── state/
+    └── projects/PROJ-024-bayesian-nonparametrics-for-anomaly-dete.yaml
 ```
 
 ## Configuration
 
-Edit `config.yaml` with your settings:
+Edit `code/config.yaml` to customize:
 
 ```yaml
-# Random seeds for reproducibility
-random_seed: 42
-pymc_seed: 42
+hyperparameters:
+  concentration: 1.0        # Dirichlet process concentration
+  truncation_level: 100     # Maximum mixture components
+  learning_rate: 0.01       # ADVI step size
+  random_seed: 42           # Reproducibility
 
-# DPGMM hyperparameters
-concentration_param: 1.0
-max_components: 10
-
-# ADVI settings
-advi_n_iter: 10000
-advi_tolerance: 1e-3
-
-# Threshold calibration
-threshold_percentile: 95
-
-# Datasets to process
-datasets:
-  - electricity
-  - traffic
-  - pems_sf
+thresholds:
+  anomaly_percentile: 95    # Adaptive anomaly threshold
 ```
 
-## Running the Pipeline
-
-### Step 1: Download Datasets
+## Running Tests
 
 ```bash
-python src/data/downloaders.py --datasets electricity traffic pems_sf
-```
+# Contract tests
+python code/scripts/run_contract_tests.py
 
-This fetches datasets from UCI via ucimlrepo and stores them in `data/raw/`.
-
-### Step 2: Run DPGMM Anomaly Detection
-
-```bash
-python src/services/anomaly_detector.py --config config.yaml --mode streaming
-```
-
-This processes each dataset incrementally and outputs anomaly scores.
-
-### Step 3: Evaluate Against Baselines
-
-```bash
-python src/evaluation/metrics.py --config config.yaml --baselines arima moving_average
-```
-
-This computes F1-scores, precision, recall, and AUC for all methods.
-
-### Step 4: Generate Visualizations
-
-```bash
-python src/evaluation/visualizations.py --config config.yaml
-```
-
-This generates ROC and PR curves saved to `figures/`.
-
-## Testing
-
-### Run All Tests
-
-```bash
+# All tests
 pytest tests/ -v
 ```
 
-### Run Contract Tests Only
+## Expected Output
 
-```bash
-pytest tests/contract/ -v
+After running `test_advi_inference.py`:
+
 ```
-
-### Run Unit Tests Only
-
-```bash
-pytest tests/unit/ -v
+[INFO] Generated synthetic time series with 1000 observations
+[INFO] Trained DPGMM with 7 active components
+[INFO] ELBO converged after 234 iterations
+[INFO] Anomaly scores computed for all observations
+[INFO] Detected 48 anomalies (4.8% rate)
+[INFO] Results saved to data/results/anomaly_scores.csv
 ```
-
-## Expected Outputs
-
-After successful execution:
-
-- `data/processed/`: Processed dataset files with checksums
-- `figures/roc_*.png`: ROC curves for all datasets and methods
-- `figures/pr_*.png`: Precision-recall curves for all datasets and methods
-- `results/metrics.json`: Evaluation metrics in JSON format
-- `logs/`: Execution logs with convergence diagnostics
 
 ## Troubleshooting
 
-| Issue | Solution |
-|-------|----------|
-| Memory exceeds 7GB | Reduce max_components in config.yaml; verify ADVI convergence |
-| Dataset download fails | Check network connectivity; verify ucimlrepo version |
-| Convergence not achieved | Increase advi_n_iter; adjust concentration_param |
-| Runtime exceeds 30 minutes | Reduce dataset size for testing; enable early stopping |
+### Issue: Checksum validation fails
+
+**Solution**: Re-run `download_datasets.py` to redownload corrupted files.
+
+### Issue: Memory limit exceeded
+
+**Solution**: Reduce `truncation_level` in config.yaml or use synthetic data.
+
+### Issue: No anomalies detected
+
+**Solution**: Lower `anomaly_percentile` threshold or verify data quality.
 
 ## Next Steps
 
-1. Review results in `results/metrics.json`
-2. Examine convergence diagnostics in `logs/`
-3. Compare F1-scores against SC-001 threshold (within 5% of baselines)
-4. Document findings for paper section on experimental results
+1. Review `research.md` for theoretical background
+2. Examine `data-model.md` for schema details
+3. Run baseline comparisons in `statistical_tests.py`
+4. Deploy streaming detector using `anomaly_detector.py` service

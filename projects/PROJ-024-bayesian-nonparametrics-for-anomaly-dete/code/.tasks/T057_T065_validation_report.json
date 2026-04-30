@@ -1,0 +1,14 @@
+{
+  "timestamp": "2026-04-30T13:14:08.649022",
+  "project_id": "PROJ-024-bayesian-nonparametrics-for-anomaly-dete",
+  "total_artifacts": 0,
+  "validated_artifacts": 0,
+  "failed_artifacts": 0,
+  "missing_artifacts": [],
+  "checksum_mismatches": [],
+  "validation_errors": [
+    "Quickstart document not found"
+  ],
+  "status": "failure",
+  "details": []
+}
