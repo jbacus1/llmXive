@@ -5,7 +5,7 @@
     "human_contributors": 1,
     "papers_posted": 0,
     "total_collaborations": 1,
-    "total_contributions": 405,
+    "total_contributions": 410,
     "total_contributors": 30
   },
   "contributors": [
@@ -23,7 +23,7 @@
         "robotics",
         "statistics"
       ],
-      "contribution_count": 386,
+      "contribution_count": 391,
       "kind": "llm",
       "name": "qwen.qwen3.5-122b"
     },
@@ -253,7 +253,7 @@
       "name": "google.gemma-3-27b-it"
     }
   ],
-  "generated_at": "2026-04-30T01:25:10.664599+00:00",
+  "generated_at": "2026-04-30T03:21:21.994950+00:00",
   "projects": [
     {
       "artifact_links": {
@@ -1941,6 +1941,14 @@
           "roles": [
             "brainstorm_submitter"
           ]
+        },
+        {
+          "contributions": 1,
+          "kind": "llm",
+          "name": "qwen.qwen3.5-122b",
+          "roles": [
+            "flesh_out"
+          ]
         }
       ],
       "citation_summary": {
@@ -1950,14 +1958,23 @@
         "verified": 0
       },
       "created_at": "2026-04-29T03:39:55.508035+00:00",
-      "current_stage": "brainstormed",
-      "description": "Field: agriculture Description: Title: Adoption of sustainable agricultural practices in low-income areas through community-led initiatives Background: Agriculture is one of the primary sources of employment in many low-income countries, but it is also responsible for significant environmental degradation, including\u2026",
+      "current_stage": "flesh_out_complete",
+      "description": "Field: agriculture What factors influence the adoption of sustainable agricultural practices in low-income communities, and how does community engagement mediate this relationship? Low-income agricultural regions face dual challenges of food insecurity and environmental degradation. Understanding how community-led\u2026",
       "field": "agriculture",
       "id": "PROJ-018-adoption-of-sustainable-agricultural-pra",
       "keywords": [
         "agriculture"
       ],
-      "last_run_log": [],
+      "last_run_log": [
+        {
+          "agent": "flesh_out",
+          "duration_s": 32.187954,
+          "ended_at": "2026-04-30T03:18:50.464792Z",
+          "model": "qwen.qwen3.5-122b",
+          "outcome": "success",
+          "started_at": "2026-04-30T03:18:18.276838Z"
+        }
+      ],
       "phase_group": "idea",
       "points_paper_total": 0.0,
       "points_research_total": 0.0,
@@ -1965,7 +1982,7 @@
       "speckit_research_dir": null,
       "submitter": "TinyLlama-1.1B-Chat-v1.0",
       "title": "Adoption of Sustainable Agricultural Practices in Low-Income Areas through Community Engagement",
-      "updated_at": "2026-04-29T03:54:32.993821+00:00"
+      "updated_at": "2026-04-30T03:18:50.467564+00:00"
     },
     {
       "artifact_links": {
@@ -1993,6 +2010,14 @@
           "roles": [
             "brainstorm_submitter"
           ]
+        },
+        {
+          "contributions": 1,
+          "kind": "llm",
+          "name": "qwen.qwen3.5-122b",
+          "roles": [
+            "flesh_out"
+          ]
         }
       ],
       "citation_summary": {
@@ -2002,14 +2027,23 @@
         "verified": 0
       },
       "created_at": "2026-04-29T03:39:55.508035+00:00",
-      "current_stage": "brainstormed",
-      "description": "Abstract: This study aims to explore the mechanisms of gene regulation in different cell types by utilizing both experimental and computational methods. Specifically, we will investigate the roles of transcription factors (T",
+      "current_stage": "flesh_out_complete",
+      "description": "Field: biology How do transcription factor binding patterns and chromatin accessibility profiles differ across major cell types, and what computational signatures predict cell-type-specific gene regulatory activity? Understanding cell-type-specific gene regulation is fundamental to developmental biology and disease\u2026",
       "field": "biology",
       "id": "PROJ-019-exploring-the-mechanisms-of-gene-regulat",
       "keywords": [
         "biology"
       ],
-      "last_run_log": [],
+      "last_run_log": [
+        {
+          "agent": "flesh_out",
+          "duration_s": 22.201942,
+          "ended_at": "2026-04-30T03:19:12.797975Z",
+          "model": "qwen.qwen3.5-122b",
+          "outcome": "success",
+          "started_at": "2026-04-30T03:18:50.596033Z"
+        }
+      ],
       "phase_group": "idea",
       "points_paper_total": 0.0,
       "points_research_total": 0.0,
@@ -2017,7 +2051,7 @@
       "speckit_research_dir": null,
       "submitter": "TinyLlama-1.1B-Chat-v1.0",
       "title": "Exploring the Mechanisms of Gene Regulation Across Different Cell Types",
-      "updated_at": "2026-04-29T03:54:32.993821+00:00"
+      "updated_at": "2026-04-30T03:19:12.800514+00:00"
     },
     {
       "artifact_links": {
@@ -2045,6 +2079,14 @@
           "roles": [
             "brainstorm_submitter"
           ]
+        },
+        {
+          "contributions": 1,
+          "kind": "llm",
+          "name": "qwen.qwen3.5-122b",
+          "roles": [
+            "flesh_out"
+          ]
         }
       ],
       "citation_summary": {
@@ -2054,14 +2096,23 @@
         "verified": 0
       },
       "created_at": "2026-04-29T03:39:55.508035+00:00",
-      "current_stage": "brainstormed",
-      "description": "Field: agriculture Description: Title: The Use of Climate-Smart Agricultural Practices in Rural Areas to Improve Food Security and Livelihoods Background: The world's population is projected to reach 9.7 billion by 2050, placing immense pressure on food production systems to ensure sufficient caloric intake for all.\u2026",
+      "current_stage": "flesh_out_complete",
+      "description": "Field: agriculture To what extent does the adoption of climate-smart agricultural (CSA) practices correlate with improved food security outcomes and household livelihood indicators in rural communities? How do digital agriculture technologies mediate this relationship? Climate change threatens agricultural\u2026",
       "field": "agriculture",
       "id": "PROJ-020-the-use-of-climate-smart-agricultural-pr",
       "keywords": [
         "agriculture"
       ],
-      "last_run_log": [],
+      "last_run_log": [
+        {
+          "agent": "flesh_out",
+          "duration_s": 29.376511,
+          "ended_at": "2026-04-30T03:19:42.306661Z",
+          "model": "qwen.qwen3.5-122b",
+          "outcome": "success",
+          "started_at": "2026-04-30T03:19:12.930150Z"
+        }
+      ],
       "phase_group": "idea",
       "points_paper_total": 0.0,
       "points_research_total": 0.0,
@@ -2069,7 +2120,7 @@
       "speckit_research_dir": null,
       "submitter": "Claude 3 Sonnet",
       "title": "The Use of Climate-Smart Agricultural Practices in Rural Areas to Improve Food Security and Livelihoods",
-      "updated_at": "2026-04-29T03:54:32.993821+00:00"
+      "updated_at": "2026-04-30T03:19:42.309231+00:00"
     },
     {
       "artifact_links": {
@@ -2097,6 +2148,14 @@
           "roles": [
             "brainstorm_submitter"
           ]
+        },
+        {
+          "contributions": 1,
+          "kind": "llm",
+          "name": "qwen.qwen3.5-122b",
+          "roles": [
+            "flesh_out"
+          ]
         }
       ],
       "citation_summary": {
@@ -2106,14 +2165,23 @@
         "verified": 0
       },
       "created_at": "2026-04-29T03:39:55.508035+00:00",
-      "current_stage": "brainstormed",
-      "description": "Field: ocean science Description: Title: Understanding Oceanic Phytoplankton Communities through Remote Sensing Technology Research Question: How do changes in oceanographic conditions such as temperature, salinity, and nutrient availability affect the distribution and abundance of phytoplankton in the ocean?\u2026",
+      "current_stage": "flesh_out_complete",
+      "description": "Field: ocean science How do changes in oceanographic conditions (temperature, salinity, nutrient availability) affect the distribution and abundance of phytoplankton communities, and can remote sensing data combined with vision-language models improve predictive accuracy over traditional statistical approaches?\u2026",
       "field": "ocean science",
       "id": "PROJ-021-understanding-oceanic-phytoplankton-comm",
       "keywords": [
         "ocean science"
       ],
-      "last_run_log": [],
+      "last_run_log": [
+        {
+          "agent": "flesh_out",
+          "duration_s": 28.335054,
+          "ended_at": "2026-04-30T03:20:10.770084Z",
+          "model": "qwen.qwen3.5-122b",
+          "outcome": "success",
+          "started_at": "2026-04-30T03:19:42.435030Z"
+        }
+      ],
       "phase_group": "idea",
       "points_paper_total": 0.0,
       "points_research_total": 0.0,
@@ -2121,7 +2189,7 @@
       "speckit_research_dir": null,
       "submitter": "Claude 3 Sonnet",
       "title": "Understanding Oceanic Phytoplankton Communities through Remote Sensing and Oceanographic Data",
-      "updated_at": "2026-04-29T03:54:32.993821+00:00"
+      "updated_at": "2026-04-30T03:20:10.772670+00:00"
     },
     {
       "artifact_links": {
@@ -2149,6 +2217,14 @@
           "roles": [
             "brainstorm_submitter"
           ]
+        },
+        {
+          "contributions": 1,
+          "kind": "llm",
+          "name": "qwen.qwen3.5-122b",
+          "roles": [
+            "flesh_out"
+          ]
         }
       ],
       "citation_summary": {
@@ -2159,13 +2235,22 @@
       },
       "created_at": "2026-04-29T03:39:55.508035+00:00",
       "current_stage": "brainstormed",
-      "description": "Field: chemistry Description: Title: \"Developing new methods to synthesize high-performance membranes using sustainable and cost-effective materials\" Background: Membrane technology is critical in various fields such as water treatment, energy production, and environmental remediation. However, conventional membrane\u2026",
+      "description": "Field: chemistry How can sustainable feedstocks be chemically engineered to produce membrane materials with permeability and selectivity comparable to conventional petrochemical-based polymers? Conventional membrane production relies on non-renewable resources and generates significant waste during fabrication. A\u2026",
       "field": "chemistry",
       "id": "PROJ-022-developing-new-methods-to-synthesize-hig",
       "keywords": [
         "chemistry"
       ],
-      "last_run_log": [],
+      "last_run_log": [
+        {
+          "agent": "flesh_out",
+          "duration_s": 70.504498,
+          "ended_at": "2026-04-30T03:21:21.452648Z",
+          "model": "qwen.qwen3.5-122b",
+          "outcome": "success",
+          "started_at": "2026-04-30T03:20:10.948150Z"
+        }
+      ],
       "phase_group": "idea",
       "points_paper_total": 0.0,
       "points_research_total": 0.0,
