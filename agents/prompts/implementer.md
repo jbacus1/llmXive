@@ -108,6 +108,21 @@ intended work in that exact invocation.
 - ✅ If you want optional flags for debugging, fine — but set
   defaults so `python script.py` does the real work.
 
+## Don't break working code (CRITICAL)
+
+If the task references a file that already exists AND a previous run
+of that file in `code/.tasks/<T###>.<path>.log` shows `exit=0` with
+real outputs (not "0 bytes downloaded" — actual data), DO NOT rewrite
+the file from scratch. Extend it minimally to address the new task
+requirement. The most expensive failure mode is the LLM regressing a
+working download/training/evaluation script because a later task
+asked for a "fix" or "refactor".
+
+Specifically: if `data/raw/<dataset>.csv` exists with non-trivial size
+(>1MB), the download approach in the existing `download_datasets.py`
+WORKED. Don't replace it with `ucimlrepo` calls if the previous direct
+HTTP download was producing real data — that's a regression.
+
 ## API consistency (CRITICAL — MOST COMMON FAILURE)
 
 You will be given a `# Existing project API surface` block listing
