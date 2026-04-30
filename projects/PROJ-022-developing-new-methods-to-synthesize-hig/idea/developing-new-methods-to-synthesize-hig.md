@@ -20,10 +20,10 @@ Conventional membrane production relies on non-renewable resources and generates
 
 ## Related work
 
-- [Benefits of Resource Strategy for Sustainable Materials Research and Development](http://arxiv.org/abs/1703.01840v1) — Discusses resource strategy aspects of essential raw materials impacting material applicability and life cycles.
-- [Environmental sustainability in basic research: a perspective from HECAP+](http://arxiv.org/abs/2306.02837v2) — Highlights the responsibility of the scientific community to limit negative environmental impacts in research.
-- [A Chemical Route to Graphene for Electronics and Spintronics Device Applications](http://arxiv.org/abs/1409.5849v1) — Demonstrates selective high precision chemical functionalization strategies for material fabrication.
-- [Multi-Principal-Element Approach to High-Performance Thermoelectric Materials](http://arxiv.org/abs/1911.03797v1) — Explores high-entropy approaches for exploiting high-performance material properties via composition engineering.
+- [Benefits of Resource Strategy for Sustainable Materials Research and Development (2017)](http://arxiv.org/abs/1703.01840v1) — Discusses resource strategy aspects of essential raw materials impacting material applicability and life cycles.
+- [Environmental sustainability in basic research: a perspective from HECAP+ (2023)](http://arxiv.org/abs/2306.02837v2) — Highlights the responsibility of the scientific community to limit negative environmental impacts in research.
+- [A Chemical Route to Graphene for Electronics and Spintronics Device Applications (2014)](http://arxiv.org/abs/1409.5849v1) — Demonstrates selective high precision chemical functionalization strategies for material fabrication.
+- [Multi-Principal-Element Approach to High-Performance Thermoelectric Materials (2019)](http://arxiv.org/abs/1911.03797v1) — Explores high-entropy approaches for exploiting high-performance material properties via composition engineering.
 
 ## Expected results
 
