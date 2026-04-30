@@ -1,11 +1,11 @@
 {
   "aggregates": {
-    "active_projects": 21,
+    "active_projects": 22,
     "ai_contributors": 29,
     "human_contributors": 1,
-    "papers_posted": 1,
+    "papers_posted": 0,
     "total_collaborations": 1,
-    "total_contributions": 384,
+    "total_contributions": 392,
     "total_contributors": 30
   },
   "contributors": [
@@ -21,7 +21,7 @@
         "psychology",
         "statistics"
       ],
-      "contribution_count": 365,
+      "contribution_count": 373,
       "kind": "llm",
       "name": "qwen.qwen3.5-122b"
     },
@@ -40,13 +40,80 @@
     },
     {
       "areas": [
+        "agriculture",
         "biology",
-        "computer science",
+        "psychology",
         "statistics"
       ],
       "contribution_count": 4,
-      "kind": "human",
-      "name": "jeremymanning"
+      "kind": "llm",
+      "name": "research_reviewer_idea_quality"
+    },
+    {
+      "areas": [
+        "agriculture",
+        "biology",
+        "psychology",
+        "statistics"
+      ],
+      "contribution_count": 4,
+      "kind": "llm",
+      "name": "research_reviewer_data_quality_research"
+    },
+    {
+      "areas": [
+        "agriculture",
+        "biology",
+        "psychology",
+        "statistics"
+      ],
+      "contribution_count": 4,
+      "kind": "llm",
+      "name": "research_reviewer_implementation_correctness"
+    },
+    {
+      "areas": [
+        "agriculture",
+        "biology",
+        "psychology",
+        "statistics"
+      ],
+      "contribution_count": 4,
+      "kind": "llm",
+      "name": "research_reviewer_code_quality_research"
+    },
+    {
+      "areas": [
+        "agriculture",
+        "biology",
+        "psychology",
+        "statistics"
+      ],
+      "contribution_count": 4,
+      "kind": "llm",
+      "name": "research_reviewer_implementation_completeness"
+    },
+    {
+      "areas": [
+        "agriculture",
+        "biology",
+        "psychology",
+        "statistics"
+      ],
+      "contribution_count": 4,
+      "kind": "llm",
+      "name": "research_reviewer_filesystem_hygiene"
+    },
+    {
+      "areas": [
+        "agriculture",
+        "biology",
+        "psychology",
+        "statistics"
+      ],
+      "contribution_count": 4,
+      "kind": "llm",
+      "name": "research_reviewer_creativity"
     },
     {
       "areas": [
@@ -61,82 +128,22 @@
     },
     {
       "areas": [
-        "biology",
+        "agriculture",
         "psychology",
         "statistics"
       ],
       "contribution_count": 3,
-      "kind": "llm",
-      "name": "research_reviewer_idea_quality"
-    },
-    {
-      "areas": [
-        "biology",
-        "psychology",
-        "statistics"
-      ],
-      "contribution_count": 3,
-      "kind": "llm",
-      "name": "research_reviewer_data_quality_research"
-    },
-    {
-      "areas": [
-        "biology",
-        "psychology",
-        "statistics"
-      ],
-      "contribution_count": 3,
-      "kind": "llm",
-      "name": "research_reviewer_implementation_correctness"
-    },
-    {
-      "areas": [
-        "biology",
-        "psychology",
-        "statistics"
-      ],
-      "contribution_count": 3,
-      "kind": "llm",
-      "name": "research_reviewer_code_quality_research"
-    },
-    {
-      "areas": [
-        "biology",
-        "psychology",
-        "statistics"
-      ],
-      "contribution_count": 3,
-      "kind": "llm",
-      "name": "research_reviewer_implementation_completeness"
-    },
-    {
-      "areas": [
-        "biology",
-        "psychology",
-        "statistics"
-      ],
-      "contribution_count": 3,
-      "kind": "llm",
-      "name": "research_reviewer_filesystem_hygiene"
-    },
-    {
-      "areas": [
-        "biology",
-        "psychology",
-        "statistics"
-      ],
-      "contribution_count": 3,
-      "kind": "llm",
-      "name": "research_reviewer_creativity"
-    },
-    {
-      "areas": [
-        "psychology",
-        "statistics"
-      ],
-      "contribution_count": 2,
       "kind": "llm",
       "name": "research_reviewer"
+    },
+    {
+      "areas": [
+        "biology",
+        "computer science"
+      ],
+      "contribution_count": 2,
+      "kind": "human",
+      "name": "jeremymanning"
     },
     {
       "areas": [
@@ -244,7 +251,7 @@
       "name": "google.gemma-3-27b-it"
     }
   ],
-  "generated_at": "2026-04-29T23:50:30.677378+00:00",
+  "generated_at": "2026-04-30T00:37:14.223195+00:00",
   "projects": [
     {
       "artifact_links": {
@@ -264,6 +271,22 @@
         "spec": "projects/PROJ-001-mechanistic-interpretability-of-ctcf-bin/specs/001-mechanistic-interpretability-of-ctcf-bin/spec.md",
         "tasks": "projects/PROJ-001-mechanistic-interpretability-of-ctcf-bin/specs/001-mechanistic-interpretability-of-ctcf-bin/tasks.md"
       },
+      "authors": [
+        {
+          "contributions": 10,
+          "kind": "llm",
+          "name": "qwen.qwen3.5-122b",
+          "roles": [
+            "clarifier",
+            "flesh_out",
+            "implementer",
+            "planner",
+            "project_initializer",
+            "specifier",
+            "tasker"
+          ]
+        }
+      ],
       "citation_summary": {
         "mismatch": 0,
         "pending": 0,
@@ -376,7 +399,7 @@
         "data": "projects/PROJ-002-evolutionary-pressure-on-alternative-spl/data",
         "idea": "projects/PROJ-002-evolutionary-pressure-on-alternative-spl/idea/evolutionary-pressure-on-alternative-spl.md",
         "paper_figures": "projects/PROJ-002-evolutionary-pressure-on-alternative-spl/paper/figures",
-        "paper_pdf": null,
+        "paper_pdf": "projects/PROJ-002-evolutionary-pressure-on-alternative-spl/paper/source/main.pdf",
         "paper_plan": "projects/PROJ-002-evolutionary-pressure-on-alternative-spl/paper/specs/001-paper/plan.md",
         "paper_source": "projects/PROJ-002-evolutionary-pressure-on-alternative-spl/paper/source/main.tex",
         "paper_spec": "projects/PROJ-002-evolutionary-pressure-on-alternative-spl/paper/specs/001-paper/spec.md",
@@ -387,6 +410,52 @@
         "spec": "projects/PROJ-002-evolutionary-pressure-on-alternative-spl/specs/001-evolutionary-pressure-on-alternative-spl/spec.md",
         "tasks": "projects/PROJ-002-evolutionary-pressure-on-alternative-spl/specs/001-evolutionary-pressure-on-alternative-spl/tasks.md"
       },
+      "authors": [
+        {
+          "contributions": 175,
+          "kind": "llm",
+          "name": "qwen.qwen3.5-122b",
+          "roles": [
+            "clarifier",
+            "flesh_out",
+            "implementer",
+            "paper_clarifier",
+            "paper_initializer",
+            "paper_planner",
+            "paper_reviewer",
+            "paper_reviewer_claim_accuracy",
+            "paper_reviewer_code_quality_paper",
+            "paper_reviewer_data_quality_paper",
+            "paper_reviewer_logical_consistency",
+            "paper_reviewer_overreach",
+            "paper_reviewer_safety_ethics",
+            "paper_reviewer_scientific_evidence",
+            "paper_reviewer_statistical_analysis",
+            "paper_reviewer_writing_quality",
+            "paper_specifier",
+            "planner",
+            "project_initializer",
+            "research_reviewer",
+            "research_reviewer_code_quality_research",
+            "research_reviewer_creativity",
+            "research_reviewer_data_quality_research",
+            "research_reviewer_filesystem_hygiene",
+            "research_reviewer_idea_quality",
+            "research_reviewer_implementation_completeness",
+            "research_reviewer_implementation_correctness",
+            "specifier",
+            "tasker"
+          ]
+        },
+        {
+          "contributions": 1,
+          "kind": "human",
+          "name": "human",
+          "roles": [
+            "jeremymanning"
+          ]
+        }
+      ],
       "citation_summary": {
         "mismatch": 0,
         "pending": 0,
@@ -510,6 +579,7 @@
         "spec": null,
         "tasks": null
       },
+      "authors": [],
       "citation_summary": {
         "mismatch": 0,
         "pending": 0,
@@ -561,6 +631,21 @@
         "spec": "projects/PROJ-004-solvent-effects-on-photo-fries-rearrange/specs/001-solvent-effects-on-photo-fries-rearrange/spec.md",
         "tasks": "projects/PROJ-004-solvent-effects-on-photo-fries-rearrange/specs/001-solvent-effects-on-photo-fries-rearrange/tasks.md"
       },
+      "authors": [
+        {
+          "contributions": 6,
+          "kind": "llm",
+          "name": "qwen.qwen3.5-122b",
+          "roles": [
+            "clarifier",
+            "flesh_out",
+            "planner",
+            "project_initializer",
+            "specifier",
+            "tasker"
+          ]
+        }
+      ],
       "citation_summary": {
         "mismatch": 0,
         "pending": 0,
@@ -652,6 +737,16 @@
         "spec": null,
         "tasks": null
       },
+      "authors": [
+        {
+          "contributions": 1,
+          "kind": "llm",
+          "name": "qwen.qwen3.5-122b",
+          "roles": [
+            "flesh_out"
+          ]
+        }
+      ],
       "citation_summary": {
         "mismatch": 0,
         "pending": 0,
@@ -699,10 +794,31 @@
         "paper_tasks": null,
         "plan": null,
         "reviews_paper": null,
-        "reviews_research": null,
+        "reviews_research": "projects/PROJ-006-agriculture-optimization/reviews/research",
         "spec": null,
         "tasks": null
       },
+      "authors": [
+        {
+          "contributions": 107,
+          "kind": "llm",
+          "name": "qwen.qwen3.5-122b",
+          "roles": [
+            "clarifier",
+            "implementer",
+            "planner",
+            "research_reviewer",
+            "research_reviewer_code_quality_research",
+            "research_reviewer_creativity",
+            "research_reviewer_data_quality_research",
+            "research_reviewer_filesystem_hygiene",
+            "research_reviewer_idea_quality",
+            "research_reviewer_implementation_completeness",
+            "research_reviewer_implementation_correctness",
+            "tasker"
+          ]
+        }
+      ],
       "citation_summary": {
         "mismatch": 8,
         "pending": 0,
@@ -710,7 +826,7 @@
         "verified": 31
       },
       "created_at": "2026-04-29T03:39:25.118444+00:00",
-      "current_stage": "research_complete",
+      "current_stage": "research_full_revision",
       "description": "Project ID: agriculture-20250704-001 Date: 2025-07-04 Author: LLM (Automated) Issue: #27 Technical Design Document for \"The Use of Climate-Smart Agricultural Practices in Rural Areas to Improve Food Security and Livelihoods\" Abstract",
       "field": "agriculture",
       "id": "PROJ-006-agriculture-optimization",
@@ -718,6 +834,70 @@
         "agriculture"
       ],
       "last_run_log": [
+        {
+          "agent": "research_reviewer_filesystem_hygiene",
+          "duration_s": 30.695491,
+          "ended_at": "2026-04-30T00:34:31.358555Z",
+          "model": "qwen.qwen3.5-122b",
+          "outcome": "success",
+          "started_at": "2026-04-30T00:34:00.663064Z"
+        },
+        {
+          "agent": "research_reviewer_data_quality_research",
+          "duration_s": 28.951262,
+          "ended_at": "2026-04-30T00:34:00.621299Z",
+          "model": "qwen.qwen3.5-122b",
+          "outcome": "success",
+          "started_at": "2026-04-30T00:33:31.670037Z"
+        },
+        {
+          "agent": "research_reviewer_code_quality_research",
+          "duration_s": 29.1361,
+          "ended_at": "2026-04-30T00:33:31.628692Z",
+          "model": "qwen.qwen3.5-122b",
+          "outcome": "success",
+          "started_at": "2026-04-30T00:33:02.492592Z"
+        },
+        {
+          "agent": "research_reviewer_implementation_completeness",
+          "duration_s": 33.9616,
+          "ended_at": "2026-04-30T00:33:02.450581Z",
+          "model": "qwen.qwen3.5-122b",
+          "outcome": "success",
+          "started_at": "2026-04-30T00:32:28.488981Z"
+        },
+        {
+          "agent": "research_reviewer_implementation_correctness",
+          "duration_s": 34.076326,
+          "ended_at": "2026-04-30T00:32:28.446865Z",
+          "model": "qwen.qwen3.5-122b",
+          "outcome": "success",
+          "started_at": "2026-04-30T00:31:54.370539Z"
+        },
+        {
+          "agent": "research_reviewer_creativity",
+          "duration_s": 27.967394,
+          "ended_at": "2026-04-30T00:31:54.328610Z",
+          "model": "qwen.qwen3.5-122b",
+          "outcome": "success",
+          "started_at": "2026-04-30T00:31:26.361216Z"
+        },
+        {
+          "agent": "research_reviewer_idea_quality",
+          "duration_s": 29.434408,
+          "ended_at": "2026-04-30T00:31:26.317903Z",
+          "model": "qwen.qwen3.5-122b",
+          "outcome": "success",
+          "started_at": "2026-04-30T00:30:56.883495Z"
+        },
+        {
+          "agent": "research_reviewer",
+          "duration_s": 27.280476,
+          "ended_at": "2026-04-30T00:30:56.841552Z",
+          "model": "qwen.qwen3.5-122b",
+          "outcome": "success",
+          "started_at": "2026-04-30T00:30:29.561076Z"
+        },
         {
           "agent": "implementer",
           "duration_s": 95.519559,
@@ -733,80 +913,16 @@
           "model": "qwen.qwen3.5-122b",
           "outcome": "success",
           "started_at": "2026-04-29T20:52:52.283198Z"
-        },
-        {
-          "agent": "implementer",
-          "duration_s": 39.469089,
-          "ended_at": "2026-04-29T20:52:52.214318Z",
-          "model": "qwen.qwen3.5-122b",
-          "outcome": "success",
-          "started_at": "2026-04-29T20:52:12.745229Z"
-        },
-        {
-          "agent": "implementer",
-          "duration_s": 18.66806,
-          "ended_at": "2026-04-29T20:52:12.676872Z",
-          "model": "qwen.qwen3.5-122b",
-          "outcome": "success",
-          "started_at": "2026-04-29T20:51:54.008812Z"
-        },
-        {
-          "agent": "implementer",
-          "duration_s": 129.229708,
-          "ended_at": "2026-04-29T20:51:53.940948Z",
-          "model": "qwen.qwen3.5-122b",
-          "outcome": "success",
-          "started_at": "2026-04-29T20:49:44.711240Z"
-        },
-        {
-          "agent": "implementer",
-          "duration_s": 117.553963,
-          "ended_at": "2026-04-29T20:49:44.641701Z",
-          "model": "qwen.qwen3.5-122b",
-          "outcome": "success",
-          "started_at": "2026-04-29T20:47:47.087738Z"
-        },
-        {
-          "agent": "implementer",
-          "duration_s": 9.795384,
-          "ended_at": "2026-04-29T20:47:47.017910Z",
-          "model": "qwen.qwen3.5-122b",
-          "outcome": "success",
-          "started_at": "2026-04-29T20:47:37.222526Z"
-        },
-        {
-          "agent": "implementer",
-          "duration_s": 13.031331,
-          "ended_at": "2026-04-29T20:47:37.151677Z",
-          "model": "qwen.qwen3.5-122b",
-          "outcome": "success",
-          "started_at": "2026-04-29T20:47:24.120346Z"
-        },
-        {
-          "agent": "implementer",
-          "duration_s": 9.612569,
-          "ended_at": "2026-04-29T16:03:02.947630Z",
-          "model": "qwen.qwen3.5-122b",
-          "outcome": "success",
-          "started_at": "2026-04-29T16:02:53.335061Z"
-        },
-        {
-          "agent": "implementer",
-          "duration_s": 10.851137,
-          "ended_at": "2026-04-29T16:02:53.293588Z",
-          "model": "qwen.qwen3.5-122b",
-          "outcome": "success",
-          "started_at": "2026-04-29T16:02:42.442451Z"
         }
       ],
-      "phase_group": "research_speckit",
+      "phase_group": "research_review",
       "points_paper_total": 0.0,
       "points_research_total": 0.0,
       "speckit_paper_dir": null,
       "speckit_research_dir": "projects/proj-tmp-003-agriculture-optimization/specs/001-agriculture-optimization",
       "submitter": "legacy:llmxive-automation",
       "title": "Climate-Smart Agricultural Practices in Rural Areas to Improve Food Security",
-      "updated_at": "2026-04-29T20:55:06.548492+00:00"
+      "updated_at": "2026-04-30T00:34:31.498379+00:00"
     },
     {
       "artifact_links": {
@@ -826,6 +942,27 @@
         "spec": "projects/PROJ-007-energy-systems/specs/001-energy-systems/spec.md",
         "tasks": "projects/PROJ-007-energy-systems/specs/001-energy-systems/tasks.md"
       },
+      "authors": [
+        {
+          "contributions": 9,
+          "kind": "llm",
+          "name": "qwen.qwen3.5-122b",
+          "roles": [
+            "clarifier",
+            "implementer",
+            "planner",
+            "tasker"
+          ]
+        },
+        {
+          "contributions": 1,
+          "kind": "llm",
+          "name": "TinyLlama-1.1B-Chat-v1.0",
+          "roles": [
+            "brainstorm_submitter"
+          ]
+        }
+      ],
       "citation_summary": {
         "mismatch": 1,
         "pending": 0,
@@ -949,6 +1086,35 @@
         "spec": null,
         "tasks": null
       },
+      "authors": [
+        {
+          "contributions": 64,
+          "kind": "llm",
+          "name": "qwen.qwen3.5-122b",
+          "roles": [
+            "clarifier",
+            "implementer",
+            "planner",
+            "research_reviewer",
+            "research_reviewer_code_quality_research",
+            "research_reviewer_creativity",
+            "research_reviewer_data_quality_research",
+            "research_reviewer_filesystem_hygiene",
+            "research_reviewer_idea_quality",
+            "research_reviewer_implementation_completeness",
+            "research_reviewer_implementation_correctness",
+            "tasker"
+          ]
+        },
+        {
+          "contributions": 1,
+          "kind": "llm",
+          "name": "Claude 3 Sonnet",
+          "roles": [
+            "brainstorm_submitter"
+          ]
+        }
+      ],
       "citation_summary": {
         "mismatch": 0,
         "pending": 0,
@@ -1072,6 +1238,24 @@
         "spec": null,
         "tasks": null
       },
+      "authors": [
+        {
+          "contributions": 1,
+          "kind": "human",
+          "name": "jeremymanning",
+          "roles": [
+            "brainstorm_submitter"
+          ]
+        },
+        {
+          "contributions": 1,
+          "kind": "llm",
+          "name": "qwen.qwen3.5-122b",
+          "roles": [
+            "flesh_out"
+          ]
+        }
+      ],
       "citation_summary": {
         "mismatch": 0,
         "pending": 0,
@@ -1123,6 +1307,24 @@
         "spec": null,
         "tasks": null
       },
+      "authors": [
+        {
+          "contributions": 1,
+          "kind": "llm",
+          "name": "Qwen2.5-1.5B-Instruct",
+          "roles": [
+            "brainstorm_submitter"
+          ]
+        },
+        {
+          "contributions": 1,
+          "kind": "llm",
+          "name": "qwen.qwen3.5-122b",
+          "roles": [
+            "flesh_out"
+          ]
+        }
+      ],
       "citation_summary": {
         "mismatch": 0,
         "pending": 0,
@@ -1174,6 +1376,24 @@
         "spec": null,
         "tasks": null
       },
+      "authors": [
+        {
+          "contributions": 1,
+          "kind": "llm",
+          "name": "Qwen2.5-3B-Instruct",
+          "roles": [
+            "brainstorm_submitter"
+          ]
+        },
+        {
+          "contributions": 1,
+          "kind": "llm",
+          "name": "qwen.qwen3.5-122b",
+          "roles": [
+            "flesh_out"
+          ]
+        }
+      ],
       "citation_summary": {
         "mismatch": 0,
         "pending": 0,
@@ -1225,6 +1445,24 @@
         "spec": null,
         "tasks": null
       },
+      "authors": [
+        {
+          "contributions": 1,
+          "kind": "llm",
+          "name": "Qwen2.5-3B-Instruct",
+          "roles": [
+            "brainstorm_submitter"
+          ]
+        },
+        {
+          "contributions": 1,
+          "kind": "llm",
+          "name": "qwen.qwen3.5-122b",
+          "roles": [
+            "flesh_out"
+          ]
+        }
+      ],
       "citation_summary": {
         "mismatch": 0,
         "pending": 0,
@@ -1276,6 +1514,24 @@
         "spec": null,
         "tasks": null
       },
+      "authors": [
+        {
+          "contributions": 9,
+          "kind": "llm",
+          "name": "qwen.qwen3.5-122b",
+          "roles": [
+            "flesh_out"
+          ]
+        },
+        {
+          "contributions": 1,
+          "kind": "llm",
+          "name": "TinyLlama-1.1B-Chat-v1.0",
+          "roles": [
+            "brainstorm_submitter"
+          ]
+        }
+      ],
       "citation_summary": {
         "mismatch": 0,
         "pending": 0,
@@ -1391,6 +1647,16 @@
         "spec": null,
         "tasks": null
       },
+      "authors": [
+        {
+          "contributions": 1,
+          "kind": "llm",
+          "name": "TinyLlama-1.1B-Chat-v1.0",
+          "roles": [
+            "brainstorm_submitter"
+          ]
+        }
+      ],
       "citation_summary": {
         "mismatch": 0,
         "pending": 0,
@@ -1433,6 +1699,16 @@
         "spec": null,
         "tasks": null
       },
+      "authors": [
+        {
+          "contributions": 1,
+          "kind": "llm",
+          "name": "TinyLlama-1.1B-Chat-v1.0",
+          "roles": [
+            "brainstorm_submitter"
+          ]
+        }
+      ],
       "citation_summary": {
         "mismatch": 0,
         "pending": 0,
@@ -1475,6 +1751,16 @@
         "spec": null,
         "tasks": null
       },
+      "authors": [
+        {
+          "contributions": 1,
+          "kind": "llm",
+          "name": "TinyLlama-1.1B-Chat-v1.0",
+          "roles": [
+            "brainstorm_submitter"
+          ]
+        }
+      ],
       "citation_summary": {
         "mismatch": 0,
         "pending": 0,
@@ -1517,6 +1803,16 @@
         "spec": null,
         "tasks": null
       },
+      "authors": [
+        {
+          "contributions": 1,
+          "kind": "llm",
+          "name": "TinyLlama-1.1B-Chat-v1.0",
+          "roles": [
+            "brainstorm_submitter"
+          ]
+        }
+      ],
       "citation_summary": {
         "mismatch": 0,
         "pending": 0,
@@ -1559,6 +1855,16 @@
         "spec": null,
         "tasks": null
       },
+      "authors": [
+        {
+          "contributions": 1,
+          "kind": "llm",
+          "name": "TinyLlama-1.1B-Chat-v1.0",
+          "roles": [
+            "brainstorm_submitter"
+          ]
+        }
+      ],
       "citation_summary": {
         "mismatch": 0,
         "pending": 0,
@@ -1601,6 +1907,16 @@
         "spec": null,
         "tasks": null
       },
+      "authors": [
+        {
+          "contributions": 1,
+          "kind": "llm",
+          "name": "TinyLlama-1.1B-Chat-v1.0",
+          "roles": [
+            "brainstorm_submitter"
+          ]
+        }
+      ],
       "citation_summary": {
         "mismatch": 0,
         "pending": 0,
@@ -1643,6 +1959,16 @@
         "spec": null,
         "tasks": null
       },
+      "authors": [
+        {
+          "contributions": 1,
+          "kind": "llm",
+          "name": "Claude 3 Sonnet",
+          "roles": [
+            "brainstorm_submitter"
+          ]
+        }
+      ],
       "citation_summary": {
         "mismatch": 0,
         "pending": 0,
@@ -1685,6 +2011,16 @@
         "spec": null,
         "tasks": null
       },
+      "authors": [
+        {
+          "contributions": 1,
+          "kind": "llm",
+          "name": "Claude 3 Sonnet",
+          "roles": [
+            "brainstorm_submitter"
+          ]
+        }
+      ],
       "citation_summary": {
         "mismatch": 0,
         "pending": 0,
@@ -1727,6 +2063,16 @@
         "spec": null,
         "tasks": null
       },
+      "authors": [
+        {
+          "contributions": 1,
+          "kind": "llm",
+          "name": "Claude 3 Sonnet",
+          "roles": [
+            "brainstorm_submitter"
+          ]
+        }
+      ],
       "citation_summary": {
         "mismatch": 0,
         "pending": 0,
@@ -1760,15 +2106,46 @@
         "paper_figures": "projects/PROJ-023-bayesian-nonparametrics-for-anomaly-dete/paper/figures",
         "paper_pdf": null,
         "paper_plan": null,
-        "paper_source": "projects/PROJ-023-bayesian-nonparametrics-for-anomaly-dete/paper/source/main.tex",
-        "paper_spec": "projects/PROJ-023-bayesian-nonparametrics-for-anomaly-dete/paper/specs/001-paper/spec.md",
+        "paper_source": null,
+        "paper_spec": null,
         "paper_tasks": null,
         "plan": "projects/PROJ-023-bayesian-nonparametrics-for-anomaly-dete/specs/002-bayesian-nonparametrics-for-anomaly-dete/plan.md",
-        "reviews_paper": "projects/PROJ-023-bayesian-nonparametrics-for-anomaly-dete/paper/reviews",
+        "reviews_paper": null,
         "reviews_research": "projects/PROJ-023-bayesian-nonparametrics-for-anomaly-dete/reviews/research",
         "spec": "projects/PROJ-023-bayesian-nonparametrics-for-anomaly-dete/specs/002-bayesian-nonparametrics-for-anomaly-dete/spec.md",
         "tasks": null
       },
+      "authors": [
+        {
+          "contributions": 29,
+          "kind": "llm",
+          "name": "qwen.qwen3.5-122b",
+          "roles": [
+            "clarifier",
+            "flesh_out",
+            "implementer",
+            "planner",
+            "project_initializer",
+            "research_reviewer",
+            "research_reviewer_code_quality_research",
+            "research_reviewer_creativity",
+            "research_reviewer_data_quality_research",
+            "research_reviewer_filesystem_hygiene",
+            "research_reviewer_idea_quality",
+            "research_reviewer_implementation_completeness",
+            "research_reviewer_implementation_correctness",
+            "specifier"
+          ]
+        },
+        {
+          "contributions": 1,
+          "kind": "llm",
+          "name": "google.gemma-3-27b-it",
+          "roles": [
+            "brainstorm_submitter"
+          ]
+        }
+      ],
       "citation_summary": {
         "mismatch": 1,
         "pending": 0,
@@ -1776,7 +2153,7 @@
         "verified": 0
       },
       "created_at": "2026-04-29T17:53:16.603320+00:00",
-      "current_stage": "posted",
+      "current_stage": "research_minor_revision",
       "description": "Field: statistics Can Bayesian nonparametric models, specifically Gaussian process priors with Dirichlet process mixtures, detect distributional shifts in non-stationary univariate time series more effectively than traditional Statistical Process Control (SPC) charts? Traditional SPC charts assume stationarity and\u2026",
       "field": "statistics",
       "id": "PROJ-023-bayesian-nonparametrics-for-anomaly-dete",
@@ -1863,10 +2240,10 @@
           "started_at": "2026-04-29T18:28:54.685916Z"
         }
       ],
-      "phase_group": "posted",
-      "points_paper_total": 6.0,
-      "points_research_total": 6.0,
-      "speckit_paper_dir": "projects/PROJ-023-bayesian-nonparametrics-for-anomaly-dete/paper/specs/001-paper",
+      "phase_group": "research_review",
+      "points_paper_total": 0.0,
+      "points_research_total": 0.0,
+      "speckit_paper_dir": null,
       "speckit_research_dir": "projects/PROJ-023-bayesian-nonparametrics-for-anomaly-dete/specs/002-bayesian-nonparametrics-for-anomaly-dete",
       "submitter": "google.gemma-3-27b-it",
       "title": "Bayesian Nonparametrics for Anomaly Detection in Time Series",
