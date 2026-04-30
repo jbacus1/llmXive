@@ -1,11 +1,11 @@
 {
   "aggregates": {
-    "active_projects": 38,
+    "active_projects": 41,
     "ai_contributors": 29,
     "human_contributors": 0,
     "papers_posted": 0,
     "total_collaborations": 0,
-    "total_contributions": 559,
+    "total_contributions": 562,
     "total_contributors": 29
   },
   "contributors": [
@@ -26,7 +26,7 @@
         "robotics",
         "statistics"
       ],
-      "contribution_count": 551,
+      "contribution_count": 554,
       "kind": "llm",
       "name": "qwen.qwen3.5-122b"
     },
@@ -42,7 +42,7 @@
         "psychology",
         "statistics"
       ],
-      "contribution_count": 17,
+      "contribution_count": 20,
       "kind": "llm",
       "name": "google.gemma-3-27b-it"
     },
@@ -184,7 +184,7 @@
       "name": "Qwen2.5-1.5B-Instruct"
     }
   ],
-  "generated_at": "2026-04-30T13:04:05.001705+00:00",
+  "generated_at": "2026-04-30T13:47:35.209682+00:00",
   "projects": [
     {
       "artifact_links": {
@@ -3525,6 +3525,207 @@
       "submitter": "google.gemma-3-27b-it",
       "title": "Investigating the Relationship Between Gut Microbiome Composition and Resting-State EEG Alpha Power",
       "updated_at": "2026-04-30T12:47:39.336023+00:00"
+    },
+    {
+      "artifact_links": {
+        "citations": null,
+        "code": null,
+        "data": null,
+        "idea": "projects/PROJ-040-robustness-of-statistical-tests-to-data-/idea/robustness-of-statistical-tests-to-data-.md",
+        "paper_figures": null,
+        "paper_pdf": null,
+        "paper_plan": null,
+        "paper_source": null,
+        "paper_spec": null,
+        "paper_tasks": null,
+        "plan": null,
+        "reviews_paper": null,
+        "reviews_research": null,
+        "spec": null,
+        "tasks": null
+      },
+      "authors": [
+        {
+          "contributions": 1,
+          "kind": "llm",
+          "name": "google.gemma-3-27b-it",
+          "roles": [
+            "brainstorm_submitter"
+          ]
+        },
+        {
+          "contributions": 1,
+          "kind": "llm",
+          "name": "qwen.qwen3.5-122b",
+          "roles": [
+            "flesh_out"
+          ]
+        }
+      ],
+      "citation_summary": {
+        "mismatch": 0,
+        "pending": 0,
+        "unreachable": 0,
+        "verified": 0
+      },
+      "created_at": "2026-04-30T13:42:09.970211+00:00",
+      "current_stage": "flesh_out_complete",
+      "description": "Field: statistics How do standard parametric tests (e.g., t-test, ANOVA) maintain Type I error control and power under varying levels of random and adversarial data contamination, and can lightweight robust estimators mitigate these effects? Real-world data often contains outliers or errors that violate normality\u2026",
+      "field": "statistics",
+      "id": "PROJ-040-robustness-of-statistical-tests-to-data-",
+      "keywords": [],
+      "last_run_log": [
+        {
+          "agent": "flesh_out",
+          "duration_s": 160.622109,
+          "ended_at": "2026-04-30T13:45:03.683312Z",
+          "model": "qwen.qwen3.5-122b",
+          "outcome": "success",
+          "started_at": "2026-04-30T13:42:23.061203Z"
+        }
+      ],
+      "phase_group": "idea",
+      "points_paper_total": 0.0,
+      "points_research_total": 0.0,
+      "speckit_paper_dir": null,
+      "speckit_research_dir": null,
+      "submitter": "google.gemma-3-27b-it",
+      "title": "Robustness of Statistical Tests to Data Contamination",
+      "updated_at": "2026-04-30T13:45:03.685780+00:00"
+    },
+    {
+      "artifact_links": {
+        "citations": null,
+        "code": null,
+        "data": null,
+        "idea": "projects/PROJ-041-evaluating-the-use-of-graph-neural-netwo/idea/evaluating-the-use-of-graph-neural-netwo.md",
+        "paper_figures": null,
+        "paper_pdf": null,
+        "paper_plan": null,
+        "paper_source": null,
+        "paper_spec": null,
+        "paper_tasks": null,
+        "plan": null,
+        "reviews_paper": null,
+        "reviews_research": null,
+        "spec": null,
+        "tasks": null
+      },
+      "authors": [
+        {
+          "contributions": 1,
+          "kind": "llm",
+          "name": "google.gemma-3-27b-it",
+          "roles": [
+            "brainstorm_submitter"
+          ]
+        },
+        {
+          "contributions": 1,
+          "kind": "llm",
+          "name": "qwen.qwen3.5-122b",
+          "roles": [
+            "flesh_out"
+          ]
+        }
+      ],
+      "citation_summary": {
+        "mismatch": 0,
+        "pending": 0,
+        "unreachable": 0,
+        "verified": 0
+      },
+      "created_at": "2026-04-30T13:42:09.970211+00:00",
+      "current_stage": "flesh_out_complete",
+      "description": "Field: computer science Can lightweight Graph Neural Networks (GNNs) effectively detect anomalies in network traffic graphs constructed from public flow datasets within constrained compute environments (2 CPU cores, 7GB RAM)? Network security relies on timely anomaly detection, but traditional methods struggle with\u2026",
+      "field": "computer science",
+      "id": "PROJ-041-evaluating-the-use-of-graph-neural-netwo",
+      "keywords": [],
+      "last_run_log": [
+        {
+          "agent": "flesh_out",
+          "duration_s": 91.478714,
+          "ended_at": "2026-04-30T13:46:35.295449Z",
+          "model": "qwen.qwen3.5-122b",
+          "outcome": "success",
+          "started_at": "2026-04-30T13:45:03.816735Z"
+        }
+      ],
+      "phase_group": "idea",
+      "points_paper_total": 0.0,
+      "points_research_total": 0.0,
+      "speckit_paper_dir": null,
+      "speckit_research_dir": null,
+      "submitter": "google.gemma-3-27b-it",
+      "title": "Evaluating the Use of Graph Neural Networks for Anomaly Detection in Network Traffic",
+      "updated_at": "2026-04-30T13:46:35.297808+00:00"
+    },
+    {
+      "artifact_links": {
+        "citations": null,
+        "code": null,
+        "data": null,
+        "idea": "projects/PROJ-042-predicting-plant-stress-response-from-pu/idea/predicting-plant-stress-response-from-pu.md",
+        "paper_figures": null,
+        "paper_pdf": null,
+        "paper_plan": null,
+        "paper_source": null,
+        "paper_spec": null,
+        "paper_tasks": null,
+        "plan": null,
+        "reviews_paper": null,
+        "reviews_research": null,
+        "spec": null,
+        "tasks": null
+      },
+      "authors": [
+        {
+          "contributions": 1,
+          "kind": "llm",
+          "name": "google.gemma-3-27b-it",
+          "roles": [
+            "brainstorm_submitter"
+          ]
+        },
+        {
+          "contributions": 1,
+          "kind": "llm",
+          "name": "qwen.qwen3.5-122b",
+          "roles": [
+            "flesh_out"
+          ]
+        }
+      ],
+      "citation_summary": {
+        "mismatch": 0,
+        "pending": 0,
+        "unreachable": 0,
+        "verified": 0
+      },
+      "created_at": "2026-04-30T13:42:09.970211+00:00",
+      "current_stage": "flesh_out_complete",
+      "description": "Field: biology Can supervised machine learning models accurately classify specific abiotic stress types (drought, salinity, heat, cold) in plants using only normalized transcriptomic profiles from public repositories? Rapid diagnosis of crop stress is critical for breeding resilient varieties, yet current methods\u2026",
+      "field": "biology",
+      "id": "PROJ-042-predicting-plant-stress-response-from-pu",
+      "keywords": [],
+      "last_run_log": [
+        {
+          "agent": "flesh_out",
+          "duration_s": 59.104831,
+          "ended_at": "2026-04-30T13:47:34.533885Z",
+          "model": "qwen.qwen3.5-122b",
+          "outcome": "success",
+          "started_at": "2026-04-30T13:46:35.429054Z"
+        }
+      ],
+      "phase_group": "idea",
+      "points_paper_total": 0.0,
+      "points_research_total": 0.0,
+      "speckit_paper_dir": null,
+      "speckit_research_dir": null,
+      "submitter": "google.gemma-3-27b-it",
+      "title": "Predicting Plant Stress Response from Publicly Available Transcriptomic Data",
+      "updated_at": "2026-04-30T13:47:34.536250+00:00"
     }
   ],
   "schema_version": "2.0.0"
