@@ -23,6 +23,7 @@ from dataclasses import dataclass
 from pathlib import Path
 
 DARTMOUTH_KEY_NAME = "DARTMOUTH_CHAT_API_KEY"
+DARTMOUTH_KEY_ALIASES = ("DARTMOUTH_API_KEY",)
 
 
 def credentials_path() -> Path:
@@ -90,6 +91,12 @@ def load_dartmouth_key(*, prompt_if_missing: bool = False) -> str | None:
     env = os.environ.get(DARTMOUTH_KEY_NAME)
     if env:
         return env.strip()
+    for alias in DARTMOUTH_KEY_ALIASES:
+        alias_val = os.environ.get(alias)
+        if alias_val:
+            # Normalize into canonical env var for downstream callers.
+            os.environ[DARTMOUTH_KEY_NAME] = alias_val.strip()
+            return alias_val.strip()
 
     chk = check_permissions()
     if not chk.ok:

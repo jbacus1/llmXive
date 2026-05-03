@@ -49,6 +49,13 @@ def _check_secrets() -> list[str]:
     The Dartmouth Chat key may live in ~/.config/llmxive/credentials.toml
     so we admit a stored credential as satisfying the requirement.
     """
+    # Accept legacy alias env var names by normalizing first.
+    try:
+        cred_mod.load_dartmouth_key(prompt_if_missing=False)
+    except PermissionError:
+        # Keep current permission-error handling in the loop below.
+        pass
+
     missing: list[str] = []
     for name in REQUIRED_SECRETS:
         if os.environ.get(name):
